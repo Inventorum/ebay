@@ -4,7 +4,6 @@ import logging
 
 from inventorum.ebay.lib.rest.resources import APIResource
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK
 
 
 log = logging.getLogger(__name__)

@@ -11,5 +11,5 @@ log = logging.getLogger(__name__)
 
 class EbayProductModel(MappedInventorumModel):
     """ Represents an inventorum product in the ebay context """
-    account = models.ForeignKey('accounts.EbayAccountModel', related_name='products',
+    account = models.ForeignKey("accounts.EbayAccountModel", related_name="products",
                                 verbose_name="Inventorum ebay account")

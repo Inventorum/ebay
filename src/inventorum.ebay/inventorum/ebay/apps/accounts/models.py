@@ -18,4 +18,4 @@ class EbayAccountModel(MappedInventorumModel):
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):
     """ Represents an inventorum user in the ebay context """
-    account = models.ForeignKey(EbayAccountModel, related_name='users', verbose_name="Account")
+    account = models.ForeignKey(EbayAccountModel, related_name="users", verbose_name="Account")

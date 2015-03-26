@@ -38,4 +38,4 @@ class MappedInventorumModel(AbstractModel):
     inv_id = models.IntegerField(unique=True, verbose_name="Universal inventorum id")
 
     def __unicode__(self):
-        return u'[{} (inv-id: {})] {}'.format(self.pk, self.inv_id, self.__class__.__name__)
+        return "[{} (inv-id: {})] {}".format(self.pk, self.inv_id, self.__class__.__name__)
