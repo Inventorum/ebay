@@ -1,0 +1,51 @@
+[unix_http_server]
+file=${buildout:directory}/var/run/supervisor.sock
+
+[supervisord]
+logfile = ${buildout:directory}/var/log/supervisor/development.log
+logfile_maxbytes = 50MB
+logfile_backups = 10
+loglevel = info
+pidfile = ${buildout:directory}/var/supervisord.development.pid
+nodaemon = false
+# http://supervisord.org/configuration.html
+environment = LD_LIBRARY_PATH="${buildout:directory}/parts/postgresql/lib"
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///${buildout:directory}/var/run/supervisor.sock
+
+
+[program:postgres]
+command = ${buildout:directory}/bin/start_postgres
+process_name = postgres
+directory = ${postgresql:location}/bin
+priority = 10
+redirect_stderr = false
+stopsignal=INT
+
+[program:celery]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/development.ini -A inventorum.ebay.celery worker -l debug
+process_name = celery
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${buildout:directory}/var/log/celery.development.log
+autostart=false
+autorestart=true
+
+[group:uwsgi]
+programs=com.inventorum.ebay
+priority=999
+
+[program:com.inventorum.ebay]
+command = ${buildout:directory}/bin/uwsgi --ini ${buildout:directory}/etc/uwsgi/apps-available/com.inventorum.ebay.ini
+priority = 10
+redirect_stderr = true
+stopsignal=INT
+autostart=false
+autorestart=true
+stopasgroup=true
+killasgroup=true

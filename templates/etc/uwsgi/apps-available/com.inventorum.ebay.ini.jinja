@@ -1,0 +1,60 @@
+# http://projects.unbit.it/uwsgi/wiki/INIFiles
+# http://projects.unbit.it/uwsgi/wiki/Example
+# https://docs.djangoproject.com/en/1.5/howto/deployment/wsgi/uwsgi/
+
+[uwsgi]
+env         = LANG=en_US.UTF-8
+plugins     = python
+
+# develop-eggs are in a different place
+pythonpath  = {{ buildout_directory }}/develop-eggs/psycopg2?{{ psycopg2_version }}*.egg
+
+# here we use ``?`` since some eggs use ``-``, some use ``_``
+{% for egg in eggs %}
+pythonpath  = {{ eggs_base }}/{{ egg|replace(' ', '-')|replace('-', '?') }}?py2.7*.egg{% endfor %}
+
+pythonpath  = {{ buildout_directory }}/src/inventorum.ebay
+
+chdir       = {{ buildout_directory }}/src/inventorum.ebay
+
+# http://projects.unbit.it/uwsgi/wiki/UsePaste
+paste       = config:{{ buildout_directory }}/src/inventorum.ebay/{{ environment }}.ini
+
+# http://stackoverflow.com/questions/17159713/logging-not-working-when-running-pyramid-app-under-uwsgi-in-emperor-mode/17160672#17160672
+paste-logger = {{ buildout_directory }}/src/inventorum.ebay/{{ environment }}.ini
+
+
+master      = true
+socket      = {{ os_root_prefix }}/tmp/uwsgi-com.inventorum.ebay.sock
+
+# http://uwsgi-docs.readthedocs.org/en/latest/Options.html#logging
+logto       = {{ os_root_prefix }}/var/log/uwsgi/app/com.inventorum.ebay.log
+logto2      = {{ os_root_prefix }}/var/log/uwsgi/app/com.inventorum.ebay.log
+logfile-chown
+logfile-chmod = 666
+
+# respawn processes taking more than n seconds
+harakiri    = 60
+harakiri-verbose = true
+
+# ``2*1024*1000 == 2048000``
+limit-post  = 2048000
+
+post-buffering = 4096
+log-slow    = 1200
+
+# maximum number of worker processes (``workers`` == ``processes``)
+# http://stackoverflow.com/questions/17053426/difference-between-workers-and-processes-in-uwsgi
+processes   = {{ uwsgi_num_workers }}
+workers     = {{ uwsgi_num_workers }}
+
+enable-threads = false
+
+# respawn processes after serving n requests
+max-requests= 5000
+
+# ... with appropriate permissions - may be needed
+# chmod-socket    = 664
+
+# clear environment on exit
+vacuum

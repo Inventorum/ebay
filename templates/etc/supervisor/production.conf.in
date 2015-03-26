@@ -1,0 +1,29 @@
+[unix_http_server]
+file=${os:root-prefix}/var/run/com.inventorum.ebay/supervisor.sock
+
+[supervisord]
+logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/supervisord.log
+logfile_maxbytes = 50MB
+logfile_backups = 10
+loglevel = info
+pidfile = ${os:root-prefix}/var/run/com.inventorum.ebay/celery.supervisord.pid
+nodaemon = false
+# http://supervisord.org/configuration.html
+environment = LD_LIBRARY_PATH="${buildout:directory}/parts/postgresql/lib"
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///${os:root-prefix}/var/run/com.inventorum.ebay/supervisor.sock
+
+
+[program:celery]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -l info
+process_name = com.inventorum.ebay.celery
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery-worker.log
+autostart=true
+autorestart=true

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# init postgres only once
+if [ `ls "${config:postgresql-var-dir}/var/lib/postgresql_${defined-versions:postgresql-version}"|wc -l` -eq 0 ]; then
+    export PGDATA=${buildout:directory}/etc/postgresql
+    export LD_LIBRARY_PATH=${buildout:directory}/parts/postgresql/lib:$LD_LIBRARY_PATH
+
+    ${postgresql:location}/bin/initdb \
+        "${config:postgresql-var-dir}/var/lib/postgresql_${defined-versions:postgresql-version}"
+
+    echo "Creating database user '${config:postgres_user}' ..."
+    echo "CREATE USER ${config:postgres_user} WITH PASSWORD '${config:postgres_user_pw}' CREATEDB;" \
+        |${postgresql:location}/bin/postgres \
+        --single \
+        -D ${config:postgresql-var-dir}/var/lib/postgresql_${defined-versions:postgresql-version} template1
+
+fi

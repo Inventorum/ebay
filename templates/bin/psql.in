@@ -1,0 +1,6 @@
+#!/bin/bash
+export LD_LIBRARY_PATH=${buildout:directory}/parts/postgresql/lib:$LD_LIBRARY_PATH
+exec "${postgresql:location}/bin/psql" \
+    -h ${config:postgresql-socket-dir}	 \
+    --username=${config:postgres_user} \
+    "$@"

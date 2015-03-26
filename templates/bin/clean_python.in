@@ -1,0 +1,6 @@
+#/bin/bash
+find ${buildout:directory} -name '*.pyc'\
+         |while read f; do
+            echo "$f";
+            rm -f "$f";
+          done

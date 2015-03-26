@@ -1,0 +1,22 @@
+#!/bin/bash
+
+unset LIB_DIR
+unset DYLD_LIBRARY_PATH
+unset DYLD_FALLBACK_LIBRARY_PATH
+
+CXX=/opt/local/bin/g++-apple-4.2
+CC=/opt/local/bin/gcc-apple-4.2
+CPP=/opt/local/bin/cpp-apple-4.2
+LD=/opt/local/libexec/apple-gcc42/gcc/i686-apple-darwin11/4.2.1/ld
+LIBRARY_PATH="${os:lib_path}/lib"
+LANG=en_US.UTF-8
+LANG_ALL=en_US.UTF-8
+
+PATH=${postgresql:location}/bin:${os:lib_path}/bin:/opt/local/libexec/gnubin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
+LD_LIBRARY_PATH=/usr/lib:${os:lib_path}/include:${os:lib_path}/lib
+INCLUDE_PATH=${os:lib_path}/include
+C_INCLUDE_PATH=${os:lib_path}/include
+CXX_INCLUDE_PATH=${os:lib_path}/include
+CPATH=${os:lib_path}/include
+
+exec "${postgresql:location}/bin/postgres" --config-file="${buildout:directory}/etc/postgresql/postgresql.conf" $@

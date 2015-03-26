@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+from setuptools import setup, find_packages
+import os
+
+here = os.path.abspath(os.path.dirname(__file__))
+VERSION = open(os.path.join(here, 'VERSION')).read().strip()
+
+entry_points = """\
+[paste.app_factory]
+ebay_main = inventorum.util.paste:make_wsgi_application
+
+[console_scripts]
+manage = inventorum.util.paste:manage
+db_provision = inventorum.ebay.scripts.db:db_provision
+"""
+
+required_eggs = [
+    'inventorum.util==9.2.6-dev',
+
+    'waitress',
+    'Django>=1.7.7',
+    'django-extensions>=1.5.2',
+    'djangorestframework>=3.1.1',
+    'django-pastedeploy-settings>=1.0rc4dev',
+
+    'plac>=0.9.1'
+]
+
+setup(
+    name='inventorum.ebay',
+    version=VERSION,
+    description="",
+    author="Inventorum GmbH",
+    author_email='tech@inventorum.com',
+    url='',
+    packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+    include_package_data=True,
+    package_data={'inventorum': [], 'static': [],},
+    scripts=[],
+    install_requires=required_eggs,
+    extras_require=dict(
+        test=required_eggs + [
+            'django-nose>=1.3',
+            'coverage>=3.7',
+            'factory_boy>=2.4'
+        ]
+    ),
+    # http://pythonhosted.org/distribute/setuptools.html#namespace-packages
+    namespace_packages=['inventorum'],
+    zip_safe=False,
+    entry_points=entry_points,
+    dependency_links=[
+    ],
+)
