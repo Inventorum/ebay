@@ -18,9 +18,6 @@ if ! $local_flag; then
     bin/supervisorctl shutdown >/dev/null 2>&1||true
     sleep 1
 
-    # hack to avoid mails cause of the ``__buildout_signature__`` bug in buildout
-    bin/buildout -vvN || bin/buildout -vvN
-
     bin/supervisord
 
     sleep 1
