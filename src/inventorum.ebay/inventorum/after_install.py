@@ -28,7 +28,7 @@ for tup in links:
     src = tup[0]
     dst = tup[1]
     if not os.path.exists(dst):
-        print '[inv-shop] creating symlink for %s to %s...' % (src, dst)
+        print '[inv-ebay] creating symlink for %s to %s...' % (src, dst)
         # might be a broken link
         try:
             os.remove(dst)
