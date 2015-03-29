@@ -15,7 +15,6 @@ To bootstrap the project:
     bin/buildout -vv
     bin/db_provision src/inventorum.ebay/development.ini inventorum_ebay_develop -D
 
-
 Running tests
 -------------
 
@@ -29,9 +28,14 @@ To run all tests:
 Working with the database
 -------------------------
 
+To apply migrations:
+
+::
+
+    bin/ebay/manage src/inventorum.ebay/development.ini migrate
+
 To generate migrations:
 
 ::
 
     bin/ebay/manage src/inventorum.ebay/development.ini makemigrations <app_name>
-
