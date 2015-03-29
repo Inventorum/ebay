@@ -65,7 +65,7 @@ if proc.returncode != 0:
 
 
 db_migrate = [
-    os.path.join(install_dir, 'bin', 'manage'),
+    os.path.join(install_dir, 'bin', 'ebay', 'manage'),
     os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
     'migrate'
 ]
