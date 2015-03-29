@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import os
 import logging
+from pipes import quote
 import subprocess
 
 from inventorum.util.paste import boostrap_from_config
@@ -35,10 +36,10 @@ def _db_provision(db_name, with_drop):
     if os.path.isdir(sandbox_exec_path):
         log.info("Running in sandbox mode")
 
-        def psql(cmd):
-            return "{sandbox_exec_path}/psql -h {host} postgres " \
-                   " -c \"{cmd}\"".format(sandbox_exec_path=sandbox_exec_path,
-                                                                host=DB_HOST, username=DB_USERNAME, cmd=cmd)
+        def psql(psql_cmd):
+            return """echo "{cmd}" | {sandbox_exec_path}/psql -h {host} -d postgres"""\
+                .format(sandbox_exec_path=sandbox_exec_path,
+                        host=DB_HOST, username=DB_USERNAME, cmd=psql_cmd)
 
         createuser = psql("CREATE USER {username} WITH PASSWORD '{password}' CREATEDB;".format(username=DB_USERNAME,
                                                                                                password=DB_PASSWORD))
@@ -46,8 +47,9 @@ def _db_provision(db_name, with_drop):
     else:
         log.info("Running in system mode")
 
-        def psql(psql):
-            return 'su - postgres -c "psql -d postgres -c \"{cmd}\""'.format(host=DB_HOST, cmd=psql)
+        def psql(psql_cmd):
+            return "su - postgres -c {shell_cmd}"\
+                .format(shell_cmd=quote("""echo "{psql_cmd}" | psql -d postgres""".format(psql_cmd=psql_cmd)))
 
         createuser = psql("CREATE ROLE {username} ENCRYPTED PASSWORD '{password}' "
                           "NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;".format(username=DB_USERNAME,
