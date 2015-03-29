@@ -1,5 +1,5 @@
 # encoding: utf-8
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import
 import os
 import logging
 import subprocess
@@ -14,61 +14,67 @@ log = logging.getLogger(__name__)
 def _db_provision(db_name, with_drop):
     from django.conf import settings
 
-    sandbox_root = settings.BUILDOUT_ROOT
-    log.debug("sandbox root is %s", sandbox_root)
-    sandbox_exec_path = os.path.join(sandbox_root, "parts", "postgresql", "bin")
+    def execute(cmd):
+        log.debug(cmd)
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        stdout, stderr = proc.communicate()
+        if stderr != "":
+            log.error(stderr)
+            exit(proc.returncode)
+        return stdout
 
     db = settings.DATABASES["default"]
     DB_HOST = db["HOST"]
     DB_USERNAME = db["USER"]
+    DB_PASSWORD = db['PASSWORD']
 
-    log.info("running in sandbox mode")
+    sandbox_root = settings.BUILDOUT_ROOT
+    log.debug("sandbox root is %s", sandbox_root)
+    sandbox_exec_path = os.path.join(sandbox_root, "parts", "postgresql", "bin")
 
-    connect_options = [
-        "--host={host}".format(host=DB_HOST)
-    ]
+    if os.path.isdir(sandbox_exec_path):
+        log.info("Running in sandbox mode")
 
-    psql = [os.path.join(sandbox_exec_path, "psql")] + connect_options
+        def psql(cmd):
+            return "{sandbox_exec_path}/psql -h {host} postgres " \
+                   " -c \"{cmd}\"".format(sandbox_exec_path=sandbox_exec_path,
+                                                                host=DB_HOST, username=DB_USERNAME, cmd=cmd)
 
-    createdb = [os.path.join(sandbox_exec_path, "createdb"), "--owner=%s" % DB_USERNAME] + connect_options
-    createdb = createdb + [
-        "--template=template0", "--encoding=UTF8",
-        "--locale=en_US.UTF-8",
-        "'{db_name}'".format(db_name=db_name)
-    ]
+        createuser = psql("CREATE USER {username} WITH PASSWORD '{password}' CREATEDB;".format(username=DB_USERNAME,
+                                                                                               password=DB_PASSWORD))
 
-    dropdb = [os.path.join(sandbox_exec_path, "dropdb")] + connect_options
-    dropdb = dropdb + ["'{db_name}'".format(db_name=db_name)]
-
-    log.debug(" ".join(createdb))
-    log.debug(" ".join(dropdb))
-
-    proc = subprocess.Popen(" ".join(createdb), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    _out, _err = proc.communicate()
-    if _err:
-        if with_drop:
-            proc = subprocess.Popen(" ".join(dropdb), stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE, shell=True)
-            _out, _err = proc.communicate()
-            if not _err:
-                log.info("database '%s' dropped." % db_name)
-            else:
-                log.error("could not drop db '%s': %s", db_name, _err)
-                exit(1)
-
-            proc = subprocess.Popen(" ".join(createdb), stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE, shell=True)
-            _out, _err = proc.communicate()
-            if not _err:
-                log.info("database '%s' created.", db_name)
-            else:
-                log.error("could not create db '%s': %s", db_name, _err)
-                exit(1)
-        else:
-            log.error(_err)
-            exit(1)
     else:
-        log.info("database '%s' created." % db_name)
+        log.info("Running in system mode")
+
+        def psql(psql):
+            return 'su - postgres -c "psql -d postgres -c \"{cmd}\""'.format(host=DB_HOST, cmd=psql)
+
+        createuser = psql("CREATE ROLE {username} ENCRYPTED PASSWORD '{password}' "
+                          "NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;".format(username=DB_USERNAME,
+                                                                                      password=DB_PASSWORD))
+
+    # check if database user already exists
+    stdout = execute(" ".join([psql("\du"), "|", "grep {username}".format(username=DB_USERNAME), "|", "wc -l"]))
+    if stdout.strip() == "0":
+        log.info("Creating database user '%s'...", DB_USERNAME)
+        execute(createuser)
+    else:
+        log.info("Database user '%s' already exists", DB_USERNAME)
+
+    # check if database already exists
+    stdout = execute(" ".join([psql("\list"), "|", "grep {db_name}".format(db_name=db_name), "|", "wc -l"]))
+    if stdout.strip() != "0":
+        if not with_drop:
+            log.info("Database '%s' already exists", db_name)
+            exit(0)
+        else:
+            log.info("Dropping database '%s'...", db_name)
+            execute(psql("DROP DATABASE {db_name}".format(db_name=db_name)))
+
+    log.info("Creating database '%s'...", db_name)
+    execute(psql("CREATE DATABASE {db_name} OWNER {owner} "
+                 "ENCODING 'UTF8' LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';".format(db_name=db_name,
+                                                                                           owner=DB_USERNAME)))
 
 
 def db_provision():
