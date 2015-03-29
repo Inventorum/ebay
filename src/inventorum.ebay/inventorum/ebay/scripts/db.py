@@ -38,8 +38,7 @@ def _db_provision(db_name, with_drop):
 
         def psql(psql_cmd):
             return """echo "{cmd}" | {sandbox_exec_path}/psql -h {host} -d postgres"""\
-                .format(sandbox_exec_path=sandbox_exec_path,
-                        host=DB_HOST, username=DB_USERNAME, cmd=psql_cmd)
+                .format(cmd=psql_cmd, sandbox_exec_path=sandbox_exec_path, host=DB_HOST)
 
         createuser = psql("CREATE USER {username} WITH PASSWORD '{password}' CREATEDB;".format(username=DB_USERNAME,
                                                                                                password=DB_PASSWORD))
