@@ -36,8 +36,3 @@ fi
 bin/ebay/manage src/inventorum.ebay/test.ini collectstatic --noinput
 
 bin/ebay/manage src/inventorum.ebay/test.ini test --noinput src/inventorum.ebay/inventorum/ebay/apps
-
-if ! $local_flag; then
-    # TODO jm: build & upload egg
-    sleep 1
-fi

@@ -19,7 +19,7 @@ def _db_provision(db_name, with_drop):
         log.debug(cmd)
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         stdout, stderr = proc.communicate()
-        if stderr != "":
+        if proc.returncode != 0:
             log.error(stderr)
             exit(proc.returncode)
         return stdout
