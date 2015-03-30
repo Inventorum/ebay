@@ -33,7 +33,7 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${buildout:directory}/var/log/celery.development.log
-autostart=false
+autostart=true
 autorestart=true
 
 [group:uwsgi]

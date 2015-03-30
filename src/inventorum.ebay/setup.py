@@ -10,20 +10,24 @@ entry_points = """\
 ebay_main = inventorum.util.paste:make_wsgi_application
 
 [console_scripts]
-manage = inventorum.util.paste:manage
+celery = inventorum.ebay.scripts.celery:run
 db_provision = inventorum.ebay.scripts.db:db_provision
+manage = inventorum.util.paste:manage
 """
 
+# alphabetically ordered
 required_eggs = [
-    'inventorum.util==9.2.6-dev',
+    'celery>=3.1.17',
 
-    'waitress',
     'Django>=1.7.7',
     'django-extensions>=1.5.2',
     'djangorestframework>=3.1.1',
     'django-pastedeploy-settings>=1.0rc4dev',
 
-    'plac>=0.9.1'
+    'inventorum.util==9.2.6-dev',
+
+    'plac>=0.9.1',
+    'waitress>=0.8.9'
 ]
 
 setup(
@@ -39,9 +43,10 @@ setup(
     scripts=[],
     install_requires=required_eggs,
     extras_require=dict(
+        # alphabetically ordered
         test=required_eggs + [
-            'django-nose>=1.3',
             'coverage>=3.7',
+            'django-nose>=1.3',
             'factory_boy>=2.4'
         ]
     ),

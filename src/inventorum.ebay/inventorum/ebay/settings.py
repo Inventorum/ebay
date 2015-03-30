@@ -26,14 +26,18 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # Else user django default django.views.static.serve (which would not be for production)
 USE_NGINX_X_ACCEL_REDIRECT = True
 
+# alphabetically ordered
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
-    'rest_framework',
     'django_nose',
+    # Provides the django db broker for celery
+    'kombu.transport.django',
 
     'inventorum.ebay.apps.accounts',
-    'inventorum.ebay.apps.products'
+    'inventorum.ebay.apps.products',
+
+    'rest_framework'
 )
 
 AUTH_USER_MODEL = 'inventorum.ebay.apps.accounts.models.EbayAccountModel'
@@ -58,32 +62,28 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 # Third party configurations
 # ==============================================================================
 
+# REST framework ===============================================================
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'inventorum.ebay.lib.auth.backends.TrustedHeaderAuthentication',
     ),
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    # TODO jm: check compatibility with new rest framework version
+    # 'DEFAULT_THROTTLE_RATES': {
+    #   'default': '20/sec', # Default one for everything
+    # },
 }
 
+# Celery settings ==============================================================
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'inventorum.api.lib.auth.backends.TokenAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#     ),
-#     'TEST_REQUEST_RENDERER_CLASSES': (
-#         'rest_framework.renderers.MultiPartRenderer',
-#         'rest_framework.renderers.JSONRenderer'
-#     ),
-#
-#     'DEFAULT_THROTTLE_RATES': {
-#         'default': '20/sec', # Default one for everything
-#         'instant_auth_generate': '20/min', # This will limit generation of instant tokens
-#         'instant_auth': '20/min' # This will limit possibility to login to backend with instant token
-#     },
-#     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
-# }
+BROKER_URL = 'django://guest:guest@localhost//'
+# CELERY_IMPORTS = ()
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
+# Others =======================================================================
 
 # set factory_boy log level to WARN
 logger = logging.getLogger('factory')
