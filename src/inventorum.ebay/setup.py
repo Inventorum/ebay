@@ -27,6 +27,7 @@ required_eggs = [
     'inventorum.util==9.2.6-dev',
 
     'plac>=0.9.1',
+    'requests>=2.6.0',
     'waitress>=0.8.9'
 ]
 

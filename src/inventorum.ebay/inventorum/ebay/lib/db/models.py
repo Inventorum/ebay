@@ -26,7 +26,13 @@ class BaseModel(AbstractModel):
     objects = PassThroughManager.for_queryset_class(BaseQuerySet)()
 
 
-class MappedInventorumModel(AbstractModel):
+class MappedInventorumModelQuerySet(BaseQuerySet):
+
+    def by_inv_id(self, inv_id):
+        return self.filter(inv_id=inv_id)
+
+
+class MappedInventorumModel(BaseModel):
     """
     Base class for inventorum entities that exist outside of the ebay context
     and are mapped into the ebay service by their universal inv_id.
@@ -36,6 +42,8 @@ class MappedInventorumModel(AbstractModel):
         abstract = True
 
     inv_id = models.IntegerField(unique=True, verbose_name="Universal inventorum id")
+
+    objects = PassThroughManager.for_queryset_class(MappedInventorumModelQuerySet)()
 
     def __unicode__(self):
         return "[{} (inv-id: {})] {}".format(self.pk, self.inv_id, self.__class__.__name__)

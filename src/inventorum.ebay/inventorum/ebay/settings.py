@@ -4,6 +4,9 @@
 import os
 import logging
 
+here = os.path.abspath(os.path.dirname(__file__))
+VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()
+
 # ==============================================================================
 # Generic Django project settings
 # ==============================================================================

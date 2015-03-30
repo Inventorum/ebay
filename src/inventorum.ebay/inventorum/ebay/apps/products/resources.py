@@ -11,5 +11,5 @@ log = logging.getLogger(__name__)
 
 class PublishResource(APIResource):
 
-    def post(self, request, pk):
+    def post(self, request, inv_product_id):
         return Response()

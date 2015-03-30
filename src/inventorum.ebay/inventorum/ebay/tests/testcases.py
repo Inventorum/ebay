@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from django.test.testcases import TestCase
 
 from rest_framework import test
 
@@ -38,3 +39,7 @@ class APITestCase(test.APITestCase):
             TrustedHeaderAuthentication.AUTHENTICATED_USER_HEADER: user.inv_id
         }
         self.client.credentials(**credentials)
+
+
+class UnitTestCase(TestCase):
+    pass
