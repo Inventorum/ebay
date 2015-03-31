@@ -1,9 +1,11 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
 import logging
 import vcr
-from django.test.testcases import TestCase
 
+from django.conf import settings
+from django.test.testcases import TestCase
 from rest_framework import test
 
 from inventorum.ebay.lib.auth.backends import TrustedHeaderAuthentication
@@ -21,8 +23,9 @@ class APITestCase(test.APITestCase):
     client_class = APIClient
     vcr = vcr.VCR(
         serializer='json',
-        cassette_library_dir='fixtures/cassettes',
+        cassette_library_dir=settings.CASSETTES_DIR,
         record_mode='once',
+        filter_headers=['X-EBAY-API-APP-NAME', 'X-EBAY-API-CERT-NAME', 'X-EBAY-API-DEV-NAME', 'Authorization']
     )
 
     def setUp(self):

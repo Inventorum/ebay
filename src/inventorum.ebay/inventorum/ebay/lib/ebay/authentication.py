@@ -8,7 +8,6 @@ class EbayAuthentication(Ebay):
 
     def get_session_id(self):
         response = self.execute('GetSessionID', {'RuName': settings.EBAY_RUNAME})
-        print response
         return response['SessionID']
 
     @classmethod

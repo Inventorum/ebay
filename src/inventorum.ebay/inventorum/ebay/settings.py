@@ -100,6 +100,7 @@ logger.setLevel(logging.WARN)
 
 PROJECT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 BUILDOUT_ROOT = os.path.join(PROJECT_DIR, '..', '..', '..')
+CASSETTES_DIR = os.path.join(PROJECT_DIR, 'fixtures', 'cassettes')
 
 # ==============================================================================
 # Project URLS and media settings
