@@ -48,6 +48,7 @@ class Ebay(object):
     timeout = 20
     api = None
     error_lang = None
+    _token = None
 
     def __init__(self, token=None, site_id=77, error_lang="en_US", parallel=None):
         self.api = Connection(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
@@ -63,11 +64,13 @@ class Ebay(object):
     # EBAY PROPERTIES
     @property
     def token(self):
-        return self.api.config.get('token')
+        return self._token
 
     @token.setter
     def token(self, new_value):
-        self.api.config.set('token', new_value, force=True)
+        self._token = new_value
+        value = getattr(self._token, 'value', None)
+        self.api.config.set('token', value, force=True)
 
     @property
     def site_id(self):

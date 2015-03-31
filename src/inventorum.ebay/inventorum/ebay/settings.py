@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'kombu.transport.django',
 
     'inventorum.ebay.apps.accounts',
+    'inventorum.ebay.apps.auth',
     'inventorum.ebay.apps.products',
 
     'rest_framework',
@@ -101,6 +102,7 @@ logger.setLevel(logging.WARN)
 PROJECT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 BUILDOUT_ROOT = os.path.join(PROJECT_DIR, '..', '..', '..')
 CASSETTES_DIR = os.path.join(PROJECT_DIR, 'fixtures', 'cassettes')
+ENCRYPTED_FIELD_KEYS_DIR = os.path.join(PROJECT_DIR, 'fieldkeys')
 
 # ==============================================================================
 # Project URLS and media settings

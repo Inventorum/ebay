@@ -40,7 +40,7 @@ class EbayAuthentication(Ebay):
         parsed_expiration_time = datetime.strptime(response['HardExpirationTime'], EBAY_DATE_FORMAT)
         token = EbayToken(response['eBayAuthToken'], parsed_expiration_time)
 
-        self.token = token.value
+        self.token = token
         self._update_notification_settings()
 
         return token
