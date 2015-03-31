@@ -6,7 +6,7 @@ from mock import patch, Mock
 class ConfigMocked(object):
     values = {}
 
-    def set(self, key, value):
+    def set(self, key, value, force=False):
         self.values[key] = value
 
     def get(self, key):

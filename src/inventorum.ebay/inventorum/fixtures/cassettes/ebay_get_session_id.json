@@ -18,7 +18,7 @@
                         "eBaySDK/2.1.0 Python/2.7.6 Darwin/14.1.0"
                     ], 
                     "X-EBAY-SDK-REQUEST-ID": [
-                        "d3e99a8e-c2de-4455-9c26-b5652681e94f"
+                        "889a075c-8292-40b1-b30e-7c8e54bd86a2"
                     ], 
                     "X-EBAY-API-CALL-NAME": [
                         "GetSessionID"
@@ -37,7 +37,7 @@
                 }, 
                 "headers": {
                     "x-ebay-request-id": [
-                        "14c6fedb-6660-a621-f6b6-dcd6de3d5d48!ws.api.dll!10.98.31.107!esbtrading[]"
+                        "14c6ffa1-e840-a794-31a7-3dc7c1fa9a40!ws.api.dll!10.121.67.26!esbtrading[]"
                     ], 
                     "content-length": [
                         "320"
@@ -55,16 +55,16 @@
                         "Apache-Coyote/1.1"
                     ], 
                     "x-ebay-api-server-name": [
-                        "___dm97MmQ3MmYrMDpgNigyNSg/Nys3PjorNzM6Pz43OzU="
+                        "___dWtgMWQ3MmYrPzo1MigyNSg+NyswNy00MDc5PTY/Mw=="
                     ], 
                     "date": [
-                        "Tue, 31 Mar 2015 13:03:11 GMT"
+                        "Tue, 31 Mar 2015 13:16:44 GMT"
                     ], 
                     "x-ebay-esb-guid": [
-                        "urn:uuid:eafcaba6-8691-4b7c-ac4a-6f0d4b446aa2"
+                        "urn:uuid:7a198810-d349-4edc-aea7-7b2d22996c74"
                     ], 
                     "guid": [
-                        "14c6fedb-6660-a621-f6b6-dcd6de3d5d48"
+                        "14c6ffa1-e840-a794-31a7-3dc7c1fa9a40"
                     ], 
                     "x-ebay-api-pool-name": [
                         "___cDRidW90amJobm1maXVm"
@@ -74,7 +74,7 @@
                     ]
                 }, 
                 "body": {
-                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetSessionIDResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-03-31T13:03:11.989Z</Timestamp><Ack>Success</Ack><Version>915</Version><Build>E915_CORE_APISIGNIN_17436769_R1</Build><SessionID>qeUBAA**6fedb67514c0a54c79557ca5ffffba74</SessionID></GetSessionIDResponse>"
+                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetSessionIDResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-03-31T13:16:45.143Z</Timestamp><Ack>Success</Ack><Version>915</Version><Build>E915_CORE_APISIGNIN_17436769_R1</Build><SessionID>qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c</SessionID></GetSessionIDResponse>"
                 }
             }
         }

@@ -1,0 +1,159 @@
+{
+    "version": 1, 
+    "interactions": [
+        {
+            "request": {
+                "body": "<?xml version='1.0' encoding='utf-8'?><FetchTokenRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials></RequesterCredentials><SessionID>qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c</SessionID></FetchTokenRequest>", 
+                "headers": {
+                    "X-EBAY-API-SITEID": [
+                        77
+                    ], 
+                    "Content-Length": [
+                        "225"
+                    ], 
+                    "X-EBAY-API-COMPATIBILITY-LEVEL": [
+                        911
+                    ], 
+                    "User-Agent": [
+                        "eBaySDK/2.1.0 Python/2.7.6 Darwin/14.1.0"
+                    ], 
+                    "X-EBAY-SDK-REQUEST-ID": [
+                        "0b2b2ad7-1902-46fc-abd3-6c54f5e7834e"
+                    ], 
+                    "X-EBAY-API-CALL-NAME": [
+                        "FetchToken"
+                    ], 
+                    "Content-Type": [
+                        "text/xml"
+                    ]
+                }, 
+                "method": "POST", 
+                "uri": "https://api.ebay.com/ws/api.dll"
+            }, 
+            "response": {
+                "status": {
+                    "message": "OK", 
+                    "code": 200
+                }, 
+                "headers": {
+                    "x-ebay-request-id": [
+                        "14c70001-66e0-a785-f856-8846db6dde22!ws.api.dll!10.120.95.133!esbtrading[]"
+                    ], 
+                    "content-length": [
+                        "1221"
+                    ], 
+                    "x-ebay-esb-app-name": [
+                        "Inventor-9021-41d8-9c25-9bae93f76429"
+                    ], 
+                    "content-type": [
+                        "text/xml"
+                    ], 
+                    "x-ebay-esb-call-name": [
+                        "FetchToken"
+                    ], 
+                    "server": [
+                        "Apache-Coyote/1.1"
+                    ], 
+                    "x-ebay-api-server-name": [
+                        "___dWtgMWQ3MmYrMGdjYigyNSg+Nys3MTYrPzA5PTY/Mg=="
+                    ], 
+                    "date": [
+                        "Tue, 31 Mar 2015 13:23:15 GMT"
+                    ], 
+                    "x-ebay-esb-guid": [
+                        "urn:uuid:2b123178-1df9-4466-9272-4f4c34abbe4a"
+                    ], 
+                    "guid": [
+                        "14c70001-66e0-a785-f856-8846db6dde22"
+                    ], 
+                    "x-ebay-api-pool-name": [
+                        "___cDRidW90amJobm1saHNv"
+                    ], 
+                    "x-ebay-esb-siteid": [
+                        "77"
+                    ]
+                }, 
+                "body": {
+                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<FetchTokenResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-03-31T13:23:16.300Z</Timestamp><Ack>Success</Ack><Version>915</Version><Build>E915_INTL_APISIGNIN_17436956_R1</Build><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken><HardExpirationTime>2016-09-21T13:18:38.000Z</HardExpirationTime></FetchTokenResponse>"
+                }
+            }
+        }, 
+        {
+            "request": {
+                "body": "<?xml version='1.0' encoding='utf-8'?><SetNotificationPreferencesRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><UserDeliveryPreferenceArray><NotificationEnable><EventEnable>Enable</EventEnable><EventType>ItemClosed</EventType></NotificationEnable><NotificationEnable><EventEnable>Enable</EventEnable><EventType>ItemUnsold</EventType></NotificationEnable><NotificationEnable><EventEnable>Enable</EventEnable><EventType>FixedPriceTransaction</EventType></NotificationEnable></UserDeliveryPreferenceArray></SetNotificationPreferencesRequest>", 
+                "headers": {
+                    "X-EBAY-API-SITEID": [
+                        77
+                    ], 
+                    "Content-Length": [
+                        "1488"
+                    ], 
+                    "X-EBAY-API-COMPATIBILITY-LEVEL": [
+                        911
+                    ], 
+                    "User-Agent": [
+                        "eBaySDK/2.1.0 Python/2.7.6 Darwin/14.1.0"
+                    ], 
+                    "X-EBAY-SDK-REQUEST-ID": [
+                        "c3836cbb-a370-4bc2-939d-f0b44a4ba1ca"
+                    ], 
+                    "X-EBAY-API-CALL-NAME": [
+                        "SetNotificationPreferences"
+                    ], 
+                    "Content-Type": [
+                        "text/xml"
+                    ]
+                }, 
+                "method": "POST", 
+                "uri": "https://api.ebay.com/ws/api.dll"
+            }, 
+            "response": {
+                "status": {
+                    "message": "OK", 
+                    "code": 200
+                }, 
+                "headers": {
+                    "x-ebay-request-id": [
+                        "14c70001-78c0-a785-c8e0-6020afbc4d15!ws.api.dll!10.120.92.142!esbtrading[]"
+                    ], 
+                    "content-length": [
+                        "285"
+                    ], 
+                    "x-ebay-esb-app-name": [
+                        "Inventor-9021-41d8-9c25-9bae93f76429"
+                    ], 
+                    "content-type": [
+                        "text/xml"
+                    ], 
+                    "x-ebay-esb-call-name": [
+                        "SetNotificationPreferences"
+                    ], 
+                    "server": [
+                        "Apache-Coyote/1.1"
+                    ], 
+                    "x-ebay-api-server-name": [
+                        "___dWtgMWQ3MGYrZDRkMSgyNSgyMCs3NDsrMTc5PTY/Mg=="
+                    ], 
+                    "date": [
+                        "Tue, 31 Mar 2015 13:23:16 GMT"
+                    ], 
+                    "x-ebay-esb-guid": [
+                        "urn:uuid:33ec7266-8d85-4310-89d3-01d43a4a3c67"
+                    ], 
+                    "guid": [
+                        "14c70001-78c0-a785-c8e0-6020afbc4d15"
+                    ], 
+                    "x-ebay-api-pool-name": [
+                        "___cDRidW9pbHFvYXpsaHNv"
+                    ], 
+                    "x-ebay-esb-siteid": [
+                        "77"
+                    ]
+                }, 
+                "body": {
+                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<SetNotificationPreferencesResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-03-31T13:23:16.814Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_APINOTIFY_17400025_R1</Build></SetNotificationPreferencesResponse>"
+                }
+            }
+        }
+    ]
+}

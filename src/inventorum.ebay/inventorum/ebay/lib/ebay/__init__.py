@@ -10,6 +10,8 @@ from ebaysdk.parallel import Parallel
 
 log = logging.getLogger(__name__)
 
+EBAY_DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+
 
 class EbayException(Exception):
     pass
@@ -65,7 +67,7 @@ class Ebay(object):
 
     @token.setter
     def token(self, new_value):
-        self.api.config.set('token', new_value)
+        self.api.config.set('token', new_value, force=True)
 
     @property
     def site_id(self):
@@ -73,7 +75,7 @@ class Ebay(object):
 
     @site_id.setter
     def site_id(self, new_value):
-        self.api.config.set('siteid', new_value)
+        self.api.config.set('siteid', new_value, force=True)
 
     def execute(self, verb, data=None):
         """
