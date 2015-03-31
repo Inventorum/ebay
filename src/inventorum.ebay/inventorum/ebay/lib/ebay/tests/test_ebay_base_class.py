@@ -16,7 +16,7 @@ class TestEbayBaseClass(EbayClassTestCase):
         self.connection_mock.assert_called_once_with(
             appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
             certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
-            debug=settings.DEBUG, timeout=20,
+            debug=settings.DEBUG, timeout=20, config_file=None,
             compatibility=911, version=911, parallel=None)
 
         self.assertEqual(self.config.values['token'], None)
@@ -37,5 +37,5 @@ class TestEbayBaseClass(EbayClassTestCase):
     def test_error_handling(self):
         ebay = Ebay(None)
 
-        self.execute_mock.error.return_value = "Some errors"
+        self.instance_mock.error.return_value = "Some errors"
         self.assertRaises(EbayReturnedErrorsException, lambda: ebay.execute('Test', {}))

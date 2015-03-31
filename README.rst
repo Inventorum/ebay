@@ -39,3 +39,19 @@ To generate migrations:
 ::
 
     bin/ebay/manage src/inventorum.ebay/development.ini makemigrations <app_name>
+
+
+Known issues
+------------
+
+In case you are getting this error in test:
+
+::
+
+  TypeError: __init__() got an unexpected keyword argument 'server_hostname'
+
+You need to downgrade python to 2.7.6
+
+::
+
+  sudo port activate python27 @2.7.6

@@ -32,14 +32,7 @@ class EbayResponse(object):
     def __init__(self, response):
         self.response = response
 
-    def validate(self):
-        self.validated = True
-        if self.response.error():
-            raise EbayReturnedErrorsException(self.response.error())
-
     def dict(self):
-        if not self.validated:
-            self.validate()
         return self.response.dict()
 
 
@@ -54,11 +47,11 @@ class Ebay(object):
     api = None
     error_lang = None
 
-    def __init__(self, token, site_id=77, error_lang="en_US", parallel=None):
+    def __init__(self, token=None, site_id=77, error_lang="en_US", parallel=None):
         self.api = Connection(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
                               certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
                               debug=settings.DEBUG, timeout=self.timeout, compatibility=self.compatibility,
-                              version=self.version, parallel=parallel)
+                              version=self.version, parallel=parallel, config_file=None)
 
         self.token = token
         self.site_id = site_id
@@ -94,8 +87,10 @@ class Ebay(object):
             log.error('Got ebay error: %s', e)
             raise EbayConnectionException(e)
 
+        if self.api.error():
+            raise EbayReturnedErrorsException(self.api.error())
+
         execution = EbayResponse(response)
-        execution.validate()
 
         return execution.dict()
 
@@ -109,6 +104,8 @@ class EbayParallel(Ebay):
         if not self.parallel:
             self.parallel = Parallel()
             kwargs['parallel'] = self.parallel
+
+        self.parallel_api_constructor = lambda: Ebay(*args, **kwargs)
         super(EbayParallel, self).__init__(*args, **kwargs)
 
     def execute(self, verb, data=None):
@@ -118,12 +115,12 @@ class EbayParallel(Ebay):
         :param data: Data that will be converted to XML and send to ebay
         :return: EbayResponse Will be validated only after you call `wait()`
         """
-        response = self.api.execute(verb=verb, data=data)
+        api = self.parallel_api_constructor().api
+        api.execute(verb=verb, data=data)
 
-        obj = EbayResponse(response)
-        self.executions.append(obj)
+        self.executions.append(api)
 
-        return obj
+        return api
 
     def wait(self):
         """
@@ -131,6 +128,7 @@ class EbayParallel(Ebay):
         :return:
         """
         self.parallel.wait(self.timeout)
+        return [EbayResponse(a.response) for a in self.executions]
 
     def wait_and_validate(self):
         """
@@ -138,7 +136,9 @@ class EbayParallel(Ebay):
         Throws EbayExceptions!
         :return:
         """
-        self.wait()
-        for response in self.executions:
-            response.validate()
+        rt = self.wait()
 
+        if self.parallel.error():
+            raise EbayReturnedErrorsException(self.parallel.error())
+
+        return rt

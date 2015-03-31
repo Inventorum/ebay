@@ -23,6 +23,8 @@ class EbayClassTestCase(APITestCase):
 
         self.config = ConfigMocked()
         self.instance_mock.config = self.config
+        self.instance_mock.error.return_value = False
+        self.instance_mock.response = {}
 
         self.execute_mock = Mock()
         self.execute_mock.error.return_value = False
@@ -33,6 +35,7 @@ class EbayClassTestCase(APITestCase):
         self.patcher_parallel = patch('inventorum.ebay.lib.ebay.Parallel', spec=True)
         self.class_parallel_mock = self.patcher_parallel.start()
         self.parallel_mock = self.class_parallel_mock.return_value
+        self.parallel_mock.error.return_value = False
 
     def tearDown(self):
         self.patcher.stop()

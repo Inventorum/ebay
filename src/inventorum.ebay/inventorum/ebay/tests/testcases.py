@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+import vcr
 from django.test.testcases import TestCase
 
 from rest_framework import test
@@ -18,6 +19,11 @@ class APIClient(test.APIClient):
 
 class APITestCase(test.APITestCase):
     client_class = APIClient
+    vcr = vcr.VCR(
+        serializer='json',
+        cassette_library_dir='fixtures/cassettes',
+        record_mode='once',
+    )
 
     def setUp(self):
         super(APITestCase, self).setUp()

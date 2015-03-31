@@ -18,17 +18,14 @@ class EbayCategories(Ebay):
             yield category
 
     def get_attributes_for_categories(self, categories_ids):
-        attributes = []
 
         for category_id in categories_ids:
-            attributes.append(self.parallel_api.execute('', dict(
+            self.parallel_api.execute('', dict(
                              AllFeaturesForCategory=True,
                              ViewAllNodes=True,
                              CategoryID=category_id,
                              LevelLimit=7,
                              DetailLevel='ReturnAll'
-                         )))
+                         ))
 
-        self.parallel_api.wait_and_validate()
-
-        return [a.dict() for a in attributes]
+        return self.parallel_api.wait_and_validate()
