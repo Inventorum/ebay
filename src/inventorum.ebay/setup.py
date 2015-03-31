@@ -28,7 +28,10 @@ required_eggs = [
 
     'plac>=0.9.1',
     'requests>=2.6.0',
-    'waitress>=0.8.9'
+    'waitress>=0.8.9',
+    'django-mptt>=0.6.1',
+    'ebaysdk>=2.1.0',
+    'mock>=1.0.1'
 ]
 
 setup(

@@ -40,7 +40,8 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.accounts',
     'inventorum.ebay.apps.products',
 
-    'rest_framework'
+    'rest_framework',
+    'mptt'
 )
 
 AUTH_USER_MODEL = 'inventorum.ebay.apps.accounts.models.EbayAccountModel'
