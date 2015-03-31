@@ -32,7 +32,8 @@ required_eggs = [
     'django-mptt>=0.6.1',
     'ebaysdk>=2.1.0',
     'grequests>=0.2.0',
-    'mock>=1.0.1'
+    'mock>=1.0.1',
+    'vcrpy>=1.3.0'
 ]
 
 setup(
