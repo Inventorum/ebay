@@ -37,15 +37,15 @@ def _db_provision(db_name, with_drop):
         log.info("Running in sandbox mode")
 
         def psql(psql_cmd):
-            return """echo "{cmd}" | {sandbox_exec_path}/psql -h {host} -d postgres"""\
-                .format(cmd=psql_cmd, sandbox_exec_path=sandbox_exec_path, host=db_host)
+            return """echo "{psql_cmd}" | {sandbox_exec_path}/psql -h {db_host} -d postgres"""\
+                .format(psql_cmd=psql_cmd, sandbox_exec_path=sandbox_exec_path, db_host=db_host)
 
-        create_user = psql("CREATE USER {username} WITH PASSWORD '{password}' CREATEDB;".format(username=db_user,
-                                                                                                password=db_pass))
+        create_user = psql("CREATE USER {db_user} WITH PASSWORD '{db_pass}' CREATEDB;".format(db_user=db_user,
+                                                                                              db_pass=db_pass))
 
-        create_db = psql("CREATE DATABASE {db_name} OWNER {owner} "
+        create_db = psql("CREATE DATABASE {db_name} OWNER {db_user} "
                          "ENCODING 'UTF8' LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';".format(db_name=db_name,
-                                                                                                   owner=db_user))
+                                                                                                   db_user=db_user))
     else:
         log.info("Running in system mode")
 
@@ -53,18 +53,18 @@ def _db_provision(db_name, with_drop):
             return "su - postgres -c {shell_cmd}"\
                 .format(shell_cmd=quote("""echo "{psql_cmd}" | psql -d postgres""".format(psql_cmd=psql_cmd)))
 
-        create_user = psql("CREATE ROLE {username} ENCRYPTED PASSWORD '{password}' "
-                           "NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;".format(username=db_user,
-                                                                                       password=db_pass))
+        create_user = psql("CREATE ROLE {db_user} ENCRYPTED PASSWORD '{db_pass}' "
+                           "NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;".format(db_user=db_user,
+                                                                                       db_pass=db_pass))
 
         create_db = psql("CREATE DATABASE {db_name};"
-                         "GRANT ALL PRIVILEGES ON DATABASE {db_name} to {username};".format(db_name=db_name,
-                                                                                            db_user=db_user))
+                         "GRANT ALL PRIVILEGES ON DATABASE {db_name} to {db_user};".format(db_name=db_name,
+                                                                                           db_user=db_user))
 
     drop_db = psql("DROP DATABASE {db_name}".format(db_name=db_name))
 
     # check if database user already exists
-    stdout = execute(" ".join([psql("\du"), "|", "grep {username}".format(username=db_user), "|", "wc -l"]))
+    stdout = execute(" ".join([psql("\du"), "|", "grep {db_user}".format(db_user=db_user), "|", "wc -l"]))
     if stdout.strip() == "0":
         log.info("Creating database user '%s'...", db_user)
         execute(create_user)
