@@ -31,6 +31,7 @@ required_eggs = [
     'waitress>=0.8.9',
     'django-mptt>=0.6.1',
     'ebaysdk>=2.1.0',
+    'grequests>=0.2.0',
     'mock>=1.0.1'
 ]
 
