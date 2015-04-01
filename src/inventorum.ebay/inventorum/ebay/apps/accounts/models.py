@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 class EbayAccountModel(MappedInventorumModel):
     """ Represents an inventorum account in the ebay context """
-    ebay_token = models.ForeignKey("auth.EbayToken", null=True, blank=True, related_name="accounts", verbose_name="Ebay token")
+    ebay_token = models.ForeignKey("auth.EbayTokenModel", null=True, blank=True, related_name="accounts", verbose_name="Ebay token")
 
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):

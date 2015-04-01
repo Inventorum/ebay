@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0001_initial'),
+        ('auth', '__first__'),
         ('accounts', '0001_initial'),
     ]
 
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='ebayaccountmodel',
             name='ebay_token',
-            field=models.ForeignKey(related_name='accounts', verbose_name='Ebay token', blank=True, to='auth.EbayToken', null=True),
+            field=models.ForeignKey(related_name='accounts', verbose_name='Ebay token', blank=True, to='auth.EbayTokenModel', null=True),
             preserve_default=True,
         ),
     ]

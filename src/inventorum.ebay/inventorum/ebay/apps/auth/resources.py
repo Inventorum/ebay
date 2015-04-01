@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.db.transaction import atomic
-from inventorum.ebay.apps.auth.models import EbayToken
+from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.apps.auth.serializers import AuthorizeEbayParametersSerializer
 from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
 from inventorum.ebay.lib.rest.resources import UnauthorizedEbayAPIResource
@@ -29,7 +29,7 @@ class AuthorizeEbayResource(UnauthorizedEbayAPIResource):
         auth = EbayAuthentication()
         token = auth.fetch_token(session_id)
 
-        db_token = EbayToken.create_from_ebay_token(token)
+        db_token = EbayTokenModel.create_from_ebay_token(token)
 
         account = request.user.account
         account.ebay_token = db_token

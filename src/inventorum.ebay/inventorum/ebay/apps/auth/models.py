@@ -5,7 +5,7 @@ from django_extensions.db.fields.encrypted import EncryptedTextField
 from inventorum.ebay.lib.db.models import BaseModel
 
 
-class EbayToken(BaseModel):
+class EbayTokenModel(BaseModel):
     value = EncryptedTextField()
     expiration_date = DateTimeField()
 

@@ -28,6 +28,12 @@ To run all tests:
 Working with the database
 -------------------------
 
+To reset database:
+
+::
+
+  bin/db_provision src/inventorum.ebay/development.ini inventorum_ebay_develop -D
+
 To apply migrations:
 
 ::
