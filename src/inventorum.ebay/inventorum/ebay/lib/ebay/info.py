@@ -52,7 +52,10 @@ class EbayInfo(Ebay):
         """
         Get user data, if `user_id` is not specified, get currently authenticated one
         :param user_id: Id of user from ebay
-        :return: EbayUser Dict of user data
+        :return: Dict of user data
+
+        :type user_id: None | str | unicode
+        :rtype: EbayUser
         """
         data = {'DetailLevel': 'ReturnAll'}
         if user_id is not None:

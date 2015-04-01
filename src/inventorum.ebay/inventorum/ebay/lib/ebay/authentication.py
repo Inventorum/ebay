@@ -33,7 +33,10 @@ class EbayAuthentication(Ebay):
         Creates ebay auth token using session_id (had to be already validated in frontend)
         Also updates settings for Ebay Notifications Platform
         :param session_id: Session id that was validated in frontend
-        :return: EbayToken
+        :return: Ebay token
+
+        :type session_id: str | unicode
+        :rtype: EbayToken
         """
         response = self.execute('FetchToken', {'SessionID': session_id})
 

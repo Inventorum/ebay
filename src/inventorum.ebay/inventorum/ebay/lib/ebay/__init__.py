@@ -85,7 +85,11 @@ class Ebay(object):
         """
         :param verb: Type of a API request
         :param data: Data that will be converted to XML and send to ebay
-        :return: dict Response from ebay
+        :return: Response from ebay
+
+        :type verb: str | unicode
+        :type data: dict
+        :rtype: dict
         """
         try:
             response = self.api.execute(verb=verb, data=data)
@@ -105,7 +109,10 @@ class Ebay(object):
         """
         Parse given ebay date as string to datetime
         :param str_date: Comming from ebay
-        :return: datetime Parsed date
+        :return: Parsed date
+
+        :type str_date: str | unicode
+        :rtype: datetime
         """
         return datetime.strptime(str_date, cls.DATE_FORMAT)
 
@@ -128,7 +135,11 @@ class EbayParallel(Ebay):
         Add to stack call to ebay api, to execute, you need to call `wait()`
         :param verb: Type of a API request
         :param data: Data that will be converted to XML and send to ebay
-        :return: EbayResponse Will be validated only after you call `wait()`
+        :return: Will be validated only after you call `wait()`
+
+        :type verb: str | unicode
+        :type data: dict
+        :rtype: Connection
         """
         api = self.parallel_api_constructor().api
         api.execute(verb=verb, data=data)
@@ -140,7 +151,8 @@ class EbayParallel(Ebay):
     def wait(self):
         """
         Executes all requests to ebay api at once.
-        :return:
+        :return: List of EbayResponses
+        :rtype: [EbayResponse]
         """
         self.parallel.wait(self.timeout)
         return [EbayResponse(a.response) for a in self.executions]
@@ -149,7 +161,8 @@ class EbayParallel(Ebay):
         """
         Executes all requests to ebay api at once and validates results.
         Throws EbayExceptions!
-        :return:
+        :return: List of EbayResponses
+        :rtype: [EbayResponse]
         """
         rt = self.wait()
 
