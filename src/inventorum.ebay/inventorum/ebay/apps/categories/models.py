@@ -22,7 +22,7 @@ class CategoryModel(MPTTModel):
     country = CountryField()
     name = CharField(max_length=255)
     external_id = CharField(max_length=255)  # Ebay documentation says it is string
-    external_parent_id = CharField(max_length=255)  # Ebay documentation says it is string
+    external_parent_id = CharField(max_length=255, null=True, blank=True)  # Ebay documentation says it is string
     b2b_vat_enabled = BooleanField(default=False)
     best_offer_enabled = BooleanField(default=False)
     auto_pay_enabled = BooleanField(default=False)
