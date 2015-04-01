@@ -35,4 +35,5 @@ fi
 # can be, that we need some static files from out of the source directory
 bin/ebay/manage src/inventorum.ebay/test.ini collectstatic --noinput
 
+bin/ebay/manage src/inventorum.ebay/test.ini test --noinput src/inventorum.ebay/inventorum/ebay/lib
 bin/ebay/manage src/inventorum.ebay/test.ini test --noinput src/inventorum.ebay/inventorum/ebay/apps
