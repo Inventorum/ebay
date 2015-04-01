@@ -32,7 +32,7 @@ class AuthorizeEbayResource(UnauthorizedEbayAPIResource):
         db_token = EbayTokenModel.create_from_ebay_token(token)
 
         account = request.user.account
-        account.ebay_token = db_token
+        account.token = db_token
         account.save()
 
         return Response()

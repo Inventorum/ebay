@@ -21,11 +21,11 @@ class EbayCategories(Ebay):
 
         for category_id in categories_ids:
             self.parallel_api.execute('', dict(
-                             AllFeaturesForCategory=True,
-                             ViewAllNodes=True,
-                             CategoryID=category_id,
-                             LevelLimit=7,
-                             DetailLevel='ReturnAll'
-                         ))
+                AllFeaturesForCategory=True,
+                ViewAllNodes=True,
+                CategoryID=category_id,
+                LevelLimit=7,
+                DetailLevel='ReturnAll'
+            ))
 
         return self.parallel_api.wait_and_validate()

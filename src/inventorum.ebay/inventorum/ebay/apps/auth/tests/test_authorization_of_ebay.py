@@ -34,7 +34,7 @@ class EbayAuthorizationTest(APITestCase):
         self.assertEqual(response.status_code, 200)
 
         account = EbayAccountModel.objects.get(pk=self.account.pk)
-        ebay_token = account.ebay_token
+        ebay_token = account.token
 
         self.assertTrue(ebay_token)
         self.assertEqual(ebay_token.value,
