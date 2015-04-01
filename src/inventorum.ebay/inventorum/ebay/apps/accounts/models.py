@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from django.db.models.fields import CharField
+from django.db.models.fields import CharField, EmailField, BooleanField, DateTimeField
 from django.db.models.fields.related import ForeignKey
 from django_countries.fields import CountryField
 
@@ -41,6 +41,13 @@ class EbayAccountModel(MappedInventorumModel):
                        verbose_name="Ebay token")
     registration_address = ForeignKey(AddressModel, null=True, blank=True, related_name="accounts",
                                       verbose_name="Registration address")
+    email = EmailField(null=True, blank=True)
+    id_verified = BooleanField(default=False)
+    store_owner = BooleanField(default=False)
+    qualifies_for_b2b_vat = BooleanField(default=False)
+    status = CharField(max_length=255, null=True, blank=True)
+    user_id = CharField(max_length=255, null=True, blank=True)
+    registration_date = DateTimeField(null=True, blank=True)
 
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):

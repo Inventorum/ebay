@@ -45,8 +45,8 @@
                     "x-ebay-esb-app-name": [
                         "Inventor-9021-41d8-9c25-9bae93f76429"
                     ], 
-                    "content-type": [
-                        "text/xml"
+                    "x-ebay-api-pool-name": [
+                        "___cDRidW90amJobm1saHNv"
                     ], 
                     "x-ebay-esb-call-name": [
                         "FetchToken"
@@ -66,8 +66,8 @@
                     "guid": [
                         "14c70001-66e0-a785-f856-8846db6dde22"
                     ], 
-                    "x-ebay-api-pool-name": [
-                        "___cDRidW90amJobm1saHNv"
+                    "content-type": [
+                        "text/xml"
                     ], 
                     "x-ebay-esb-siteid": [
                         "77"
@@ -122,8 +122,8 @@
                     "x-ebay-esb-app-name": [
                         "Inventor-9021-41d8-9c25-9bae93f76429"
                     ], 
-                    "content-type": [
-                        "text/xml"
+                    "x-ebay-api-pool-name": [
+                        "___cDRidW9pbHFvYXpsaHNv"
                     ], 
                     "x-ebay-esb-call-name": [
                         "SetNotificationPreferences"
@@ -143,8 +143,8 @@
                     "guid": [
                         "14c70001-78c0-a785-c8e0-6020afbc4d15"
                     ], 
-                    "x-ebay-api-pool-name": [
-                        "___cDRidW9pbHFvYXpsaHNv"
+                    "content-type": [
+                        "text/xml"
                     ], 
                     "x-ebay-esb-siteid": [
                         "77"
@@ -152,6 +152,83 @@
                 }, 
                 "body": {
                     "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<SetNotificationPreferencesResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-03-31T13:23:16.814Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_APINOTIFY_17400025_R1</Build></SetNotificationPreferencesResponse>"
+                }
+            }
+        }, 
+        {
+            "request": {
+                "body": "<?xml version='1.0' encoding='utf-8'?><GetUserRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><DetailLevel>ReturnAll</DetailLevel></GetUserRequest>", 
+                "headers": {
+                    "X-EBAY-API-SITEID": [
+                        77
+                    ], 
+                    "Content-Length": [
+                        "1095"
+                    ], 
+                    "X-EBAY-API-COMPATIBILITY-LEVEL": [
+                        911
+                    ], 
+                    "User-Agent": [
+                        "eBaySDK/2.1.0 Python/2.7.6 Darwin/14.1.0"
+                    ], 
+                    "X-EBAY-SDK-REQUEST-ID": [
+                        "aea0e5a2-abc7-4492-a720-f0d25d1351d3"
+                    ], 
+                    "X-EBAY-API-CALL-NAME": [
+                        "GetUser"
+                    ], 
+                    "Content-Type": [
+                        "text/xml"
+                    ]
+                }, 
+                "method": "POST", 
+                "uri": "https://api.ebay.com/ws/api.dll"
+            }, 
+            "response": {
+                "status": {
+                    "message": "OK", 
+                    "code": 200
+                }, 
+                "headers": {
+                    "x-ebay-request-id": [
+                        "14c74390-f430-a620-7646-1816dd9cc14f!ws.api.dll!10.98.7.100!esbtrading[]"
+                    ], 
+                    "content-length": [
+                        "2380"
+                    ], 
+                    "x-ebay-esb-app-name": [
+                        "Inventor-9021-41d8-9c25-9bae93f76429"
+                    ], 
+                    "content-type": [
+                        "text/xml"
+                    ], 
+                    "x-ebay-esb-call-name": [
+                        "GetUser"
+                    ], 
+                    "server": [
+                        "Apache-Coyote/1.1"
+                    ], 
+                    "x-ebay-api-server-name": [
+                        "___dm97MmQ3MmYrZGcxZCgyNSg/Nys3PjQrNzQ6Pz43OzQ="
+                    ], 
+                    "date": [
+                        "Wed, 01 Apr 2015 09:03:58 GMT"
+                    ], 
+                    "x-ebay-esb-guid": [
+                        "urn:uuid:baa56611-d997-435b-8929-238c6f960235"
+                    ], 
+                    "guid": [
+                        "14c74390-f430-a620-7646-1816dd9cc14f"
+                    ], 
+                    "x-ebay-api-pool-name": [
+                        "___cDRidW90amJobm1saHNv"
+                    ], 
+                    "x-ebay-esb-siteid": [
+                        "77"
+                    ]
+                }, 
+                "body": {
+                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetUserResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-01T09:03:58.802Z</Timestamp><Ack>Success</Ack><Version>915</Version><Build>E915_INTL_APISIGNIN_17436956_R1</Build><User><AboutMePage>false</AboutMePage><EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ==</EIASToken><Email>tech+ebay@inventorum.com</Email><FeedbackScore>0</FeedbackScore><UniqueNegativeFeedbackCount>0</UniqueNegativeFeedbackCount><UniquePositiveFeedbackCount>0</UniquePositiveFeedbackCount><PositiveFeedbackPercent>0.0</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>true</NewUser><RegistrationAddress><Name>John Newman</Name><Street></Street><Street1></Street1><CityName>default</CityName><Country>DE</Country><CountryName>Deutschland</CountryName><PostalCode>default</PostalCode></RegistrationAddress><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATTax</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>false</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><SellerGuaranteeLevel>NotEligible</SellerGuaranteeLevel><SellerPaymentAddress/><SchedulingInfo><MaxScheduledMinutes>30240</MaxScheduledMinutes><MinScheduledMinutes>0</MinScheduledMinutes><MaxScheduledItems>3000</MaxScheduledItems></SchedulingInfo><StoreOwner>false</StoreOwner><SellerBusinessType>Private</SellerBusinessType><PaymentMethod>NothingOnFile</PaymentMethod><CharityRegistered>false</CharityRegistered><SafePaymentExempt>false</SafePaymentExempt><TransactionPercent>0.0</TransactionPercent><RecoupmentPolicyConsent/><DomesticRateTable>false</DomesticRateTable><InternationalRateTable>false</InternationalRateTable></SellerInfo><BusinessRole>Shopper</BusinessRole><eBayWikiReadOnly>false</eBayWikiReadOnly><MotorsDealer>false</MotorsDealer><UniqueNeutralFeedbackCount>0</UniqueNeutralFeedbackCount><EnterpriseSeller>false</EnterpriseSeller></User></GetUserResponse>"
                 }
             }
         }

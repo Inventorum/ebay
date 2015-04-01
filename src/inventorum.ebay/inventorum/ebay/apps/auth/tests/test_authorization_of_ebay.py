@@ -2,6 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
+import pytz
+from django.utils.datetime_safe import datetime
 
 from inventorum.ebay.apps.accounts.models import EbayAccountModel
 from inventorum.ebay.tests.testcases import APITestCase
@@ -49,3 +51,19 @@ class EbayAuthorizationTest(APITestCase):
                          'qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFR'
                          'oxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZ'
                          'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/')
+
+        self.assertEqual(account.email, "tech+ebay@inventorum.com")
+        self.assertEqual(account.id_verified, False)
+        self.assertEqual(account.status, 'Confirmed')
+        self.assertEqual(account.user_id, 'newmade')
+        self.assertEqual(account.qualifies_for_b2b_vat, False)
+        self.assertEqual(account.store_owner, False)
+        self.assertEqual(account.registration_date, datetime(2015, 3, 31, 6, 57, 26, tzinfo=pytz.UTC))
+
+        address = account.registration_address
+        self.assertEqual(address.name, "John Newman")
+        self.assertEqual(address.street, None)
+        self.assertEqual(address.street1, None)
+        self.assertEqual(address.city, 'default')
+        self.assertEqual(address.country, 'DE')
+        self.assertEqual(address.postal_code, 'default')
