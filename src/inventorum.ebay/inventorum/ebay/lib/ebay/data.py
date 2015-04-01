@@ -89,6 +89,7 @@ class EbayCategoryMappingFields(object):
         'CategoryID': ('category_id', None),
         'Virtual': ('virtual', EbayParser.parse_bool),
         'Expired': ('expired', EbayParser.parse_bool),
+        'LeafCategory': ('leaf', EbayParser.parse_bool),
         'B2BVATEnabled': ('b2b_vat_enabled', EbayParser.parse_bool),
         # If true, the category supports business-to-business (B2B) VAT listings. Applicable to the eBay Germany (DE),
         # Austria (AT), and Switzerland CH) sites only. If not present, the category does not support this feature.
@@ -112,6 +113,7 @@ class EbayCategory(object):
     b2b_vat_enabled = False
     best_offer_enabled = False
     auto_pay_enabled = False
+    leaf = False
     item_lot_size_disabled = False
     # Indicators for categories where you cannot publish anymore
     virtual = False
@@ -135,8 +137,5 @@ class EbayCategory(object):
         if category.parent_id == category.category_id:
             # If it is level=1 category then parent_id == category_id
             category.parent_id = None
-        category.virtual = bool(category.virtual)
-        category.expired = bool(category.expired)
-        category.b2b_vat_enabled = bool(category.b2b_vat_enabled)
         return category
 

@@ -25,6 +25,13 @@ class AddressModel(BaseModel):
 
     @classmethod
     def create_from_ebay_address(cls, ebay_address):
+        """
+
+        :param ebay_address:
+        :return:
+
+        :type ebay_address: inventorum.ebay.lib.ebay.data.EbayUserAddress
+        """
         return cls.objects.create(
             name=ebay_address.name,
             street=ebay_address.street,

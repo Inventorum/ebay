@@ -16,6 +16,10 @@ class EbayException(Exception):
     pass
 
 
+class EbayNotSupportedSite(Exception):
+    pass
+
+
 class EbayConnectionException(EbayException):
     pass
 
@@ -50,6 +54,9 @@ class Ebay(object):
     _token = None
 
     def __init__(self, token=None, site_id=77, error_lang="en_US", parallel=None):
+        if site_id not in settings.EBAY_SUPPORTED_SITES.values():
+            raise EbayNotSupportedSite()
+
         self.api = Connection(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
                               certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
                               debug=settings.DEBUG, timeout=self.timeout, compatibility=self.compatibility,

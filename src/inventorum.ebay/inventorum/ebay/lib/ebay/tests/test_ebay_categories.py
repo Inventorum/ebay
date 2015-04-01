@@ -44,6 +44,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(first_category.virtual, False)
         self.assertEqual(first_category.expired, False)
         self.assertEqual(first_category.b2b_vat_enabled, False)
+        self.assertEqual(first_category.leaf, False)
         self.assertEqual(first_category.best_offer_enabled, True)
         self.assertEqual(first_category.auto_pay_enabled, True)
         self.assertEqual(first_category.item_lot_size_disabled, False)

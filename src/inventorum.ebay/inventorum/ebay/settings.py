@@ -39,6 +39,7 @@ INSTALLED_APPS = (
 
     'inventorum.ebay.apps.accounts',
     'inventorum.ebay.apps.auth',
+    'inventorum.ebay.apps.categories',
     'inventorum.ebay.apps.products',
 
     'rest_framework',
@@ -147,3 +148,14 @@ AVAILABLE_LANGUAGES = [l[0] for l in LANGUAGES]
 
 AUTHENTICATION_BACKENDS = (
 )
+
+
+# ==============================================================================
+# Ebay
+# ==============================================================================
+
+# https://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/SiteCodeType.html
+EBAY_SUPPORTED_SITES = {
+    "DE": 77,  # Currency EUR
+    "AT": 16  # Currency EUR
+}
