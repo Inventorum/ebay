@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import Ebay
 from django.conf import settings
-from inventorum.ebay.lib.ebay.data import EbayToken
+from inventorum.ebay.lib.ebay.data import EbayToken, EbayParser
 
 
 class EbayAuthentication(Ebay):
@@ -28,7 +28,7 @@ class EbayAuthentication(Ebay):
         """
         response = self.execute('FetchToken', {'SessionID': session_id})
 
-        parsed_expiration_time = self.parse_date(response['HardExpirationTime'])
+        parsed_expiration_time = EbayParser.parse_date(response['HardExpirationTime'])
         token = EbayToken(response['eBayAuthToken'], parsed_expiration_time)
 
         self.token = token

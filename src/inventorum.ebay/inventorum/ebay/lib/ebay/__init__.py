@@ -49,8 +49,6 @@ class Ebay(object):
     error_lang = None
     _token = None
 
-    DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
-
     def __init__(self, token=None, site_id=77, error_lang="en_US", parallel=None):
         self.api = Connection(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
                               certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
@@ -103,18 +101,6 @@ class Ebay(object):
         execution = EbayResponse(response)
 
         return execution.dict()
-
-    @classmethod
-    def parse_date(cls, str_date):
-        """
-        Parse given ebay date as string to datetime
-        :param str_date: Comming from ebay
-        :return: Parsed date
-
-        :type str_date: str | unicode
-        :rtype: datetime
-        """
-        return datetime.strptime(str_date, cls.DATE_FORMAT)
 
 
 class EbayParallel(Ebay):
