@@ -38,9 +38,12 @@ INSTALLED_APPS = (
     'kombu.transport.django',
 
     'inventorum.ebay.apps.accounts',
+    'inventorum.ebay.apps.auth',
+    'inventorum.ebay.apps.categories',
     'inventorum.ebay.apps.products',
 
-    'rest_framework'
+    'rest_framework',
+    'mptt'
 )
 
 AUTH_USER_MODEL = 'inventorum.ebay.apps.accounts.models.EbayAccountModel'
@@ -99,6 +102,8 @@ logger.setLevel(logging.WARN)
 
 PROJECT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 BUILDOUT_ROOT = os.path.join(PROJECT_DIR, '..', '..', '..')
+CASSETTES_DIR = os.path.join(PROJECT_DIR, 'fixtures', 'cassettes')
+ENCRYPTED_FIELD_KEYS_DIR = os.path.join(PROJECT_DIR, 'fieldkeys')
 
 # ==============================================================================
 # Project URLS and media settings
@@ -143,3 +148,14 @@ AVAILABLE_LANGUAGES = [l[0] for l in LANGUAGES]
 
 AUTHENTICATION_BACKENDS = (
 )
+
+
+# ==============================================================================
+# Ebay
+# ==============================================================================
+
+# https://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/SiteCodeType.html
+EBAY_SUPPORTED_SITES = {
+    "DE": 77,  # Currency EUR
+    "AT": 16  # Currency EUR
+}

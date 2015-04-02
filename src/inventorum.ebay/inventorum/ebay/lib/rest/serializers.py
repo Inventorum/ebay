@@ -21,7 +21,8 @@ class POPOSerializer(serializers.Serializer):
 
         ModelClass = self.Meta.model
 
-        for name, field in self.fields.iteritems():
+        for original_name, field in self.fields.iteritems():
+            name = field.source
             if name in validated_data:
                 if isinstance(field, POPOSerializer) and name in validated_data:
                     # Note: We call create directly since the data has already been validated
