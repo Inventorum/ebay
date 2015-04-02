@@ -3,6 +3,7 @@
 """Base settings shared by all environments"""
 import os
 import logging
+from datetime import datetime
 
 here = os.path.abspath(os.path.dirname(__file__))
 VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()
@@ -77,7 +78,7 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     # TODO jm: check compatibility with new rest framework version
     # 'DEFAULT_THROTTLE_RATES': {
-    #   'default': '20/sec', # Default one for everything
+    # 'default': '20/sec', # Default one for everything
     # },
 }
 
@@ -139,7 +140,6 @@ LANGUAGES = (('de', _('German'),),
 
 LOCALE_PATHS = (os.path.join(PROJECT_DIR, 'ebay', 'conf', 'locale'), )
 
-
 AVAILABLE_LANGUAGES = [l[0] for l in LANGUAGES]
 
 # ==============================================================================
@@ -159,3 +159,17 @@ EBAY_SUPPORTED_SITES = {
     "DE": 77,  # Currency EUR
     "AT": 16  # Currency EUR
 }
+
+EBAY_LIVE_TOKEN = 'AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x' \
+                  '9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89c' \
+                  'LIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYA' \
+                  'b183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2' \
+                  'KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fz' \
+                  'BsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XT' \
+                  'sApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5' \
+                  'O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3' \
+                  'qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFR' \
+                  'oxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZ' \
+                  'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/'
+
+EBAY_LIVE_TOKEN_EXPIRATION_DATE = datetime(2016, 9, 21, 13, 18, 38)
