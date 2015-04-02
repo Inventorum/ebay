@@ -2,17 +2,18 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
-from django.utils.datetime_safe import datetime
-from inventorum.ebay.apps.auth.models import EbayTokenModel
-from inventorum.ebay.lib.ebay.authentication import EbayToken
 import vcr
 
+from django.utils.datetime_safe import datetime
 from django.conf import settings
 from django.test.testcases import TestCase
 from rest_framework import test
 
+from inventorum.ebay.tests import StagingTestAccount
+from inventorum.ebay.apps.auth.models import EbayTokenModel
+from inventorum.ebay.lib.ebay.authentication import EbayToken
 from inventorum.ebay.lib.auth.backends import TrustedHeaderAuthentication
-from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
+from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory, EbayAccountFactory
 
 
 log = logging.getLogger(__name__)
@@ -34,8 +35,8 @@ class APITestCase(test.APITestCase):
     def setUp(self):
         super(APITestCase, self).setUp()
 
-        self.user = EbayUserFactory.create()
-        self.account = self.user.account
+        self.account = EbayAccountFactory(inv_id=StagingTestAccount.ACCOUNT_ID)
+        self.user = EbayUserFactory(inv_id=StagingTestAccount.USER_ID, account=self.account)
 
         self.authenticate(self.user)
 
