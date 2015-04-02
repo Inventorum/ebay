@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.apps.categories.models import CategoryModel
-from inventorum.ebay.apps.categories.services import EbayCategoriesScrapper
+from inventorum.ebay.apps.categories.services import EbayCategoriesScraper
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
@@ -17,7 +17,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         )
 
         # First root node of ebay has 2012 children
-        service = EbayCategoriesScrapper(self.ebay_token, limit_root_nodes=1, limit_nodes_level=2)
+        service = EbayCategoriesScraper(self.ebay_token, limit_root_nodes=1, limit_nodes_level=2)
         service.fetch_all()
 
         categories = CategoryModel.objects.all()

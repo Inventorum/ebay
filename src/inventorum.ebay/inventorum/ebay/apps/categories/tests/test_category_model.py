@@ -5,7 +5,11 @@ from inventorum.ebay.tests.testcases import APITestCase
 
 
 class TestCategoryModel(APITestCase):
-    def test_it(self):
+    def test_if_tree_manager_works_with_our_validity_query_set(self):
+        """
+        Make sure TreeManager works with validity queryset correctly.
+        :return:
+        """
         category = CategoryModel.objects.create(
             name="Test",
             external_id="123",

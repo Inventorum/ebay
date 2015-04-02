@@ -9,7 +9,7 @@ from django.conf import settings
 log = logging.getLogger(__name__)
 
 
-class EbayCategoriesScrapper(object):
+class EbayCategoriesScraper(object):
     limit_root_nodes = None
     count_root_nodes_by_country = {}
 
@@ -17,7 +17,7 @@ class EbayCategoriesScrapper(object):
 
     def __init__(self, ebay_token, limit_root_nodes=None, limit_nodes_level=None):
         """
-        Scrapping categories from ebay and saving them to database
+        Scraping categories from ebay and saving them to database
         :param ebay_token: Ebay token
         :param limit_root_nodes: Limit of how many root nodes we should scrap
         :return:

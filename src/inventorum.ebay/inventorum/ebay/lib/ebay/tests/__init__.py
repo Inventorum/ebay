@@ -1,5 +1,5 @@
 from ebaysdk.trading import Connection
-from inventorum.ebay.tests.testcases import APITestCase
+from inventorum.ebay.tests.testcases import UnitTestCase
 from mock import patch, Mock
 
 
@@ -13,7 +13,7 @@ class ConfigMocked(object):
         return self.values.get(key, None)
 
 
-class EbayClassTestCase(APITestCase):
+class EbayClassTestCase(UnitTestCase):
     def setUp(self):
         super(EbayClassTestCase, self).setUp()
         self.connection_original = Connection

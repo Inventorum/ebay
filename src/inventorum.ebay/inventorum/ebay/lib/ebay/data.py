@@ -20,10 +20,6 @@ class EbayParser(object):
         """
         return datetime.strptime(str_date, cls.DATE_FORMAT)
 
-    @classmethod
-    def parse_bool(cls, str_bool):
-        return str_bool == "true"
-
 
 class EbayUserAddress(object):
     name = None
