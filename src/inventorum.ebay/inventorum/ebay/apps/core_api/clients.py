@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.core_api.models import CoreProductSerializer
+from inventorum.ebay.apps.core_api.models import CoreProductDeserializer
 import requests
 
 from django.conf import settings
@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 
 
 class CoreAPIClient(object):
+    API_VERSION = 9
 
     @property
     def default_headers(self):
@@ -20,7 +21,8 @@ class CoreAPIClient(object):
         return {
             "User-Agent": "inv-ebay/{version}".format(version=settings.VERSION),
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "X-Api-Version": self.API_VERSION
         }
 
     @classmethod
@@ -111,5 +113,5 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         """
         response = self.get("/api/products/{product_id}".format(product_id=product_id))
         json = response.json()
-        serializer = CoreProductSerializer(data=json)
+        serializer = CoreProductDeserializer(data=json)
         return serializer.build()

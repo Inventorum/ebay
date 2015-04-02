@@ -24,7 +24,8 @@ class TestCoreAPIClient(UnitTestCase):
         self.assertEqual(self.subject.default_headers, {
             "User-Agent": "inv-ebay/{version}".format(version=expected_version),
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "X-Api-Version": 9
         })
 
     def test_url_for(self):

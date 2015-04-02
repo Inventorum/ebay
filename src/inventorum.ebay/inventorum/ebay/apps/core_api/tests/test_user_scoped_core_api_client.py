@@ -34,6 +34,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
             "User-Agent": "inv-ebay/{version}".format(version=expected_version),
             "Content-Type": "application/json",
             "Accept": "application/json",
+            "X-Api-Version": 9,
             "X-Inv-User": unicode(self.user_id),
             "X-Inv-Account": unicode(self.account_id)
         })
@@ -46,7 +47,14 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(core_product.name, "XtC Advanced 2 LTD")
         self.assertEqual(core_product.description, "GIANT XtC 27.5\" Advanced Carbon")
         self.assertEqual(core_product.gross_price, D("1999.99"))
-        self.assertEqual(core_product.stock, D("1000"))
+        self.assertEqual(core_product.quantity, D("1000"))
+
+        self.assertEqual(len(core_product.images), 1)
+        image = core_product.images[0]
+        self.assertEqual(image.id, 2914)
+        self.assertTrue(image.url.endswith(
+            "/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG"))
+
 
     @CoreApiTest.vcr.use_cassette("get_product_with_ebay_meta.json")
     def test_get_product_with_ebay_meta(self):
@@ -59,4 +67,17 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(core_product.description, "eBay: GIANT FastRoad CoMax Carbon")
         # non-channeled gross price: 1999.99
         self.assertEqual(core_product.gross_price, D("1599.99"))
-        self.assertEqual(core_product.stock, D("1000"))
+        self.assertEqual(core_product.quantity, D("1000"))
+
+        # non-channeled product has only one image
+        self.assertEqual(len(core_product.images), 2)
+
+        image_1 = core_product.images[0]
+        self.assertEqual(image_1.id, 2915)
+        self.assertTrue(image_1.url.endswith(
+            "/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad_retina.JPEG"))
+
+        image_2 = core_product.images[1]
+        self.assertEqual(image_2.id, 2916)
+        self.assertTrue(image_2.url.endswith(
+            "/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad_retina.JPEG"))

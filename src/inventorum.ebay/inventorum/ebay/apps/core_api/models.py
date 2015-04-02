@@ -11,33 +11,66 @@ log = logging.getLogger(__name__)
 
 
 class CoreProduct(object):
-
-    def __init__(self, id, name, description, gross_price, stock):
+    """ Represents a core product from the inventorum api """
+    def __init__(self, id, name, description, gross_price, quantity, images):
+        """
+        :type id: int
+        :type name: unicode
+        :type description: unicode
+        :type gross_price: decimal.Decimal
+        :type quantity: decimal.Decimal
+        :type images: list of CoreProductImage
+        """
         self.id = id
         self.name = name
         self.description = description
         self.gross_price = gross_price
-        self.stock = stock
+        self.quantity = quantity
+        self.images = images
 
 
-class CoreProductSerializer(POPOSerializer):
-    EBAY_META = "ebay"
+class CoreProductImage(object):
+    """ Represents a product image embedded in a core product"""
+    def __init__(self, id, url):
+        """
+        :type id: int
+        :type url: unicode
+        """
+        self.id = id
+        self.url = url
 
-    class CoreProductMetaSerializer(serializers.Serializer):
-        name = serializers.CharField(allow_blank=True)
-        description = serializers.CharField(allow_blank=True)
-        gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+class CoreProductImageDeserializer(POPOSerializer):
+
+        class Meta:
+            model = CoreProductImage
+
+        id = serializers.IntegerField()
+        ipad_retina = serializers.CharField(source="url")
+
+
+class CoreProductDeserializer(POPOSerializer):
 
     class Meta:
         model = CoreProduct
 
-    id = serializers.IntegerField(required=True)
+    class MetaDeserializer(serializers.Serializer):
+        """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
+        name = serializers.CharField(allow_blank=True)
+        description = serializers.CharField(allow_blank=True)
+        gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+        images = CoreProductImageDeserializer(many=True)
+
+    id = serializers.IntegerField()
     name = serializers.CharField()
     description = serializers.CharField(allow_blank=True)
     gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
-    stock = serializers.DecimalField(max_digits=10, decimal_places=2)
+    quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
-    meta = serializers.DictField(child=CoreProductMetaSerializer())
+    images = CoreProductImageDeserializer(many=True)
+
+    meta = serializers.DictField(child=MetaDeserializer())
 
     def create(self, validated_data):
         if "meta" in validated_data:
@@ -45,14 +78,15 @@ class CoreProductSerializer(POPOSerializer):
                 ebay_meta = validated_data["meta"]["ebay"]
 
                 def overwrite_from_meta(attr):
-                    if ebay_meta[attr] and ebay_meta[attr] != validated_data[attr]:
+                    if attr in ebay_meta:
                         validated_data[attr] = ebay_meta[attr]
 
                 overwrite_from_meta("name")
                 overwrite_from_meta("description")
                 overwrite_from_meta("gross_price")
+                overwrite_from_meta("images")
 
             # we need meta only for attr overwrites => throw it away afterwards
             del validated_data["meta"]
 
-        return super(CoreProductSerializer, self).create(validated_data)
+        return super(CoreProductDeserializer, self).create(validated_data)
