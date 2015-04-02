@@ -30,17 +30,14 @@ class TestCoreAPIClient(UnitTestCase):
     def test_url_for(self):
         expected_host = settings.INV_CORE_API_HOST
 
-        self.assertEqual(CoreAPIClient.url_for('/api/products'), "https://{host}/api/products"
+        self.assertEqual(CoreAPIClient.url_for('/api/products'), "http://{host}/api/products"
                          .format(host=expected_host))
 
-        self.assertEqual(CoreAPIClient.url_for('api/products'), "https://{host}/api/products"
+        self.assertEqual(CoreAPIClient.url_for('api/products'), "http://{host}/api/products"
                          .format(host=expected_host))
 
-        self.assertEqual(CoreAPIClient.url_for('/'), "https://{host}/"
+        self.assertEqual(CoreAPIClient.url_for('/'), "http://{host}/"
                          .format(host=expected_host))
 
-        self.assertEqual(CoreAPIClient.url_for(''), "https://{host}/"
+        self.assertEqual(CoreAPIClient.url_for(''), "http://{host}/"
                          .format(host=expected_host))
-
-    def test_get(self):
-        pass
