@@ -14,9 +14,7 @@ class POPOSerializer(serializers.Serializer):
     """
 
     def create(self, validated_data):
-        """
-        :type validated_data: dict
-        """
+        assert type(validated_data) is dict
         assert hasattr(self, "Meta") and hasattr(self.Meta, "model"), "No `Meta.model` defined"
 
         ModelClass = self.Meta.model
@@ -24,7 +22,8 @@ class POPOSerializer(serializers.Serializer):
         for name, field in self.fields.iteritems():
             if name in validated_data:
                 if isinstance(field, POPOSerializer) and name in validated_data:
-                    validated_data[name] = field.build()
+                    # Note: We call create directly since the data has already been validated
+                    validated_data[name] = field.create(validated_data[name])
                 elif isinstance(field, serializers.ListSerializer) and isinstance(field.child, POPOSerializer):
                     validated_data[name] = [field.child.create(validated_item) for validated_item in validated_data[name]]
 

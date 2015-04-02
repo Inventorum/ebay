@@ -15,11 +15,31 @@ from rest_framework import serializers
 log = logging.getLogger(__name__)
 
 
+# Test POPOs #################################################################################
+
 class _Customer(object):
-    def __init__(self, first_name, last_name, birthday=None):
+    def __init__(self, first_name, last_name, birthday=None, address=None):
         self.first_name = first_name
         self.last_name = last_name
         self.birthday = birthday
+        self.address = address
+
+
+class _Address(object):
+    def __init__(self, street, zip_code, city):
+        self.street = street
+        self.zip_code = zip_code
+        self.city = city
+
+
+class _AddressSerializer(POPOSerializer):
+
+    class Meta:
+        model = _Address
+
+    street = serializers.CharField()
+    zip_code = serializers.CharField()
+    city = serializers.CharField()
 
 
 class _CustomerSerializer(POPOSerializer):
@@ -30,6 +50,8 @@ class _CustomerSerializer(POPOSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     BirthDay = serializers.DateField(source="birthday", required=False)
+
+    address = _AddressSerializer(required=False)
 
 
 class _CustomerSerializerWithUndefinedPOPOAttributes(_CustomerSerializer):
@@ -72,6 +94,8 @@ class _OrderSerializer(POPOSerializer):
     items = _OrderItemSerializer(many=True)
 
 
+# Specs ####################################################################################
+
 class TestPOPOSerializer(TestCase):
 
     def test_serializes_simple_popo(self):
@@ -81,16 +105,18 @@ class TestPOPOSerializer(TestCase):
         self.assertEqual(serializer.data, {
             "first_name": "John",
             "last_name": "Wayne",
-            "BirthDay": None
+            "BirthDay": None,
+            "address": None
         })
 
-        customer = _Customer("John", "Wayne", date(2015, 04, 01))
+        customer = _Customer("John", "Wayne", birthday=date(2015, 04, 01))
         serializer = _CustomerSerializer(customer)
 
         self.assertEqual(serializer.data, {
             "first_name": "John",
             "last_name": "Wayne",
-            "BirthDay": "2015-04-01"
+            "BirthDay": "2015-04-01",
+            "address": None
         })
 
     def test_deserializes_simple_popo(self):
@@ -116,7 +142,43 @@ class TestPOPOSerializer(TestCase):
         self.assertTrue(instance)
         self.assertEqual(instance.birthday, date(2015, 04, 01))
 
-    def test_serializes_nested_popos(self):
+    def test_serializes_nested_popo(self):
+        customer = _Customer("John", "Wayne", address=_Address("Voltastraße 5", "1337", "Berlin"))
+        serializer = _CustomerSerializer(customer)
+
+        self.assertEqual(serializer.data, {
+            "first_name": "John",
+            "last_name": "Wayne",
+            "BirthDay": None,
+            "address": {
+                "street": "Voltastraße 5",
+                "zip_code": "1337",
+                "city": "Berlin"
+            }
+        })
+
+    def test_deserializes_nested_popo(self):
+        data = {
+            "first_name": "John",
+            "last_name": "Wayne",
+            "address": {
+                "street": "Voltastraße 5",
+                "zip_code": "1337",
+                "city": "Berlin"
+            }
+        }
+
+        serializer = _CustomerSerializer(data=data)
+        instance = serializer.build()
+        self.assertTrue(instance)
+        self.assertTrue(instance.address)
+
+        address = instance.address
+        self.assertEqual(address.street, "Voltastraße 5")
+        self.assertEqual(address.zip_code, "1337")
+        self.assertEqual(address.city, "Berlin")
+
+    def test_serializes_nested_list_popo(self):
         items = [
             _OrderItem(1, price=D("3.99"), quantity=5),
             _OrderItem(2, price=D("1.00"), quantity=3)
@@ -140,7 +202,7 @@ class TestPOPOSerializer(TestCase):
             ]
         })
 
-    def test_deserializes_nested_popos(self):
+    def test_deserializes_nested_list_popo(self):
         data = {
             "items": [
                 {
