@@ -1,4 +1,18 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
 
-# this is a namespace package
-__import__('pkg_resources').declare_namespace(__name__)
+import logging
+import os
+from django.conf import settings
+import vcr
+
+
+log = logging.getLogger(__name__)
+
+
+class CoreApiTest(object):
+    vcr = vcr.VCR(
+        serializer='json',
+        cassette_library_dir=os.path.join(settings.CASSETTES_DIR, 'core_api'),
+        record_mode='once'
+    )

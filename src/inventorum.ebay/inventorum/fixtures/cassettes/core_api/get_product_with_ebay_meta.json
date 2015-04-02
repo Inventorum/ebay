@@ -1,0 +1,150 @@
+{
+    "version": 1, 
+    "interactions": [
+        {
+            "request": {
+                "body": null, 
+                "headers": {
+                    "X-Inv-User": [
+                        "425"
+                    ], 
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ], 
+                    "X-Inv-Account": [
+                        "346"
+                    ], 
+                    "Accept": [
+                        "application/json"
+                    ], 
+                    "User-Agent": [
+                        "inv-ebay/0.0.1-dev"
+                    ], 
+                    "Connection": [
+                        "keep-alive"
+                    ], 
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }, 
+                "method": "GET", 
+                "uri": "http://inv-api.localhost:8000/api/products/463691"
+            }, 
+            "response": {
+                "status": {
+                    "message": "MOVED PERMANENTLY", 
+                    "code": 301
+                }, 
+                "headers": {
+                    "transfer-encoding": [
+                        "chunked"
+                    ], 
+                    "set-cookie": [
+                        "sn=\"e30:1YdeY0:N5_d7cDHo0oe4T6V8hCARBGx4ig\"; Domain=inv-api.localhost; expires=Thu, 02-Apr-2015 14:48:36 GMT; httponly; Max-Age=7200; Path=/"
+                    ], 
+                    "vary": [
+                        "Cookie"
+                    ], 
+                    "server": [
+                        "waitress"
+                    ], 
+                    "connection": [
+                        "close"
+                    ], 
+                    "location": [
+                        "http://inv-api.localhost:8000/api/products/463691/"
+                    ], 
+                    "date": [
+                        "Thu, 02 Apr 2015 12:48:36 GMT"
+                    ], 
+                    "x-rid": [
+                        "3000642274013652306"
+                    ], 
+                    "content-type": [
+                        "text/html; charset=utf-8"
+                    ]
+                }, 
+                "body": {
+                    "string": ""
+                }
+            }
+        }, 
+        {
+            "request": {
+                "body": null, 
+                "headers": {
+                    "X-Inv-User": [
+                        "425"
+                    ], 
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ], 
+                    "X-Inv-Account": [
+                        "346"
+                    ], 
+                    "Accept": [
+                        "application/json"
+                    ], 
+                    "User-Agent": [
+                        "inv-ebay/0.0.1-dev"
+                    ], 
+                    "Connection": [
+                        "keep-alive"
+                    ], 
+                    "Cookie": [
+                        "sn=\"e30:1YdeY0:N5_d7cDHo0oe4T6V8hCARBGx4ig\""
+                    ], 
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }, 
+                "method": "GET", 
+                "uri": "http://inv-api.localhost:8000/api/products/463691/"
+            }, 
+            "response": {
+                "status": {
+                    "message": "OK", 
+                    "code": 200
+                }, 
+                "headers": {
+                    "x-inv-user": [
+                        "425"
+                    ], 
+                    "transfer-encoding": [
+                        "chunked"
+                    ], 
+                    "set-cookie": [
+                        "sn=\"e30:1YdeY1:UlEmqIVTqpNZfYynotqFQROCDL8\"; Domain=inv-api.localhost; expires=Thu, 02-Apr-2015 14:48:37 GMT; httponly; Max-Age=7200; Path=/"
+                    ], 
+                    "vary": [
+                        "Accept, Cookie"
+                    ], 
+                    "x-inv-account": [
+                        "346"
+                    ], 
+                    "server": [
+                        "waitress"
+                    ], 
+                    "connection": [
+                        "close"
+                    ], 
+                    "allow": [
+                        "GET, PUT, DELETE, HEAD, OPTIONS"
+                    ], 
+                    "date": [
+                        "Thu, 02 Apr 2015 12:48:36 GMT"
+                    ], 
+                    "x-rid": [
+                        "303267572195435858"
+                    ], 
+                    "content-type": [
+                        "application/json"
+                    ]
+                }, 
+                "body": {
+                    "string": "{\"price\": \"1260.4957983193\", \"gross_price\": \"1499.99\", \"purchase_price\": null, \"average_price\": null, \"average_purchase_price\": null, \"is_favourite\": false, \"stock\": 1000, \"reorder\": 100, \"safety\": 2, \"images\": [{\"ipad\": \"/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad.JPEG\", \"thumb\": \"/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_thumb.JPEG\", \"image\": \"//localhost:5443/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_retina.JPEG\", \"ipad_retina\": \"/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad_retina.JPEG\", \"thumb_retina\": \"/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_thumb_retina.JPEG\", \"id\": 2915}], \"tax_rate\": 19.0, \"address\": \"\", \"shipping_services\": [], \"categories\": [], \"shop_url\": null, \"ebay_url\": null, \"in_shop\": false, \"meta\": {\"ebay\": {\"images\": [], \"price\": \"1344.5294117647\", \"gross_price\": \"1599.99\", \"id\": 732, \"channel\": 4, \"name\": \"eBay: FastRoad CoMax\", \"description\": \"eBay: GIANT FastRoad CoMax Carbon\"}}, \"id\": 463691, \"name\": \"FastRoad CoMax\", \"description\": \"GIANT FastRoad CoMax Carbon\", \"supplier\": \"\", \"brand\": \"\", \"product_code\": \"987654321\", \"gtin\": \"75678164125\", \"ebay_product_id\": null, \"custom_price\": false, \"is_giftcard\": false, \"attributes\": [], \"tags\": []}"
+                }
+            }
+        }
+    ]
+}
