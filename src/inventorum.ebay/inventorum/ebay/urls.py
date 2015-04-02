@@ -11,5 +11,6 @@ log = logging.getLogger(__name__)
 
 urlpatterns = patterns('',
     url(r'^accounts/', include('inventorum.ebay.apps.accounts.urls', namespace='accounts')),
+    url(r'^auth/', include('inventorum.ebay.apps.auth.urls', namespace='auth')),
     url(r'^products/', include('inventorum.ebay.apps.products.urls', namespace='products')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

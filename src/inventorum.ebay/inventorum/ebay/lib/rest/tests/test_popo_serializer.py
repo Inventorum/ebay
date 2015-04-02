@@ -18,11 +18,11 @@ log = logging.getLogger(__name__)
 # Test POPOs #################################################################################
 
 class _Customer(object):
-    def __init__(self, first_name, last_name, birthday=None, address=None):
+    def __init__(self, first_name, last_name, birthday=None, foo_address=None):
         self.first_name = first_name
         self.last_name = last_name
         self.birthday = birthday
-        self.address = address
+        self.foo_address = foo_address
 
 
 class _Address(object):
@@ -51,7 +51,7 @@ class _CustomerSerializer(POPOSerializer):
     last_name = serializers.CharField()
     BirthDay = serializers.DateField(source="birthday", required=False)
 
-    address = _AddressSerializer(required=False)
+    address = _AddressSerializer(required=False, source="foo_address")
 
 
 class _CustomerSerializerWithUndefinedPOPOAttributes(_CustomerSerializer):
@@ -143,7 +143,7 @@ class TestPOPOSerializer(TestCase):
         self.assertEqual(instance.birthday, date(2015, 04, 01))
 
     def test_serializes_nested_popo(self):
-        customer = _Customer("John", "Wayne", address=_Address("Voltastraße 5", "1337", "Berlin"))
+        customer = _Customer("John", "Wayne", foo_address=_Address("Voltastraße 5", "1337", "Berlin"))
         serializer = _CustomerSerializer(customer)
 
         self.assertEqual(serializer.data, {
@@ -171,9 +171,9 @@ class TestPOPOSerializer(TestCase):
         serializer = _CustomerSerializer(data=data)
         instance = serializer.build()
         self.assertTrue(instance)
-        self.assertTrue(instance.address)
+        self.assertTrue(instance.foo_address)
 
-        address = instance.address
+        address = instance.foo_address
         self.assertEqual(address.street, "Voltastraße 5")
         self.assertEqual(address.zip_code, "1337")
         self.assertEqual(address.city, "Berlin")
