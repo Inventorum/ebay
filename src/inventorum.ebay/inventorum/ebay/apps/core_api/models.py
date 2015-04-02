@@ -56,8 +56,8 @@ class CoreProductDeserializer(POPOSerializer):
 
     class MetaDeserializer(serializers.Serializer):
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
-        name = serializers.CharField(allow_blank=True)
-        description = serializers.CharField(allow_blank=True)
+        name = serializers.CharField(allow_null=True, allow_blank=True)
+        description = serializers.CharField(allow_null=True, allow_blank=True)
         gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
 
         images = CoreProductImageDeserializer(many=True)
@@ -78,12 +78,13 @@ class CoreProductDeserializer(POPOSerializer):
                 ebay_meta = validated_data["meta"]["ebay"]
 
                 def overwrite_from_meta(attr):
-                    if attr in ebay_meta:
+                    if attr in ebay_meta and ebay_meta[attr] not in (None, []):
                         validated_data[attr] = ebay_meta[attr]
 
                 overwrite_from_meta("name")
                 overwrite_from_meta("description")
                 overwrite_from_meta("gross_price")
+
                 overwrite_from_meta("images")
 
             # we need meta only for attr overwrites => throw it away afterwards
