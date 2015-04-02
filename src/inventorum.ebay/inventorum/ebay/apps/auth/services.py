@@ -34,8 +34,8 @@ class AuthorizationService(object):
         self.account.id_verified = user.id_verified
         self.account.status = user.status
         self.account.user_id = user.user_id
-        self.account.qualifies_for_b2b_vat = user.qualifies_for_b2b_vat
-        self.account.store_owner = user.store_owner
+        self.account.qualifies_for_b2b_vat = user.seller_info.qualifies_for_b2b_vat
+        self.account.store_owner = user.seller_info.store_owner
         self.account.registration_date = user.registration_date
         self.account.registration_address = AddressModel.create_from_ebay_address(user.registration_address)
 

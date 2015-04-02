@@ -2,8 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 from ebaysdk.parallel import Parallel
 import logging
-from inventorum.ebay.lib.ebay import Ebay, EbayException, EbayParallel
-from inventorum.ebay.lib.ebay.data import EbayCategoryMappingFields, EbayCategory
+from inventorum.ebay.lib.ebay import Ebay,  EbayParallel
+from inventorum.ebay.lib.ebay.data import EbayCategory, EbayCategorySerializer
 
 
 log = logging.getLogger(__name__)
@@ -22,7 +22,8 @@ class EbayCategories(Ebay):
         :rtype: generator object
         """
 
-        fields_to_retrieve = EbayCategoryMappingFields.ALL.keys()
+        # I am accessing private field `_declared_fields` cause I didn't see any other way to get this info...
+        fields_to_retrieve = EbayCategorySerializer._declared_fields.keys()
         data = dict(
             DetailLevel='ReturnAll',
             OutputSelector=fields_to_retrieve

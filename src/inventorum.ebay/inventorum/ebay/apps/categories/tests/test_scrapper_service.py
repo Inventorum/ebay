@@ -6,7 +6,7 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
 class TestScrappingCategories(EbayAuthenticatedAPITestCase):
-    @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_all_categories.json", record_mode='new_episodes')
+    @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_level_limited_categories.json")
     def test_it(self):
         # Create first one to prove categories scrapper removes them
         CategoryModel.objects.create(

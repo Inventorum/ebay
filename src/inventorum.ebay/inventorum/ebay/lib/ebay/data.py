@@ -1,7 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.datetime_safe import datetime
-from inventorum.ebay.lib.ebay import Ebay
+from inventorum.ebay.lib.rest.serializers import POPOSerializer
+from rest_framework.fields import CharField, IntegerField, BooleanField, DateTimeField
 
 
 class EbayParser(object):
@@ -32,16 +33,42 @@ class EbayUserAddress(object):
     country = None
     postal_code = None
 
-    @classmethod
-    def create_from_data(cls, data):
-        address = EbayUserAddress()
-        address.name = data['Name']
-        address.street = data['Street']
-        address.street1 = data['Street1']
-        address.city = data['CityName']
-        address.country = data['Country']
-        address.postal_code = data['PostalCode']
-        return address
+    def __init__(self, name, street, street1, city, country, postal_code):
+        self.name = name
+        self.street = street
+        self.street1 = street1
+        self.city = city
+        self.country = country
+        self.postal_code = postal_code
+
+
+class EbayUserAddressSerializer(POPOSerializer):
+    Name = CharField(source='name')
+    Street = CharField(source='street', default="", required=False, allow_null=True)
+    Street1 = CharField(source='street1', default="", required=False, allow_null=True)
+    CityName = CharField(source='city')
+    Country = CharField(source='country')
+    PostalCode = CharField(source='postal_code')
+
+    class Meta:
+        model = EbayUserAddress
+
+
+class EbaySellerInfo(object):
+    qualifies_for_b2b_vat = None
+    store_owner = None
+
+    def __init__(self, qualifies_for_b2b_vat, store_owner):
+        self.qualifies_for_b2b_vat = qualifies_for_b2b_vat
+        self.store_owner = store_owner
+
+
+class EbaySellerInfoSerializer(POPOSerializer):
+    QualifiesForB2BVAT = BooleanField(source='qualifies_for_b2b_vat')
+    StoreOwner = BooleanField(source='store_owner')
+
+    class Meta:
+        model = EbaySellerInfo
 
 
 class EbayUser(object):
@@ -49,23 +76,37 @@ class EbayUser(object):
     user_id = None
     id_verified = False
     status = False
-    registration_address = EbayUserAddress()
+    registration_address = None
     registration_date = None
-    qualifies_for_b2b_vat = None
-    store_owner = None
+    seller_info = None
+
+    def __init__(self, email, user_id, id_verified, status, registration_address, registration_date, seller_info):
+        self.email = email
+        self.user_id = user_id
+        self.id_verified = id_verified
+        self.status = status
+        self.registration_address = registration_address
+        self.registration_date = registration_date
+        self.seller_info = seller_info
+
 
     @classmethod
     def create_from_data(cls, data):
-        user = EbayUser()
-        user.email = data['Email']
-        user.id_verified = data['IDVerified'] == 'true'
-        user.status = data['Status']
-        user.user_id = data['UserID']
-        user.qualifies_for_b2b_vat = data['SellerInfo']['QualifiesForB2BVAT'] == 'true'
-        user.store_owner = data['SellerInfo']['StoreOwner'] == 'true'
-        user.registration_address = EbayUserAddress.create_from_data(data['RegistrationAddress'])
-        user.registration_date = EbayParser.parse_date(data['RegistrationDate'])
-        return user
+        serializer = EbayUserSerializer(data=data)
+        return serializer.build()
+
+
+class EbayUserSerializer(POPOSerializer):
+    Email = CharField(source='email')
+    UserID = CharField(source='user_id')
+    IDVerified = BooleanField(source='id_verified')
+    Status = CharField(source='status')
+    RegistrationAddress = EbayUserAddressSerializer(source='registration_address')
+    RegistrationDate = DateTimeField(source='registration_date')
+    SellerInfo = EbaySellerInfoSerializer(source='seller_info')
+
+    class Meta:
+        model = EbayUser
 
 
 class EbayToken(object):
@@ -80,33 +121,6 @@ class EbayToken(object):
         self.value = value
 
 
-class EbayCategoryMappingFields(object):
-    ALL = {
-        'CategoryName': ('name', None),
-        # Documentation says it is string...
-        'CategoryParentID': ('parent_id', None),
-        # Documentation says it is string...
-        'CategoryID': ('category_id', None),
-        'CategoryLevel': ('level', None),
-        'Virtual': ('virtual', EbayParser.parse_bool),
-        'Expired': ('expired', EbayParser.parse_bool),
-        'LeafCategory': ('leaf', EbayParser.parse_bool),
-        'B2BVATEnabled': ('b2b_vat_enabled', EbayParser.parse_bool),
-        # If true, the category supports business-to-business (B2B) VAT listings. Applicable to the eBay Germany (DE),
-        # Austria (AT), and Switzerland CH) sites only. If not present, the category does not support this feature.
-        # Will not be returned if false.
-        'BestOfferEnabled': ('best_offer_enabled', EbayParser.parse_bool),
-        'AutoPayEnabled': ('auto_pay_enabled', EbayParser.parse_bool),
-        # If true, indicates that the category supports immediate payment. If not present, the category does not
-        # support immediate payment. Will not be returned if false.
-        'LSD': ('item_lot_size_disabled', EbayParser.parse_bool),
-        # "Lot Size Disabled (LSD)" indicates that Item.LotSize is not permitted when you list
-        # in this category. If true, indicates that lot sizes are disabled in the specified category. Will not be
-        # returned if false.
-
-    }
-
-
 class EbayCategory(object):
     name = None
     parent_id = 0
@@ -117,27 +131,59 @@ class EbayCategory(object):
     auto_pay_enabled = False
     leaf = False
     item_lot_size_disabled = False
-    # Indicators for categories where you cannot publish anymore
     virtual = False
     expired = False
 
+    def __init__(self, name, parent_id, category_id, level, auto_pay_enabled=False, best_offer_enabled=False,
+                 item_lot_size_disabled=False, virtual=False, expired=False, leaf=False, b2b_vat_enabled=False):
+        self.name = name
+        self.parent_id = parent_id
+        self.category_id = category_id
+        self.level = level
+        self.b2b_vat_enabled = b2b_vat_enabled
+        self.best_offer_enabled = best_offer_enabled
+        self.auto_pay_enabled = auto_pay_enabled
+        self.leaf = leaf
+        self.item_lot_size_disabled = item_lot_size_disabled
+        self.virtual = virtual
+        self.expired = expired
+
+
     @property
     def can_publish(self):
-        return not self.virtual and not self.expired
+        return not self.expired
 
     @classmethod
     def create_from_data(cls, data):
-        category = EbayCategory()
-        mapping = EbayCategoryMappingFields.ALL
-        for key, value in mapping.iteritems():
-            field_name, parser = value
-            data_value = data.get(key)
-            if parser:
-                data_value = parser(data_value)
-            setattr(category, field_name, data_value)
+        """
+        Create Ebay category from json data
+        :param data:
+        :return: EbayCategory
+        :rtype: EbayCategory
+        :type data: dict
+        """
+        serializer = EbayCategorySerializer(data=data)
+        obj = serializer.build()
+        return obj
 
-        if category.parent_id == category.category_id:
-            # If it is level=1 category then parent_id == category_id
-            category.parent_id = None
-        return category
 
+class EbayCategorySerializer(POPOSerializer):
+    CategoryName = CharField(source='name')
+    CategoryParentID = CharField(source='parent_id')
+    CategoryID = CharField(source='category_id')
+    CategoryLevel = IntegerField(source='level')
+    B2BVATEnabled = BooleanField(source='b2b_vat_enabled', required=False)
+    BestOfferEnabled = BooleanField(source='best_offer_enabled', required=False)
+    AutoPayEnabled = BooleanField(source='auto_pay_enabled', required=False)
+    LeafCategory = BooleanField(source='leaf', required=False)
+    LSD = BooleanField(source='item_lot_size_disabled', required=False)
+    Virtual = BooleanField(source='virtual', required=False)
+    Expired = BooleanField(source='expired', required=False)
+
+    class Meta:
+        model = EbayCategory
+
+    def validate(self, data):
+        if data['parent_id'] == data['category_id']:
+            data['parent_id'] = None
+        return data

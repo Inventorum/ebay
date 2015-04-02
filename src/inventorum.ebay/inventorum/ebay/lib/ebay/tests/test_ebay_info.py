@@ -4,6 +4,7 @@ import logging
 from django.utils.datetime_safe import datetime
 from inventorum.ebay.lib.ebay.info import EbayInfo
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+from pytz import UTC
 
 log = logging.getLogger(__name__)
 
@@ -20,9 +21,9 @@ class TestEbayInfo(EbayAuthenticatedAPITestCase):
         self.assertEqual(user.id_verified, False)
         self.assertEqual(user.status, 'Confirmed')
         self.assertEqual(user.user_id, 'newmade')
-        self.assertEqual(user.qualifies_for_b2b_vat, False)
-        self.assertEqual(user.store_owner, False)
-        self.assertEqual(user.registration_date, datetime(2015, 3, 31, 8, 57, 26))
+        self.assertEqual(user.seller_info.qualifies_for_b2b_vat, False)
+        self.assertEqual(user.seller_info.store_owner, False)
+        self.assertEqual(user.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=UTC))
 
         address = user.registration_address
         self.assertEqual(address.name, 'John Newman')

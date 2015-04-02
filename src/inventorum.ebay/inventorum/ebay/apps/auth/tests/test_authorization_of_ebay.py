@@ -58,7 +58,7 @@ class EbayAuthorizationTest(APITestCase):
         self.assertEqual(account.user_id, 'newmade')
         self.assertEqual(account.qualifies_for_b2b_vat, False)
         self.assertEqual(account.store_owner, False)
-        self.assertEqual(account.registration_date, datetime(2015, 3, 31, 6, 57, 26, tzinfo=pytz.UTC))
+        self.assertEqual(account.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=pytz.UTC))
 
         address = account.registration_address
         self.assertEqual(address.name, "John Newman")
