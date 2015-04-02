@@ -48,7 +48,8 @@ setup(
         test=required_eggs + [
             'coverage>=3.7',
             'django-nose>=1.3',
-            'factory_boy>=2.4'
+            'factory_boy>=2.4',
+            'mock>=1.0.1'
         ]
     ),
     # http://pythonhosted.org/distribute/setuptools.html#namespace-packages

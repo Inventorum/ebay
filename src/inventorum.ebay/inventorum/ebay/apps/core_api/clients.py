@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.core_api.models import CoreProductSerializer
 import requests
 
 from django.conf import settings
@@ -36,34 +37,40 @@ class CoreAPIClient(object):
         if not path.startswith("/"):
             path = "/{path}".format(path=path)
 
-        return "https://{host}{path}".format(host=settings.INV_CORE_API_HOST, path=path)
+        return "http://{host}{path}".format(host=settings.INV_CORE_API_HOST, path=path)
 
-    def get(self, path, params=None, headers=None):
+    def get(self, path, params=None, custom_headers=None):
         """
         Performs a get request to the given core api path with the given params/headers
 
         :param path: The core api request path
         :param params: Optional URL params
-        :param headers: Optional HTTP headers
-        :return: The response as JSON
+        :param custom_headers: Optional custom HTTP headers (default header can be overwritten)
+        :return: The HTTP response
 
         :type path: str | unicode
         :type params: dict
-        :type headers: dict
+        :type custom_headers: dict
 
-        :rtype: valid JSON type, see https://docs.python.org/2/library/json.html#json.loads
+        :rtype: requests.models.Response
+
+        :raises requests.exceptions.HTTPError
         """
         if params is None:
             params = {}
 
-        if headers is None:
-            headers = {}
+        if custom_headers is None:
+            custom_headers = {}
 
-        headers_with_defaults = self.default_headers
-        headers_with_defaults.update(headers)
+        headers = self.default_headers
+        headers.update(custom_headers)
 
-        response = requests.get(self.url_for(path), params=params, headers=headers_with_defaults)
-        return response.json()
+        response = requests.get(self.url_for(path), params=params, headers=headers)
+
+        if not response.ok:
+            response.raise_for_status()
+
+        return response
 
 
 class UserScopedCoreAPIClient(CoreAPIClient):
@@ -93,5 +100,16 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         })
         return default_headers
 
-    def get_product_details(self, inv_product_id):
-        raise NotImplemented
+    def get_product(self, product_id):
+        """
+
+        :param product_id:
+        :return:
+
+        :raises requests.exceptions.HTTPError
+                rest_framework.exceptions.ValidationError
+        """
+        response = self.get("/api/products/{product_id}".format(product_id=product_id))
+        json = response.json()
+        serializer = CoreProductSerializer(data=json)
+        return serializer.build()
