@@ -25,9 +25,9 @@ def _db_provision(db_name, with_drop):
         return stdout
 
     db = settings.DATABASES["default"]
-    DB_HOST = db["HOST"]
-    DB_USERNAME = db["USER"]
-    DB_PASSWORD = db['PASSWORD']
+    db_host = db["HOST"]
+    db_user = db["USER"]
+    db_pass = db['PASSWORD']
 
     sandbox_root = settings.BUILDOUT_ROOT
     log.debug("sandbox root is %s", sandbox_root)
@@ -37,12 +37,15 @@ def _db_provision(db_name, with_drop):
         log.info("Running in sandbox mode")
 
         def psql(psql_cmd):
-            return """echo "{cmd}" | {sandbox_exec_path}/psql -h {host} -d postgres"""\
-                .format(cmd=psql_cmd, sandbox_exec_path=sandbox_exec_path, host=DB_HOST)
+            return """echo "{psql_cmd}" | {sandbox_exec_path}/psql -h {db_host} -d postgres"""\
+                .format(psql_cmd=psql_cmd, sandbox_exec_path=sandbox_exec_path, db_host=db_host)
 
-        createuser = psql("CREATE USER {username} WITH PASSWORD '{password}' CREATEDB;".format(username=DB_USERNAME,
-                                                                                               password=DB_PASSWORD))
+        create_user = psql("CREATE USER {db_user} WITH PASSWORD '{db_pass}' CREATEDB;".format(db_user=db_user,
+                                                                                              db_pass=db_pass))
 
+        create_db = psql("CREATE DATABASE {db_name} OWNER {db_user} "
+                         "ENCODING 'UTF8' LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';".format(db_name=db_name,
+                                                                                                   db_user=db_user))
     else:
         log.info("Running in system mode")
 
@@ -50,17 +53,23 @@ def _db_provision(db_name, with_drop):
             return "su - postgres -c {shell_cmd}"\
                 .format(shell_cmd=quote("""echo "{psql_cmd}" | psql -d postgres""".format(psql_cmd=psql_cmd)))
 
-        createuser = psql("CREATE ROLE {username} ENCRYPTED PASSWORD '{password}' "
-                          "NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;".format(username=DB_USERNAME,
-                                                                                      password=DB_PASSWORD))
+        create_user = psql("CREATE ROLE {db_user} ENCRYPTED PASSWORD '{db_pass}' "
+                           "NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;".format(db_user=db_user,
+                                                                                       db_pass=db_pass))
+
+        create_db = psql("CREATE DATABASE {db_name};"
+                         "GRANT ALL PRIVILEGES ON DATABASE {db_name} to {db_user};".format(db_name=db_name,
+                                                                                           db_user=db_user))
+
+    drop_db = psql("DROP DATABASE {db_name}".format(db_name=db_name))
 
     # check if database user already exists
-    stdout = execute(" ".join([psql("\du"), "|", "grep {username}".format(username=DB_USERNAME), "|", "wc -l"]))
+    stdout = execute(" ".join([psql("\du"), "|", "grep {db_user}".format(db_user=db_user), "|", "wc -l"]))
     if stdout.strip() == "0":
-        log.info("Creating database user '%s'...", DB_USERNAME)
-        execute(createuser)
+        log.info("Creating database user '%s'...", db_user)
+        execute(create_user)
     else:
-        log.info("Database user '%s' already exists", DB_USERNAME)
+        log.info("Database user '%s' already exists", db_user)
 
     # check if database already exists
     stdout = execute(" ".join([psql("\list"), "|", "grep {db_name}".format(db_name=db_name), "|", "wc -l"]))
@@ -70,12 +79,10 @@ def _db_provision(db_name, with_drop):
             exit(0)
         else:
             log.info("Dropping database '%s'...", db_name)
-            execute(psql("DROP DATABASE {db_name}".format(db_name=db_name)))
+            execute(drop_db)
 
     log.info("Creating database '%s'...", db_name)
-    execute(psql("CREATE DATABASE {db_name} OWNER {owner} "
-                 "ENCODING 'UTF8' LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';".format(db_name=db_name,
-                                                                                           owner=DB_USERNAME)))
+    execute(create_db)
 
 
 def db_provision():

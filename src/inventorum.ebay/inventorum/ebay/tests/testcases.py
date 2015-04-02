@@ -47,8 +47,8 @@ class APITestCase(test.APITestCase):
         :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
         """
         credentials = {
-            TrustedHeaderAuthentication.AUTHENTICATED_ACCOUNT_HEADER: user.account.inv_id,
-            TrustedHeaderAuthentication.AUTHENTICATED_USER_HEADER: user.inv_id
+            TrustedHeaderAuthentication.TRUSTED_ACCOUNT_HEADER: user.account.inv_id,
+            TrustedHeaderAuthentication.TRUSTED_USER_HEADER: user.inv_id
         }
         self.client.credentials(**credentials)
 

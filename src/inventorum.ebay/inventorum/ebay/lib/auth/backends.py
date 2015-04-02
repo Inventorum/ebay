@@ -13,8 +13,10 @@ log = logging.getLogger(__name__)
 
 
 class TrustedHeaderAuthentication(BaseAuthentication):
-    AUTHENTICATED_ACCOUNT_HEADER = "X-Inv-Account"
-    AUTHENTICATED_USER_HEADER = "X-Inv-User"
+    # Note: Django converts custom headers to uppercase, replaces hyphens with underscores and adds the HTTP prefix
+    # https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpRequest.META
+    TRUSTED_ACCOUNT_HEADER = "HTTP_X_INV_ACCOUNT"
+    TRUSTED_USER_HEADER = "HTTP_X_INV_USER"
 
     def authenticate(self, request):
         """
@@ -28,15 +30,19 @@ class TrustedHeaderAuthentication(BaseAuthentication):
         :type request: django.http.request.HttpRequest
         :rtype: (EbayUserModel, None) | None
         """
-        inv_account_id = int_or_none(request.META.get(self.AUTHENTICATED_ACCOUNT_HEADER))
-        inv_user_id = int_or_none(request.META.get(self.AUTHENTICATED_USER_HEADER))
+        inv_account_id = int_or_none(request.META.get(self.TRUSTED_ACCOUNT_HEADER))
+        inv_user_id = int_or_none(request.META.get(self.TRUSTED_USER_HEADER))
 
         if inv_account_id is None or inv_user_id is None:
             return None
 
+        log.debug("Attempting trusted header authentication: X-Inv-User: %s, X-Inv-Account: %s",
+                  inv_user_id, inv_account_id)
+
         try:
             account = EbayAccountModel.objects.get(inv_id=inv_account_id)
         except EbayAccountModel.DoesNotExist:
+            log.debug("Trusted header authentication failed. X-Inv-Account %s not connected to ebay", inv_account_id)
             raise AuthenticationFailed("Account %s not connected to ebay" % inv_account_id)
 
         user, created = EbayUserModel.objects.select_related('account') \

@@ -1,7 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from random import randint
 
+import factory
 from django.db import models
 
 from inventorum.util.django.db.managers import ValidityQuerySet
@@ -47,3 +49,8 @@ class MappedInventorumModel(BaseModel):
 
     def __unicode__(self):
         return "[{} (inv-id: {})] {}".format(self.pk, self.inv_id, self.__class__.__name__)
+
+
+class MappedInventorumModelFactory(factory.DjangoModelFactory):
+    # A randomly generated inv_id to better reflect reality
+    inv_id = factory.LazyAttribute(lambda m: randint(999, 99999))
