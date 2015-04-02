@@ -17,17 +17,17 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         )
 
         # First root node of ebay has 2012 children
-        service = EbayCategoriesScrapper(self.ebay_token, limit_root_nodes=1)
+        service = EbayCategoriesScrapper(self.ebay_token, limit_root_nodes=1, limit_nodes_level=2)
         service.fetch_all()
 
         categories = CategoryModel.objects.all()
-        # Doubled because AT & DE (2012 + 1 [root node] = 4026)
-        self.assertEqual(categories.count(), 4026)
+        # Doubled because AT & DE (31 + 1 [root node] * 2 = 64)
+        self.assertEqual(categories.count(), 64)
         # 2 root nodes because AT & DE
-        self.assertEqual(CategoryModel.objects.root_nodes().count(), 2)
+        self.assertEqual(CategoryModel.tree_objects.root_nodes().count(), 2)
 
         # Make sure it was soft deleted
-        self.assertEqual(CategoryModel.admin_objects.count(), 4027)
+        self.assertEqual(CategoryModel.admin_objects.count(), 65)
 
         root_category = CategoryModel.tree_objects.root_nodes().first()
         self.assertEqual(root_category.name, "Antiquit\xe4ten & Kunst")

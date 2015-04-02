@@ -87,6 +87,7 @@ class EbayCategoryMappingFields(object):
         'CategoryParentID': ('parent_id', None),
         # Documentation says it is string...
         'CategoryID': ('category_id', None),
+        'CategoryLevel': ('level', None),
         'Virtual': ('virtual', EbayParser.parse_bool),
         'Expired': ('expired', EbayParser.parse_bool),
         'LeafCategory': ('leaf', EbayParser.parse_bool),
@@ -110,6 +111,7 @@ class EbayCategory(object):
     name = None
     parent_id = 0
     category_id = 0
+    level = 0
     b2b_vat_enabled = False
     best_offer_enabled = False
     auto_pay_enabled = False

@@ -13,7 +13,9 @@ class EbayCategoriesScrapper(object):
     limit_root_nodes = None
     count_root_nodes_by_country = {}
 
-    def __init__(self, ebay_token, limit_root_nodes=None):
+    limit_nodes_level = None
+
+    def __init__(self, ebay_token, limit_root_nodes=None, limit_nodes_level=None):
         """
         Scrapping categories from ebay and saving them to database
         :param ebay_token: Ebay token
@@ -22,6 +24,7 @@ class EbayCategoriesScrapper(object):
         :type ebay_token: inventorum.ebay.lib.ebay.data.EbayToken
         :type limit_root_nodes: int | None
         """
+        self.limit_nodes_level = limit_nodes_level
         self.limit_root_nodes = limit_root_nodes
         self.ebay_token = ebay_token
 
@@ -44,10 +47,12 @@ class EbayCategoriesScrapper(object):
         categories_ids = []
 
         api = EbayCategories(self.ebay_token, site_id=settings.EBAY_SUPPORTED_SITES[country_code])
-        categories_generator = api.get_categories()
+        categories_generator = api.get_categories(level_limit=self.limit_nodes_level)
 
         for category in categories_generator:
+            log.debug('Parsing category: %s [%s], level: %s', category.name, category.category_id, category.level)
             if self._did_we_reach_limit_of_root_nodes(category, country_code):
+                log.debug('Skipped because we reached limit of root nodes')
                 break
             category = CategoryModel.create_or_update_from_ebay_category(category, country_code)
             categories_ids.append(category.pk)

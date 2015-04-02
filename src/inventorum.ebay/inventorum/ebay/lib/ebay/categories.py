@@ -1,9 +1,12 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from ebaysdk.parallel import Parallel
+import logging
 from inventorum.ebay.lib.ebay import Ebay, EbayException, EbayParallel
 from inventorum.ebay.lib.ebay.data import EbayCategoryMappingFields, EbayCategory
 
+
+log = logging.getLogger(__name__)
 
 class EbayCategories(Ebay):
     parallel_api = None
@@ -12,17 +15,24 @@ class EbayCategories(Ebay):
         super(EbayCategories, self).__init__(*args, **kwargs)
         self.parallel_api = EbayParallel(*args, **kwargs)
 
-    def get_categories(self):
+    def get_categories(self, level_limit=None):
         """
         Returns generator to iterate over categories
         :return: Generator of categories
         :rtype: generator object
         """
+
         fields_to_retrieve = EbayCategoryMappingFields.ALL.keys()
-        response = self.execute('GetCategories', dict(
+        data = dict(
             DetailLevel='ReturnAll',
             OutputSelector=fields_to_retrieve
-        ))
+        )
+
+        if level_limit is not None:
+            data['LevelLimit'] = level_limit
+
+        log.debug('Sending request to ebay categories: %s', data)
+        response = self.execute('GetCategories', data)
 
         for category in response['CategoryArray']['Category']:
             # It is so much data I dont want to store in memory here, thats why we return generator
