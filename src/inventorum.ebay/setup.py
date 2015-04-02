@@ -34,6 +34,7 @@ required_eggs = [
     'grequests>=0.2.0',
     'mock>=1.0.1',
     'vcrpy>=1.3.0',
+    'python-keyczar>=0.715',
     'django-countries>=3.3'
 ]
 
