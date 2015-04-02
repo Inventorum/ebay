@@ -4,6 +4,14 @@
 inventorum.ebay
 ===============
 
+Prerequisities
+--------------
+Install some required packages
+
+::
+
+  apt-get install libxml2-dev libxslt1-dev python2.7-dev
+
 Quickstart
 ----------
 
