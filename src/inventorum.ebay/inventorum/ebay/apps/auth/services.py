@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
-from inventorum.ebay.lib.ebay.data import EbayToken
+from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 from inventorum.ebay.lib.ebay.info import EbayInfo
 
 

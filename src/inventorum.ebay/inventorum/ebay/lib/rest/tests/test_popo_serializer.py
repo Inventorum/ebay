@@ -6,6 +6,7 @@ from decimal import Decimal as D
 from datetime import date
 
 from unittest.case import TestCase
+from django.core.exceptions import ValidationError
 
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 
@@ -234,7 +235,7 @@ class TestPOPOSerializer(TestCase):
         }
 
         serializer = _CustomerSerializerWithUndefinedPOPOAttributes(data=data)
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValidationError):
             serializer.build()
 
     def test_deserialize_throws_with_too_few_serializer_attributes(self):
@@ -244,5 +245,5 @@ class TestPOPOSerializer(TestCase):
         }
 
         serializer = _CustomerSerializerWithUndefinedSerializerAttributes(data=data)
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValidationError):
             serializer.build()
