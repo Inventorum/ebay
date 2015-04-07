@@ -62,5 +62,6 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
             self.assertGreater(features.payment_methods.count(), 0)
             self.assertGreater(features.durations.count(), 0)
 
+        # Models should not be duplicated!
         self.assertEqual(PaymentMethodModel.objects.count(), 10)
         self.assertEqual(DurationModel.objects.count(), 5)
