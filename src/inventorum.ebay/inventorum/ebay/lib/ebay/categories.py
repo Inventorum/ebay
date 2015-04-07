@@ -2,11 +2,13 @@
 from __future__ import absolute_import, unicode_literals
 from ebaysdk.parallel import Parallel
 import logging
-from inventorum.ebay.lib.ebay import Ebay,  EbayParallel
-from inventorum.ebay.lib.ebay.data import EbayCategory, EbayCategorySerializer
+from inventorum.ebay.lib.ebay import Ebay, EbayParallel
+from inventorum.ebay.lib.ebay.data.categories import EbayCategorySerializer, EbayCategory
+from inventorum.ebay.lib.ebay.data.features import EbayFeature
 
 
 log = logging.getLogger(__name__)
+
 
 class EbayCategories(Ebay):
     parallel_api = None
@@ -39,10 +41,15 @@ class EbayCategories(Ebay):
             # It is so much data I dont want to store in memory here, thats why we return generator
             yield EbayCategory.create_from_data(category)
 
-    def get_attributes_for_categories(self, categories_ids):
-
+    def get_features_for_categories(self, categories_ids):
+        """
+        Returns features per category
+        :param categories_ids:
+        :return: List of feature per category
+        :rtype: [inventorum.ebay.lib.ebay.data.EbayFeature]
+        """
         for category_id in categories_ids:
-            self.parallel_api.execute('', dict(
+            self.parallel_api.execute('GetCategoryFeatures', dict(
                 AllFeaturesForCategory=True,
                 ViewAllNodes=True,
                 CategoryID=category_id,
@@ -50,4 +57,11 @@ class EbayCategories(Ebay):
                 DetailLevel='ReturnAll'
             ))
 
-        return self.parallel_api.wait_and_validate()
+        category_features = self.parallel_api.wait_and_validate()
+        features = {}
+        for i, response in enumerate(category_features):
+            data = response.response.dict()
+            feature = EbayFeature.create_from_data(data)
+            features[feature.details.category_id] = feature
+
+        return features
