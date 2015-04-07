@@ -49,6 +49,19 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(len(feature.details.durations_dict), 9)
 
         self.assertEqual(feature.details.durations_dict['FixedPriceItem'], 8)
+        self.assertIsNone(feature.details.payment_methods)
+        self.assertEqual(feature.payment_methods, [
+            'PayPal',
+            'Moneybookers',
+            'CashOnPickup',
+            'MoneyXferAcceptedInCheckout',
+            'MoneyXferAccepted',
+            'COD',
+            'PaymentSeeDescription',
+            'CCAccepted',
+            'Escrow',
+            'StandardPayment'
+        ])
 
         second_feature = features['64540']
 
@@ -59,6 +72,19 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(len(second_feature.details.durations_dict), 9)
 
         self.assertEqual(second_feature.details.durations_dict['FixedPriceItem'], 8)
+        self.assertIsNone(second_feature.details.payment_methods)
+        self.assertEqual(second_feature.payment_methods, [
+            'PayPal',
+            'Moneybookers',
+            'CashOnPickup',
+            'MoneyXferAcceptedInCheckout',
+            'MoneyXferAccepted',
+            'COD',
+            'PaymentSeeDescription',
+            'CCAccepted',
+            'Escrow',
+            'StandardPayment'
+        ])
 
         feature_definition = feature.definition
         self.assertIsInstance(feature_definition, EbayFeatureDefinition)
@@ -72,3 +98,6 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         log.debug('Original data: %s', feature_definition.durations_dict[8]._poposerializer_original_data)
         self.assertEqual(feature_definition.durations_dict[8].durations, ['Days_3', 'Days_5', 'Days_7', 'Days_10',
                                                                           'Days_30'])
+
+        self.assertEqual(feature.get_duration_list_by_type('FixedPriceItem'), ['Days_3', 'Days_5', 'Days_7', 'Days_10',
+                                                                               'Days_30'])

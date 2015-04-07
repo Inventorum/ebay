@@ -11,7 +11,6 @@ log = logging.getLogger(__name__)
 
 
 class TestEbayInfo(EbayAuthenticatedAPITestCase):
-
     @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_user.json")
     def test_it(self):
         auth = EbayInfo(self.ebay_token)
@@ -42,8 +41,21 @@ class TestEbayInfo(EbayAuthenticatedAPITestCase):
         self.assertIsInstance(site_defaults.definition, EbayFeatureDefinition)
 
         durations = site_defaults.definition.durations
-        self.assertEqual(len(durations), 0)
+        self.assertIsNone(durations)
 
         durations = site_defaults.details.durations
-        self.assertEqual(len(durations), 0)
+        self.assertIsNone(durations)
         self.assertIsNone(site_defaults.details.category_id)
+
+        self.assertEqual(site_defaults.details.payment_methods, [
+            'PayPal',
+            'Moneybookers',
+            'CashOnPickup',
+            'MoneyXferAcceptedInCheckout',
+            'MoneyXferAccepted',
+            'COD',
+            'PaymentSeeDescription',
+            'CCAccepted',
+            'Escrow',
+            'StandardPayment'
+        ])

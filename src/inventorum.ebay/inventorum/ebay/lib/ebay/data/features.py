@@ -24,13 +24,17 @@ class EbayListingDurationSerializer(POPOSerializer):
 class EbayFeatureDetails(object):
     durations = None
     category_id = None
+    payment_methods = None
 
-    def __init__(self, durations=None, category_id=None):
-        self.durations = durations or []
+    def __init__(self, durations=None, category_id=None, payment_methods=None):
+        self.durations = durations
         self.category_id = category_id
+        self.payment_methods = payment_methods
 
     @property
     def durations_dict(self):
+        if self.durations is None:
+            return None
         return {d.duration_type: d.duration_id for d in self.durations}
 
     @classmethod
@@ -49,6 +53,7 @@ class EbayFeatureDetails(object):
 class EbayFeatureDetailsSerializer(POPOSerializer):
     CategoryID = CharField(source="category_id", required=False)
     ListingDuration = EbayListingDurationSerializer(many=True, source="durations", required=False)
+    PaymentMethod = ListField(child=CharField(), source="payment_methods", required=False)
 
     class Meta:
         model = EbayFeatureDetails
@@ -59,7 +64,7 @@ class EbayListingDurationDefinition(object):
     durations = None
 
     def __init__(self, set_id, durations=None):
-        self.durations = durations or []
+        self.durations = durations
         self.set_id = set_id
 
 
@@ -75,7 +80,7 @@ class EbayFeatureDefinition(object):
     durations = None
 
     def __init__(self, durations=None):
-        self.durations = durations or []
+        self.durations = durations
 
     @property
     def durations_dict(self):
@@ -104,10 +109,23 @@ class EbayFeatureDefinitionSerializer(POPOSerializer):
 class EbayFeature(object):
     """
     Attributes:
-        feature_definition (EbayFeatureDetails): Features details
+        definition (EbayFeatureDetails): Features details
     """
     definition = None
     details = None
+    site_defaults = None
+
+    def get_duration_list_by_type(self, duration_type):
+        set_id = self.details.durations_dict[duration_type]
+        if set_id is None:
+            set_id = self.site_defaults.durations_dict[duration_type]
+        return self.definition.durations_dict[set_id].durations
+
+    @property
+    def payment_methods(self):
+        if self.details.payment_methods is None:
+            return self.site_defaults.payment_methods
+        return self.details.payment_methods
 
     @classmethod
     def create_from_data(cls, data):
@@ -124,4 +142,5 @@ class EbayFeature(object):
 
         details_data = data.get('Category', data.get('SiteDefaults'))
         instance.details = EbayFeatureDetails.create_from_data(details_data)
+        instance.site_defaults = EbayFeatureDetails.create_from_data(data.get('SiteDefaults'))
         return instance

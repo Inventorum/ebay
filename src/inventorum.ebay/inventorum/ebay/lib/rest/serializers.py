@@ -39,7 +39,7 @@ class POPOSerializer(serializers.Serializer):
             raise ValidationError(msg)
 
         # Debugging purposes
-        instance._poposerializer_original_data = self.data
+        instance._poposerializer_original_data = self.root.initial_data
         return instance
 
     def build(self):
