@@ -16,6 +16,7 @@ class PublishResource(APIResource):
         try:
             core_product = request.user.core_api.get_product(inv_product_id)
         except HTTPError as e:
+            log.warn('Got exception when trying to get product: %s', e)
             return Response(status=e.response.status_code)
 
         return Response(data=core_product.name)

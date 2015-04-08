@@ -73,3 +73,15 @@ You need to downgrade python to 2.7.6
     sudo port activate python27 @2.7.6
 
 
+
+Account we are using for testing
+--------------------------------
+
+::
+
+  # Inventorum test account (slingshot)
+  Email: tech+slingshot-test@inventorum.com
+  Account id: 346
+  User id: 425
+  Pin: 1111
+  Password: login

@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from decimal import Decimal as D
+from decimal import Decimal as D, Decimal
 
 from django.conf import settings
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
@@ -81,3 +81,18 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(image_2.id, 2916)
         self.assertTrue(image_2.url.endswith(
             "/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad_retina.JPEG"))
+
+    @CoreApiTest.vcr.use_cassette("get_product_with_shipping_services.json")
+    def test_get_product_with_ebay_meta(self):
+        core_product = self.subject.get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES)
+
+        self.assertEqual(core_product.id, StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES)
+        self.assertEqual(len(core_product.shipping_services), 2)
+
+        first_shipping = core_product.shipping_services[0]
+        self.assertEqual(first_shipping.id, 'DE_HermesPaket')
+        self.assertEqual(first_shipping.description, 'Hermes Paket')
+        self.assertEqual(first_shipping.time_min, 1)
+        self.assertEqual(first_shipping.time_max, 2)
+        self.assertEqual(first_shipping.additional_cost, Decimal(1))
+        self.assertEqual(first_shipping.cost, Decimal(10))

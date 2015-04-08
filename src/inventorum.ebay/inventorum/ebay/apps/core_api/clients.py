@@ -39,7 +39,8 @@ class CoreAPIClient(object):
         if not path.startswith("/"):
             path = "/{path}".format(path=path)
 
-        return "http://{host}{path}".format(host=settings.INV_CORE_API_HOST, path=path)
+        protocol = 'https' if settings.INV_CORE_API_SECURE else 'http'
+        return "{protocol}://{host}{path}".format(protocol=protocol, host=settings.INV_CORE_API_HOST, path=path)
 
     def get(self, path, params=None, custom_headers=None):
         """
@@ -113,5 +114,6 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         """
         response = self.get("/api/products/{product_id}".format(product_id=product_id))
         json = response.json()
+        log.debug('Got json from /api/products/%s/: %s', product_id, json)
         serializer = CoreProductDeserializer(data=json)
         return serializer.build()
