@@ -101,3 +101,14 @@ class TestUserScopedCoreAPIClient(APITestCase):
     def test_get_product_with_ebay_meta(self):
         core_account = self.subject.get_account_info()
         self.assertEqual(core_account.account.email, "tech+slingshot-test@inventorum.com")
+
+        billing = core_account.account.billing_address
+        self.assertEqual(billing.address1, "Voltastr 5")
+        self.assertEqual(billing.address2, "Gebaude 3")
+        self.assertEqual(billing.zipcode, "13355")
+        self.assertEqual(billing.city, "Berlin")
+        self.assertEqual(billing.state, None)
+        self.assertEqual(billing.country, "DE")
+        self.assertEqual(billing.first_name, "John")
+        self.assertEqual(billing.last_name, "Newman")
+        self.assertEqual(billing.company, "Inventorum")

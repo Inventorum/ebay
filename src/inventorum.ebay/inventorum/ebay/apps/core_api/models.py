@@ -135,16 +135,61 @@ class CoreProductDeserializer(POPOSerializer):
         return super(CoreProductDeserializer, self).create(validated_data)
 
 
+class CoreAddress(object):
+    def __init__(self, id, address1, address2, zipcode, city, state, country, first_name, last_name, company):
+        """
+        :type id: int
+        :type address1: unicode
+        :type address2: unicode
+        :type zipcode: unicode
+        :type city: unicode
+        :type state: unicode
+        :type country: unicode
+        :type first_name: unicode
+        :type last_name: unicode
+        :type company: unicode
+        """
+        self.id = id
+        self.address1 = address1
+        self.address2 = address2
+        self.zipcode = zipcode
+        self.city = city
+        self.state = state
+        self.country = country
+        self.first_name = first_name
+        self.last_name = last_name
+        self.company = company
+
+
+class CoreAddressDeserializer(POPOSerializer):
+    id = serializers.IntegerField()
+    address1 = serializers.CharField()
+    address2 = serializers.CharField(allow_null=True)
+    zipcode = serializers.CharField()
+    city = serializers.CharField()
+    state = serializers.CharField(allow_null=True)
+    country = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    company = serializers.CharField(allow_null=True)
+
+    class Meta:
+        model = CoreAddress
+
+
 class CoreAccount(object):
-    def __init__(self, email=None):
+    def __init__(self, email=None, billing_address=None):
         """
         :type email: unicode | None
+        :type billing_address: CoreAddress
         """
         self.email = email
+        self.billing_address = billing_address
 
 
 class CoreAccountDeserializer(POPOSerializer):
     email = serializers.EmailField()
+    billing_address = CoreAddressDeserializer(required=False)
 
     class Meta:
         model = CoreAccount
