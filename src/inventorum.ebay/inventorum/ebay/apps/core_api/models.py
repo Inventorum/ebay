@@ -120,7 +120,7 @@ class CoreProductDeserializer(POPOSerializer):
                 ebay_meta = validated_data["meta"]["ebay"]
 
                 def overwrite_from_meta(attr):
-                    if attr in ebay_meta and ebay_meta[attr] not in (None, []):
+                    if attr in ebay_meta and ebay_meta[attr]:
                         validated_data[attr] = ebay_meta[attr]
 
                 overwrite_from_meta("name")
@@ -178,17 +178,19 @@ class CoreAddressDeserializer(POPOSerializer):
 
 
 class CoreAccount(object):
-    def __init__(self, email=None, billing_address=None):
+    def __init__(self, country, email=None, billing_address=None):
         """
         :type email: unicode | None
         :type billing_address: CoreAddress
         """
         self.email = email
+        self.country = country
         self.billing_address = billing_address
 
 
 class CoreAccountDeserializer(POPOSerializer):
     email = serializers.EmailField()
+    country = serializers.CharField()
     billing_address = CoreAddressDeserializer(required=False)
 
     class Meta:

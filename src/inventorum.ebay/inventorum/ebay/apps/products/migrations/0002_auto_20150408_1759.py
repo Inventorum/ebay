@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import datetime
+import django_countries.fields
 from django.utils.timezone import utc
 import django.utils.timezone
 import inventorum.util.django.db.models
@@ -47,9 +48,10 @@ class Migration(migrations.Migration):
                 ('quantity', models.IntegerField(default=0)),
                 ('gross_price', models.DecimalField(max_digits=20, decimal_places=10)),
                 ('publishing_status', models.IntegerField(default=1, choices=[(1, b'Draft'), (2, b'In progress'), (3, b'Published')])),
+                ('country', django_countries.fields.CountryField(max_length=2)),
                 ('account', models.ForeignKey(related_name='items', verbose_name='Inventorum ebay account', to='accounts.EbayAccountModel')),
                 ('category', models.ForeignKey(related_name='items', to='categories.CategoryModel')),
-                ('product', models.ForeignKey(related_name='images', to='products.EbayProductModel')),
+                ('product', models.ForeignKey(related_name='items', to='products.EbayProductModel')),
             ],
             options={
                 'abstract': False,

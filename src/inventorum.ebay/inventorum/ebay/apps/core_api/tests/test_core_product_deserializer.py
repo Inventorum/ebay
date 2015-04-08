@@ -23,14 +23,14 @@ class TestCoreProductDeserializer(UnitTestCase):
                     "id": 520,
                     "channel": 4,
                     "name": None,
-                    "description": None
+                    "description": ""
                 }
             },
             "id": 330857,
             "name": "Felt Brougham",
             "variation_count": 0,
             "shipping_services": [],
-            "description": "Marvellous bike",
+            "description": "Marvellous bike"
         }
 
         subject = CoreProductDeserializer(data=minimal_core_product_json)

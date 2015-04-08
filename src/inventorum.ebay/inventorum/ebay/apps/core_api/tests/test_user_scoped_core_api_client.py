@@ -101,6 +101,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
     def test_get_account_info(self):
         core_account = self.subject.get_account_info()
         self.assertEqual(core_account.account.email, "tech+slingshot-test@inventorum.com")
+        self.assertEqual(core_account.account.country, "DE")
 
         billing = core_account.account.billing_address
         self.assertEqual(billing.address1, "Voltastr 5")

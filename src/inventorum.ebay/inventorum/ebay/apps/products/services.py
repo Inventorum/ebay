@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext
-from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel
+from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel
 
 
 class PublishingValidationException(Exception):
@@ -12,36 +12,65 @@ class PublishingService(object):
     def __init__(self, product_id, user):
         """
         Service for publishing products to ebay
-        :param core_product: Core product from API
-        :return:
-        :type core_product: inventorum.ebay.apps.core_api.models.CoreProduct
-        :type account: EbayAccountModel
+        :type product_id: int
+        :type user: EbayUserModel
         """
         self.user = user
         self.core_product = self.user.core_api.get_product(product_id)
-        self.core_account = self.user.core_api
-
-    def _create_db_item(self):
-        return EbayItemModel.create_from_core_product(self.core_product)
+        self.core_info = self.user.core_api.get_account_info()
+        self.core_account = self.core_info.account
 
     def validate(self):
+        """
+        Validates account and product before publishing to ebay
+        :raises: PublishingValidationException
+        """
+        if not self.core_account.billing_address:
+            raise PublishingValidationException(ugettext('To publish product we need your billing address'))
+
         if self.core_product.is_parent:
             raise PublishingValidationException(ugettext('Cannot publish products with variations'))
 
         if not self.core_product.shipping_services:
             raise PublishingValidationException(ugettext('Product has not shipping services selected'))
 
-        db_product_exists = EbayProductModel.objects.filter(inv_id=self.core_product.id).exists()
-        if not db_product_exists:
+        try:
+            product = EbayProductModel.objects.get(inv_id=self.core_product.id)
+        except EbayProductModel.DoesNotExist:
             raise PublishingValidationException(ugettext('Couldnt find product [inv_id:%s] in database') % self.core_product.id)
 
+        if not product.category_id:
+            raise PublishingValidationException(ugettext('You need to select category'))
+
     def prepare(self):
+        """
+        Create all necessary models for later publishing in async task
+        :return:
+        """
+        # TODO: At this point we should inform API to change quantity I think?
         item = self._create_db_item()
 
+    def _create_db_item(self):
 
+        db_product = EbayProductModel.objects.get(inv_id=self.core_product.id)
 
+        item = EbayItemModel.objects.create(
+            product=db_product,
+            account=db_product.account,
+            name=self.core_product.name,
+            description=self.core_product.description,
+            gross_price=self.core_product.gross_price,
+            category=db_product.category,
+            country=self.core_account.country,
+            quantity=self.core_product.quantity,
+            postal_code=self.core_account.billing_address.zipcode
+        )
 
+        for image in self.core_product.images:
+            EbayItemImageModel.objects.create(
+                inv_id=image.id,
+                url=image.url,
+                item=item
+            )
 
-
-
-
+        return item
