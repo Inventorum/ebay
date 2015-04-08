@@ -1,29 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+import logging
 from inventorum.ebay.lib.ebay.categories import EbayCategories
-from inventorum.ebay.lib.ebay.data import EbayCategory
-from inventorum.ebay.lib.ebay.tests import EbayClassTestCase
-from django.conf import settings
+from inventorum.ebay.lib.ebay.data.categories import EbayCategory
+from inventorum.ebay.lib.ebay.data.features import EbayFeature, EbayFeatureDetails, EbayFeatureDefinition, \
+    EbayListingDurationDefinition
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
-
-class EbayCategoriesTest(EbayClassTestCase):
-    def test_init(self):
-        ebay = EbayCategories(None)
-
-
-        self.connection_mock.assert_any_call(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
-                                             certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
-                                             debug=settings.DEBUG, timeout=20, config_file=None,
-                                             compatibility=911, version=911, parallel=None)
-        # Make sure parallel object was created
-        self.connection_mock.assert_any_call(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
-                                             certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
-                                             debug=settings.DEBUG, timeout=20, config_file=None,
-                                             compatibility=911, version=911, parallel=self.parallel_mock)
-
-        ebay.get_attributes_for_categories([1, 2, 3])
-        self.parallel_mock.wait.assert_called_with(ebay.timeout)
+log = logging.getLogger(__name__)
 
 
 class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
@@ -48,3 +32,72 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(first_category.best_offer_enabled, True)
         self.assertEqual(first_category.auto_pay_enabled, True)
         self.assertEqual(first_category.item_lot_size_disabled, False)
+
+    # TODO: We cannot use here cassette cause it is not supporting gevent (somehow, second response is empty
+    # if taken from cassette)
+    def test_ebay_categories_features(self):
+        ebay = EbayCategories(self.ebay_token)
+        features = ebay.get_features_for_categories(['353', '64540'])
+        self.assertEqual(len(features), 2)
+        feature = features['353']
+
+        self.assertIsInstance(feature, EbayFeature)
+        self.assertEqual(feature.details.category_id, '353')
+
+        log.debug('Durations: %s', feature.details.durations)
+        self.assertEqual(len(feature.details.durations), 9)
+        self.assertEqual(len(feature.details.durations_dict), 9)
+
+        self.assertEqual(feature.details.durations_dict['FixedPriceItem'], 8)
+        self.assertIsNone(feature.details.payment_methods)
+        self.assertEqual(feature.payment_methods, [
+            'PayPal',
+            'Moneybookers',
+            'CashOnPickup',
+            'MoneyXferAcceptedInCheckout',
+            'MoneyXferAccepted',
+            'COD',
+            'PaymentSeeDescription',
+            'CCAccepted',
+            'Escrow',
+            'StandardPayment'
+        ])
+
+        second_feature = features['64540']
+
+        self.assertIsInstance(second_feature, EbayFeature)
+        self.assertEqual(second_feature.details.category_id, '64540')
+
+        self.assertEqual(len(second_feature.details.durations), 9)
+        self.assertEqual(len(second_feature.details.durations_dict), 9)
+
+        self.assertEqual(second_feature.details.durations_dict['FixedPriceItem'], 8)
+        self.assertIsNone(second_feature.details.payment_methods)
+        self.assertEqual(second_feature.payment_methods, [
+            'PayPal',
+            'Moneybookers',
+            'CashOnPickup',
+            'MoneyXferAcceptedInCheckout',
+            'MoneyXferAccepted',
+            'COD',
+            'PaymentSeeDescription',
+            'CCAccepted',
+            'Escrow',
+            'StandardPayment'
+        ])
+
+        feature_definition = feature.definition
+        self.assertIsInstance(feature_definition, EbayFeatureDefinition)
+        self.assertEqual(len(feature_definition.durations), 6)
+
+        for duration in feature_definition.durations:
+            self.assertIsInstance(duration, EbayListingDurationDefinition)
+
+        # So in Category 353 we got SetId: 8 for FixedPriceItem, lets check if this is in definitions
+        self.assertIsInstance(feature_definition.durations_dict[8], EbayListingDurationDefinition)
+        log.debug('Original data: %s', feature_definition.durations_dict[8]._poposerializer_original_data)
+        self.assertEqual(feature_definition.durations_dict[8].durations, ['Days_3', 'Days_5', 'Days_7', 'Days_10',
+                                                                          'Days_30'])
+
+        self.assertEqual(feature.get_duration_list_by_type('FixedPriceItem'), ['Days_3', 'Days_5', 'Days_7', 'Days_10',
+                                                                               'Days_30'])

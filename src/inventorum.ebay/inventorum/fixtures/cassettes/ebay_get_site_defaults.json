@@ -1,0 +1,82 @@
+{
+    "version": 1, 
+    "interactions": [
+        {
+            "request": {
+                "body": "<?xml version='1.0' encoding='utf-8'?><GetCategoryFeaturesRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><AllFeaturesForCategory>True</AllFeaturesForCategory><DetailLevel>ReturnAll</DetailLevel><LevelLimit>7</LevelLimit><ViewAllNodes>True</ViewAllNodes></GetCategoryFeaturesRequest>", 
+                "headers": {
+                    "X-EBAY-API-SITEID": [
+                        77
+                    ], 
+                    "Content-Length": [
+                        "1231"
+                    ], 
+                    "X-EBAY-API-COMPATIBILITY-LEVEL": [
+                        911
+                    ], 
+                    "User-Agent": [
+                        "eBaySDK/2.1.0 Python/2.7.6 Darwin/14.1.0"
+                    ], 
+                    "X-EBAY-SDK-REQUEST-ID": [
+                        "52cd80c8-c452-404e-8dad-8b2ccbb30015"
+                    ], 
+                    "X-EBAY-API-CALL-NAME": [
+                        "GetCategoryFeatures"
+                    ], 
+                    "Content-Type": [
+                        "text/xml"
+                    ]
+                }, 
+                "method": "POST", 
+                "uri": "https://api.ebay.com/ws/api.dll"
+            }, 
+            "response": {
+                "status": {
+                    "message": "OK", 
+                    "code": 200
+                }, 
+                "headers": {
+                    "x-ebay-request-id": [
+                        "14c92c0c-7520-a793-8101-95c1a61cf749!ws.api.dll!10.121.56.16!esbtrading[]"
+                    ], 
+                    "content-length": [
+                        "11198"
+                    ], 
+                    "x-ebay-esb-app-name": [
+                        "Inventor-9021-41d8-9c25-9bae93f76429"
+                    ], 
+                    "content-type": [
+                        "text/xml"
+                    ], 
+                    "x-ebay-esb-call-name": [
+                        "GetCategoryFeatures"
+                    ], 
+                    "server": [
+                        "Apache-Coyote/1.1"
+                    ], 
+                    "x-ebay-api-server-name": [
+                        "___dWtgMWQ3MmYrNTQ2ZCgyNSg+Nys3MTcrMDI5PTY/Mg=="
+                    ], 
+                    "date": [
+                        "Tue, 07 Apr 2015 07:20:49 GMT"
+                    ], 
+                    "x-ebay-esb-guid": [
+                        "urn:uuid:33a25d1f-c45f-4cf2-90d4-19c28c8b2d1d"
+                    ], 
+                    "guid": [
+                        "14c92c0c-7520-a793-8101-95c1a61cf749"
+                    ], 
+                    "x-ebay-api-pool-name": [
+                        "___cDRidW9kYnFna2xib2l3aQ=="
+                    ], 
+                    "x-ebay-esb-siteid": [
+                        "77"
+                    ]
+                }, 
+                "body": {
+                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetCategoryFeaturesResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-07T07:20:49.858Z</Timestamp><Ack>Success</Ack><Version>895</Version><Build>E895_INTL_APICATALOG_17257399_R1</Build><CategoryVersion>3145</CategoryVersion><UpdateTime>2015-04-06T09:47:55.000Z</UpdateTime><SiteDefaults><ShippingTermsRequired>false</ShippingTermsRequired><BestOfferEnabled>true</BestOfferEnabled><DutchBINEnabled>false</DutchBINEnabled><UserConsentRequired>false</UserConsentRequired><HomePageFeaturedEnabled>true</HomePageFeaturedEnabled><ProPackEnabled>false</ProPackEnabled><BasicUpgradePackEnabled>false</BasicUpgradePackEnabled><ValuePackEnabled>true</ValuePackEnabled><ProPackPlusEnabled>true</ProPackPlusEnabled><AdFormatEnabled>Disabled</AdFormatEnabled><BestOfferCounterEnabled>true</BestOfferCounterEnabled><BestOfferAutoDeclineEnabled>true</BestOfferAutoDeclineEnabled><LocalMarketSpecialitySubscription>false</LocalMarketSpecialitySubscription><LocalMarketRegularSubscription>false</LocalMarketRegularSubscription><LocalMarketPremiumSubscription>false</LocalMarketPremiumSubscription><LocalMarketNonSubscription>false</LocalMarketNonSubscription><ExpressEnabled>true</ExpressEnabled><ExpressPicturesRequired>true</ExpressPicturesRequired><ExpressConditionRequired>true</ExpressConditionRequired><MinimumReservePrice>0.0</MinimumReservePrice><SellerContactDetailsEnabled>false</SellerContactDetailsEnabled><TransactionConfirmationRequestEnabled>false</TransactionConfirmationRequestEnabled><StoreInventoryEnabled>false</StoreInventoryEnabled><SkypeMeTransactionalEnabled>true</SkypeMeTransactionalEnabled><SkypeMeNonTransactionalEnabled>true</SkypeMeNonTransactionalEnabled><ClassifiedAdPaymentMethodEnabled>NotSupported</ClassifiedAdPaymentMethodEnabled><ClassifiedAdShippingMethodEnabled>false</ClassifiedAdShippingMethodEnabled><ClassifiedAdBestOfferEnabled>Disabled</ClassifiedAdBestOfferEnabled><ClassifiedAdCounterOfferEnabled>false</ClassifiedAdCounterOfferEnabled><ClassifiedAdAutoDeclineEnabled>false</ClassifiedAdAutoDeclineEnabled><ClassifiedAdContactByPhoneEnabled>false</ClassifiedAdContactByPhoneEnabled><ClassifiedAdContactByEmailEnabled>false</ClassifiedAdContactByEmailEnabled><SafePaymentRequired>true</SafePaymentRequired><ItemSpecificsEnabled>Enabled</ItemSpecificsEnabled><ClassifiedAdAutoAcceptEnabled>false</ClassifiedAdAutoAcceptEnabled><BestOfferAutoAcceptEnabled>true</BestOfferAutoAcceptEnabled><CrossBorderTradeNorthAmericaEnabled>false</CrossBorderTradeNorthAmericaEnabled><CrossBorderTradeGBEnabled>false</CrossBorderTradeGBEnabled><CrossBorderTradeAustraliaEnabled>false</CrossBorderTradeAustraliaEnabled><PayPalBuyerProtectionEnabled>false</PayPalBuyerProtectionEnabled><BuyerGuaranteeEnabled>true</BuyerGuaranteeEnabled><CombinedFixedPriceTreatmentEnabled>true</CombinedFixedPriceTreatmentEnabled><GalleryFeaturedDurations><Duration>Days_7</Duration><Duration>Lifetime</Duration></GalleryFeaturedDurations><PayPalRequired>false</PayPalRequired><eBayMotorsProAdFormatEnabled>Disabled</eBayMotorsProAdFormatEnabled><eBayMotorsProContactByPhoneEnabled>false</eBayMotorsProContactByPhoneEnabled><eBayMotorsProContactByAddressEnabled>false</eBayMotorsProContactByAddressEnabled><eBayMotorsProCompanyNameEnabled>false</eBayMotorsProCompanyNameEnabled><eBayMotorsProContactByEmailEnabled>false</eBayMotorsProContactByEmailEnabled><eBayMotorsProBestOfferEnabled>Disabled</eBayMotorsProBestOfferEnabled><eBayMotorsProAutoAcceptEnabled>false</eBayMotorsProAutoAcceptEnabled><eBayMotorsProAutoDeclineEnabled>false</eBayMotorsProAutoDeclineEnabled><eBayMotorsProPaymentMethodCheckOutEnabled>NotSupported</eBayMotorsProPaymentMethodCheckOutEnabled><eBayMotorsProShippingMethodEnabled>false</eBayMotorsProShippingMethodEnabled><eBayMotorsProCounterOfferEnabled>false</eBayMotorsProCounterOfferEnabled><eBayMotorsProSellerContactDetailsEnabled>false</eBayMotorsProSellerContactDetailsEnabled><LocalMarketAdFormatEnabled>Disabled</LocalMarketAdFormatEnabled><LocalMarketContactByPhoneEnabled>false</LocalMarketContactByPhoneEnabled><LocalMarketContactByAddressEnabled>false</LocalMarketContactByAddressEnabled><LocalMarketCompanyNameEnabled>false</LocalMarketCompanyNameEnabled><LocalMarketContactByEmailEnabled>false</LocalMarketContactByEmailEnabled><LocalMarketBestOfferEnabled>Disabled</LocalMarketBestOfferEnabled><LocalMarketAutoAcceptEnabled>false</LocalMarketAutoAcceptEnabled><LocalMarketAutoDeclineEnabled>false</LocalMarketAutoDeclineEnabled><LocalMarketPaymentMethodCheckOutEnabled>NotSupported</LocalMarketPaymentMethodCheckOutEnabled><LocalMarketShippingMethodEnabled>false</LocalMarketShippingMethodEnabled><LocalMarketCounterOfferEnabled>false</LocalMarketCounterOfferEnabled><LocalMarketSellerContactDetailsEnabled>false</LocalMarketSellerContactDetailsEnabled><ClassifiedAdContactByAddressEnabled>false</ClassifiedAdContactByAddressEnabled><ClassifiedAdCompanyNameEnabled>false</ClassifiedAdCompanyNameEnabled><SpecialitySubscription>National</SpecialitySubscription><RegularSubscription>National</RegularSubscription><PremiumSubscription>National</PremiumSubscription><NonSubscription>National</NonSubscription><PayPalRequiredForStoreOwner>true</PayPalRequiredForStoreOwner><ReviseQuantityAllowed>true</ReviseQuantityAllowed><RevisePriceAllowed>true</RevisePriceAllowed><StoreOwnerExtendedListingDurationsEnabled>true</StoreOwnerExtendedListingDurationsEnabled><StoreOwnerExtendedListingDurations><Duration>Days_30</Duration><Duration>GTC</Duration></StoreOwnerExtendedListingDurations><ReturnPolicyEnabled>true</ReturnPolicyEnabled><HandlingTimeEnabled>false</HandlingTimeEnabled><MaxFlatShippingCostCBTExempt>false</MaxFlatShippingCostCBTExempt><Group1MaxFlatShippingCost currencyID=\"EUR\">3.0</Group1MaxFlatShippingCost><Group2MaxFlatShippingCost currencyID=\"EUR\">2.5</Group2MaxFlatShippingCost><PaymentMethod>PayPal</PaymentMethod><PaymentMethod>Moneybookers</PaymentMethod><PaymentMethod>CashOnPickup</PaymentMethod><PaymentMethod>MoneyXferAcceptedInCheckout</PaymentMethod><PaymentMethod>MoneyXferAccepted</PaymentMethod><PaymentMethod>COD</PaymentMethod><PaymentMethod>PaymentSeeDescription</PaymentMethod><PaymentMethod>CCAccepted</PaymentMethod><PaymentMethod>Escrow</PaymentMethod><PaymentMethod>StandardPayment</PaymentMethod><ZeroInsertionFeeEligible>false</ZeroInsertionFeeEligible><VariationsEnabled>false</VariationsEnabled><AttributeConversionEnabled>Disabled</AttributeConversionEnabled><FreeGalleryPlusEnabled>false</FreeGalleryPlusEnabled><FreePicturePackEnabled>false</FreePicturePackEnabled><ItemCompatibilityEnabled>Disabled</ItemCompatibilityEnabled><MinItemCompatibility>0</MinItemCompatibility><MaxItemCompatibility>0</MaxItemCompatibility><ConditionEnabled>Disabled</ConditionEnabled><ValueCategory>false</ValueCategory><ProductCreationEnabled>Disabled</ProductCreationEnabled><FixedPriceFormatDisabled>false</FixedPriceFormatDisabled><MaxItemSpecificsInClassified>0</MaxItemSpecificsInClassified><MaxGranularFitmentCount>0</MaxGranularFitmentCount><PaymentOptionsGroup>eBayPaymentProcessEnabled</PaymentOptionsGroup><ShippingProfileCategoryGroup>ALL</ShippingProfileCategoryGroup><PaymentProfileCategoryGroup>ALL</PaymentProfileCategoryGroup><ReturnPolicyProfileCategoryGroup>ALL</ReturnPolicyProfileCategoryGroup><VINSupported>false</VINSupported><VRMSupported>false</VRMSupported><SellerProvidedTitleSupported>false</SellerProvidedTitleSupported><DepositSupported>false</DepositSupported><GlobalShippingEnabled>false</GlobalShippingEnabled><AdditionalCompatibilityEnabled>false</AdditionalCompatibilityEnabled><PickupDropOffEnabled>false</PickupDropOffEnabled></SiteDefaults><FeatureDefinitions><ListingDurations Version=\"8\"/><ShippingTermsRequired/><BestOfferEnabled/><DutchBINEnabled/><UserConsentRequired/><HomePageFeaturedEnabled/><ProPackEnabled/><BasicUpgradePackEnabled/><ValuePackEnabled/><ProPackPlusEnabled/><AdFormatEnabled/><BestOfferCounterEnabled/><BestOfferAutoDeclineEnabled/><LocalMarketSpecialitySubscription/><LocalMarketRegularSubscription/><LocalMarketPremiumSubscription/><LocalMarketNonSubscription/><ExpressEnabled/><ExpressPicturesRequired/><ExpressConditionRequired/><MinimumReservePrice/><TransactionConfirmationRequestEnabled/><SellerContactDetailsEnabled/><StoreInventoryEnabled/><SkypeMeTransactionalEnabled/><SkypeMeNonTransactionalEnabled/><ClassifiedAdPaymentMethodEnabled/><ClassifiedAdShippingMethodEnabled/><ClassifiedAdBestOfferEnabled/><ClassifiedAdCounterOfferEnabled/><ClassifiedAdAutoDeclineEnabled/><ClassifiedAdContactByPhoneEnabled/><ClassifiedAdContactByEmailEnabled/><SafePaymentRequired/><ItemSpecificsEnabled/><BestOfferAutoAcceptEnabled/><ClassifiedAdAutoAcceptEnabled/><CrossBorderTradeNorthAmericaEnabled/><CrossBorderTradeGBEnabled/><CrossBorderTradeAustraliaEnabled/><PayPalBuyerProtectionEnabled/><BuyerGuaranteeEnabled/><CombinedFixedPriceTreatmentEnabled/><GalleryFeaturedDurations/><PayPalRequired/><eBayMotorsProAdFormatEnabled/><eBayMotorsProContactByPhoneEnabled/><eBayMotorsProPhoneCount/><eBayMotorsProContactByAddressEnabled/><eBayMotorsProStreetCount/><eBayMotorsProCompanyNameEnabled/><eBayMotorsProContactByEmailEnabled/><eBayMotorsProBestOfferEnabled/><eBayMotorsProAutoAcceptEnabled/><eBayMotorsProAutoDeclineEnabled/><eBayMotorsProPaymentMethodCheckOutEnabled/><eBayMotorsProShippingMethodEnabled/><eBayMotorsProCounterOfferEnabled/><eBayMotorsProSellerContactDetailsEnabled/><LocalMarketAdFormatEnabled/><LocalMarketContactByPhoneEnabled/><LocalMarketPhoneCount/><LocalMarketContactByAddressEnabled/><LocalMarketStreetCount/><LocalMarketCompanyNameEnabled/><LocalMarketContactByEmailEnabled/><LocalMarketBestOfferEnabled/><LocalMarketAutoAcceptEnabled/><LocalMarketAutoDeclineEnabled/><LocalMarketPaymentMethodCheckOutEnabled/><LocalMarketShippingMethodEnabled/><LocalMarketCounterOfferEnabled/><LocalMarketSellerContactDetailsEnabled/><ClassifiedAdPhoneCount/><ClassifiedAdContactByAddressEnabled/><ClassifiedAdStreetCount/><ClassifiedAdCompanyNameEnabled/><SpecialitySubscription/><RegularSubscription/><PremiumSubscription/><NonSubscription/><ReturnPolicyEnabled/><HandlingTimeEnabled/><PayPalRequiredForStoreOwner/><ReviseQuantityAllowed/><RevisePriceAllowed/><StoreOwnerExtendedListingDurationsEnabled/><StoreOwnerExtendedListingDurations/><PaymentMethod/><Group1MaxFlatShippingCost/><Group2MaxFlatShippingCost/><Group3MaxFlatShippingCost/><MaxFlatShippingCostCBTExempt/><MaxFlatShippingCost/><ZeroInsertionFeeEligible/><VariationsEnabled/><AttributeConversionEnabled/><FreeGalleryPlusEnabled/><FreePicturePackEnabled/><ItemCompatibilityEnabled/><MaxItemCompatibility/><MinItemCompatibility/><ConditionEnabled/><ConditionValues/><ValueCategory/><ProductCreationEnabled/><FixedPriceFormatDisabled/><MaxItemSpecificsInClassified/><CompatibleVehicleType/><MaxGranularFitmentCount/><PaymentOptionsGroup/><ShippingProfileCategoryGroup/><PaymentProfileCategoryGroup/><ReturnPolicyProfileCategoryGroup/><VINSupported/><VRMSupported/><SellerProvidedTitleSupported/><DepositSupported/><GlobalShippingEnabled/><AdditionalCompatibilityEnabled/><PickupDropOffEnabled/></FeatureDefinitions></GetCategoryFeaturesResponse>"
+                }
+            }
+        }
+    ]
+}

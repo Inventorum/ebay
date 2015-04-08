@@ -2,7 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import Ebay
 from django.conf import settings
-from inventorum.ebay.lib.ebay.data import EbayToken, EbayParser
+from inventorum.ebay.lib.ebay.data import EbayParser
+from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 
 
 class EbayAuthentication(Ebay):

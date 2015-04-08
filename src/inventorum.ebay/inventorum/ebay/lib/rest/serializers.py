@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 
@@ -30,7 +31,16 @@ class POPOSerializer(serializers.Serializer):
                 elif isinstance(field, serializers.ListSerializer) and isinstance(field.child, POPOSerializer):
                     validated_data[name] = [field.child.create(validated_item) for validated_item in validated_data[name]]
 
-        return ModelClass(**validated_data)
+        try:
+            instance = ModelClass(**validated_data)
+        except TypeError as e:
+            msg = 'Got TypeError (%s) when trying to create %s with data: %s' % (e, ModelClass, validated_data)
+            log.warn(msg)
+            raise ValidationError(msg)
+
+        # Debugging purposes
+        instance._poposerializer_original_data = self.root.initial_data
+        return instance
 
     def build(self):
         if not hasattr(self, "_errors"):

@@ -111,10 +111,11 @@ class Ebay(object):
 
 
 class EbayParallel(Ebay):
-    executions = []
+    executions = None
     parallel = None
 
     def __init__(self, *args, **kwargs):
+        self.executions = []
         self.parallel = kwargs.get('parallel')
         if not self.parallel:
             self.parallel = Parallel()

@@ -2,7 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.db.transaction import atomic
-from inventorum.ebay.apps.categories.models import CategoryModel
+from django.utils.functional import cached_property
+from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from django.conf import settings
 
@@ -85,3 +86,44 @@ class EbayCategoriesScraper(object):
         for category in children_categories:
             category.parent = categories_by_external_id[category.external_parent_id]
             category.save()
+
+
+class EbayFeaturesScraper(object):
+    batch_size = 20
+
+    def __init__(self, ebay_token):
+        self.ebay_token = ebay_token
+
+    @cached_property
+    def count(self):
+        return CategoryModel.objects.count()
+
+    @property
+    def pages(self):
+        return self.count/self.batch_size
+
+    def fetch_all(self):
+        for country_code in settings.EBAY_SUPPORTED_SITES.keys():
+            self._fetch_in_batches(country_code)
+
+    def _fetch_in_batches(self, country_code):
+        queryset = CategoryModel.objects.filter(country=country_code)
+
+        for page in range(0, self.pages):
+            start = page * self.batch_size
+            end = start + self.batch_size
+            limited_categories = queryset[start:end]
+            log.debug('Fetching categories features, starting batch: %s/%s', page+1, self.pages)
+            ebay = EbayCategories(self.ebay_token, site_id=settings.EBAY_SUPPORTED_SITES[country_code])
+            self._get_features_for_categories(limited_categories, ebay)
+
+    def _get_features_for_categories(self, categories, ebay):
+        categories_ids = {category.external_id: category for category in categories}
+        features = ebay.get_features_for_categories(categories_ids.keys())
+
+        with atomic():
+            for category_id, feature in features.iteritems():
+                CategoryFeaturesModel.create_or_update_from_ebay_data_for_category(feature, categories_ids[category_id])
+
+
+

@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.utils.datetime_safe import datetime
+from inventorum.ebay.lib.ebay.data.features import EbayFeature, EbayFeatureDefinition
 from inventorum.ebay.lib.ebay.info import EbayInfo
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from pytz import UTC
@@ -10,7 +11,6 @@ log = logging.getLogger(__name__)
 
 
 class TestEbayInfo(EbayAuthenticatedAPITestCase):
-
     @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_user.json")
     def test_it(self):
         auth = EbayInfo(self.ebay_token)
@@ -32,3 +32,30 @@ class TestEbayInfo(EbayAuthenticatedAPITestCase):
         self.assertEqual(address.city, 'default')
         self.assertEqual(address.country, 'DE')
         self.assertEqual(address.postal_code, 'default')
+
+    @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_site_defaults.json")
+    def test_it(self):
+        auth = EbayInfo(self.ebay_token)
+        site_defaults = auth.get_site_defaults()
+        self.assertIsInstance(site_defaults, EbayFeature)
+        self.assertIsInstance(site_defaults.definition, EbayFeatureDefinition)
+
+        durations = site_defaults.definition.durations
+        self.assertIsNone(durations)
+
+        durations = site_defaults.details.durations
+        self.assertIsNone(durations)
+        self.assertIsNone(site_defaults.details.category_id)
+
+        self.assertEqual(site_defaults.details.payment_methods, [
+            'PayPal',
+            'Moneybookers',
+            'CashOnPickup',
+            'MoneyXferAcceptedInCheckout',
+            'MoneyXferAccepted',
+            'COD',
+            'PaymentSeeDescription',
+            'CCAccepted',
+            'Escrow',
+            'StandardPayment'
+        ])

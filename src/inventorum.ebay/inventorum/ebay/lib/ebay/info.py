@@ -1,7 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import Ebay
-from inventorum.ebay.lib.ebay.data import EbayUser
+from inventorum.ebay.lib.ebay.data.features import EbayFeature
+from inventorum.ebay.lib.ebay.data.user import EbayUser
 
 
 class EbayInfo(Ebay):
@@ -19,3 +20,12 @@ class EbayInfo(Ebay):
             data['UserID'] = user_id
         response = self.execute('GetUser', data)
         return EbayUser.create_from_data(response['User'])
+
+    def get_site_defaults(self):
+        response = self.execute('GetCategoryFeatures', dict(
+            AllFeaturesForCategory=True,
+            ViewAllNodes=True,
+            LevelLimit=7,
+            DetailLevel='ReturnAll'
+        ))
+        return EbayFeature.create_from_data(response)
