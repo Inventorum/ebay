@@ -25,6 +25,20 @@ class EbayItemImageModel(MappedInventorumModel):
     url = models.TextField()
 
 
+class EbayItemShippingDetails(BaseModel):
+    item = models.ForeignKey("products.EbayItemModel", related_name="shipping")
+    additional_cost = models.DecimalField(max_digits=20, decimal_places=10)
+    cost = models.DecimalField(max_digits=20, decimal_places=10)
+    external_id = models.CharField(max_length=255)
+
+#     'ShippingDetails': [
+#         {'ShippingServiceOptions': {
+#             'ShippingServicePriority': 1,
+#             'ShippingServiceAdditionalCost': 0.0,
+#             'ShippingService': u'First service',
+#             'ShippingServiceCost': 2.0}}],
+
+
 class EbayItemModel(BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="items",
                                 verbose_name="Inventorum ebay account")

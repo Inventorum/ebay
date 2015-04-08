@@ -25,8 +25,22 @@ class TradingEbayProductDataBuilder(GenericEbayProductDataBuilder):
             'PrimaryCategory': {'CategoryID': self.item.category.external_id},
         }
         data.update(**self._static_data)
+        shipping = [self._build_shipping_details(s) for s in self.item.shipping.all()]
+        data['ShippingDetails'] = shipping
         return {'Item': data}
 
+    def _build_shipping_details(self, shipping):
+        """
+        :type shipping: inventorum.ebay.apps.products.models.EbayItemShippingDetails
+        """
+        return {
+            'ShippingServiceOptions': {
+                'ShippingServicePriority': 1,
+                'ShippingServiceAdditionalCost': shipping.additional_cost,
+                'ShippingServiceCost': shipping.cost,
+                'ShippingService': shipping.external_id,
+            }
+        }
     @property
     def _static_data(self):
         return {
@@ -60,17 +74,16 @@ class TradingEbayProductDataBuilder(GenericEbayProductDataBuilder):
 #     'Quantity': 20,
 #     'StartPrice': Decimal('4.74810'),
 #     'PrimaryCategory': {'CategoryID': u'6699'},
-
-#     'ListingDuration': u'Days_30',
-#     'PaymentMethods': [u'PayPal'],
-#     'PayPalEmailAddress': None,
-
 #     'ShippingDetails': [
 #         {'ShippingServiceOptions': {
 #             'ShippingServicePriority': 1,
 #             'ShippingServiceAdditionalCost': 0.0,
 #             'ShippingService': u'First service',
 #             'ShippingServiceCost': 2.0}}],
+
+#     'ListingDuration': u'Days_30',
+#     'PaymentMethods': [u'PayPal'],
+#     'PayPalEmailAddress': None,
 
 
 

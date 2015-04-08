@@ -1,7 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext
-from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel
+from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
+    EbayItemShippingDetails
 
 
 class PublishingValidationException(Exception):
@@ -54,6 +55,9 @@ class PublishingService(object):
 
         db_product = EbayProductModel.objects.get(inv_id=self.core_product.id)
 
+    # additional_cost = models.DecimalField(max_digits=20, decimal_places=10)
+    # cost = models.DecimalField(max_digits=20, decimal_places=10)
+    # service = models.CharField(max_length=255)
         item = EbayItemModel.objects.create(
             product=db_product,
             account=db_product.account,
@@ -70,6 +74,14 @@ class PublishingService(object):
             EbayItemImageModel.objects.create(
                 inv_id=image.id,
                 url=image.url,
+                item=item
+            )
+
+        for service in self.core_product.shipping_services:
+            EbayItemShippingDetails.objects.create(
+                additional_cost=service.additional_cost,
+                cost=service.cost,
+                external_id=service.id,
                 item=item
             )
 

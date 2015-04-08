@@ -24,6 +24,7 @@ class APIClient(test.APIClient):
 
 
 class APITestCase(test.APITestCase):
+    maxDiff = None
     client_class = APIClient
     vcr = vcr.VCR(
         serializer='json',

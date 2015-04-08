@@ -109,6 +109,24 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                 u'ReturnsAcceptedOption': u'ReturnsAccepted'
             },
             u'StartPrice': Decimal('599.9900000000'),
-            u'Title': u'SlowRoad Shipping Details'
+            u'Title': u'SlowRoad Shipping Details',
+
+            u'ShippingDetails': [
+                {
+                    u'ShippingServiceOptions': {
+                        u'ShippingService': u'DE_DHLPaket',
+                        u'ShippingServiceAdditionalCost': Decimal('3.0000000000'),
+                        u'ShippingServiceCost': Decimal('20.0000000000'),
+                        u'ShippingServicePriority': 1
+                    }
+                },
+                {
+                    u'ShippingServiceOptions': {
+                        u'ShippingService': u'DE_HermesPaket',
+                        u'ShippingServiceAdditionalCost': Decimal('1.0000000000'),
+                        u'ShippingServiceCost': Decimal('10.0000000000'),
+                        u'ShippingServicePriority': 1
+                    }
+                }],
         }})
 
