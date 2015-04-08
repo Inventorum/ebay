@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
+
     def __init__(self, id, name, description, gross_price, quantity, images, variation_count, shipping_services):
         """
         :type id: int
@@ -39,6 +40,7 @@ class CoreProduct(object):
 
 class CoreProductImage(object):
     """ Represents a product image embedded in a core product"""
+
     def __init__(self, id, url):
         """
         :type id: int
@@ -49,16 +51,16 @@ class CoreProductImage(object):
 
 
 class CoreProductImageDeserializer(POPOSerializer):
+    class Meta:
+        model = CoreProductImage
 
-        class Meta:
-            model = CoreProductImage
-
-        id = serializers.IntegerField()
-        ipad_retina = serializers.CharField(source="url")
+    id = serializers.IntegerField()
+    ipad_retina = serializers.CharField(source="url")
 
 
 class CoreShippingService(object):
     """ Represents a shipping service model """
+
     def __init__(self, id, description, time_min, time_max, additional_cost, cost):
         """
         :type id: unicode
@@ -75,21 +77,20 @@ class CoreShippingService(object):
         self.additional_cost = additional_cost
         self.cost = cost
 
+
 class CoreShippingServiceDeserializer(POPOSerializer):
+    class Meta:
+        model = CoreShippingService
 
-        class Meta:
-            model = CoreShippingService
-
-        id = serializers.CharField()
-        description = serializers.CharField()
-        time_min = serializers.IntegerField()
-        time_max = serializers.IntegerField()
-        additional_cost = serializers.DecimalField(max_digits=20, decimal_places=10)
-        cost = serializers.DecimalField(max_digits=20, decimal_places=10)
+    id = serializers.CharField()
+    description = serializers.CharField()
+    time_min = serializers.IntegerField()
+    time_max = serializers.IntegerField()
+    additional_cost = serializers.DecimalField(max_digits=20, decimal_places=10)
+    cost = serializers.DecimalField(max_digits=20, decimal_places=10)
 
 
 class CoreProductDeserializer(POPOSerializer):
-
     class Meta:
         model = CoreProduct
 
@@ -132,3 +133,30 @@ class CoreProductDeserializer(POPOSerializer):
             del validated_data["meta"]
 
         return super(CoreProductDeserializer, self).create(validated_data)
+
+
+class CoreAccount(object):
+    def __init__(self, email=None):
+        """
+        :type email: unicode | None
+        """
+        self.email = email
+
+
+class CoreAccountDeserializer(POPOSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = CoreAccount
+
+
+class CoreInfo(object):
+    def __init__(self, account):
+        self.account = account
+
+
+class CoreInfoDeserializer(POPOSerializer):
+    account = CoreAccountDeserializer()
+
+    class Meta:
+        model = CoreInfo

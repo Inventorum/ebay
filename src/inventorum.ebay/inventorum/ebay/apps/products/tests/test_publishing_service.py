@@ -20,9 +20,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_failed_validation(self):
         # Product not in db
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
-            core_product = self.api_client.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID)
-
-        service = PublishingService(core_product, self.account)
+            service = PublishingService(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.user)
 
         # No shipping services
         with self.assertRaises(PublishingValidationException) as e:
@@ -33,9 +31,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         # Get product with shipping
 
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
-            core_product = self.api_client.get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES)
+            service = PublishingService(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.user)
 
-        service = PublishingService(core_product, self.account)
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
@@ -43,7 +40,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         # Right now I am mocking category assigment, in future there will be endpoint for it
         EbayProductModel.objects.create(
-            inv_id=core_product.id,
+            inv_id=service.core_product.id,
             account=self.account,
             category=CategoryModel.objects.filter(country='DE').last()
         )

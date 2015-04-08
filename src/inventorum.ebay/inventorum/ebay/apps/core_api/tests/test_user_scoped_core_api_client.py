@@ -96,3 +96,8 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(first_shipping.time_max, 2)
         self.assertEqual(first_shipping.additional_cost, Decimal(1))
         self.assertEqual(first_shipping.cost, Decimal(10))
+
+    @CoreApiTest.vcr.use_cassette("get_account_info.json")
+    def test_get_product_with_ebay_meta(self):
+        core_account = self.subject.get_account_info()
+        self.assertEqual(core_account.account.email, "tech+slingshot-test@inventorum.com")

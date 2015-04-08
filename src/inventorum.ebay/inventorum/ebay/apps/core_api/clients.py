@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.core_api.models import CoreProductDeserializer
+from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreAccountDeserializer, CoreInfoDeserializer
 import requests
 
 from django.conf import settings
@@ -117,3 +117,15 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         log.debug('Got json from /api/products/%s/: %s', product_id, json)
         serializer = CoreProductDeserializer(data=json)
         return serializer.build()
+
+    def get_account_info(self):
+        """
+        :rtype: inventorum.ebay.apps.core_api.models.CoreInfo
+        :raises requests.exceptions.HTTPError
+                rest_framework.exceptions.ValidationError
+        """
+        response = self.get("/api/info/")
+        json = response.json()
+        serializer = CoreInfoDeserializer(data=json)
+        return serializer.build()
+

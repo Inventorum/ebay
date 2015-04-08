@@ -9,7 +9,7 @@ class PublishingValidationException(Exception):
 
 
 class PublishingService(object):
-    def __init__(self, core_product, account):
+    def __init__(self, product_id, user):
         """
         Service for publishing products to ebay
         :param core_product: Core product from API
@@ -17,8 +17,9 @@ class PublishingService(object):
         :type core_product: inventorum.ebay.apps.core_api.models.CoreProduct
         :type account: EbayAccountModel
         """
-        self.core_product = core_product
-        self.account = account
+        self.user = user
+        self.core_product = self.user.core_api.get_product(product_id)
+        self.core_account = self.user.core_api
 
     def _create_db_item(self):
         return EbayItemModel.create_from_core_product(self.core_product)
