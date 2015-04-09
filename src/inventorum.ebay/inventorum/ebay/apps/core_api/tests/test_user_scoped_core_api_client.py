@@ -116,6 +116,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
 
         account_settings = core_account.account.settings
         self.assertEqual(len(account_settings.shipping_services), 1)
+        self.assertEqual(account_settings.ebay_paypal_email, None)
 
         shipping_service = account_settings.shipping_services[0]
         self.assertEqual(shipping_service.id, 'DE_DHLPaket')

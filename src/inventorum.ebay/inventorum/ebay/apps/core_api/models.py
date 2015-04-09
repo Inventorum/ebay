@@ -178,15 +178,17 @@ class CoreAddressDeserializer(POPOSerializer):
 
 
 class CoreAccountSettings(object):
-    def __init__(self, shipping_services):
+    def __init__(self, shipping_services, ebay_paypal_email):
         """
         :type shipping_services: list of CoreShippingService
         """
         self.shipping_services = shipping_services
+        self.ebay_paypal_email = ebay_paypal_email
 
 
 class CoreAccountSettingsDeserializer(POPOSerializer):
     shipping_services = CoreShippingServiceDeserializer(many=True)
+    ebay_paypal_email = serializers.CharField(allow_null=True)
 
     class Meta:
         model = CoreAccountSettings

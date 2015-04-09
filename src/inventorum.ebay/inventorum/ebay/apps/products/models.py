@@ -27,7 +27,7 @@ class EbayItemImageModel(MappedInventorumModel):
 
 class EbayItemShippingDetails(BaseModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="shipping")
-    additional_cost = models.DecimalField(max_digits=20, decimal_places=10)
+    additional_cost = models.DecimalField(max_digits=20, decimal_places=10, null=True, blank=True)
     cost = models.DecimalField(max_digits=20, decimal_places=10)
     external_id = models.CharField(max_length=255)
 

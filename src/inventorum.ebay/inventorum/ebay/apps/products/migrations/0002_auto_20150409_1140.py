@@ -67,7 +67,7 @@ class Migration(migrations.Migration):
                 ('time_modified', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Last change', auto_now=True)),
                 ('is_active', models.BooleanField(default=True, verbose_name='Is active')),
                 ('deleted_at', models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=utc), verbose_name='Time of deletion')),
-                ('additional_cost', models.DecimalField(max_digits=20, decimal_places=10)),
+                ('additional_cost', models.DecimalField(null=True, max_digits=20, decimal_places=10, blank=True)),
                 ('cost', models.DecimalField(max_digits=20, decimal_places=10)),
                 ('external_id', models.CharField(max_length=255)),
                 ('item', models.ForeignKey(related_name='shipping', to='products.EbayItemModel')),

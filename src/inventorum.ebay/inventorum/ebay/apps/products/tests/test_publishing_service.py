@@ -48,19 +48,20 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             service = PublishingService(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.user)
 
         # No shipping services
+        service.core_account.settings.shipping_services = []
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
         self.assertEqual(e.exception.message, 'Product has not shipping services selected')
 
-        # Get product with shipping
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
-            service = PublishingService(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.user)
+        # Get product w/o shipping but acc has
+        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+            service = PublishingService(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.user)
 
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
-        self.assertEqual(e.exception.message, 'Couldnt find product [inv_id:640416] in database')
+        self.assertEqual(e.exception.message, 'Couldnt find product [inv_id:463690] in database')
 
         # Right now I am mocking that we once saved a product for ebay
         product = self._create_product(service.core_product)
@@ -102,6 +103,23 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(shipping_services[1].external_id, 'DE_HermesPaket')
         self.assertEqual(shipping_services[1].cost, Decimal('10'))
         self.assertEqual(shipping_services[1].additional_cost, Decimal('1'))
+
+    def test_account_shipping_fallback(self):
+        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+            service = PublishingService(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.user)
+
+        product = self._create_product(service.core_product)
+
+        self._assign_category(product)
+        service.prepare()
+
+        last_item = product.items.last()
+        shipping_services = last_item.shipping.all()
+
+        self.assertEqual(shipping_services.count(), 1)
+        self.assertEqual(shipping_services[0].external_id, 'DE_DHLPaket')
+        self.assertEqual(shipping_services[0].cost, Decimal('0'))
+        self.assertEqual(shipping_services[0].additional_cost, None)
 
     def test_builder(self):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):

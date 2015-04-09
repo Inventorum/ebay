@@ -32,7 +32,7 @@ class PublishingService(object):
         if self.core_product.is_parent:
             raise PublishingValidationException(ugettext('Cannot publish products with variations'))
 
-        if not self.core_product.shipping_services:
+        if not (self.core_product.shipping_services or self.core_account.settings.shipping_services):
             raise PublishingValidationException(ugettext('Product has not shipping services selected'))
 
         try:
@@ -74,8 +74,8 @@ class PublishingService(object):
                 url=image.url,
                 item=item
             )
-
-        for service in self.core_product.shipping_services:
+        shipping_services = self.core_product.shipping_services or self.core_account.settings.shipping_services
+        for service in shipping_services:
             EbayItemShippingDetails.objects.create(
                 additional_cost=service.additional_cost,
                 cost=service.cost,
