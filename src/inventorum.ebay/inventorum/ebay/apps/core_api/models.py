@@ -86,7 +86,7 @@ class CoreShippingServiceDeserializer(POPOSerializer):
     description = serializers.CharField()
     time_min = serializers.IntegerField()
     time_max = serializers.IntegerField()
-    additional_cost = serializers.DecimalField(max_digits=20, decimal_places=10)
+    additional_cost = serializers.DecimalField(max_digits=20, decimal_places=10, allow_null=True)
     cost = serializers.DecimalField(max_digits=20, decimal_places=10)
 
 
@@ -177,20 +177,38 @@ class CoreAddressDeserializer(POPOSerializer):
         model = CoreAddress
 
 
-class CoreAccount(object):
-    def __init__(self, country, email=None, billing_address=None):
+class CoreAccountSettings(object):
+    def __init__(self, shipping_services):
         """
+        :type shipping_services: list of CoreShippingService
+        """
+        self.shipping_services = shipping_services
+
+
+class CoreAccountSettingsDeserializer(POPOSerializer):
+    shipping_services = CoreShippingServiceDeserializer(many=True)
+
+    class Meta:
+        model = CoreAccountSettings
+
+
+class CoreAccount(object):
+    def __init__(self, country, settings, email=None, billing_address=None):
+        """
+        :type settings: CoreAccountSettings
         :type email: unicode | None
         :type billing_address: CoreAddress
         """
         self.email = email
         self.country = country
         self.billing_address = billing_address
+        self.settings = settings
 
 
 class CoreAccountDeserializer(POPOSerializer):
     email = serializers.EmailField()
     country = serializers.CharField()
+    settings = CoreAccountSettingsDeserializer()
     billing_address = CoreAddressDeserializer(required=False)
 
     class Meta:

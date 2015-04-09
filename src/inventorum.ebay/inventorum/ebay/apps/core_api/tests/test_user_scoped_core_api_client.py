@@ -113,3 +113,12 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(billing.first_name, "John")
         self.assertEqual(billing.last_name, "Newman")
         self.assertEqual(billing.company, "Inventorum")
+
+        account_settings = core_account.account.settings
+        self.assertEqual(len(account_settings.shipping_services), 1)
+
+        shipping_service = account_settings.shipping_services[0]
+        self.assertEqual(shipping_service.id, 'DE_DHLPaket')
+        self.assertEqual(shipping_service.description, 'DHL Paket')
+        self.assertEqual(shipping_service.additional_cost, None)
+        self.assertEqual(shipping_service.cost, Decimal(0))

@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
 import logging
 import unittest
-from inventorum.ebay.apps.categories.models import CategoryModel
+from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
@@ -24,6 +24,16 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         category, c = CategoryModel.objects.get_or_create(external_id='64540')
         product.category = category
         product.save()
+
+        features = CategoryFeaturesModel.objects.create(
+            category=category
+        )
+        durations = ['Days_5', 'Days_120']
+        for d in durations:
+            duration = DurationModel.objects.create(
+                value=d
+            )
+            features.durations.add(duration)
 
     def _create_product(self, core_product):
         product = EbayProductModel.objects.create(
@@ -80,6 +90,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(last_item.gross_price, Decimal("599.99"))
         self.assertEqual(last_item.country, 'DE')
         self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.DRAFT)
+        self.assertEqual(last_item.listing_duration, 'Days_120')
 
         shipping_services = last_item.shipping.all()
         self.assertEqual(shipping_services.count(), 2)
@@ -121,7 +132,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             },
             u'StartPrice': Decimal('599.9900000000'),
             u'Title': u'SlowRoad Shipping Details',
-
+            u'ListingDuration': u'Days_120',
             u'ShippingDetails': [
                 {
                     u'ShippingServiceOptions': {

@@ -18,6 +18,7 @@ class TradingEbayProductDataBuilder(GenericEbayProductDataBuilder):
         data = {
             'Title': self.item.name,
             'Description': self.item.description,
+            'ListingDuration': self.item.listing_duration,
             'Country': unicode(self.item.country),
             'PostalCode': self.item.postal_code,
             'Quantity': self.item.quantity,

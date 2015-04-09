@@ -46,6 +46,7 @@ class EbayItemModel(BaseModel):
     category = models.ForeignKey("categories.CategoryModel", related_name="items")
 
     name = models.CharField(max_length=255)
+    listing_duration = models.CharField(max_length=255)
     description = models.TextField()
     postal_code = models.CharField(max_length=255, null=True, blank=True)
     quantity = models.IntegerField(default=0)

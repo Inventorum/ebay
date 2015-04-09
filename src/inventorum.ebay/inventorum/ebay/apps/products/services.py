@@ -55,10 +55,8 @@ class PublishingService(object):
 
         db_product = EbayProductModel.objects.get(inv_id=self.core_product.id)
 
-    # additional_cost = models.DecimalField(max_digits=20, decimal_places=10)
-    # cost = models.DecimalField(max_digits=20, decimal_places=10)
-    # service = models.CharField(max_length=255)
         item = EbayItemModel.objects.create(
+            listing_duration=db_product.category.features.max_listing_duration,
             product=db_product,
             account=db_product.account,
             name=self.core_product.name,
