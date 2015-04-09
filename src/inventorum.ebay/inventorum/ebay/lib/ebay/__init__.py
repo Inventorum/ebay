@@ -8,8 +8,10 @@ from ebaysdk.trading import Connection
 
 from django.conf import settings
 from ebaysdk.parallel import Parallel
+from inventorum.ebay.lib.ebay.data.errors import EbayError
 
 log = logging.getLogger(__name__)
+
 
 
 class EbayException(Exception):
@@ -21,7 +23,15 @@ class EbayNotSupportedSite(Exception):
 
 
 class EbayConnectionException(EbayException):
-    pass
+    errors = None
+    def __init__(self, message, response):
+        self.message = message
+        self.response = response
+        errors = self.response.dict()['Errors']
+        if not isinstance(errors, list):
+            errors = [errors]
+        self.errors = [EbayError.create_from_data(e) for e in errors]
+
 
 
 class EbayReturnedErrorsException(EbayException):
@@ -100,7 +110,7 @@ class Ebay(object):
             response = self.api.execute(verb=verb, data=data)
         except ConnectionError as e:
             log.error('Got ebay error: %s', e)
-            raise EbayConnectionException(e)
+            raise EbayConnectionException(e.message, e.response)
 
         if self.api.error():
             raise EbayReturnedErrorsException(self.api.error())

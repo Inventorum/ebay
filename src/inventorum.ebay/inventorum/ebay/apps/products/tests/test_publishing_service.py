@@ -7,7 +7,6 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
-from inventorum.ebay.apps.products.builders import TradingEbayProductDataBuilder
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException
 from inventorum.ebay.tests import StagingTestAccount
@@ -137,8 +136,9 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         last_item = product.items.last()
 
         # Check data builder
-        builder = TradingEbayProductDataBuilder(last_item)
-        data = builder.build()
+        ebay_item = last_item.ebay_object
+
+        data = ebay_item.dict()
         self.assertEqual(data, {u'Item': {
             u'ConditionID': 1000,
             u'Country': 'DE',

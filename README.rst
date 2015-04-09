@@ -33,6 +33,9 @@ To run all tests:
     bin/ebay/manage src/inventorum.ebay/test.ini test --noinput src/inventorum.ebay/inventorum/ebay/apps
 
 
+If you want to skip tests that take really long (like parsing ebay categories etc) you can apply
+environment variable ``SKIP_LONG_TESTS`` with value ``1``. (ONLY FOR DEVELOPMENT PURPOSES!)
+
 Working with the database
 -------------------------
 

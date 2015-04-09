@@ -50,6 +50,7 @@ class Migration(migrations.Migration):
                 ('gross_price', models.DecimalField(max_digits=20, decimal_places=10)),
                 ('paypal_email_address', models.CharField(max_length=255, null=True, blank=True)),
                 ('publishing_status', models.IntegerField(default=1, choices=[(1, b'Draft'), (2, b'In progress'), (3, b'Published')])),
+                ('external_id', models.CharField(max_length=255, null=True, blank=True)),
                 ('country', django_countries.fields.CountryField(max_length=2)),
                 ('account', models.ForeignKey(related_name='items', verbose_name='Inventorum ebay account', to='accounts.EbayAccountModel')),
                 ('category', models.ForeignKey(related_name='items', to='categories.CategoryModel')),

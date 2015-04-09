@@ -1,8 +1,10 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 
+import os
 import logging
 import vcr
+import unittest
 
 from django.utils.datetime_safe import datetime
 from django.conf import settings
@@ -66,3 +68,10 @@ class EbayAuthenticatedAPITestCase(APITestCase):
 
 class UnitTestCase(TestCase):
     pass
+
+
+def skip_if_test_takes_too_long():
+    """
+    Skip a test if the condition is true.
+    """
+    return unittest.skipIf(os.environ.get('SKIP_LONG_TESTS', False), "Test takes too long...")

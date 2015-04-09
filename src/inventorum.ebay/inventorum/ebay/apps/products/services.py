@@ -1,11 +1,21 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext
+from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod
+from inventorum.ebay.lib.ebay.items import EbayItems
 
 
-class PublishingValidationException(Exception):
+class PublishingServiceException(Exception):
+    pass
+
+
+class PublishingValidationException(PublishingServiceException):
+    pass
+
+
+class PublishingNotPossibleException(PublishingServiceException):
     pass
 
 
@@ -16,6 +26,7 @@ class PublishingService(object):
         :type product_id: int
         :type user: EbayUserModel
         """
+        self.product_id = product_id
         self.user = user
         self.core_product = self.user.core_api.get_product(product_id)
         self.core_info = self.user.core_api.get_account_info()
@@ -50,6 +61,17 @@ class PublishingService(object):
         """
         # TODO: At this point we should inform API to change quantity I think?
         item = self._create_db_item()
+
+    def publish(self):
+        """
+        Here this method can be called asynchronously, cause it loads everything from DB again
+        """
+        item = EbayItemModel.objects.get(product_id=self.product_id)
+        item.publishing_status = EbayProductPublishingStatus.IN_PROGRESS
+        item.save()
+
+        service = EbayItems()
+        service.publish(item.ebay_object)
 
     def _create_db_item(self):
 

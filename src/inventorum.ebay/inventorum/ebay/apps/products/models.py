@@ -6,6 +6,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
+from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem
 
 
 log = logging.getLogger(__name__)
@@ -31,6 +32,14 @@ class EbayItemShippingDetails(BaseModel):
     cost = models.DecimalField(max_digits=20, decimal_places=10)
     external_id = models.CharField(max_length=255)
 
+    @property
+    def ebay_object(self):
+        return EbayShippingService(
+            id=self.external_id,
+            cost=self.cost,
+            additional_cost=self.additional_cost
+        )
+
 
 class EbayItemPaymentMethod(BaseModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="payment_methods")
@@ -52,4 +61,22 @@ class EbayItemModel(BaseModel):
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
     publishing_status = models.IntegerField(choices=EbayProductPublishingStatus.CHOICES,
                                             default=EbayProductPublishingStatus.DRAFT)
+    external_id = models.CharField(max_length=255, null=True, blank=True)
     country = CountryField()
+
+    @property
+    def ebay_object(self):
+        payment_methods = list(self.payment_methods.all().values_list('external_id', flat=True))
+        return EbayFixedPriceItem(
+            title=self.name,
+            description=self.description,
+            listing_duration=self.listing_duration,
+            country=unicode(self.country),
+            postal_code=self.postal_code,
+            quantity=self.quantity,
+            start_price=self.gross_price,
+            paypal_email_address=self.paypal_email_address,
+            payment_methods=payment_methods,
+            category_id=self.category.external_id,
+            shipping_services=[s.ebay_object for s in self.shipping.all()]
+        )

@@ -1,16 +1,20 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+import unittest
+import os
+
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from inventorum.ebay.lib.ebay.data.categories import EbayCategory
-from inventorum.ebay.lib.ebay.data.features import EbayFeature, EbayFeatureDetails, EbayFeatureDefinition, \
+from inventorum.ebay.lib.ebay.data.features import EbayFeature, EbayFeatureDefinition, \
     EbayListingDurationDefinition
-from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, skip_if_test_takes_too_long
 
 log = logging.getLogger(__name__)
 
 
 class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
+    @skip_if_test_takes_too_long()
     @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_all_categories.json")
     def test_getting_categories(self):
         ebay = EbayCategories(self.ebay_token)
@@ -35,6 +39,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
     # TODO: We cannot use here cassette cause it is not supporting gevent (somehow, second response is empty
     # if taken from cassette)
+    @skip_if_test_takes_too_long()
     def test_ebay_categories_features(self):
         ebay = EbayCategories(self.ebay_token)
         features = ebay.get_features_for_categories(['353', '64540'])
