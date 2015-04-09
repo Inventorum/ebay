@@ -41,6 +41,7 @@ class TradingEbayProductDataBuilder(GenericEbayProductDataBuilder):
                 'ShippingService': shipping.external_id,
             }
         }
+
     @property
     def _static_data(self):
         return {

@@ -81,6 +81,17 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(last_item.country, 'DE')
         self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.DRAFT)
 
+        shipping_services = last_item.shipping.all()
+        self.assertEqual(shipping_services.count(), 2)
+
+        self.assertEqual(shipping_services[0].external_id, 'DE_DHLPaket')
+        self.assertEqual(shipping_services[0].cost, Decimal('20'))
+        self.assertEqual(shipping_services[0].additional_cost, Decimal('3'))
+
+        self.assertEqual(shipping_services[1].external_id, 'DE_HermesPaket')
+        self.assertEqual(shipping_services[1].cost, Decimal('10'))
+        self.assertEqual(shipping_services[1].additional_cost, Decimal('1'))
+
     def test_builder(self):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
             service = PublishingService(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.user)
