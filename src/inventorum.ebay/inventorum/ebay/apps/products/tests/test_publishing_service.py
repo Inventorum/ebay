@@ -97,6 +97,14 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(payment_methods.count(), 1)
         self.assertEqual(payment_methods.last().external_id, 'PayPal')
 
+        images = last_item.images.all()
+        self.assertEqual(images.count(), 1)
+
+        last_image = images.last()
+        self.assertEqual(last_image.inv_id, 2918)
+        self.assertTrue(last_image.url.startswith('https://app.inventorum.net/'),
+                        "Image does not starts with https:// (%s)" % last_image.url)
+
         shipping_services = last_item.shipping.all()
         self.assertEqual(shipping_services.count(), 2)
 
@@ -158,6 +166,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             u'ListingDuration': u'Days_120',
             u'PayPalEmailAddress': u'john.newman@paypal.com',
             u'PaymentMethods': ['PayPal'],
+            u'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
+                                               '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
             u'ShippingDetails': [
                 {
                     u'ShippingServiceOptions': {

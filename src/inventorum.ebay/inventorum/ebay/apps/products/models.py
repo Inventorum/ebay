@@ -6,7 +6,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
-from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem
+from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture
 
 
 log = logging.getLogger(__name__)
@@ -24,6 +24,10 @@ class EbayProductModel(MappedInventorumModel):
 class EbayItemImageModel(MappedInventorumModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="images")
     url = models.TextField()
+
+    @property
+    def ebay_object(self):
+        return EbayPicture(self.url.replace('https://', 'http://'))
 
 
 class EbayItemShippingDetails(BaseModel):
@@ -78,5 +82,6 @@ class EbayItemModel(BaseModel):
             paypal_email_address=self.paypal_email_address,
             payment_methods=payment_methods,
             category_id=self.category.external_id,
-            shipping_services=[s.ebay_object for s in self.shipping.all()]
+            shipping_services=[s.ebay_object for s in self.shipping.all()],
+            pictures=[i.ebay_object for i in self.images.all()],
         )

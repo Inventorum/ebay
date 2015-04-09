@@ -39,14 +39,20 @@
                     "code": 301
                 }, 
                 "headers": {
+                    "x-inv-user": [
+                        "Anonymous"
+                    ], 
                     "transfer-encoding": [
                         "chunked"
                     ], 
                     "set-cookie": [
-                        "sn=\"e30:1Yg9DA:zUDxwonSlL5ONkYCd4YwF4uc_Dg\"; Domain=app-intern.inventorum.net; expires=Thu, 09-Apr-2015 11:57:24 GMT; httponly; Max-Age=7200; Path=/"
+                        "sn=\"e30:1YgDbJ:nDq-Ek_sDnL_c8uS8U9dayOwGSU\"; Domain=app-intern.inventorum.net; expires=Thu, 09-Apr-2015 16:38:37 GMT; httponly; Max-Age=7200; Path=/"
                     ], 
                     "vary": [
                         "Cookie"
+                    ], 
+                    "x-inv-account": [
+                        "Anonymous"
                     ], 
                     "server": [
                         "nginx/1.6.2"
@@ -58,10 +64,10 @@
                         "https://app-intern.inventorum.net/api/products/640416/"
                     ], 
                     "date": [
-                        "Thu, 09 Apr 2015 09:57:24 GMT"
+                        "Thu, 09 Apr 2015 14:38:37 GMT"
                     ], 
                     "x-rid": [
-                        "1643111593815893492"
+                        "3388537924398671348"
                     ], 
                     "content-type": [
                         "text/html; charset=utf-8"
@@ -98,7 +104,7 @@
                         "keep-alive"
                     ], 
                     "Cookie": [
-                        "sn=\"e30:1Yg9DA:zUDxwonSlL5ONkYCd4YwF4uc_Dg\""
+                        "sn=\"e30:1YgDbJ:nDq-Ek_sDnL_c8uS8U9dayOwGSU\""
                     ], 
                     "Content-Type": [
                         "application/json"
@@ -120,7 +126,7 @@
                         "chunked"
                     ], 
                     "set-cookie": [
-                        "sn=\"e30:1Yg9DA:zUDxwonSlL5ONkYCd4YwF4uc_Dg\"; Domain=app-intern.inventorum.net; expires=Thu, 09-Apr-2015 11:57:24 GMT; httponly; Max-Age=7200; Path=/"
+                        "sn=\"e30:1YgDbJ:nDq-Ek_sDnL_c8uS8U9dayOwGSU\"; Domain=app-intern.inventorum.net; expires=Thu, 09-Apr-2015 16:38:37 GMT; httponly; Max-Age=7200; Path=/"
                     ], 
                     "vary": [
                         "Accept, Cookie"
@@ -138,17 +144,17 @@
                         "GET, PUT, DELETE, HEAD, OPTIONS"
                     ], 
                     "date": [
-                        "Thu, 09 Apr 2015 09:57:24 GMT"
+                        "Thu, 09 Apr 2015 14:38:37 GMT"
                     ], 
                     "x-rid": [
-                        "1643111593815893492"
+                        "2410693855305852404"
                     ], 
                     "content-type": [
                         "application/json"
                     ]
                 }, 
                 "body": {
-                    "string": "{\"attributes\": {}, \"name\": \"SlowRoad Shipping Details\", \"id\": 640416, \"quantity\": \"3000.00\", \"reorder_level\": \"200.00\", \"safety_stock\": \"200.00\", \"price\": \"560.7383177570\", \"tax_type\": 1062, \"custom_price\": false, \"ebay_product_id\": null, \"ebay_url\": null, \"in_shop\": false, \"shop_url\": null, \"thumbnail\": null, \"variation_count\": 0, \"variations\": [], \"average_purchase_price\": \"0E-10\", \"description\": \"Some description\", \"product_code\": \"\", \"ean\": null, \"categories\": [], \"images\": [], \"custom_sale\": false, \"shipping_services\": [{\"id\": \"DE_HermesPaket\", \"description\": \"Hermes Paket\", \"type\": \"\", \"time_max\": 2, \"time_min\": 1, \"cost_group_flat\": \"Group3MaxFlatShippingCost\", \"carrier\": \"[Hermes]\", \"category\": \"[STANDARD]\", \"service\": \"DE_HermesPaket\", \"cost\": \"10.0000000000\", \"additional_cost\": \"1.0000000000\", \"enabled\": true, \"free_above_price\": null}, {\"id\": \"DE_DHLPaket\", \"description\": \"DHL Paket\", \"type\": \"\", \"time_max\": 2, \"time_min\": 1, \"cost_group_flat\": \"Group3MaxFlatShippingCost\", \"carrier\": \"[DHL]\", \"category\": \"[STANDARD]\", \"service\": \"DE_DHLPaket\", \"cost\": \"20.0000000000\", \"additional_cost\": \"3.0000000000\", \"enabled\": true, \"free_above_price\": null}], \"is_favourite\": false, \"brand\": \"\", \"supplier\": \"\", \"meta\": {\"shop\": {\"images\": [], \"price\": \"560.7383177570\", \"gross_price\": \"599.99\", \"id\": 738, \"channel\": 5, \"name\": \"\", \"description\": \"\"}, \"ebay\": {\"images\": [], \"price\": \"560.7383177570\", \"gross_price\": \"599.99\", \"id\": 739, \"channel\": 4, \"name\": \"\", \"description\": \"\"}}, \"is_giftcard\": false, \"gross_price\": \"599.99\", \"purchase_price\": \"0E-10\"}"
+                    "string": "{\"attributes\": {}, \"name\": \"SlowRoad Shipping Details\", \"id\": 640416, \"quantity\": \"3000.00\", \"reorder_level\": \"200.00\", \"safety_stock\": \"200.00\", \"price\": \"560.7383177570\", \"tax_type\": 1062, \"custom_price\": false, \"ebay_product_id\": null, \"ebay_url\": null, \"in_shop\": false, \"shop_url\": null, \"thumbnail\": {\"ipad\": \"https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad.JPEG\", \"id\": 2918, \"ipad_retina\": \"https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG\", \"thumb_retina\": \"https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb_retina.JPEG\", \"thumb\": \"https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb.JPEG\"}, \"variation_count\": 0, \"variations\": [], \"average_purchase_price\": \"0E-10\", \"description\": \"Some description\", \"product_code\": \"\", \"ean\": null, \"categories\": [], \"images\": [{\"ipad\": \"https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad.JPEG\", \"id\": 2918, \"ipad_retina\": \"https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG\", \"thumb_retina\": \"https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb_retina.JPEG\", \"thumb\": \"https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb.JPEG\"}], \"custom_sale\": false, \"shipping_services\": [{\"id\": \"DE_HermesPaket\", \"description\": \"Hermes Paket\", \"type\": \"\", \"time_max\": 2, \"time_min\": 1, \"cost_group_flat\": \"Group3MaxFlatShippingCost\", \"carrier\": \"[Hermes]\", \"category\": \"[STANDARD]\", \"service\": \"DE_HermesPaket\", \"cost\": \"10.0000000000\", \"additional_cost\": \"1.0000000000\", \"enabled\": true, \"free_above_price\": null}, {\"id\": \"DE_DHLPaket\", \"description\": \"DHL Paket\", \"type\": \"\", \"time_max\": 2, \"time_min\": 1, \"cost_group_flat\": \"Group3MaxFlatShippingCost\", \"carrier\": \"[DHL]\", \"category\": \"[STANDARD]\", \"service\": \"DE_DHLPaket\", \"cost\": \"20.0000000000\", \"additional_cost\": \"3.0000000000\", \"enabled\": true, \"free_above_price\": null}], \"is_favourite\": false, \"brand\": \"\", \"supplier\": \"\", \"meta\": {\"shop\": {\"images\": [], \"price\": \"560.7383177570\", \"gross_price\": \"599.99\", \"id\": 738, \"channel\": 5, \"name\": \"\", \"description\": \"\"}, \"ebay\": {\"images\": [], \"price\": \"560.7383177570\", \"gross_price\": \"599.99\", \"id\": 739, \"channel\": 4, \"name\": \"\", \"description\": \"\"}}, \"is_giftcard\": false, \"gross_price\": \"599.99\", \"purchase_price\": \"0E-10\"}"
                 }
             }
         }, 
@@ -197,7 +203,7 @@
                         "chunked"
                     ], 
                     "set-cookie": [
-                        "sn=\"e30:1Yg9DA:zUDxwonSlL5ONkYCd4YwF4uc_Dg\"; Domain=app-intern.inventorum.net; expires=Thu, 09-Apr-2015 11:57:24 GMT; httponly; Max-Age=7200; Path=/"
+                        "sn=\"e30:1YgDbJ:nDq-Ek_sDnL_c8uS8U9dayOwGSU\"; Domain=app-intern.inventorum.net; expires=Thu, 09-Apr-2015 16:38:37 GMT; httponly; Max-Age=7200; Path=/"
                     ], 
                     "vary": [
                         "Accept, Cookie"
@@ -215,10 +221,10 @@
                         "GET, HEAD, OPTIONS"
                     ], 
                     "date": [
-                        "Thu, 09 Apr 2015 09:57:24 GMT"
+                        "Thu, 09 Apr 2015 14:38:37 GMT"
                     ], 
                     "x-rid": [
-                        "3420907546720396788"
+                        "2410693855305852404"
                     ], 
                     "content-type": [
                         "application/json"
