@@ -17,6 +17,11 @@ class EbayProductModel(MappedInventorumModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="products",
                                 verbose_name="Inventorum ebay account")
     category = models.ForeignKey("categories.CategoryModel", related_name="products", null=True, blank=True)
+    external_item_id = models.CharField(max_length=255, null=True, blank=True)
+
+    @property
+    def is_published(self):
+        return self.external_item_id is not None
 
 
 # Models for data just before publishing

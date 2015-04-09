@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+import unittest
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.tests import StagingTestAccount
@@ -13,6 +14,7 @@ log = logging.getLogger(__name__)
 
 class TestProductPublish(APITestCase):
 
+    @unittest.skip("To be done")
     @CoreApiTest.vcr.use_cassette("get_product_simple.json")
     def test_first_time_publish(self):
         inv_product_id = StagingTestAccount.Products.SIMPLE_PRODUCT_ID

@@ -70,6 +70,27 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(e.exception.message, 'You need to select category')
         self._assign_category(product)
+
+        service.core_product.gross_price = Decimal("0.99")
+
+        with self.assertRaises(PublishingValidationException) as e:
+            service.validate()
+
+        self.assertEqual(e.exception.message, 'Price needs to be greater or equal than 1')
+
+        service.core_product.gross_price = 1
+
+        product.external_item_id = "some_id!!"
+        product.save()
+
+        with self.assertRaises(PublishingValidationException) as e:
+            service.validate()
+
+        self.assertEqual(e.exception.message, 'Product was already published')
+
+        product.external_item_id = None
+        product.save()
+
         # Should not raise anything finally!
         service.validate()
 

@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from decimal import Decimal
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
@@ -46,6 +47,9 @@ class PublishingService(object):
         if not (self.core_product.shipping_services or self.core_account.settings.shipping_services):
             raise PublishingValidationException(ugettext('Product has not shipping services selected'))
 
+        if self.core_product.gross_price < Decimal("1"):
+            raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
+
         try:
             product = EbayProductModel.objects.get(inv_id=self.core_product.id)
         except EbayProductModel.DoesNotExist:
@@ -53,6 +57,9 @@ class PublishingService(object):
 
         if not product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
+
+        if product.is_published:
+            raise PublishingValidationException(ugettext('Product was already published'))
 
     def prepare(self):
         """
