@@ -32,6 +32,7 @@ class PublishingService(object):
         self.core_product = self.user.core_api.get_product(product_id)
         self.core_info = self.user.core_api.get_account_info()
         self.core_account = self.core_info.account
+        self.product, c = EbayProductModel.objects.get_or_create(inv_id=self.core_product.id, account=self.user.account)
 
     def validate(self):
         """
@@ -50,15 +51,10 @@ class PublishingService(object):
         if self.core_product.gross_price < Decimal("1"):
             raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
 
-        try:
-            product = EbayProductModel.objects.get(inv_id=self.core_product.id)
-        except EbayProductModel.DoesNotExist:
-            raise PublishingValidationException(ugettext('Couldnt find product [inv_id:%s] in database') % self.core_product.id)
-
-        if not product.category_id:
+        if not self.product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
 
-        if product.is_published:
+        if self.product.is_published:
             raise PublishingValidationException(ugettext('Product was already published'))
 
     def prepare(self):
@@ -77,7 +73,7 @@ class PublishingService(object):
         item.publishing_status = EbayProductPublishingStatus.IN_PROGRESS
         item.save()
 
-        service = EbayItems()
+        service = EbayItems(self.user.account.token.ebay_object)
         service.publish(item.ebay_object)
 
     def _create_db_item(self):

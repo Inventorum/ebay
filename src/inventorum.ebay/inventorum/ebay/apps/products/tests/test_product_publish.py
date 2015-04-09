@@ -14,14 +14,14 @@ log = logging.getLogger(__name__)
 
 class TestProductPublish(APITestCase):
 
-    @unittest.skip("To be done")
-    @CoreApiTest.vcr.use_cassette("get_product_simple.json")
-    def test_first_time_publish(self):
+    @CoreApiTest.vcr.use_cassette("publish_product_resource_no_category.json")
+    def test_publish_no_category(self):
         inv_product_id = StagingTestAccount.Products.SIMPLE_PRODUCT_ID
         assert not EbayProductModel.objects.by_inv_id(inv_product_id).exists()
 
         response = self.client.post("/products/%s/publish" % inv_product_id)
         log.debug('Got response: %s', response)
-        self.assertEqual(response.status_code, 200)
-        # core api product name, just to prove that the connection is working
-        self.assertEqual(response.data, "XtC Advanced 2 LTD")
+        self.assertEqual(response.status_code, 400)
+        data = response.data
+        self.assertEqual(data, ['You need to select category'])
+        

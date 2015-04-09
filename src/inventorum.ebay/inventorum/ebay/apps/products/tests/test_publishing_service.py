@@ -34,13 +34,6 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             )
             features.durations.add(duration)
 
-    def _create_product(self, core_product):
-        product = EbayProductModel.objects.create(
-            inv_id=core_product.id,
-            account=self.account
-        )
-        return product
-
     def test_failed_validation(self):
         # Product not in db
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
@@ -60,16 +53,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
-        self.assertEqual(e.exception.message, 'Couldnt find product [inv_id:463690] in database')
-
-        # Right now I am mocking that we once saved a product for ebay
-        product = self._create_product(service.core_product)
-
-        with self.assertRaises(PublishingValidationException) as e:
-            service.validate()
-
         self.assertEqual(e.exception.message, 'You need to select category')
-        self._assign_category(product)
+        self._assign_category(service.product)
 
         service.core_product.gross_price = Decimal("0.99")
 
@@ -80,16 +65,16 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         service.core_product.gross_price = 1
 
-        product.external_item_id = "some_id!!"
-        product.save()
+        service.product.external_item_id = "some_id!!"
+        service.product.save()
 
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
         self.assertEqual(e.exception.message, 'Product was already published')
 
-        product.external_item_id = None
-        product.save()
+        service.product.external_item_id = None
+        service.product.save()
 
         # Should not raise anything finally!
         service.validate()
@@ -97,8 +82,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_preparation(self):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
             service = PublishingService(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.user)
-
-        product = self._create_product(service.core_product)
+        product = service.product
 
         self._assign_category(product)
         service.prepare()
@@ -141,7 +125,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
             service = PublishingService(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.user)
 
-        product = self._create_product(service.core_product)
+        product = service.product
 
         self._assign_category(product)
         service.prepare()
@@ -158,7 +142,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
             service = PublishingService(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.user)
 
-        product = self._create_product(service.core_product)
+        product = service.product
 
         self._assign_category(product)
         service.prepare()
