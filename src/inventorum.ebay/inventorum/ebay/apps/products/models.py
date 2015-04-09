@@ -32,6 +32,11 @@ class EbayItemShippingDetails(BaseModel):
     external_id = models.CharField(max_length=255)
 
 
+class EbayItemPaymentMethod(BaseModel):
+    item = models.ForeignKey("products.EbayItemModel", related_name="payment_methods")
+    external_id = models.CharField(max_length=255)
+
+
 class EbayItemModel(BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="items",
                                 verbose_name="Inventorum ebay account")

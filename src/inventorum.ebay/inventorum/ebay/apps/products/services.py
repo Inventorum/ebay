@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
-    EbayItemShippingDetails
+    EbayItemShippingDetails, EbayItemPaymentMethod
 
 
 class PublishingValidationException(Exception):
@@ -81,6 +81,12 @@ class PublishingService(object):
                 additional_cost=service.additional_cost,
                 cost=service.cost,
                 external_id=service.id,
+                item=item
+            )
+
+        for payment in self.core_account.settings.ebay_payment_methods:
+            EbayItemPaymentMethod.objects.create(
+                external_id=payment,
                 item=item
             )
 

@@ -15,6 +15,7 @@ class GenericEbayProductDataBuilder(object):
 
 class TradingEbayProductDataBuilder(GenericEbayProductDataBuilder):
     def build(self):
+        payment_methods = list(self.item.payment_methods.all().values_list('external_id', flat=True))
         data = {
             'Title': self.item.name,
             'Description': self.item.description,
@@ -23,11 +24,18 @@ class TradingEbayProductDataBuilder(GenericEbayProductDataBuilder):
             'PostalCode': self.item.postal_code,
             'Quantity': self.item.quantity,
             'StartPrice': self.item.gross_price,
+            'PayPalEmailAddress': self.item.paypal_email_address,
+            'PaymentMethods': payment_methods,
             'PrimaryCategory': {'CategoryID': self.item.category.external_id},
         }
+
+        # Static data
         data.update(**self._static_data)
+
+        # Shipping
         shipping = [self._build_shipping_details(s) for s in self.item.shipping.all()]
         data['ShippingDetails'] = shipping
+
         return {'Item': data}
 
     def _build_shipping_details(self, shipping):
@@ -55,37 +63,3 @@ class TradingEbayProductDataBuilder(GenericEbayProductDataBuilder):
             'DispatchTimeMax': 3,
             'ConditionID': 1000
         }
-
-
-
-
-
-
-# {'Item': {
-#     'Description': u'nek 0,28, 47514, Venceremos, A5 Notenheft Lin. 14, BUND, 100% Recyclingpapier, ean 4015290475144',
-#     'Title': u'Notenheft A5 quer Lin 14',
-#     'Country': u'Germany',
-#     'Currency': u'EUR',
-#     'PostalCode': u'10119',
-#     'ListingType': u'FixedPriceItem',
-#     'ReturnPolicy': {
-#         'ReturnsAcceptedOption': u'ReturnsAccepted', 'Description': u''
-#     }, 'PictureDetails': None}}
-#     'DispatchTimeMax': 3,
-#     'ConditionID': 1000,
-#     'Quantity': 20,
-#     'StartPrice': Decimal('4.74810'),
-#     'PrimaryCategory': {'CategoryID': u'6699'},
-#     'ShippingDetails': [
-#         {'ShippingServiceOptions': {
-#             'ShippingServicePriority': 1,
-#             'ShippingServiceAdditionalCost': 0.0,
-#             'ShippingService': u'First service',
-#             'ShippingServiceCost': 2.0}}],
-#     'ListingDuration': u'Days_30',
-
-#     'PaymentMethods': [u'PayPal'],
-#     'PayPalEmailAddress': None,
-
-
-

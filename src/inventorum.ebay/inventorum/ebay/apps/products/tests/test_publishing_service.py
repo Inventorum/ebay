@@ -94,6 +94,10 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.DRAFT)
         self.assertEqual(last_item.listing_duration, 'Days_120')
 
+        payment_methods = last_item.payment_methods.all()
+        self.assertEqual(payment_methods.count(), 1)
+        self.assertEqual(payment_methods.last().external_id, 'PayPal')
+
         shipping_services = last_item.shipping.all()
         self.assertEqual(shipping_services.count(), 2)
 
@@ -152,6 +156,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             u'StartPrice': Decimal('599.9900000000'),
             u'Title': u'SlowRoad Shipping Details',
             u'ListingDuration': u'Days_120',
+            u'PayPalEmailAddress': u'john.newman@paypal.com',
+            u'PaymentMethods': ['PayPal'],
             u'ShippingDetails': [
                 {
                     u'ShippingServiceOptions': {
