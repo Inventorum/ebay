@@ -82,8 +82,8 @@ class TradingEbayProductDataBuilder(GenericEbayProductDataBuilder):
 #             'ShippingServiceAdditionalCost': 0.0,
 #             'ShippingService': u'First service',
 #             'ShippingServiceCost': 2.0}}],
-
 #     'ListingDuration': u'Days_30',
+
 #     'PaymentMethods': [u'PayPal'],
 #     'PayPalEmailAddress': None,
 

@@ -65,6 +65,7 @@ class PublishingService(object):
             category=db_product.category,
             country=self.core_account.country,
             quantity=self.core_product.quantity,
+            paypal_email_address=self.core_account.settings.ebay_paypal_email,
             postal_code=self.core_account.billing_address.zipcode
         )
 

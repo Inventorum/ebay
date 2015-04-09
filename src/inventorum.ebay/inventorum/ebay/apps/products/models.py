@@ -31,13 +31,6 @@ class EbayItemShippingDetails(BaseModel):
     cost = models.DecimalField(max_digits=20, decimal_places=10)
     external_id = models.CharField(max_length=255)
 
-#     'ShippingDetails': [
-#         {'ShippingServiceOptions': {
-#             'ShippingServicePriority': 1,
-#             'ShippingServiceAdditionalCost': 0.0,
-#             'ShippingService': u'First service',
-#             'ShippingServiceCost': 2.0}}],
-
 
 class EbayItemModel(BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="items",
@@ -51,6 +44,7 @@ class EbayItemModel(BaseModel):
     postal_code = models.CharField(max_length=255, null=True, blank=True)
     quantity = models.IntegerField(default=0)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20)
+    paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
     publishing_status = models.IntegerField(choices=EbayProductPublishingStatus.CHOICES,
                                             default=EbayProductPublishingStatus.DRAFT)
     country = CountryField()

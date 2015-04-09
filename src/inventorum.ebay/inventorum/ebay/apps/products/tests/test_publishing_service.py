@@ -90,6 +90,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(last_item.quantity, 3000)
         self.assertEqual(last_item.gross_price, Decimal("599.99"))
         self.assertEqual(last_item.country, 'DE')
+        self.assertEqual(last_item.paypal_email_address, 'john.newman@paypal.com')
         self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.DRAFT)
         self.assertEqual(last_item.listing_duration, 'Days_120')
 
@@ -117,7 +118,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         shipping_services = last_item.shipping.all()
 
         self.assertEqual(shipping_services.count(), 1)
-        self.assertEqual(shipping_services[0].external_id, 'DE_DHLPaket')
+        self.assertEqual(shipping_services[0].external_id, 'DE_HermesPaket')
         self.assertEqual(shipping_services[0].cost, Decimal('0'))
         self.assertEqual(shipping_services[0].additional_cost, None)
 

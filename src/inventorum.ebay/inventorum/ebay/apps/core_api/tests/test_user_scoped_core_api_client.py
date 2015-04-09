@@ -116,11 +116,11 @@ class TestUserScopedCoreAPIClient(APITestCase):
 
         account_settings = core_account.account.settings
         self.assertEqual(len(account_settings.shipping_services), 1)
-        self.assertEqual(account_settings.ebay_paypal_email, None)
+        self.assertEqual(account_settings.ebay_paypal_email, 'john.newman@paypal.com')
         self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
 
         shipping_service = account_settings.shipping_services[0]
-        self.assertEqual(shipping_service.id, 'DE_DHLPaket')
-        self.assertEqual(shipping_service.description, 'DHL Paket')
+        self.assertEqual(shipping_service.id, 'DE_HermesPaket')
+        self.assertEqual(shipping_service.description, 'Hermes Paket')
         self.assertEqual(shipping_service.additional_cost, None)
         self.assertEqual(shipping_service.cost, Decimal(0))
