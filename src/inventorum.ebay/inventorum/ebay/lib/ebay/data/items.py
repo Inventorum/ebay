@@ -4,16 +4,39 @@ from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
 
 
+class EbayPicture(object):
+    def __init__(self, url):
+        if url.startswith('https'):
+            raise TypeError('Ebay does not accept url with https for pictures')
+
+        self.url = url
+
+    def dict(self):
+        return {
+            'PictureURL': self.url
+        }
+
+
 class EbayShippingService(object):
     def __init__(self, id, cost, additional_cost=None):
         self.id = id
         self.cost = cost
         self.additional_cost = additional_cost
 
+    def dict(self):
+        return {
+            'ShippingServiceOptions': {
+                'ShippingServicePriority': 1,
+                'ShippingServiceAdditionalCost': self.additional_cost or 0,
+                'ShippingServiceCost': self.cost,
+                'ShippingService': self.id,
+            }
+        }
+
 
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
-                 paypal_email_address, payment_methods, category_id, shipping_services):
+                 paypal_email_address, payment_methods, category_id, shipping_services, pictures=None):
         if not all([isinstance(s, EbayShippingService) for s in shipping_services]):
             raise TypeError("shipping_services must be list of EbayShippingService instances")
 
@@ -28,6 +51,7 @@ class EbayFixedPriceItem(object):
         self.payment_methods = payment_methods
         self.category_id = category_id
         self.shipping_services = shipping_services
+        self.pictures = pictures or []
 
     def dict(self):
         data = {
@@ -42,29 +66,15 @@ class EbayFixedPriceItem(object):
             'PaymentMethods': self.payment_methods,
             'PrimaryCategory': {'CategoryID': self.category_id},
         }
+        if self.pictures:
+            data['PictureDetails'] = [p.dict() for p in self.pictures]
+        if self.shipping_services:
+            data['ShippingDetails'] = [s.dict() for s in self.shipping_services]
 
         # Static data
         data.update(**self._static_data)
 
-        # Shipping
-        shipping = [self._build_shipping_details(s) for s in self.shipping_services]
-        data['ShippingDetails'] = shipping
-
         return {'Item': data}
-
-    def _build_shipping_details(self, shipping):
-        """
-        :type shipping: inventorum.ebay.apps.products.models.EbayItemShippingDetails
-        """
-        return {
-            'ShippingServiceOptions': {
-                'ShippingServicePriority': 1,
-                'ShippingServiceAdditionalCost': shipping.additional_cost or 0,
-                'ShippingServiceCost': shipping.cost,
-                'ShippingService': shipping.id,
-            }
-        }
-
 
     @property
     def _static_data(self):
