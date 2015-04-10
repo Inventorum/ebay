@@ -69,7 +69,7 @@ class PublishingService(object):
         """
         Here this method can be called asynchronously, cause it loads everything from DB again
         """
-        item = EbayItemModel.objects.get(product_id=self.product_id)
+        item = EbayItemModel.objects.get(product__inv_id=self.product_id)
         item.publishing_status = EbayProductPublishingStatus.IN_PROGRESS
         item.save()
 
