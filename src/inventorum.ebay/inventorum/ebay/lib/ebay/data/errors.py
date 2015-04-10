@@ -12,6 +12,9 @@ class EbayError(object):
         self.severity_code = severity_code
         self.short_message = short_message
 
+    def __unicode__(self):
+        return self.long_message
+
     @classmethod
     def create_from_data(cls, data):
         """

@@ -3,6 +3,8 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException
+from inventorum.ebay.lib.ebay import EbayConnectionException
+from inventorum.ebay.lib.rest.exceptions import BadRequest
 
 from inventorum.ebay.lib.rest.resources import APIResource
 from requests.exceptions import HTTPError
@@ -23,7 +25,11 @@ class PublishResource(APIResource):
 
         service.prepare()
         # TODO: Move this to celery task!
-        service.publish()
+        try:
+            service.publish()
+        except EbayConnectionException as e:
+            log.error('Got ebay errors: %s', e.errors)
+            raise BadRequest([unicode(err) for err in e.errors])
 
         serializer = EbayProductSerializer(service.product)
         return Response(data=serializer.data)
