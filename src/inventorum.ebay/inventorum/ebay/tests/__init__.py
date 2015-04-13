@@ -19,3 +19,6 @@ class StagingTestAccount(object):
 
         PRODUCT_VALID_FOR_PUBLISHING = 640449
         PRODUCT_NOT_EXISTING = 1
+
+
+        IPAD_STAND = 665753

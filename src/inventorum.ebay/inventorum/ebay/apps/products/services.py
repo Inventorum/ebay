@@ -26,8 +26,7 @@ class PublishingCouldNotGetDataFromCoreAPI(PublishingServiceException):
     def __init__(self, response):
         self.response = response
 
-
-class PublishingService(object):
+class PublishingUnpublishingService(object):
     def __init__(self, product, user):
         """
         Service for publishing products to ebay
@@ -55,6 +54,8 @@ class PublishingService(object):
     def core_account(self):
         return self.core_info.account
 
+
+class PublishingService(PublishingUnpublishingService):
     def validate(self):
         """
         Validates account and product before publishing to ebay
@@ -86,16 +87,25 @@ class PublishingService(object):
         item = self._create_db_item()
         # TODO: At this point we should change state in API to In progress of publishing, but api is not ready yet
 
-    def publish(self):
+        return item
+
+    def publish(self, item):
         """
         Here this method can be called asynchronously, cause it loads everything from DB again
+        :type item: EbayItemModel
         """
-        item = EbayItemModel.objects.get(product_id=self.product.id)
         item.publishing_status = EbayProductPublishingStatus.IN_PROGRESS
         item.save()
 
         service = EbayItems(self.user.account.token.ebay_object)
-        service.publish(item.ebay_object)
+        response = service.publish(item.ebay_object)
+
+        item.external_id = response.item_id
+        item.publishing_status = EbayProductPublishingStatus.PUBLISHED
+        item.published_at = response.start_time
+        item.ends_at = response.end_time
+        item.save()
+
         # TODO: At this point we should inform API to change quantity I think?
 
     def _create_db_item(self):
@@ -138,3 +148,19 @@ class PublishingService(object):
             )
 
         return item
+
+
+class UnpublishingService(PublishingUnpublishingService):
+    def validate(self):
+        if not self.product.is_published:
+            raise PublishingValidationException(ugettext('Product is not published'))
+
+    def unpublish(self):
+        item = self.product.published_item
+
+        service = EbayItems(self.user.account.token.ebay_object)
+        response = service.unpublish(item.external_id)
+
+        item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
+        item.unpublished_at = response.end_time
+        item.save()

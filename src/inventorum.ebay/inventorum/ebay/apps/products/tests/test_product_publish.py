@@ -63,12 +63,31 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertEqual(data['error']['key'], 'ebay.api.errors')
 
     @CoreApiTest.vcr.use_cassette("publish_product_that_does_not_exists.json")
-    def test_publish_valid_one(self):
+    def test_publish_not_existing_one(self):
         inv_product_id = StagingTestAccount.Products.PRODUCT_NOT_EXISTING
-
-        product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
 
         response = self.client.post("/products/%s/publish" % inv_product_id)
         log.debug('Got response: %s', response)
         self.assertEqual(response.status_code, 404)
+
+    @CoreApiTest.vcr.use_cassette("unpublish_product_that_does_not_exists.json")
+    def test_unpublish_not_existing_one(self):
+        inv_product_id = StagingTestAccount.Products.PRODUCT_NOT_EXISTING
+        response = self.client.post("/products/%s/unpublish" % inv_product_id)
+        log.debug('Got response: %s', response)
+        self.assertEqual(response.status_code, 404)
+
+    @CoreApiTest.vcr.use_cassette("publish_and_unpublish_full.json")
+    def test_publish_then_unpublish(self):
+        inv_product_id = StagingTestAccount.Products.IPAD_STAND
+        product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
+        self._assign_category(product)
+
+        response = self.client.post("/products/%s/publish" % inv_product_id)
+        log.debug('Got response: %s', response)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post("/products/%s/unpublish" % inv_product_id)
+        log.debug('Got response: %s', response)
+        self.assertEqual(response.status_code, 200)
 
