@@ -3,8 +3,8 @@
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
-      <env name="SKIP_LONG_TESTS" value="1" />
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="SKIP_LONG_TESTS" value="1" />
     </envs>
     <option name="SDK_HOME" value="/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />

@@ -9,4 +9,5 @@ log = logging.getLogger(__name__)
 
 urlpatterns = patterns('',
     url(r'^(?P<inv_product_id>[0-9]+)/publish$', resources.PublishResource.as_view(), name='publish'),
+    url(r'^(?P<inv_product_id>[0-9]+)/unpublish$', resources.UnpublishResource.as_view(), name='unpublish'),
 )

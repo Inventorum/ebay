@@ -111,3 +111,10 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.item_id, "261844248112")
         self.assertEqual(response.start_time, datetime(2015, 4, 9, 14, 13, 14, 253000, tzinfo=UTC))
         self.assertEqual(response.end_time, datetime(2015, 5, 9, 14, 13, 14, 253000, tzinfo=UTC))
+
+    @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_unpublish_item.json")
+    def test_unpublishing(self):
+        service = EbayItems(self.ebay_token)
+        response = service.unpublish('261844248112')
+
+        self.assertEqual(response.end_time, datetime(2015, 4, 13, 12, 4, 17, tzinfo=UTC))
