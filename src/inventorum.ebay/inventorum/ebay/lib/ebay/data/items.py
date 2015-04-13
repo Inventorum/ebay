@@ -45,7 +45,7 @@ class EbayFixedPriceItem(object):
         self.listing_duration = listing_duration
         self.country = country
         self.postal_code = postal_code
-        self.quantity = quantity
+        self.quantity = int(quantity)
         self.start_price = start_price
         self.paypal_email_address = paypal_email_address
         self.payment_methods = payment_methods
