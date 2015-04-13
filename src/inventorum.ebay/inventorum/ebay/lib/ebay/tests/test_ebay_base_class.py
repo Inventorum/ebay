@@ -5,6 +5,7 @@ from ebaysdk.exception import ConnectionError
 from inventorum.ebay.lib.ebay import Ebay, EbayConnectionException, EbayReturnedErrorsException
 from inventorum.ebay.lib.ebay.tests import EbayClassTestCase
 from django.conf import settings
+from mock import Mock
 
 
 class TestEbayBaseClass(EbayClassTestCase):
@@ -31,7 +32,9 @@ class TestEbayBaseClass(EbayClassTestCase):
     def test_connection_handling(self):
         ebay = Ebay(None)
 
-        self.instance_mock.execute.side_effect = ConnectionError("test", {})
+        error_response = Mock()
+        error_response.dict.return_value = {'Errors': []}
+        self.instance_mock.execute.side_effect = ConnectionError("test", error_response)
         self.assertRaises(EbayConnectionException, lambda: ebay.execute('Test', {}))
 
     def test_error_handling(self):

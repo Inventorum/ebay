@@ -23,12 +23,14 @@ class TestCoreProductDeserializer(UnitTestCase):
                     "id": 520,
                     "channel": 4,
                     "name": None,
-                    "description": None
+                    "description": ""
                 }
             },
             "id": 330857,
             "name": "Felt Brougham",
-            "description": "Marvellous bike",
+            "variation_count": 0,
+            "shipping_services": [],
+            "description": "Marvellous bike"
         }
 
         subject = CoreProductDeserializer(data=minimal_core_product_json)
@@ -40,3 +42,4 @@ class TestCoreProductDeserializer(UnitTestCase):
         self.assertEqual(core_product.description, "Marvellous bike")
         self.assertEqual(len(core_product.images), 1)
         self.assertEqual(core_product.images[0].id, 2915)
+        self.assertFalse(core_product.is_parent)

@@ -1,8 +1,10 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 
+import os
 import logging
 import vcr
+import unittest
 
 from django.utils.datetime_safe import datetime
 from django.conf import settings
@@ -24,6 +26,7 @@ class APIClient(test.APIClient):
 
 
 class APITestCase(test.APITestCase):
+    maxDiff = None
     client_class = APIClient
     vcr = vcr.VCR(
         serializer='json',
@@ -61,7 +64,15 @@ class EbayAuthenticatedAPITestCase(APITestCase):
     def setUp(self):
         super(EbayAuthenticatedAPITestCase, self).setUp()
         self.account.token = EbayTokenModel.create_from_ebay_token(self.ebay_token)
+        self.account.save()
 
 
 class UnitTestCase(TestCase):
     pass
+
+
+def long_running_test():
+    """
+    Skip a test if the condition is true.
+    """
+    return unittest.skipIf(os.environ.get('SKIP_LONG_TESTS', False), "Test takes too long...")

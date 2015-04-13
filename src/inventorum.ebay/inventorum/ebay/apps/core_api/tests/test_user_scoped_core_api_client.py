@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from decimal import Decimal as D
+from decimal import Decimal as D, Decimal
 
 from django.conf import settings
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
@@ -81,3 +81,46 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(image_2.id, 2916)
         self.assertTrue(image_2.url.endswith(
             "/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad_retina.JPEG"))
+
+    @CoreApiTest.vcr.use_cassette("get_product_with_shipping_services.json")
+    def test_get_product_with_ebay_meta(self):
+        core_product = self.subject.get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES)
+
+        self.assertEqual(core_product.id, StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES)
+        self.assertEqual(len(core_product.shipping_services), 2)
+
+        first_shipping = core_product.shipping_services[0]
+        self.assertEqual(first_shipping.id, 'DE_HermesPaket')
+        self.assertEqual(first_shipping.description, 'Hermes Paket')
+        self.assertEqual(first_shipping.time_min, 1)
+        self.assertEqual(first_shipping.time_max, 2)
+        self.assertEqual(first_shipping.additional_cost, Decimal(1))
+        self.assertEqual(first_shipping.cost, Decimal(10))
+
+    @CoreApiTest.vcr.use_cassette("get_account_info.json")
+    def test_get_account_info(self):
+        core_account = self.subject.get_account_info()
+        self.assertEqual(core_account.account.email, "tech+slingshot-test@inventorum.com")
+        self.assertEqual(core_account.account.country, "DE")
+
+        billing = core_account.account.billing_address
+        self.assertEqual(billing.address1, "Voltastr 5")
+        self.assertEqual(billing.address2, "Gebaude 3")
+        self.assertEqual(billing.zipcode, "13355")
+        self.assertEqual(billing.city, "Berlin")
+        self.assertEqual(billing.state, None)
+        self.assertEqual(billing.country, "DE")
+        self.assertEqual(billing.first_name, "John")
+        self.assertEqual(billing.last_name, "Newman")
+        self.assertEqual(billing.company, "Inventorum")
+
+        account_settings = core_account.account.settings
+        self.assertEqual(len(account_settings.shipping_services), 1)
+        self.assertEqual(account_settings.ebay_paypal_email, 'john.newman@paypal.com')
+        self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
+
+        shipping_service = account_settings.shipping_services[0]
+        self.assertEqual(shipping_service.id, 'DE_HermesPaket')
+        self.assertEqual(shipping_service.description, 'Hermes Paket')
+        self.assertEqual(shipping_service.additional_cost, None)
+        self.assertEqual(shipping_service.cost, Decimal(0))

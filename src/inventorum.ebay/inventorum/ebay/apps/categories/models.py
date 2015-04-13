@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.models.fields.related import OneToOneField, ManyToManyField
+from inventorum.ebay.apps.categories import ListingDurations
 from inventorum.util.django.db.managers import ValidityManager
 import mptt
 
@@ -88,6 +89,15 @@ class CategoryFeaturesModel(BaseModel):
     category = OneToOneField(CategoryModel, related_name="features")
     durations = ManyToManyField(DurationModel, related_name="features")
     payment_methods = ManyToManyField(PaymentMethodModel, related_name="features")
+
+    @property
+    def max_listing_duration(self):
+        ordered_durations = ListingDurations.ORDERED
+        durations_values = [d.value for d in self.durations.all()]
+        for ordered_duration in ordered_durations:
+            if ordered_duration in durations_values:
+                return ordered_duration
+        return None
 
     @classmethod
     def create_or_update_from_ebay_data_for_category(cls, data, category):

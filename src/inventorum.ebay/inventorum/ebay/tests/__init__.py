@@ -15,3 +15,7 @@ class StagingTestAccount(object):
         SIMPLE_PRODUCT_ID = 463690
         # no variations, one image, and ebay meta
         PRODUCT_WITH_EBAY_META_ID = 463691
+        PRODUCT_WITH_SHIPPING_SERVICES = 640416
+
+        PRODUCT_VALID_FOR_PUBLISHING = 640449
+        PRODUCT_NOT_EXISTING = 1
