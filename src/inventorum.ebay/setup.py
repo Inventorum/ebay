@@ -24,7 +24,7 @@ required_eggs = [
     'djangorestframework>=3.1.1',
     'django-pastedeploy-settings>=1.0rc4dev',
 
-    'inventorum.util==9.2.6-dev',
+    'inventorum.util==9.3.7-dev',
 
     'plac>=0.9.1',
     'requests>=2.6.0',
