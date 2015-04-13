@@ -71,7 +71,7 @@ class UnitTestCase(TestCase):
     pass
 
 
-def skip_if_test_takes_too_long():
+def long_running_test():
     """
     Skip a test if the condition is true.
     """
