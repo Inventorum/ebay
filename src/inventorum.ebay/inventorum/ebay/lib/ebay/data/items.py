@@ -82,8 +82,8 @@ class EbayFixedPriceItem(object):
             'Currency': 'EUR',
             'ListingType': 'FixedPriceItem',
             'ReturnPolicy': {
-                'ReturnsAcceptedOption': u'ReturnsAccepted',
-                'Description': u''
+                'ReturnsAcceptedOption': 'ReturnsAccepted',
+                'Description': ''
             },
             'DispatchTimeMax': 3,
             'ConditionID': 1000
