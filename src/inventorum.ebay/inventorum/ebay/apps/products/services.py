@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
@@ -29,10 +30,13 @@ class PublishingService(object):
         """
         self.product_id = product_id
         self.user = user
-        self.core_product = self.user.core_api.get_product(product_id)
         self.core_info = self.user.core_api.get_account_info()
         self.core_account = self.core_info.account
-        self.product, c = EbayProductModel.objects.get_or_create(inv_id=self.core_product.id, account=self.user.account)
+        self.product, c = EbayProductModel.objects.get_or_create(inv_id=product_id, account=self.user.account)
+
+    @cached_property
+    def core_product(self):
+        return self.user.core_api.get_product(self.product_id)
 
     def validate(self):
         """
