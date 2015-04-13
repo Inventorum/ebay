@@ -202,7 +202,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
     @CoreApiTest.vcr.use_cassette("test_publishing_service_publish_and_unpublish.json")
     def test_publishing(self):
-        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
+        product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
 
         # 176973 is valid ebay category id
         category, c = CategoryModel.objects.get_or_create(external_id='176973')
@@ -222,8 +222,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         # Try to publish
         service = PublishingService(product, self.user)
         service.validate()
-        service.prepare()
-        service.publish()
+        item = service.prepare()
+        service.publish(item)
 
         item = product.published_item
         self.assertIsNotNone(item)
@@ -233,8 +233,6 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertIsNone(item.unpublished_at)
 
         # And now unpublish
-
-        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         unpublish_service = UnpublishingService(product, self.user)
         unpublish_service.validate()
         unpublish_service.unpublish()

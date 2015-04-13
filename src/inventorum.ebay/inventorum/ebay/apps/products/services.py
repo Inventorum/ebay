@@ -54,9 +54,6 @@ class PublishingUnpublishingService(object):
     def core_account(self):
         return self.core_info.account
 
-    def get_item(self):
-        return EbayItemModel.objects.get(product_id=self.product.id)
-
 
 class PublishingService(PublishingUnpublishingService):
     def validate(self):
@@ -90,11 +87,13 @@ class PublishingService(PublishingUnpublishingService):
         item = self._create_db_item()
         # TODO: At this point we should change state in API to In progress of publishing, but api is not ready yet
 
-    def publish(self):
+        return item
+
+    def publish(self, item):
         """
         Here this method can be called asynchronously, cause it loads everything from DB again
+        :type item: EbayItemModel
         """
-        item = self.get_item()
         item.publishing_status = EbayProductPublishingStatus.IN_PROGRESS
         item.save()
 
@@ -157,11 +156,11 @@ class UnpublishingService(PublishingUnpublishingService):
             raise PublishingValidationException(ugettext('Product is not published'))
 
     def unpublish(self):
-        item = self.get_item()
+        item = self.product.published_item
 
         service = EbayItems(self.user.account.token.ebay_object)
         response = service.unpublish(item.external_id)
 
-        item.published_status = EbayProductPublishingStatus.UNPUBLISHED
-        item.unpublised_at = response.end_time
+        item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
+        item.unpublished_at = response.end_time
         item.save()

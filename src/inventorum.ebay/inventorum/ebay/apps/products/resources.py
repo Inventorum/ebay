@@ -31,10 +31,10 @@ class PublishResource(APIResource):
                 raise exceptions.NotFound
             raise ApiException(e.response.data, key="core.api.error", status_code=e.response.status_code)
 
-        service.prepare()
+        item = service.prepare()
         # TODO: Move this to celery task!
         try:
-            service.publish()
+            service.publish(item)
         except EbayConnectionException as e:
             log.error('Got ebay errors: %s', e.errors)
             raise BadRequest([unicode(err) for err in e.errors], key="ebay.api.errors")

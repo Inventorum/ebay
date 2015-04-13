@@ -21,4 +21,4 @@ class StagingTestAccount(object):
         PRODUCT_NOT_EXISTING = 1
 
 
-        PRODUCT_WITH_VALID_SHIPPING = 640416
+        IPAD_STAND = 665753
