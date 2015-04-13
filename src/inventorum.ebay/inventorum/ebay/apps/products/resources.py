@@ -3,15 +3,16 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException
+from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
+    PublishingCouldNotGetDataFromCoreAPI
 from inventorum.ebay.lib.ebay import EbayConnectionException
-from inventorum.ebay.lib.rest.exceptions import BadRequest
+from inventorum.ebay.lib.rest.exceptions import BadRequest, ApiException
 
 from inventorum.ebay.lib.rest.resources import APIResource
 from requests.exceptions import HTTPError
-from rest_framework.exceptions import ValidationError
+from rest_framework import exceptions
 from rest_framework.response import Response
-
+from rest_framework import status
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +25,11 @@ class PublishResource(APIResource):
         try:
             service.validate()
         except PublishingValidationException as e:
-            raise ValidationError(e.message)
+            raise exceptions.ValidationError(e.message)
+        except PublishingCouldNotGetDataFromCoreAPI as e:
+            if e.response.status_code == status.HTTP_404_NOT_FOUND:
+                raise exceptions.NotFound
+            raise ApiException(e.response.data, key="core.api.error", status_code=e.response.status_code)
 
         service.prepare()
         # TODO: Move this to celery task!

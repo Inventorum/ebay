@@ -62,3 +62,13 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         )
         self.assertEqual(data['error']['key'], 'ebay.api.errors')
 
+    @CoreApiTest.vcr.use_cassette("publish_product_that_does_not_exists.json")
+    def test_publish_valid_one(self):
+        inv_product_id = StagingTestAccount.Products.PRODUCT_NOT_EXISTING
+
+        product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
+
+        response = self.client.post("/products/%s/publish" % inv_product_id)
+        log.debug('Got response: %s', response)
+        self.assertEqual(response.status_code, 404)
+

@@ -32,11 +32,13 @@ ValidationError.key = 'validation.failed'
 class ApiException(Exception):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
-    def __init__(self, detail, key="common.unknown"):
+    def __init__(self, detail, key="common.unknown", status_code=None):
         # For validation errors the 'detail' key is always required.
         # The details should always be coerced to a list if not already.
         self.detail = detail
         self.key = key
+        if status_code is not None:
+            self.status_code = status_code
 
 
 class BadRequest(ApiException):

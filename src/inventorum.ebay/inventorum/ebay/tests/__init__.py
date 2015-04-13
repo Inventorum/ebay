@@ -18,3 +18,4 @@ class StagingTestAccount(object):
         PRODUCT_WITH_SHIPPING_SERVICES = 640416
 
         PRODUCT_VALID_FOR_PUBLISHING = 640449
+        PRODUCT_NOT_EXISTING = 1

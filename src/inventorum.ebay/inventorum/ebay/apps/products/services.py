@@ -7,6 +7,7 @@ from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod
 from inventorum.ebay.lib.ebay.items import EbayItems
+from requests.exceptions import HTTPError
 
 
 class PublishingServiceException(Exception):
@@ -21,6 +22,11 @@ class PublishingNotPossibleException(PublishingServiceException):
     pass
 
 
+class PublishingCouldNotGetDataFromCoreAPI(PublishingServiceException):
+    def __init__(self, response):
+        self.response = response
+
+
 class PublishingService(object):
     def __init__(self, product, user):
         """
@@ -29,13 +35,25 @@ class PublishingService(object):
         :type user: EbayUserModel
         """
         self.user = user
-        self.core_info = self.user.core_api.get_account_info()
-        self.core_account = self.core_info.account
         self.product = product
 
     @cached_property
     def core_product(self):
-        return self.user.core_api.get_product(self.product.inv_id)
+        try:
+            return self.user.core_api.get_product(self.product.inv_id)
+        except HTTPError as e:
+            raise PublishingCouldNotGetDataFromCoreAPI(response=e.response)
+
+    @cached_property
+    def core_info(self):
+        try:
+            return self.user.core_api.get_account_info()
+        except HTTPError as e:
+            raise PublishingCouldNotGetDataFromCoreAPI(e.response)
+
+    @property
+    def core_account(self):
+        return self.core_info.account
 
     def validate(self):
         """
