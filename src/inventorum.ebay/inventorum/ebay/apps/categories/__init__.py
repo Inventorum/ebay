@@ -1,6 +1,7 @@
-__author__ = 'bim'
+# encoding: utf-8
+from __future__ import absolute_import, unicode_literals
 
 
 class ListingDurations(object):
-    ORDERED = (u'GTC', u'Days_120', u'Days_90', u'Days_60', u'Days_30', u'Days_21', u'Days_14',
-               u'Days_10', u'Days_7', u'Days_5', u'Days_3', u'Days_1')
+    ORDERED = ('GTC', 'Days_120', 'Days_90', 'Days_60', 'Days_30', 'Days_21', 'Days_14',
+               'Days_10', 'Days_7', 'Days_5', 'Days_3', 'Days_1')
