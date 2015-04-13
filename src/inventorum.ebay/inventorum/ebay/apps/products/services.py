@@ -22,21 +22,20 @@ class PublishingNotPossibleException(PublishingServiceException):
 
 
 class PublishingService(object):
-    def __init__(self, product_id, user):
+    def __init__(self, product, user):
         """
         Service for publishing products to ebay
-        :type product_id: int
+        :type product: EbayProductModel
         :type user: EbayUserModel
         """
-        self.product_id = product_id
         self.user = user
         self.core_info = self.user.core_api.get_account_info()
         self.core_account = self.core_info.account
-        self.product, c = EbayProductModel.objects.get_or_create(inv_id=product_id, account=self.user.account)
+        self.product = product
 
     @cached_property
     def core_product(self):
-        return self.user.core_api.get_product(self.product_id)
+        return self.user.core_api.get_product(self.product.inv_id)
 
     def validate(self):
         """
@@ -73,7 +72,7 @@ class PublishingService(object):
         """
         Here this method can be called asynchronously, cause it loads everything from DB again
         """
-        item = EbayItemModel.objects.get(product__inv_id=self.product_id)
+        item = EbayItemModel.objects.get(product_id=self.product.id)
         item.publishing_status = EbayProductPublishingStatus.IN_PROGRESS
         item.save()
 

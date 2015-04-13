@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException
 from inventorum.ebay.lib.ebay import EbayConnectionException
@@ -17,7 +18,9 @@ log = logging.getLogger(__name__)
 
 class PublishResource(APIResource):
     def post(self, request, inv_product_id):
-        service = PublishingService(inv_product_id, request.user)
+        product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=request.user.account)
+
+        service = PublishingService(product, request.user)
         try:
             service.validate()
         except PublishingValidationException as e:
