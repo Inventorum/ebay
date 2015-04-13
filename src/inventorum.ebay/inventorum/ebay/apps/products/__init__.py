@@ -8,9 +8,11 @@ class EbayProductPublishingStatus(object):
     DRAFT = 1
     IN_PROGRESS = 2
     PUBLISHED = 3
+    UNPUBLISHED = 4
 
     CHOICES = (
         (DRAFT, "Draft"),
         (IN_PROGRESS, "In progress"),
-        (PUBLISHED, "Published")
+        (PUBLISHED, "Published"),
+        (UNPUBLISHED, "Unpublished"),
     )

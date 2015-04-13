@@ -7,8 +7,8 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
-from inventorum.ebay.apps.products.models import EbayProductModel
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException
+from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel
+from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
@@ -68,16 +68,23 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         service.core_product.gross_price = 1
 
-        service.product.external_item_id = "some_id!!"
-        service.product.save()
+        # mock that product was published
+        item = service._create_db_item()
+        item.publishing_status = EbayProductPublishingStatus.PUBLISHED
+        item.save()
 
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
         self.assertEqual(e.exception.message, 'Product was already published')
 
-        service.product.external_item_id = None
-        service.product.save()
+        item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
+        item.save()
+
+        # Get product again cause it has cached item
+        product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
+        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+            service = PublishingService(product, self.user)
 
         # Should not raise anything finally!
         service.validate()
@@ -192,4 +199,52 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                     }
                 }],
         }})
+
+    @CoreApiTest.vcr.use_cassette("test_publishing_service_publish_and_unpublish.json")
+    def test_publishing(self):
+        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
+
+        # 176973 is valid ebay category id
+        category, c = CategoryModel.objects.get_or_create(external_id='176973')
+        product.category = category
+        product.save()
+
+        features = CategoryFeaturesModel.objects.create(
+            category=category
+        )
+        durations = ['Days_5', 'Days_30']
+        for d in durations:
+            duration = DurationModel.objects.create(
+                value=d
+            )
+            features.durations.add(duration)
+
+        # Try to publish
+        service = PublishingService(product, self.user)
+        service.validate()
+        service.prepare()
+        service.publish()
+
+        item = product.published_item
+        self.assertIsNotNone(item)
+        self.assertEqual(item.publishing_status, EbayProductPublishingStatus.PUBLISHED)
+        self.assertIsNotNone(item.published_at)
+        self.assertIsNotNone(item.ends_at)
+        self.assertIsNone(item.unpublished_at)
+
+        # And now unpublish
+
+        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
+        unpublish_service = UnpublishingService(product, self.user)
+        unpublish_service.validate()
+        unpublish_service.unpublish()
+
+        item = product.published_item
+        self.assertIsNone(item)
+
+        last_item = product.items.last()
+        self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.UNPUBLISHED)
+        self.assertIsNotNone(last_item.published_at)
+        self.assertIsNotNone(last_item.unpublished_at)
+
 

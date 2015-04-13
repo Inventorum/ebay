@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.db import models
+from django.utils.functional import cached_property
 from django_countries.fields import CountryField
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
@@ -21,7 +22,18 @@ class EbayProductModel(MappedInventorumModel):
 
     @property
     def is_published(self):
-        return self.external_item_id is not None
+        return self.published_item is not None
+
+    @property
+    def published_item(self):
+        try:
+            return self.items.get(publishing_status=EbayProductPublishingStatus.PUBLISHED)
+        except EbayItemModel.DoesNotExist:
+            return None
+
+    @property
+    def external_item_id(self):
+        return self.published_item.external_id
 
 
 # Models for data just before publishing
@@ -70,6 +82,11 @@ class EbayItemModel(BaseModel):
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
     publishing_status = models.IntegerField(choices=EbayProductPublishingStatus.CHOICES,
                                             default=EbayProductPublishingStatus.DRAFT)
+
+    published_at = models.DateTimeField(null=True, blank=True)
+    unpublished_at = models.DateTimeField(null=True, blank=True)
+    ends_at = models.DateTimeField(null=True, blank=True)
+
     external_id = models.CharField(max_length=255, null=True, blank=True)
     country = CountryField()
 
