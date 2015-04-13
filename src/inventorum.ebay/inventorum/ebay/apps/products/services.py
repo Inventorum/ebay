@@ -65,8 +65,8 @@ class PublishingService(object):
         Create all necessary models for later publishing in async task
         :return:
         """
-        # TODO: At this point we should inform API to change quantity I think?
         item = self._create_db_item()
+        # TODO: At this point we should change state in API to In progress of publishing, but api is not ready yet
 
     def publish(self):
         """
@@ -78,6 +78,7 @@ class PublishingService(object):
 
         service = EbayItems(self.user.account.token.ebay_object)
         service.publish(item.ebay_object)
+        # TODO: At this point we should inform API to change quantity I think?
 
     def _create_db_item(self):
 
