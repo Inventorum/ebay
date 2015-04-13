@@ -29,7 +29,7 @@ class PublishResource(APIResource):
             service.publish()
         except EbayConnectionException as e:
             log.error('Got ebay errors: %s', e.errors)
-            raise BadRequest([unicode(err) for err in e.errors])
+            raise BadRequest([unicode(err) for err in e.errors], key="ebay.api.errors")
 
         serializer = EbayProductSerializer(service.product)
         return Response(data=serializer.data)

@@ -80,6 +80,7 @@ REST_FRAMEWORK = {
     # 'DEFAULT_THROTTLE_RATES': {
     # 'default': '20/sec', # Default one for everything
     # },
+    'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
 }
 
 # Celery settings ==============================================================

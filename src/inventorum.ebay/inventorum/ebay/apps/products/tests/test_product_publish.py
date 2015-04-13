@@ -52,7 +52,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         log.debug('Got response: %s', response)
         self.assertEqual(response.status_code, 400)
         data = response.data
-        self.assertEqual(data, [
+        self.assertEqual(data['error']['detail'], [
             u'Die eingegebene E-Mail-Adresse ist nicht mit einem PayPal-Konto verknüpft. Sollten Sie noch kein '
             u'PayPal-Konto haben, richten Sie mit dieser Adresse bitte eines ein, damit Ihre Käufer Sie bezahlen '
             u'können. (Sie können Ihr Konto auch einrichten, nachdem der Artikel verkauft wurde.)',
@@ -60,4 +60,5 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             u'enthalten unter Umständen unzulässige Begriffe oder das Angebot verstößt gegen die '
             u'eBay-Grundsätze.']
         )
+        self.assertEqual(data['error']['key'], 'ebay.api.errors')
 
