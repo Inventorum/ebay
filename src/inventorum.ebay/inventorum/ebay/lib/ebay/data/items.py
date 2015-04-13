@@ -109,3 +109,27 @@ class EbayAddItemResponseDeserializer(POPOSerializer):
 
     class Meta:
         model = EbayAddItemResponse
+
+
+class EbayUnpublishReasons(object):
+    NOT_AVAILABLE = 'NotAvailable'
+    INCORRECT = 'Incorrect'
+    LOST_OR_BROKEN = 'LostOrBroken'
+    OTHER_ERROR = 'OtherListingError'
+
+
+class EbayEndItemResponse(object):
+    def __init__(self, end_time):
+        self.end_time = end_time
+
+    @classmethod
+    def create_from_data(cls, data):
+        serializer = EbayEndItemResponseDeserializer(data=data)
+        return serializer.build()
+
+
+class EbayEndItemResponseDeserializer(POPOSerializer):
+    EndTime = fields.DateTimeField(source='end_time')
+
+    class Meta:
+        model = EbayEndItemResponse
