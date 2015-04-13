@@ -70,35 +70,35 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         errors = e.exception.errors
         self.assertEqual(len(errors), 4)
 
-        self.assertEqual(errors[0].long_message, u'Für diese Kategorie ist kein Artikelzustand verfügbar. '
-                                                 u'Der eingegebene Artikelzustand wurde entfernt.')
-        self.assertEqual(errors[0].short_message, u'Artikelzustand kann nicht verwendet werden.')
+        self.assertEqual(errors[0].long_message, 'Für diese Kategorie ist kein Artikelzustand verfügbar. '
+                                                 'Der eingegebene Artikelzustand wurde entfernt.')
+        self.assertEqual(errors[0].short_message, 'Artikelzustand kann nicht verwendet werden.')
         self.assertEqual(errors[0].code, 21917121)
         self.assertEqual(errors[0].severity_code, 'Warning')
         self.assertEqual(errors[0].classification, 'RequestError')
 
 
-        self.assertEqual(errors[1].long_message, u'Erforderliche Mindesanzahl an Bildern:  1 Für Angebote in dieser '
-                                                 u'Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen, um '
-                                                 u'Ihre Verkaufschancen  möglicherweise um 12 zu erhöhen. '
-                                                 u'(Prozentangabe beruht auf Anteilen an verkauften Artikeln in dieser '
-                                                 u'Kategorie mit unterschiedlich vielen Bildern. Tatsächliche '
-                                                 u'Ergebnisse können anders ausfallen und der Verkauf ist nicht '
-                                                 u'garantiert.)')
+        self.assertEqual(errors[1].long_message, 'Erforderliche Mindesanzahl an Bildern:  1 Für Angebote in dieser '
+                                                 'Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen, um '
+                                                 'Ihre Verkaufschancen  möglicherweise um 12 zu erhöhen. '
+                                                 '(Prozentangabe beruht auf Anteilen an verkauften Artikeln in dieser '
+                                                 'Kategorie mit unterschiedlich vielen Bildern. Tatsächliche '
+                                                 'Ergebnisse können anders ausfallen und der Verkauf ist nicht '
+                                                 'garantiert.)')
         self.assertEqual(errors[1].code, 21919136)
         self.assertEqual(errors[1].severity_code, 'Error')
         self.assertEqual(errors[1].classification, 'RequestError')
 
 
-        self.assertEqual(errors[2].long_message, u'Bei der ausgewählten Kategorie handelt es sich nicht um eine so '
-                                                 u'genannte Unterkategorie.')
+        self.assertEqual(errors[2].long_message, 'Bei der ausgewählten Kategorie handelt es sich nicht um eine so '
+                                                 'genannte Unterkategorie.')
         self.assertEqual(errors[2].code, 87)
         self.assertEqual(errors[2].severity_code, 'Error')
         self.assertEqual(errors[2].classification, 'RequestError')
 
 
-        self.assertEqual(errors[3].long_message, u'Die Dauer "120" (in Tagen) ist für dieses Angebotsformat nicht '
-                                                 u'verfügbar, bzw. ungültig für die Kategorie "64540".')
+        self.assertEqual(errors[3].long_message, 'Die Dauer "120" (in Tagen) ist für dieses Angebotsformat nicht '
+                                                 'verfügbar, bzw. ungültig für die Kategorie "64540".')
         self.assertEqual(errors[3].code, 83)
         self.assertEqual(errors[3].severity_code, 'Error')
         self.assertEqual(errors[3].classification, 'RequestError')
