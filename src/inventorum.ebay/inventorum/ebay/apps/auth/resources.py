@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 
 class AuthorizeEbayResource(UnauthorizedEbayAPIResource):
+
     def get(self, request):
         ebay = EbayAuthentication()
         session_id = ebay.get_session_id()

@@ -6,6 +6,7 @@ import pytz
 from django.utils.datetime_safe import datetime
 
 from inventorum.ebay.apps.accounts.models import EbayAccountModel
+from inventorum.ebay.tests import StagingTestAccount, Countries
 from inventorum.ebay.tests.testcases import APITestCase
 
 log = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ class EbayAuthorizationTest(APITestCase):
 
             requests = cass.requests
 
-            self.assertEqual(requests[0].headers['X-EBAY-API-SITEID'], 77)
+            self.assertEqual(requests[0].headers['X-EBAY-API-SITEID'], 77)  # = DE
             self.assertEqual(requests[1].headers['X-EBAY-API-SITEID'], 77)
             self.assertEqual(requests[2].headers['X-EBAY-API-SITEID'], 77)
 
@@ -58,12 +59,13 @@ class EbayAuthorizationTest(APITestCase):
                              'oxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZ'
                              'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/')
 
-            self.assertEqual(account.email, "tech+ebay@inventorum.com")
+            self.assertEqual(account.email, StagingTestAccount.EMAIL)
             self.assertEqual(account.id_verified, False)
             self.assertEqual(account.status, 'Confirmed')
             self.assertEqual(account.user_id, 'newmade')
             self.assertEqual(account.qualifies_for_b2b_vat, False)
             self.assertEqual(account.store_owner, False)
+            self.assertEqual(account.country, StagingTestAccount.COUNTRY)
             self.assertEqual(account.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=pytz.UTC))
 
             address = account.registration_address
@@ -86,7 +88,7 @@ class EbayAuthorizationTest(APITestCase):
 
             requests = cass.requests
 
-            self.assertEqual(requests[0].headers['X-EBAY-API-SITEID'], 16)
+            self.assertEqual(requests[0].headers['X-EBAY-API-SITEID'], 16)  # = AT
             self.assertEqual(requests[2].headers['X-EBAY-API-SITEID'], 16)
             self.assertEqual(requests[3].headers['X-EBAY-API-SITEID'], 16)
 
@@ -108,12 +110,13 @@ class EbayAuthorizationTest(APITestCase):
                              'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/')
             self.assertEqual(ebay_token.site_id, 16)
 
-            self.assertEqual(account.email, "tech+ebay@inventorum.com")
+            self.assertEqual(account.email, StagingTestAccount.EMAIL)
             self.assertEqual(account.id_verified, False)
             self.assertEqual(account.status, 'Confirmed')
             self.assertEqual(account.user_id, 'newmade')
             self.assertEqual(account.qualifies_for_b2b_vat, False)
             self.assertEqual(account.store_owner, False)
+            self.assertEqual(account.country, Countries.AT)
             self.assertEqual(account.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=pytz.UTC))
 
             address = account.registration_address
