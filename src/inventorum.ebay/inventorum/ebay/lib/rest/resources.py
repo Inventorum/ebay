@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.lib.rest.permissions import IsEbayAuthenticated
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -14,4 +15,4 @@ class UnauthorizedEbayAPIResource(APIView):
 
 
 class APIResource(UnauthorizedEbayAPIResource):
-    permission_classes = UnauthorizedEbayAPIResource.permission_classes + ()  # we will have here in future new check
+    permission_classes = UnauthorizedEbayAPIResource.permission_classes + (IsEbayAuthenticated, )
