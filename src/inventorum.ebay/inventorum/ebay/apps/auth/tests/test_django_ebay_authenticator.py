@@ -1,5 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
+from django.conf import settings
+
 from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
 from inventorum.util.django.timezone import datetime
@@ -17,7 +20,8 @@ class TestDjangoEbayAuthenticator(APITestCase):
         response = self.client.post('/products/1/publish')
         self.assertEqual(response.status_code, 403)
 
-        token = EbayTokenModel.create_from_ebay_token(EbayAuthenticatedAPITestCase.ebay_token)
+        token = EbayTokenModel.create_from_ebay_token(EbayAuthenticatedAPITestCase.ebay_token,
+                                                      site_id=settings.EBAY_SUPPORTED_SITES['DE'])
         token.expiration_date = datetime(2000, 1, 1)
         token.save()
         self.account.token = token

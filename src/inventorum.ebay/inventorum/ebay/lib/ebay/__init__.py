@@ -62,18 +62,17 @@ class Ebay(object):
     api = None
     error_lang = None
     _token = None
+    default_site_id = 77
 
-    def __init__(self, token=None, site_id=77, error_lang="en_US", parallel=None):
-        if site_id not in settings.EBAY_SUPPORTED_SITES.values():
-            raise EbayNotSupportedSite()
+    def __init__(self, token=None, error_lang="en_US", parallel=None):
 
         self.api = Connection(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
                               certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
                               debug=settings.DEBUG, timeout=self.timeout, compatibility=self.compatibility,
                               version=self.version, parallel=parallel, config_file=None)
+        self.site_id = self.default_site_id
 
         self.token = token
-        self.site_id = site_id
         self.error_lang = error_lang
 
 
@@ -87,6 +86,12 @@ class Ebay(object):
         self._token = new_value
         value = getattr(self._token, 'value', None)
         self.api.config.set('token', value, force=True)
+
+        # Set site id
+        site_id = getattr(self._token, 'site_id', None) or self.default_site_id
+        if site_id not in settings.EBAY_SUPPORTED_SITES.values():
+            raise EbayNotSupportedSite()
+        self.api.config.set('siteid', site_id, force=True)
 
     @property
     def site_id(self):

@@ -25,7 +25,7 @@ class AuthorizeEbayResource(UnauthorizedEbayAPIResource):
         serializer.is_valid(raise_exception=True)
 
         session_id = serializer.data['session_id']
-        service = AuthorizationService(request.user.account)
+        service = AuthorizationService(request.user)
         service.assign_token_from_session_id(session_id)
         service.fetch_user_data_from_ebay()
 

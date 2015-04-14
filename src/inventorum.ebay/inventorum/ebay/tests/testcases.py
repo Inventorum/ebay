@@ -63,7 +63,8 @@ class EbayAuthenticatedAPITestCase(APITestCase):
 
     def setUp(self):
         super(EbayAuthenticatedAPITestCase, self).setUp()
-        self.account.token = EbayTokenModel.create_from_ebay_token(self.ebay_token)
+        self.account.token = EbayTokenModel.create_from_ebay_token(self.ebay_token,
+                                                                   site_id=settings.EBAY_SUPPORTED_SITES['DE'])
         self.account.save()
 
 

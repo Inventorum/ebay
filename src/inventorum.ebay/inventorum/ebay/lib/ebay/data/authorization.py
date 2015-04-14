@@ -10,6 +10,7 @@ class EbayToken(object):
     expiration_time = None
     value = None
 
-    def __init__(self, value, expiration_time):
+    def __init__(self, value, expiration_time, site_id=None):
         self.expiration_time = expiration_time
         self.value = value
+        self.site_id = site_id
