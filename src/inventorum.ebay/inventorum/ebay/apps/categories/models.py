@@ -1,7 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from django.core.exceptions import MultipleObjectsReturned
 from django.db.models.fields.related import OneToOneField, ManyToManyField
 from inventorum.ebay.apps.categories import ListingDurations
 from inventorum.util.django.db.managers import ValidityManager
@@ -9,7 +8,7 @@ import mptt
 
 from django.db.models.fields import CharField, BooleanField
 from django_countries.fields import CountryField
-from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
+from inventorum.ebay.lib.db.models import BaseModel
 from mptt.fields import TreeForeignKey
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel
@@ -18,12 +17,12 @@ from mptt.models import MPTTModel
 log = logging.getLogger(__name__)
 
 
-class CategoryTreeManager(TreeManager, ValidityManager):
+class CategoryTreeManager(TreeManager):
     pass
 
 
-class CategoryModel(BaseModel):
-    """ Represents an ebay category """
+class CategoryModel(MPTTModel):
+    """ Represents the ebay category tree model """
 
     country = CountryField()
     name = CharField(max_length=255)
@@ -34,8 +33,12 @@ class CategoryModel(BaseModel):
     auto_pay_enabled = BooleanField(default=False)
     item_lot_size_disabled = BooleanField(default=False)
     ebay_leaf = BooleanField(default=False)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
-    tree_objects = CategoryTreeManager()
+    objects = CategoryTreeManager()
+
+    class MPTTMeta:
+       order_insertion_by = ['name']
 
     @classmethod
     def create_or_update_from_ebay_category(cls, data, country_code):
@@ -71,10 +74,9 @@ class CategoryModel(BaseModel):
 
         return category
 
-
-# MH: We need to do it like this, because then we can use TreeManager() and also our own validity query set etc!
-TreeForeignKey(CategoryModel, blank=True, null=True).contribute_to_class(CategoryModel, 'parent')
-mptt.register(CategoryModel, order_insertion_by=['name'])
+    @property
+    def is_leaf(self):
+        return self.is_leaf_node()
 
 
 class DurationModel(BaseModel):
@@ -124,5 +126,3 @@ class CategoryFeaturesModel(BaseModel):
         features.payment_methods = payment_methods_db
         features.save()
         return features
-
-
