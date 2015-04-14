@@ -90,7 +90,7 @@ class Ebay(object):
         self.api.config.set('token', value, force=True)
 
         # Set site id
-        site_id = getattr(self._token, 'site_id', None) or self.default_site_id
+        site_id = getattr(self._token, 'site_id', self.default_site_id)
         if site_id not in settings.EBAY_SUPPORTED_SITES.values():
             raise EbayNotSupportedSite()
         self.api.config.set('siteid', site_id, force=True)
