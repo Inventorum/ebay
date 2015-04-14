@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
+from django.utils.translation import gettext
 from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer
-from inventorum.ebay.lib.rest.exceptions import BadRequest
+
+from inventorum.ebay.lib.rest.exceptions import NotFound
 from inventorum.ebay.lib.rest.resources import APIResource
+
 from rest_framework.response import Response
 
 
@@ -16,12 +19,11 @@ class CategoryListResource(APIResource):
     def get(self, request):
         parent_id = request.GET.get('parent_id', None)
 
-        # validate optional parent_id
         if parent_id is not None:
             try:
                 parent = CategoryModel.objects.get(pk=parent_id)
             except CategoryModel.DoesNotExist:
-                raise BadRequest("Invalid parent_id")
+                raise NotFound(gettext("Invalid parent_id"), key="categories.invalid_parent_id")
 
             categories = parent.get_children()
             ancestors = parent.get_ancestors(include_self=True)

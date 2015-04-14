@@ -58,8 +58,8 @@ class TestCategoryList(EbayAuthenticatedAPITestCase):
         non_existing_parent_id = 10001
 
         response = self.get_categories(parent_id=non_existing_parent_id)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["error"]["detail"], "Invalid parent_id")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data["error"]["key"], "categories.invalid_parent_id")
 
     def test_breadcrumb(self):
         root = CategoryFactory.create(name="root")
