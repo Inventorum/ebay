@@ -1,7 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from inventorum.ebay.lib.ebay.data import EbayBooleanField
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from rest_framework.fields import IntegerField, ListField, CharField
+from rest_framework.fields import IntegerField, ListField, CharField, BooleanField
 
 
 class EbayListingDuration(object):
@@ -22,11 +23,13 @@ class EbayListingDurationSerializer(POPOSerializer):
 
 
 class EbayFeatureDetails(object):
+    item_specifics_enabled = None
     durations = None
     category_id = None
     payment_methods = None
 
-    def __init__(self, durations=None, category_id=None, payment_methods=None):
+    def __init__(self, item_specifics_enabled, durations=None, category_id=None, payment_methods=None):
+        self.item_specifics_enabled = item_specifics_enabled
         self.durations = durations
         self.category_id = category_id
         self.payment_methods = payment_methods
@@ -38,7 +41,7 @@ class EbayFeatureDetails(object):
         return {d.duration_type: d.duration_id for d in self.durations}
 
     @classmethod
-    def create_from_data(cls, data):
+    def create_from_data(cls, data, site_defaults=None):
         """
         Create Ebay feature from data from ebay
         :param data:
@@ -46,7 +49,7 @@ class EbayFeatureDetails(object):
         :rtype: EbayFeatureDetails
         :type data: dict
         """
-        serializer = EbayFeatureDetailsSerializer(data=data)
+        serializer = EbayFeatureDetailsSerializer(data=data, context={'site_defaults': site_defaults})
         return serializer.build()
 
 
@@ -54,9 +57,17 @@ class EbayFeatureDetailsSerializer(POPOSerializer):
     CategoryID = CharField(source="category_id", required=False)
     ListingDuration = EbayListingDurationSerializer(many=True, source="durations", required=False)
     PaymentMethod = ListField(child=CharField(), source="payment_methods", required=False)
+    ItemSpecificsEnabled = EbayBooleanField(source='item_specifics_enabled')
 
     class Meta:
         model = EbayFeatureDetails
+
+    def to_internal_value(self, data):
+        fields_to_fallback_to_site_defaults = ['ItemSpecificsEnabled', 'PaymentMethod', 'ItemSpecificsEnabled']
+        for name in fields_to_fallback_to_site_defaults:
+            if name not in data:
+                data[name] = self.context['site_defaults'][name]
+        return super(EbayFeatureDetailsSerializer, self).to_internal_value(data)
 
 
 class EbayListingDurationDefinition(object):
@@ -141,6 +152,6 @@ class EbayFeature(object):
         instance.definition = EbayFeatureDefinition.create_from_data(durations)
 
         details_data = data.get('Category', data.get('SiteDefaults'))
-        instance.details = EbayFeatureDetails.create_from_data(details_data)
+        instance.details = EbayFeatureDetails.create_from_data(details_data, data.get('SiteDefaults'))
         instance.site_defaults = EbayFeatureDetails.create_from_data(data.get('SiteDefaults'))
         return instance

@@ -54,12 +54,17 @@ class EbayCategories(Ebay):
                 ViewAllNodes=True,
                 CategoryID=category_id,
                 LevelLimit=7,
-                DetailLevel='ReturnAll'
+                DetailLevel='ReturnAll',
+                FeatureID=['ListingDurations', 'PaymentMethods', 'ItemSpecificsEnabled']
+                # If you input specific category features with FeatureID fields and set DetailLevel to ReturnAll,
+                # eBay returns just the requested feature settings for the specified category, regardless of the
+                # site defaults.
             ))
 
         category_features = self.parallel_api.wait_and_validate()
         features = {}
         for i, response in enumerate(category_features):
+            log.debug('Parsing %d category: %s', i, response)
             data = response.response.dict()
             feature = EbayFeature.create_from_data(data)
             features[feature.details.category_id] = feature

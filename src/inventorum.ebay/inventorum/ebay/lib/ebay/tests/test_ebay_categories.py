@@ -55,6 +55,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(feature.details.durations_dict['FixedPriceItem'], 8)
         self.assertIsNone(feature.details.payment_methods)
+        self.assertTrue(feature.details.item_specifics_enabled)
         self.assertEqual(feature.payment_methods, [
             'PayPal',
             'Moneybookers',
@@ -78,6 +79,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(second_feature.details.durations_dict['FixedPriceItem'], 8)
         self.assertIsNone(second_feature.details.payment_methods)
+        self.assertTrue(second_feature.details.item_specifics_enabled)
         self.assertEqual(second_feature.payment_methods, [
             'PayPal',
             'Moneybookers',

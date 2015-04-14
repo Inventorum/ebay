@@ -16,9 +16,11 @@ class EbayCategory(object):
     item_lot_size_disabled = False
     virtual = False
     expired = False
+    item_specifics_enabled = False
 
     def __init__(self, name, parent_id, category_id, level, auto_pay_enabled=False, best_offer_enabled=False,
-                 item_lot_size_disabled=False, virtual=False, expired=False, leaf=False, b2b_vat_enabled=False):
+                 item_lot_size_disabled=False, virtual=False, expired=False, leaf=False, b2b_vat_enabled=False,
+                 item_specifics_enabled=False):
         self.name = name
         self.parent_id = parent_id
         self.category_id = category_id
@@ -30,6 +32,7 @@ class EbayCategory(object):
         self.item_lot_size_disabled = item_lot_size_disabled
         self.virtual = virtual
         self.expired = expired
+        self.item_specifics_enabled = item_specifics_enabled
 
 
     @property
@@ -46,8 +49,7 @@ class EbayCategory(object):
         :type data: dict
         """
         serializer = EbayCategorySerializer(data=data)
-        obj = serializer.build()
-        return obj
+        return serializer.build()
 
 
 class EbayCategorySerializer(POPOSerializer):
