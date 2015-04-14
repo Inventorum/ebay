@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.categories',
     'inventorum.ebay.apps.products',
 
+    'raven.contrib.django.raven_compat',
     'rest_framework',
     'mptt'
 )
@@ -83,6 +84,11 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
 }
 
+# Sentry
+RAVEN_CONFIG = {
+    'dsn': 'http://837c06463bdc4bb5857794845702e464:48487cf9d2a1435285227bad64368e44@sentry.srv.hern.as/14',
+}
+
 # Celery settings ==============================================================
 
 BROKER_URL = 'django://guest:guest@localhost//'
@@ -121,6 +127,8 @@ MEDIA_URL = '/uploads/'
 # ==============================================================================
 
 MIDDLEWARE_CLASSES = (
+    # BH: This adds `X-Sentry-ID` header, so error can be tracked down
+    'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
     # TODO jm: Needed?
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # TODO jm: Move to utils?!

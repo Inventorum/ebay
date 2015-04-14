@@ -42,10 +42,10 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
             service = PublishingService(product, self.user)
 
-        # No shipping services
-        service.core_account.settings.shipping_services = []
-        with self.assertRaises(PublishingValidationException) as e:
-            service.validate()
+            # No shipping services
+            service.core_account.settings.shipping_services = []
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
 
         self.assertEqual(e.exception.message, 'Product has not shipping services selected')
 
@@ -53,8 +53,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
             service = PublishingService(product, self.user)
 
-        with self.assertRaises(PublishingValidationException) as e:
-            service.validate()
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
 
         self.assertEqual(e.exception.message, 'You need to select category')
         self._assign_category(service.product)
@@ -86,16 +86,16 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
             service = PublishingService(product, self.user)
 
-        # Should not raise anything finally!
-        service.validate()
+            # Should not raise anything finally!
+            service.validate()
 
     def test_preparation(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
             service = PublishingService(product, self.user)
 
-        self._assign_category(product)
-        service.prepare()
+            self._assign_category(product)
+            service.prepare()
 
         last_item = product.items.last()
         self.assertEqual(last_item.name, "SlowRoad Shipping Details")
@@ -136,25 +136,25 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
             service = PublishingService(product, self.user)
 
-        self._assign_category(product)
-        service.prepare()
+            self._assign_category(product)
+            service.prepare()
 
-        last_item = product.items.last()
-        shipping_services = last_item.shipping.all()
+            last_item = product.items.last()
+            shipping_services = last_item.shipping.all()
 
-        self.assertEqual(shipping_services.count(), 1)
-        self.assertEqual(shipping_services[0].external_id, 'DE_HermesPaket')
-        self.assertEqual(shipping_services[0].cost, Decimal('0'))
-        self.assertEqual(shipping_services[0].additional_cost, None)
+            self.assertEqual(shipping_services.count(), 1)
+            self.assertEqual(shipping_services[0].external_id, 'DE_HermesPaket')
+            self.assertEqual(shipping_services[0].cost, Decimal('0'))
+            self.assertEqual(shipping_services[0].additional_cost, None)
 
     def test_builder(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
             service = PublishingService(product, self.user)
 
-        self._assign_category(product)
-        service.prepare()
-        last_item = product.items.last()
+            self._assign_category(product)
+            service.prepare()
+            last_item = product.items.last()
 
         # Check data builder
         ebay_item = last_item.ebay_object
