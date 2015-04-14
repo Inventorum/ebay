@@ -3,8 +3,6 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from django.db.models.fields.related import OneToOneField, ManyToManyField
 from inventorum.ebay.apps.categories import ListingDurations
-from inventorum.util.django.db.managers import ValidityManager
-import mptt
 
 from django.db.models.fields import CharField, BooleanField
 from django_countries.fields import CountryField
@@ -76,6 +74,10 @@ class CategoryModel(MPTTModel):
 
     @property
     def is_leaf(self):
+        """
+        :returns: True if the category is a leaf in the category tree, i.e. if it does not have any descendants
+        :rtype: bool
+        """
         return self.is_leaf_node()
 
 

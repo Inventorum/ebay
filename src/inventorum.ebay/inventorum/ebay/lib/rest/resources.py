@@ -1,15 +1,15 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from rest_framework.generics import GenericAPIView
 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 
 
 log = logging.getLogger(__name__)
 
 
-class UnauthorizedEbayAPIResource(APIView):
+class UnauthorizedEbayAPIResource(GenericAPIView):
     permission_classes = (IsAuthenticated,)
 
 
