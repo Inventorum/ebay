@@ -43,3 +43,7 @@ class ApiException(Exception):
 
 class BadRequest(ApiException):
     status_code = status.HTTP_400_BAD_REQUEST
+
+
+class NotFound(ApiException):
+    status_code = status.HTTP_404_NOT_FOUND

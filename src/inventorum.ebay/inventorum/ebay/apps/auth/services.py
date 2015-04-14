@@ -38,7 +38,10 @@ class AuthorizationService(object):
         auth = EbayAuthentication(default_site_id=site_id)
         token = auth.fetch_token(session_id)
         db_token = EbayTokenModel.create_from_ebay_token(token)
+
         self.account.token = db_token
+        self.account.country = country
+
         self._auto_committed_save()
 
     def fetch_user_data_from_ebay(self):
