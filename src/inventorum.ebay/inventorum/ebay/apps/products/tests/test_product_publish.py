@@ -1,13 +1,14 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-import unittest
+
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.apps.products.models import EbayProductModel
-from inventorum.ebay.tests import StagingTestAccount
 
-from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
+from inventorum.ebay.tests import StagingTestAccount
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+from inventorum.util.celery import celery_test_case
 
 
 log = logging.getLogger(__name__)
@@ -39,7 +40,6 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 400)
         data = response.data
         self.assertEqual(data, ['You need to select category'])
-
 
     @CoreApiTest.vcr.use_cassette("publish_product_resource_valid_one.json")
     def test_publish_valid_one(self):
@@ -90,4 +90,3 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         response = self.client.post("/products/%s/unpublish" % inv_product_id)
         log.debug('Got response: %s', response)
         self.assertEqual(response.status_code, 200)
-

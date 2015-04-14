@@ -85,7 +85,7 @@ REST_FRAMEWORK = {
 
 # Celery settings ==============================================================
 
-BROKER_URL = 'django://guest:guest@localhost//'
+BROKER_URL = 'django://'
 # CELERY_IMPORTS = ()
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'

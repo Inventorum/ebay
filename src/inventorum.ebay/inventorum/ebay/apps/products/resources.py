@@ -5,11 +5,12 @@ from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
     PublishingCouldNotGetDataFromCoreAPI, UnpublishingService
+from inventorum.ebay.apps.products.tasks import foo
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.rest.exceptions import BadRequest, ApiException
 
 from inventorum.ebay.lib.rest.resources import APIResource
-from requests.exceptions import HTTPError
+from inventorum.util.celery import TaskExecutionContext
 from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework import status
@@ -33,6 +34,9 @@ class PublishResource(APIResource):
 
         item = service.prepare()
         # TODO: Move this to celery task!
+
+        foo.delay(context=TaskExecutionContext(user_id=1, account_id=1, request_id=1245))
+
         try:
             service.publish(item)
         except EbayConnectionException as e:
@@ -62,7 +66,3 @@ class UnpublishResource(APIResource):
         service.unpublish()
         serializer = EbayProductSerializer(service.product)
         return Response(data=serializer.data)
-
-
-
-
