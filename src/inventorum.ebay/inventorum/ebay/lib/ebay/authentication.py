@@ -30,7 +30,7 @@ class EbayAuthentication(Ebay):
         response = self.execute('FetchToken', {'SessionID': session_id})
 
         parsed_expiration_time = EbayParser.parse_date(response['HardExpirationTime'])
-        token = EbayToken(response['eBayAuthToken'], parsed_expiration_time)
+        token = EbayToken(response['eBayAuthToken'], parsed_expiration_time, site_id=self.default_site_id)
 
         self.token = token
         self._update_notification_settings()

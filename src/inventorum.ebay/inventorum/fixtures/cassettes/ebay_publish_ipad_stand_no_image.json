@@ -3,22 +3,22 @@
     "interactions": [
         {
             "request": {
-                "body": "<?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Stand for iPad from Inventorum for your POS Shop</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_120</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>64540</CategoryID></PrimaryCategory><Quantity>1</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>0</ShippingServiceAdditionalCost><ShippingServiceCost>10</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>599.99</StartPrice><Title>Inventorum iPad Stand</Title></Item></AddItemRequest>", 
+                "body": "<?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Stand for iPad from Inventorum for your POS Shop</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_120</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>64540</CategoryID></PrimaryCategory><Quantity>1</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>0</ShippingServiceAdditionalCost><ShippingServiceCost>10</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>599.99</StartPrice><Title>Inventorum iPad Stand</Title></Item></AddItemRequest>", 
                 "headers": {
                     "X-EBAY-API-SITEID": [
                         77
                     ], 
                     "Content-Length": [
-                        "2033"
+                        "2069"
                     ], 
                     "X-EBAY-API-COMPATIBILITY-LEVEL": [
                         911
                     ], 
                     "User-Agent": [
-                        "eBaySDK/2.1.0 Python/2.7.8 Darwin/14.1.0"
+                        "eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0"
                     ], 
                     "X-EBAY-SDK-REQUEST-ID": [
-                        "58b2f46e-1283-48d7-b0ce-bdafd500b274"
+                        "a96c0d5b-b220-402f-9f5b-0c250b2b4959"
                     ], 
                     "X-EBAY-API-CALL-NAME": [
                         "AddItem"
@@ -37,7 +37,7 @@
                 }, 
                 "headers": {
                     "x-ebay-request-id": [
-                        "14c9e334-1080-a620-7646-1816d8a40796!ws.api.dll!10.98.7.100!esbtrading[]"
+                        "14cb7688-3580-a625-48d6-abf6cb7f439e!ws.api.dll!10.98.84.141!esbtrading[]"
                     ], 
                     "content-length": [
                         "2646"
@@ -55,16 +55,16 @@
                         "Apache-Coyote/1.1"
                     ], 
                     "x-ebay-api-server-name": [
-                        "___dm97PWQ3MGYrPmdgMygyNSgzMSs0MjErMz85PTY/Mw=="
+                        "___ZW9nNGQ3MmYrNDM3NSgyNSg+NSs/NS0wPz07NT43"
                     ], 
                     "date": [
-                        "Thu, 09 Apr 2015 12:41:41 GMT"
+                        "Tue, 14 Apr 2015 10:10:22 GMT"
                     ], 
                     "x-ebay-esb-guid": [
-                        "urn:uuid:dc84161f-467c-4a71-bb42-7b57e0b98205"
+                        "urn:uuid:4a9f4775-b09a-4758-8b44-e8c01d0c94f2"
                     ], 
                     "guid": [
-                        "14c9e334-1080-a620-7646-1816d8a40796"
+                        "14cb7688-3580-a625-48d6-abf6cb7f439e"
                     ], 
                     "x-ebay-api-pool-name": [
                         "___cDRidW8ydmtv"
@@ -74,7 +74,7 @@
                     ]
                 }, 
                 "body": {
-                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-09T12:41:41.886Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikelzustand kann nicht verwendet werden.</ShortMessage><LongMessage>F\u00fcr diese Kategorie ist kein Artikelzustand verf\u00fcgbar. Der eingegebene Artikelzustand wurde entfernt.</LongMessage><ErrorCode>21917121</ErrorCode><SeverityCode>Warning</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Erforderliche Mindestanzahl an Fotos: 1 Die ideale Anzahl f\u00fcr diese Kategorie ist mindestens: 2 </ShortMessage><LongMessage>Erforderliche Mindesanzahl an Bildern:  1 F\u00fcr Angebote in dieser Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen, um Ihre Verkaufschancen  m\u00f6glicherweise um 12 zu erh\u00f6hen. (Prozentangabe beruht auf Anteilen an verkauften Artikeln in dieser Kategorie mit unterschiedlich vielen Bildern. Tats\u00e4chliche Ergebnisse k\u00f6nnen anders ausfallen und der Verkauf ist nicht garantiert.)</LongMessage><ErrorCode>21919136</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters ParamID=\"0\"><Value>Erforderliche Mindestanzahl an Fotos: 1 Die ideale Anzahl f\u00fcr diese Kategorie ist mindestens: 2 </Value></ErrorParameters><ErrorParameters ParamID=\"1\"><Value>Erforderliche Mindesanzahl an Bildern:  1 F\u00fcr Angebote in dieser Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen, um Ihre Verkaufschancen  m\u00f6glicherweise um 12 zu erh\u00f6hen. (Prozentangabe beruht auf Anteilen an verkauften Artikeln in dieser Kategorie mit unterschiedlich vielen Bildern. Tats\u00e4chliche Ergebnisse k\u00f6nnen anders ausfallen und der Verkauf ist nicht garantiert.)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Ung\u00fcltige Kategorie.</ShortMessage><LongMessage>Bei der ausgew\u00e4hlten Kategorie handelt es sich nicht um eine so genannte Unterkategorie.</LongMessage><ErrorCode>87</ErrorCode><SeverityCode>Error</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Ung\u00fcltige Dauer.</ShortMessage><LongMessage>Die Dauer &quot;120&quot; (in Tagen) ist f\u00fcr dieses Angebotsformat nicht verf\u00fcgbar, bzw. ung\u00fcltig f\u00fcr die Kategorie &quot;64540&quot;.</LongMessage><ErrorCode>83</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters ParamID=\"0\"><Value>120</Value></ErrorParameters><ErrorParameters ParamID=\"1\"><Value>64540</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"
+                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-14T10:10:22.801Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikelzustand kann nicht verwendet werden.</ShortMessage><LongMessage>F\u00fcr diese Kategorie ist kein Artikelzustand verf\u00fcgbar. Der eingegebene Artikelzustand wurde entfernt.</LongMessage><ErrorCode>21917121</ErrorCode><SeverityCode>Warning</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Erforderliche Mindestanzahl an Fotos: 1 Die ideale Anzahl f\u00fcr diese Kategorie ist mindestens: 2 </ShortMessage><LongMessage>Erforderliche Mindesanzahl an Bildern:  1 F\u00fcr Angebote in dieser Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen, um Ihre Verkaufschancen  m\u00f6glicherweise um 12 zu erh\u00f6hen. (Prozentangabe beruht auf Anteilen an verkauften Artikeln in dieser Kategorie mit unterschiedlich vielen Bildern. Tats\u00e4chliche Ergebnisse k\u00f6nnen anders ausfallen und der Verkauf ist nicht garantiert.)</LongMessage><ErrorCode>21919136</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters ParamID=\"0\"><Value>Erforderliche Mindestanzahl an Fotos: 1 Die ideale Anzahl f\u00fcr diese Kategorie ist mindestens: 2 </Value></ErrorParameters><ErrorParameters ParamID=\"1\"><Value>Erforderliche Mindesanzahl an Bildern:  1 F\u00fcr Angebote in dieser Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen, um Ihre Verkaufschancen  m\u00f6glicherweise um 12 zu erh\u00f6hen. (Prozentangabe beruht auf Anteilen an verkauften Artikeln in dieser Kategorie mit unterschiedlich vielen Bildern. Tats\u00e4chliche Ergebnisse k\u00f6nnen anders ausfallen und der Verkauf ist nicht garantiert.)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Ung\u00fcltige Kategorie.</ShortMessage><LongMessage>Bei der ausgew\u00e4hlten Kategorie handelt es sich nicht um eine so genannte Unterkategorie.</LongMessage><ErrorCode>87</ErrorCode><SeverityCode>Error</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Ung\u00fcltige Dauer.</ShortMessage><LongMessage>Die Dauer &quot;120&quot; (in Tagen) ist f\u00fcr dieses Angebotsformat nicht verf\u00fcgbar, bzw. ung\u00fcltig f\u00fcr die Kategorie &quot;64540&quot;.</LongMessage><ErrorCode>83</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters ParamID=\"0\"><Value>120</Value></ErrorParameters><ErrorParameters ParamID=\"1\"><Value>64540</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"
                 }
             }
         }

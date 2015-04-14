@@ -27,43 +27,99 @@ class EbayAuthorizationTest(APITestCase):
         log.debug('Got response: %s', response.data)
         self.assertEqual(response.status_code, 400)
 
-    @APITestCase.vcr.use_cassette("ebay_fetch_token.json")
     def test_fetch_token(self):
-        response = self.client.post('/auth/authorize/', data={
-            'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
-        })
-        log.debug('Got response: %s', response.data)
-        self.assertEqual(response.status_code, 200)
+        with APITestCase.vcr.use_cassette("ebay_fetch_token.json") as cass:
+            response = self.client.post('/auth/authorize/', data={
+                'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
+            })
+            log.debug('Got response: %s', response.data)
+            self.assertEqual(response.status_code, 200)
 
-        account = EbayAccountModel.objects.get(pk=self.account.pk)
-        ebay_token = account.token
+            requests = cass.requests
 
-        self.assertTrue(ebay_token)
-        self.assertEqual(ebay_token.value,
-                         'AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x'
-                         '9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89c'
-                         'LIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYA'
-                         'b183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2'
-                         'KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fz'
-                         'BsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XT'
-                         'sApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5'
-                         'O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3'
-                         'qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFR'
-                         'oxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZ'
-                         'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/')
+            self.assertEqual(requests[0].headers['X-EBAY-API-SITEID'], 77)
+            self.assertEqual(requests[1].headers['X-EBAY-API-SITEID'], 77)
+            self.assertEqual(requests[2].headers['X-EBAY-API-SITEID'], 77)
 
-        self.assertEqual(account.email, "tech+ebay@inventorum.com")
-        self.assertEqual(account.id_verified, False)
-        self.assertEqual(account.status, 'Confirmed')
-        self.assertEqual(account.user_id, 'newmade')
-        self.assertEqual(account.qualifies_for_b2b_vat, False)
-        self.assertEqual(account.store_owner, False)
-        self.assertEqual(account.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=pytz.UTC))
+            account = EbayAccountModel.objects.get(pk=self.account.pk)
+            ebay_token = account.token
 
-        address = account.registration_address
-        self.assertEqual(address.name, "John Newman")
-        self.assertEqual(address.street, None)
-        self.assertEqual(address.street1, None)
-        self.assertEqual(address.city, 'default')
-        self.assertEqual(address.country, 'DE')
-        self.assertEqual(address.postal_code, 'default')
+            self.assertTrue(ebay_token)
+            self.assertEqual(ebay_token.value,
+                             'AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x'
+                             '9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89c'
+                             'LIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYA'
+                             'b183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2'
+                             'KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fz'
+                             'BsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XT'
+                             'sApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5'
+                             'O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3'
+                             'qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFR'
+                             'oxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZ'
+                             'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/')
+
+            self.assertEqual(account.email, "tech+ebay@inventorum.com")
+            self.assertEqual(account.id_verified, False)
+            self.assertEqual(account.status, 'Confirmed')
+            self.assertEqual(account.user_id, 'newmade')
+            self.assertEqual(account.qualifies_for_b2b_vat, False)
+            self.assertEqual(account.store_owner, False)
+            self.assertEqual(account.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=pytz.UTC))
+
+            address = account.registration_address
+            self.assertEqual(address.name, "John Newman")
+            self.assertEqual(address.street, None)
+            self.assertEqual(address.street1, None)
+            self.assertEqual(address.city, 'default')
+            self.assertEqual(address.country, 'DE')
+            self.assertEqual(address.postal_code, 'default')
+
+
+
+    def test_fetch_token_from_AT(self):
+        with APITestCase.vcr.use_cassette("ebay_fetch_token_fake_AT.json", record_mode='new_episodes') as cass:
+            response = self.client.post('/auth/authorize/', data={
+                'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
+            })
+            log.debug('Got response: %s', response.data)
+            self.assertEqual(response.status_code, 200)
+
+            requests = cass.requests
+
+            self.assertEqual(requests[0].headers['X-EBAY-API-SITEID'], 16)
+            self.assertEqual(requests[2].headers['X-EBAY-API-SITEID'], 16)
+            self.assertEqual(requests[3].headers['X-EBAY-API-SITEID'], 16)
+
+            account = EbayAccountModel.objects.get(pk=self.account.pk)
+            ebay_token = account.token
+
+            self.assertTrue(ebay_token)
+            self.assertEqual(ebay_token.value,
+                             'AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x'
+                             '9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89c'
+                             'LIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYA'
+                             'b183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2'
+                             'KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fz'
+                             'BsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XT'
+                             'sApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5'
+                             'O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3'
+                             'qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFR'
+                             'oxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZ'
+                             'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/')
+            self.assertEqual(ebay_token.site_id, 16)
+
+            self.assertEqual(account.email, "tech+ebay@inventorum.com")
+            self.assertEqual(account.id_verified, False)
+            self.assertEqual(account.status, 'Confirmed')
+            self.assertEqual(account.user_id, 'newmade')
+            self.assertEqual(account.qualifies_for_b2b_vat, False)
+            self.assertEqual(account.store_owner, False)
+            self.assertEqual(account.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=pytz.UTC))
+
+            address = account.registration_address
+            self.assertEqual(address.name, "John Newman")
+            self.assertEqual(address.street, 'Voltastr 5')
+            self.assertEqual(address.street1, 'Voltastr 5')
+            self.assertEqual(address.city, 'Berlin')
+            self.assertEqual(address.country, 'DE')
+            self.assertEqual(address.postal_code, '13355')

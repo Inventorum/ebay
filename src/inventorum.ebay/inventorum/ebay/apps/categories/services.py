@@ -46,8 +46,12 @@ class EbayCategoriesScraper(object):
 
     def _scrap_all_categories(self, country_code):
         categories_ids = []
+        account_token = self.ebay_token
 
-        api = EbayCategories(self.ebay_token, site_id=settings.EBAY_SUPPORTED_SITES[country_code])
+        # Lets do magic and change site_id for this token (why even ebay allows it, do not ask me...)
+        account_token.site_id = settings.EBAY_SUPPORTED_SITES[country_code]
+
+        api = EbayCategories(self.ebay_token)
         categories_generator = api.get_categories(level_limit=self.limit_nodes_level)
 
         for category in categories_generator:
@@ -114,7 +118,12 @@ class EbayFeaturesScraper(object):
             end = start + self.batch_size
             limited_categories = queryset[start:end]
             log.debug('Fetching categories features, starting batch: %s/%s', page+1, self.pages)
-            ebay = EbayCategories(self.ebay_token, site_id=settings.EBAY_SUPPORTED_SITES[country_code])
+            account_token = self.ebay_token
+
+            # Lets do magic and change site_id for this token (why even ebay allows it, do not ask me...)
+            account_token.site_id = settings.EBAY_SUPPORTED_SITES[country_code]
+
+            ebay = EbayCategories(account_token)
             self._get_features_for_categories(limited_categories, ebay)
 
     def _get_features_for_categories(self, categories, ebay):
