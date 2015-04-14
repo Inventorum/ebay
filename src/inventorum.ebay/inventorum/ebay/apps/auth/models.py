@@ -28,11 +28,11 @@ class EbayTokenModel(BaseModel):
     objects = PassThroughManager.for_queryset_class(EbayTokenModelQuerySet)()
 
     @classmethod
-    def create_from_ebay_token(cls, ebay_token, site_id):
+    def create_from_ebay_token(cls, ebay_token):
         return cls.objects.create(
             value=ebay_token.value,
             expiration_date=ebay_token.expiration_time,
-            site_id=site_id
+            site_id=ebay_token.site_id
         )
 
     @property

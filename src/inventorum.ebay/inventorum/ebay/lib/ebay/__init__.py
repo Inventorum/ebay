@@ -64,12 +64,16 @@ class Ebay(object):
     _token = None
     default_site_id = 77
 
-    def __init__(self, token=None, error_lang="en_US", parallel=None):
+    def __init__(self, token=None, default_site_id=None, error_lang="en_US", parallel=None):
 
         self.api = Connection(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
                               certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
                               debug=settings.DEBUG, timeout=self.timeout, compatibility=self.compatibility,
                               version=self.version, parallel=parallel, config_file=None)
+
+        if default_site_id is not None:
+            self.default_site_id = default_site_id
+
         self.site_id = self.default_site_id
 
         self.token = token

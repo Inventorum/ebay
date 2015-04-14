@@ -35,9 +35,9 @@ class AuthorizationService(object):
         if site_id is None:
             raise AuthorizationServiceException(ugettext('Country %(country)s not supported') % {'country': country})
 
-        auth = EbayAuthentication()
+        auth = EbayAuthentication(default_site_id=site_id)
         token = auth.fetch_token(session_id)
-        db_token = EbayTokenModel.create_from_ebay_token(token, site_id=site_id)
+        db_token = EbayTokenModel.create_from_ebay_token(token)
         self.account.token = db_token
         self._auto_committed_save()
 

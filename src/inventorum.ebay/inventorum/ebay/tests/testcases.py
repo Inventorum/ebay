@@ -59,12 +59,12 @@ class APITestCase(test.APITestCase):
 
 class EbayAuthenticatedAPITestCase(APITestCase):
     # Token valid till 2016.09.21 13:18:38
-    ebay_token = EbayToken(settings.EBAY_LIVE_TOKEN, expiration_time=settings.EBAY_LIVE_TOKEN_EXPIRATION_DATE)
+    ebay_token = EbayToken(settings.EBAY_LIVE_TOKEN, expiration_time=settings.EBAY_LIVE_TOKEN_EXPIRATION_DATE,
+                           site_id=settings.EBAY_SUPPORTED_SITES['DE'])
 
     def setUp(self):
         super(EbayAuthenticatedAPITestCase, self).setUp()
-        self.account.token = EbayTokenModel.create_from_ebay_token(self.ebay_token,
-                                                                   site_id=settings.EBAY_SUPPORTED_SITES['DE'])
+        self.account.token = EbayTokenModel.create_from_ebay_token(self.ebay_token)
         self.account.save()
 
 
