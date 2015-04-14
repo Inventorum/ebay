@@ -60,11 +60,10 @@ class Ebay(object):
     version = 911
     timeout = 20
     api = None
-    error_lang = None
     _token = None
     default_site_id = 77
 
-    def __init__(self, token=None, default_site_id=None, error_lang="en_US", parallel=None):
+    def __init__(self, token=None, default_site_id=None, parallel=None):
 
         self.api = Connection(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
                               certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
@@ -77,7 +76,6 @@ class Ebay(object):
         self.site_id = self.default_site_id
 
         self.token = token
-        self.error_lang = error_lang
 
 
     # EBAY PROPERTIES
@@ -115,6 +113,7 @@ class Ebay(object):
         :type data: dict
         :rtype: dict
         """
+        self._append_additional_params_to_data(data)
         try:
             response = self.api.execute(verb=verb, data=data)
         except ConnectionError as e:
@@ -127,6 +126,10 @@ class Ebay(object):
         execution = EbayResponse(response)
 
         return execution.dict()
+
+    def _append_additional_params_to_data(self, data):
+        if self._token:
+            data['ErrorLanguage'] = self._token.error_language or "en_US"
 
 
 class EbayParallel(Ebay):
@@ -154,6 +157,7 @@ class EbayParallel(Ebay):
         :type data: dict
         :rtype: Connection
         """
+        self._append_additional_params_to_data(data)
         api = self.parallel_api_constructor().api
         api.execute(verb=verb, data=data)
 
