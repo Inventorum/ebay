@@ -5,13 +5,13 @@ from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from rest_framework import status
-from inventorum.ebay.tests.testcases import APITestCase
+from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
 
 
 log = logging.getLogger(__name__)
 
 
-class TestCategoryList(APITestCase):
+class TestCategoryList(EbayAuthenticatedAPITestCase):
 
     def test_without_parent_id_returns_all_root_categories(self):
         # this test also asserts the complete response format and the correct ordering
