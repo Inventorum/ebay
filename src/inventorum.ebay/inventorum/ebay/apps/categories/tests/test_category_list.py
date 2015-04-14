@@ -1,9 +1,11 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
+from inventorum.ebay.tests import Countries
 from rest_framework import status
 from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
 
@@ -13,9 +15,14 @@ log = logging.getLogger(__name__)
 
 class TestCategoryList(EbayAuthenticatedAPITestCase):
 
-    def test_without_parent_id_returns_all_root_categories(self):
-        # this test also asserts the complete response format and the correct ordering
+    def setUp(self):
+        super(TestCategoryList, self).setUp()
 
+        # Invariant: default country of categories must equal account category since categories are filtered by country
+        assert self.account.country == CategoryFactory.country
+
+    def test_without_parent_id_returns_all_root_categories_by_country(self):
+        # this test also asserts the complete response format and the correct ordering
         root_a = CategoryFactory.create(name="z root category")
         root_b = CategoryFactory.create(name="a root category")
         root_c = CategoryFactory.create(name="m root category")
@@ -23,6 +30,10 @@ class TestCategoryList(EbayAuthenticatedAPITestCase):
         # some children that may not be included
         CategoryFactory.create(parent=root_a)
         CategoryFactory.create(parent=root_b)
+
+        # some roots for other countries that may not be included
+        assert CategoryFactory.country is not Countries.AT
+        CategoryFactory.create(country=Countries.AT)
 
         response = self.get_categories()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -58,6 +69,13 @@ class TestCategoryList(EbayAuthenticatedAPITestCase):
         non_existing_parent_id = 10001
 
         response = self.get_categories(parent_id=non_existing_parent_id)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data["error"]["key"], "categories.invalid_parent_id")
+
+        assert CategoryFactory.country is not Countries.AT
+        category_of_different_country = CategoryFactory.create(country=Countries.AT)
+
+        response = self.get_categories(parent_id=category_of_different_country.id)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data["error"]["key"], "categories.invalid_parent_id")
 

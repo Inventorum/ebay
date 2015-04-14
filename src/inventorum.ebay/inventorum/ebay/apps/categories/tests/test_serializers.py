@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.tests import Countries
 
 from inventorum.ebay.tests.testcases import UnitTestCase
 
@@ -14,7 +15,7 @@ class TestCategorySerializers(UnitTestCase):
 
     def test_serialization_of_root_with_children(self):
         root = CategoryFactory.create(name="Some root category",
-                                      country="DE",
+                                      country=Countries.DE,
                                       parent=None)
         CategoryFactory.create(parent=root)
 
@@ -31,7 +32,7 @@ class TestCategorySerializers(UnitTestCase):
     def test_serialization_of_leaf(self):
         parent = CategoryFactory.create()
         leaf = CategoryFactory.create(name="Some leaf category",
-                                      country="DE",
+                                      country=Countries.AT,
                                       parent=parent)
 
         subject = serializers.CategorySerializer(leaf)
@@ -39,7 +40,7 @@ class TestCategorySerializers(UnitTestCase):
         self.assertEqual(subject.data, {
             "id": leaf.id,
             "name": "Some leaf category",
-            "country": "DE",
+            "country": "AT",
             "parent_id": parent.id,
             "is_leaf": True
         })

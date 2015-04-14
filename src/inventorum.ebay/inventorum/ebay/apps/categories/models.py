@@ -36,7 +36,8 @@ class CategoryModel(MPTTModel):
     objects = CategoryTreeManager()
 
     class MPTTMeta:
-       order_insertion_by = ['name']
+        order_insertion_by = ['name']
+
 
     @classmethod
     def create_or_update_from_ebay_category(cls, data, country_code):

@@ -18,17 +18,18 @@ class CategoryListResource(APIResource):
 
     def get(self, request):
         parent_id = request.GET.get('parent_id', None)
+        country = request.user.account.country
 
         if parent_id is not None:
             try:
-                parent = CategoryModel.objects.get(pk=parent_id)
+                parent = CategoryModel.objects.get(pk=parent_id, country=country)
             except CategoryModel.DoesNotExist:
                 raise NotFound(gettext("Invalid parent_id"), key="categories.invalid_parent_id")
 
             categories = parent.get_children()
             ancestors = parent.get_ancestors(include_self=True)
         else:
-            categories = CategoryModel.objects.root_nodes()
+            categories = CategoryModel.objects.root_nodes().filter(country=country)
             ancestors = []
 
         return Response(data={
