@@ -17,7 +17,7 @@ class EbayCategories(Ebay):
         super(EbayCategories, self).__init__(*args, **kwargs)
         self.parallel_api = EbayParallel(*args, **kwargs)
 
-    def get_categories(self, level_limit=None):
+    def get_categories(self, level_limit=None, only_leaf=False):
         """
         Returns generator to iterate over categories
         :return: Generator of categories
@@ -28,6 +28,7 @@ class EbayCategories(Ebay):
         fields_to_retrieve = EbayCategorySerializer._declared_fields.keys()
         data = dict(
             DetailLevel='ReturnAll',
+            ViewAllNodes=not only_leaf,
             OutputSelector=fields_to_retrieve
         )
 
@@ -64,9 +65,9 @@ class EbayCategories(Ebay):
         category_features = self.parallel_api.wait_and_validate()
         features = {}
         for i, response in enumerate(category_features):
-            log.debug('Parsing %d category: %s', i, response)
             data = response.response.dict()
             feature = EbayFeature.create_from_data(data)
+            log.debug('Parsing %d category: %s', i, data)
             features[feature.details.category_id] = feature
 
         return features

@@ -58,7 +58,8 @@ class CategoryModel(BaseModel):
             b2b_vat_enabled=data.b2b_vat_enabled,
             best_offer_enabled=data.best_offer_enabled,
             auto_pay_enabled=data.auto_pay_enabled,
-            item_lot_size_disabled=data.item_lot_size_disabled
+            item_lot_size_disabled=data.item_lot_size_disabled,
+            ebay_leaf=data.leaf
         )
         category, created = CategoryModel.objects.get_or_create(
             external_id=data.category_id,
