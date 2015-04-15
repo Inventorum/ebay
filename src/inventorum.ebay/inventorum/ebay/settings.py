@@ -187,3 +187,5 @@ EBAY_LIVE_TOKEN = 'AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj
                   'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/'
 
 EBAY_LIVE_TOKEN_EXPIRATION_DATE = datetime(2016, 9, 21, 13, 18, 38)
+
+EBAY_LISTING_URL = "http://cgi.ebay.de/ws/eBayISAPI.dll?ViewItem&item={listing_id}"

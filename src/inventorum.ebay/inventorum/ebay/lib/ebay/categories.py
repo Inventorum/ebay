@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from ebaysdk.parallel import Parallel
 import logging
+
 from inventorum.ebay.lib.ebay import Ebay, EbayParallel
 from inventorum.ebay.lib.ebay.data.categories import EbayCategorySerializer, EbayCategory
 from inventorum.ebay.lib.ebay.data.features import EbayFeature

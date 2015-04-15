@@ -38,7 +38,6 @@ class CategoryModel(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
 
-
     @classmethod
     def create_or_update_from_ebay_category(cls, data, country_code):
         """
@@ -80,6 +79,14 @@ class CategoryModel(MPTTModel):
         :rtype: bool
         """
         return self.is_leaf_node()
+
+    @property
+    def ancestors(self):
+        """
+        :returns: A queryset for all ancestors of the category *excluding itself*
+        :rtype: django.db.models.query.QuerySet
+        """
+        return self.get_ancestors(include_self=False)
 
 
 class DurationModel(BaseModel):
