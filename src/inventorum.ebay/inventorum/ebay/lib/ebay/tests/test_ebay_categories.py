@@ -133,6 +133,9 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(first_name_rn.validation_rules.value_type, 'Text')
         self.assertFalse(first_name_rn.validation_rules.can_use_in_variations)
 
+        first_value_recommendations = first_name_rn.value_recommendations
+        self.assertEqual(len(first_value_recommendations), 0)
+
         second_name_rn = some_specifics.name_recommendations[1]
         self.assertEqual(second_name_rn.name, 'Maßeinheit')
         self.assertEqual(second_name_rn.help_text, None)
@@ -141,3 +144,8 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(second_name_rn.validation_rules.selection_mode, 'SelectionOnly')
         self.assertEqual(second_name_rn.validation_rules.value_type, 'Text')
         self.assertFalse(second_name_rn.validation_rules.can_use_in_variations)
+
+        second_value_recommendations = second_name_rn.value_recommendations
+        self.assertEqual(len(second_value_recommendations), 10)
+        values = [r.value for r in second_value_recommendations]
+        self.assertEqual(values, ['kg', '100 g', '10 g', 'L', '100 ml', '10 ml', 'm³', 'm', 'm²', 'Einheit'])

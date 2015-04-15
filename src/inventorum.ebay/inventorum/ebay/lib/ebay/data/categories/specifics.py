@@ -4,6 +4,17 @@ from inventorum.ebay.lib.ebay.data import EbayBooleanField
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework.fields import CharField, IntegerField
 
+class EbayValueRecommendation(object):
+    def __init__(self, value):
+        self.value = value
+
+
+class EbayValueRecommendationSerializer(POPOSerializer):
+    Value = CharField(source='value')
+
+    class Meta:
+        model = EbayValueRecommendation
+
 
 class EbaySpecificsNameRecommendationValidationRules(object):
     def __init__(self, max_values=1, min_values=0, can_use_in_variations=True, selection_mode='FreeText', value_type='text'):
@@ -26,12 +37,13 @@ class EbaySpecificsNameRecommendationValidationRulesSerializer(POPOSerializer):
 
 
 class EbaySpecificsNameRecommendation(object):
-    def __init__(self, name, validation_rules, help_text=None, help_url=None):
+    def __init__(self, name, validation_rules, value_recommendations=None, help_text=None, help_url=None):
         """
         :type name: unicode | str
         :type help_text: unicode | str
         :type help_url: unicode | str
         """
+        self.value_recommendations = value_recommendations or []
         self.name = name
         self.help_text = help_text
         self.help_url = help_url
@@ -47,6 +59,7 @@ class EbaySpecificsNameRecommendationSerializer(POPOSerializer):
     HelpText = CharField(source='help_text', required=False)
     HelpURL = CharField(source='help_url', required=False)
     ValidationRules = EbaySpecificsNameRecommendationValidationRulesSerializer(source='validation_rules')
+    ValueRecommendation = EbayValueRecommendationSerializer(source="value_recommendations", many=True, required=False)
 
     class Meta:
         model = EbaySpecificsNameRecommendation
