@@ -105,10 +105,10 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
     def get_product(self, product_id):
         """
+        :param product_id: The global inventorum product id
 
-        :param product_id:
-        :return:
-
+        :type product_id: int
+        :rtype: inventorum.ebay.apps.core_api.models.CoreProduct
         :raises requests.exceptions.HTTPError
                 rest_framework.exceptions.ValidationError
         """
@@ -129,3 +129,10 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         serializer = CoreInfoDeserializer(data=json)
         return serializer.build()
 
+    def get_product_delta(self):
+        """
+        :rtype: collections.Iterable[list of inventorum.ebay.apps.core_api.models.CoreProductDelta]
+        :raises requests.exceptions.HTTPError
+                rest_framework.exceptions.ValidationError
+        """
+        pass
