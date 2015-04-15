@@ -110,6 +110,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(first_specific.selection_mode, 'FreeText')
         self.assertEqual(first_specific.value_type, 'Text')
         self.assertFalse(first_specific.can_use_in_variations)
+        self.assertTrue(first_specific.can_use_own_values)
 
         self.assertEqual(first_specific.values.all().count(), 0)
 
@@ -121,6 +122,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(second_specific.selection_mode, 'SelectionOnly')
         self.assertEqual(second_specific.value_type, 'Text')
         self.assertFalse(second_specific.can_use_in_variations)
+        self.assertFalse(second_specific.can_use_own_values)
 
         values = second_specific.values.all()
         self.assertEqual(values.count(), 10)

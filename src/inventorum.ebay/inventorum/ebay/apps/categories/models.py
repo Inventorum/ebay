@@ -159,6 +159,13 @@ class CategorySpecificModel(BaseModel):
         ordering = ('name', 'time_added', 'pk')
 
     @property
+    def can_use_own_values(self):
+        """
+        If true, user can type his own values, does not need to limit himself to .values provided by us!
+        """
+        return self.selection_mode == 'FreeText'
+
+    @property
     def is_required(self):
         return self.min_values > 0
 
