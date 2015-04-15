@@ -128,8 +128,16 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(first_name_rn.name, 'Anzahl der Einheiten')
         self.assertEqual(first_name_rn.help_text, None)
         self.assertEqual(first_name_rn.help_url, None)
+        self.assertFalse(first_name_rn.is_required)
+        self.assertEqual(first_name_rn.validation_rules.selection_mode, 'FreeText')
+        self.assertEqual(first_name_rn.validation_rules.value_type, 'Text')
+        self.assertFalse(first_name_rn.validation_rules.can_use_in_variations)
 
         second_name_rn = some_specifics.name_recommendations[1]
         self.assertEqual(second_name_rn.name, 'Maßeinheit')
         self.assertEqual(second_name_rn.help_text, None)
         self.assertEqual(second_name_rn.help_url, None)
+        self.assertFalse(second_name_rn.is_required)
+        self.assertEqual(second_name_rn.validation_rules.selection_mode, 'SelectionOnly')
+        self.assertEqual(second_name_rn.validation_rules.value_type, 'Text')
+        self.assertFalse(second_name_rn.validation_rules.can_use_in_variations)
