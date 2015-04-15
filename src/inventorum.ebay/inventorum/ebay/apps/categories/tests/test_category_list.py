@@ -1,13 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
+
 from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.tests import Countries
 from rest_framework import status
-from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
 log = logging.getLogger(__name__)

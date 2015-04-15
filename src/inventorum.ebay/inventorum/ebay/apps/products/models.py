@@ -3,8 +3,8 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.db import models
-from django.utils.functional import cached_property
 from django_countries.fields import CountryField
+from inventorum.ebay import settings
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
 from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture
@@ -33,7 +33,17 @@ class EbayProductModel(MappedInventorumModel):
 
     @property
     def external_item_id(self):
+        if not self.is_published:
+            return None
+
         return self.published_item.external_id
+
+    @property
+    def listing_url(self):
+        if not self.is_published:
+            return None
+
+        return settings.EBAY_LISTING_URL.format(listing_id=self.published_item.external_id)
 
 
 # Models for data just before publishing
