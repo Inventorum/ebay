@@ -95,8 +95,8 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         log.debug('Leaf categories external ids: %s', [l.external_id for l in leaf_categories])
 
         with EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_specifics_for_20_leaf_categories.json"):
-            features_service = EbaySpecificsScraper(self.ebay_token)
-            features_service.fetch_all()
+            specifics_service = EbaySpecificsScraper(self.ebay_token)
+            specifics_service.fetch_all()
 
         self.assertEqual(CategorySpecificModel.objects.count(), 80)
 
