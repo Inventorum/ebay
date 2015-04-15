@@ -1,9 +1,14 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
+import logging
+
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, PaymentMethodModel, \
     DurationModel
 from inventorum.ebay.apps.categories.services import EbayCategoriesScraper, EbayFeaturesScraper
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+
+log = logging.getLogger(__name__)
 
 
 class TestScrappingCategories(EbayAuthenticatedAPITestCase):
@@ -59,6 +64,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
 
         leaf_categories = CategoryModel.objects.filter(ebay_leaf=True)
         self.assertGreater(leaf_categories.count(), 0)
+        log.debug('Leaf categories external ids: %s', [l.external_id for l in leaf_categories])
 
         features_service = EbayFeaturesScraper(self.ebay_token)
         features_service.fetch_all()

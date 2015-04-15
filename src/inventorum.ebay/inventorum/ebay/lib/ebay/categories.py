@@ -1,10 +1,11 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from ebaysdk.parallel import Parallel
 import logging
+
 from inventorum.ebay.lib.ebay import Ebay, EbayParallel
 from inventorum.ebay.lib.ebay.data.categories import EbayCategorySerializer, EbayCategory
-from inventorum.ebay.lib.ebay.data.features import EbayFeature
+from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature
+from inventorum.ebay.lib.ebay.data.categories.specifics import EbayCategorySpecifics
 
 
 log = logging.getLogger(__name__)
@@ -71,3 +72,27 @@ class EbayCategories(Ebay):
             features[feature.details.category_id] = feature
 
         return features
+
+    def get_specifics_for_categories(self, categories_ids):
+        """
+        Returns specifics per category
+        :param categories_ids:
+        :return: List of specifics per category
+        :rtype: list[inventorum.ebay.lib.ebay.data.EbayFeature]
+        """
+        response = self.execute('GetCategorySpecifics', dict(
+            AllFeaturesForCategory=True,
+            ViewAllNodes=True,
+            CategoryID=categories_ids,
+            LevelLimit=7,
+            DetailLevel='ReturnAll',
+        ))
+
+        category_specifics = response['Recommendations']
+        specifics = {}
+        for i, data in enumerate(category_specifics):
+            specific = EbayCategorySpecifics.create_from_data(data)
+            log.debug('Parsing %d category specific: %s', i, data)
+            specifics[specific.category_id] = specific
+
+        return specifics
