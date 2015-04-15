@@ -122,3 +122,14 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         some_specifics = specifics['167050']
         self.assertEqual(some_specifics.category_id, '167050')
+        self.assertEqual(len(some_specifics.name_recommendations), 2)
+
+        first_name_rn = some_specifics.name_recommendations[0]
+        self.assertEqual(first_name_rn.name, 'Anzahl der Einheiten')
+        self.assertEqual(first_name_rn.help_text, None)
+        self.assertEqual(first_name_rn.help_url, None)
+
+        second_name_rn = some_specifics.name_recommendations[1]
+        self.assertEqual(second_name_rn.name, 'Maßeinheit')
+        self.assertEqual(second_name_rn.help_text, None)
+        self.assertEqual(second_name_rn.help_url, None)
