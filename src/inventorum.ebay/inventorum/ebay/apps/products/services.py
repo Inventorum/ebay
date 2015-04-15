@@ -26,10 +26,11 @@ class PublishingCouldNotGetDataFromCoreAPI(PublishingServiceException):
     def __init__(self, response):
         self.response = response
 
+
 class PublishingUnpublishingService(object):
     def __init__(self, product, user):
         """
-        Service for publishing products to ebay
+        Abstract service for publishing/unpublishing products to ebay
         :type product: EbayProductModel
         :type user: EbayUserModel
         """
@@ -164,3 +165,18 @@ class UnpublishingService(PublishingUnpublishingService):
         item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
         item.unpublished_at = response.end_time
         item.save()
+
+
+class SynchronizationService(object):
+    """
+    This service is responsible for synchronizing
+    """
+
+    def __init__(self, account):
+        self.account = account
+
+    def synchronize_all(self):
+        pass
+
+    def synchronize(self, product):
+        pass
