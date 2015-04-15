@@ -82,18 +82,31 @@ class TestEbayProductSerializer(UnitTestCase):
         self.assertEqual(EbayProductSerializer(product).data, data_before)
 
     def test_category_validation(self):
-        root_category = CategoryFactory.create(name="Root category")
-        level_2_category = CategoryFactory.create(name="Level 2 category", parent=root_category)
-        leaf_category = CategoryFactory.create(name="Leaf category", parent=level_2_category)
-
-        product = EbayProductFactory(category=None)
-
         def get_partial_data_for_category_update(category):
             return {
                 "category": {
                     "id": category.id
                 }
             }
+
+        root_category = CategoryFactory.create(name="Root category")
+        level_2_category = CategoryFactory.create(name="Level 2 category", parent=root_category)
+        leaf_category = CategoryFactory.create(name="Leaf category", parent=level_2_category)
+
+        product = EbayProductFactory(category=None)
+
+        # try to assign category without id
+        invalid_data = {"category": {}}
+        subject = EbayProductSerializer(product, data=invalid_data, partial=True)
+        self.assertFalse(subject.is_valid())
+        self.assertEqual(subject.errors["category"], ['id is required'])
+
+        # try to assign non-existing category
+        non_persistent_category = CategoryFactory.build(id=999999)
+        invalid_data = get_partial_data_for_category_update(non_persistent_category)
+        subject = EbayProductSerializer(product, data=invalid_data, partial=True)
+        self.assertFalse(subject.is_valid())
+        self.assertEqual(subject.errors["category"], ['Invalid pk "999999" - object does not exist.'])
 
         # try to assign non-leaf categories
         for category in [root_category, level_2_category]:
