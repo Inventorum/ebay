@@ -33,17 +33,21 @@ class EbayProductModel(MappedInventorumModel):
 
     @property
     def external_item_id(self):
-        if not self.is_published:
+        published_item = self.published_item
+
+        if not published_item:
             return None
 
-        return self.published_item.external_id
+        return published_item.external_id
 
     @property
     def listing_url(self):
-        if not self.is_published:
+        published_item = self.published_item
+
+        if not published_item:
             return None
 
-        return settings.EBAY_LISTING_URL.format(listing_id=self.published_item.external_id)
+        return settings.EBAY_LISTING_URL.format(listing_id=published_item.external_id)
 
 
 # Models for data just before publishing
