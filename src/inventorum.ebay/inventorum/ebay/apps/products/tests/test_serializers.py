@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-import json
 import logging
-from django.forms.models import model_to_dict
+
 from django.utils.functional import cached_property
-from inventorum.ebay.apps.categories.serializers import CategoryBreadcrumbSerializer
+from inventorum.ebay.apps.categories.models import CategoryModel
+
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.serializers import EbayProductCategorySerializer, EbayProductSerializer
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
@@ -75,11 +75,11 @@ class TestEbayProductSerializer(UnitTestCase):
         subject.is_valid(raise_exception=True)
         subject.save()
 
-        product.reload()
+        updated_product = product.reload()
 
         # deserialize serialized doesn't change the representation
         data_before = serialized
-        self.assertEqual(EbayProductSerializer(product).data, data_before)
+        self.assertEqual(EbayProductSerializer(updated_product).data, data_before)
 
     def test_category_validation(self):
         def get_partial_data_for_category_update(category):
@@ -130,3 +130,33 @@ class TestEbayProductSerializer(UnitTestCase):
         subject = EbayProductSerializer(product, data=invalid_data, partial=True)
         self.assertFalse(subject.is_valid())
         self.assertEqual(subject.errors["category"], ["Invalid category"])
+
+    def test_cannot_update_categories(self):
+        # Note: This test basically only proves that `RelatedModelByIdField` works as expected
+        # and can be safely removed when there are separate tests for this field.
+        product = EbayProductFactory()
+        parent_category = CategoryFactory.create(name="Some parent")
+        category = CategoryFactory.create(name="Some category", parent=parent_category)
+
+        assert category.country == Countries.DE
+
+        data = {
+            "category": {
+                "id": category.id,
+                "name": "UPDATED NAME",
+                "country": Countries.AT
+            }
+        }
+
+        subject = EbayProductSerializer(product, data=data, partial=True)
+        subject.is_valid(raise_exception=True)
+        subject.save()
+
+        # assignment works...
+        updated_product = product.reload()
+        self.assertEqual(updated_product.category_id, category.id)
+
+        # ...but the category must not be changed
+        category = CategoryModel.objects.get(id=category.id)
+        self.assertEqual(category.name, "Some category")
+        self.assertEqual(category.country, Countries.DE)
