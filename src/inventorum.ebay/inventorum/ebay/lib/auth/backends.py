@@ -42,6 +42,6 @@ class TrustedHeaderAuthentication(BaseAuthentication):
         account, c = EbayAccountModel.objects.get_or_create(inv_id=inv_account_id)
 
         user, created = EbayUserModel.objects.select_related('account') \
-            .get_or_create(account_id=account.id, inv_id=inv_user_id)
+            .get_or_create(account=account, inv_id=inv_user_id)
 
         return user, None
