@@ -54,6 +54,7 @@ class EbayAccountModel(MappedInventorumModel):
     qualifies_for_b2b_vat = BooleanField(default=False)
     status = CharField(max_length=255, null=True, blank=True)
     user_id = CharField(max_length=255, null=True, blank=True)
+    country = CountryField(null=True, blank=True)
     registration_date = DateTimeField(null=True, blank=True)
 
 

@@ -6,11 +6,19 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class StagingTestAccount(object):
+class Countries:
+    DE = "DE"
+    AT = "AT"
+
+
+class StagingTestAccount:
     ACCOUNT_ID = 346
     USER_ID = 425
+    EMAIL = "tech+ebay@inventorum.com"
 
-    class Products(object):
+    COUNTRY = Countries.DE
+
+    class Products:
         # no variations, one image
         SIMPLE_PRODUCT_ID = 463690
         # no variations, one image, and ebay meta

@@ -54,8 +54,12 @@ class EbayCategoriesScraper(object):
 
     def _scrap_all_categories(self, country_code):
         categories_ids = []
+        account_token = self.ebay_token
 
-        api = EbayCategories(self.ebay_token, site_id=settings.EBAY_SUPPORTED_SITES[country_code])
+        # Lets do magic and change site_id for this token (why even ebay allows it, do not ask me...)
+        account_token.site_id = settings.EBAY_SUPPORTED_SITES[country_code]
+
+        api = EbayCategories(self.ebay_token)
         categories_generator = api.get_categories(level_limit=self.limit_nodes_level, only_leaf=self.only_leaf)
 
         for category in categories_generator:

@@ -29,12 +29,9 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         # Doubled because AT & DE (31 + 1 [root node] * 2 = 64)
         self.assertEqual(categories.count(), 64)
         # 2 root nodes because AT & DE
-        self.assertEqual(CategoryModel.tree_objects.root_nodes().count(), 2)
+        self.assertEqual(CategoryModel.objects.root_nodes().count(), 2)
 
-        # Make sure it was soft deleted
-        self.assertEqual(CategoryModel.admin_objects.count(), 65)
-
-        root_category = CategoryModel.tree_objects.root_nodes().first()
+        root_category = CategoryModel.objects.root_nodes().first()
         self.assertEqual(root_category.name, "Antiquit\xe4ten & Kunst")
         self.assertEqual(root_category.external_id, "353")
         self.assertEqual(root_category.external_parent_id, None)
@@ -46,7 +43,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(root_category.country, "DE")
 
         # AT root category
-        root_category = CategoryModel.tree_objects.root_nodes().last()
+        root_category = CategoryModel.objects.root_nodes().last()
         self.assertEqual(root_category.name, "Antiquit\xe4ten & Kunst")
         self.assertEqual(root_category.external_id, "353")
         self.assertEqual(root_category.external_parent_id, None)
