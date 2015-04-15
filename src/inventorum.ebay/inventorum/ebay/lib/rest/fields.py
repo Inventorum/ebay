@@ -10,6 +10,7 @@ from rest_framework import serializers
 log = logging.getLogger(__name__)
 
 
+# Note: There are no specific test cases yet but the field is implicitly tested in `TestEbayProductSerializer`
 class RelatedModelByIdField(serializers.PrimaryKeyRelatedField):
     """
     A field for related models, which works similar to `PrimaryKeyRelatedField` but allows
