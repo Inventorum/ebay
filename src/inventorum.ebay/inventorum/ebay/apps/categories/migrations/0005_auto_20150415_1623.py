@@ -11,7 +11,7 @@ import inventorum.util.django.db.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('categories', '0004_categoryfeaturesmodel_item_specifics_enabled'),
+        ('categories', '0004_auto_20150414_1306'),
     ]
 
     operations = [
@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
                 ('category', models.ForeignKey(related_name='specifics', to='categories.CategoryModel')),
             ],
             options={
+                'ordering': ('name', 'time_added', 'pk'),
             },
             bases=(inventorum.util.django.db.models.ModelMixins, models.Model),
         ),
@@ -49,12 +50,18 @@ class Migration(migrations.Migration):
                 ('specific', models.ForeignKey(related_name='values', to='categories.CategorySpecificModel')),
             ],
             options={
-                'abstract': False,
+                'ordering': ('time_added', 'pk'),
             },
             bases=(inventorum.util.django.db.models.ModelMixins, models.Model),
         ),
         migrations.AlterUniqueTogether(
             name='categoryspecificmodel',
             unique_together=set([('category', 'name', 'deleted_at')]),
+        ),
+        migrations.AddField(
+            model_name='categoryfeaturesmodel',
+            name='item_specifics_enabled',
+            field=models.BooleanField(default=False),
+            preserve_default=True,
         ),
     ]
