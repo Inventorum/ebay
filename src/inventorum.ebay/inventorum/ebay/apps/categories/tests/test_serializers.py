@@ -1,12 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.categories.serializers import CategorySpecificsSerializer
 from inventorum.ebay.tests import Countries
 
 from inventorum.ebay.tests.testcases import UnitTestCase
 
 from inventorum.ebay.apps.categories import serializers
-from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 
 log = logging.getLogger(__name__)
 
@@ -57,3 +58,34 @@ class TestCategoryBreadcrumbSerializer(UnitTestCase):
             "id": category.id,
             "name": "Some category"
         })
+
+
+class TestCategorySpecificsSerializer(UnitTestCase):
+    def test_serialization(self):
+        category = CategoryFactory.create(name="Some category")
+
+        specific = CategorySpecificFactory.create(category=category)
+        required_specific = CategorySpecificFactory.create_required(category=category)
+
+        specific_data = CategorySpecificsSerializer(specific).data
+        self.assertEqual(specific_data, {
+            'can_use_own_values': True,
+            'can_use_in_variations': True,
+            'help_url': specific.help_url,
+            'help_text': specific.help_text,
+            'is_required': False,
+            'id': specific.id,
+            'values': [
+                {'value': 'Value 1'},
+                {'value': 'Value 2'},
+                {'value': 'Value 3'},
+                {'value': 'Value 4'},
+                {'value': 'Value 5'}
+            ]
+        })
+
+        required_specific_data = CategorySpecificsSerializer(required_specific).data
+        self.assertEqual(required_specific_data['is_required'], True)
+
+
+

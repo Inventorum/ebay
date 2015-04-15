@@ -6,7 +6,8 @@ from django.utils.translation import ugettext
 
 from inventorum.ebay.apps.categories.models import CategoryModel
 
-from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer
+from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer, \
+    CategorySpecificsSerializer
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.lib.rest.fields import RelatedModelByIdField
 from rest_framework import serializers
@@ -19,9 +20,10 @@ class EbayProductCategorySerializer(CategorySerializer):
 
     class Meta:
         model = CategoryModel
-        fields = CategorySerializer.Meta.fields + ("breadcrumb",)
+        fields = CategorySerializer.Meta.fields + ("breadcrumb", "specifics")
 
     breadcrumb = CategoryBreadcrumbSerializer(source="ancestors", many=True)
+    specifics = CategorySpecificsSerializer(many=True)
 
 
 class EbayProductSerializer(serializers.ModelSerializer):

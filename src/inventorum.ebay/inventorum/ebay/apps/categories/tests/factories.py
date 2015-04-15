@@ -26,3 +26,43 @@ class CategoryFactory(factory.DjangoModelFactory):
         """ Sets the external parent id only when there is a parent """
         if self.parent is not None:
             return n
+
+
+class SpecificValueFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = models.SpecificValueModel
+
+    value = factory.Sequence(lambda n: "Value {0}".format(n))
+
+
+class CategorySpecificFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = models.CategorySpecificModel
+
+    name = factory.Sequence(lambda n: "Specific {0}".format(n))
+    help_text = "Some help text"
+    help_url = "http://ebay.com/help_url"
+
+    can_use_in_variations = True
+    max_values = 1
+    min_values = 0
+    selection_mode = "FreeText"
+    value_type = "Text"
+
+    @factory.post_generation
+    def values(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for value in extracted:
+                self.values.add(value)
+        else:
+            for i in range(0, 5):
+                SpecificValueFactory.create(specific=self)
+
+    @classmethod
+    def create_required(cls, **kwargs):
+        return cls.create(min_values=1, **kwargs)
