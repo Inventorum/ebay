@@ -39,11 +39,7 @@ class TrustedHeaderAuthentication(BaseAuthentication):
         log.debug("Attempting trusted header authentication: X-Inv-User: %s, X-Inv-Account: %s",
                   inv_user_id, inv_account_id)
 
-        try:
-            account = EbayAccountModel.objects.get(inv_id=inv_account_id)
-        except EbayAccountModel.DoesNotExist:
-            log.debug("Trusted header authentication failed. X-Inv-Account %s not connected to ebay", inv_account_id)
-            raise AuthenticationFailed("Account %s not connected to ebay" % inv_account_id)
+        account, c = EbayAccountModel.objects.get_or_create(inv_id=inv_account_id)
 
         user, created = EbayUserModel.objects.select_related('account') \
             .get_or_create(account_id=account.id, inv_id=inv_user_id)
