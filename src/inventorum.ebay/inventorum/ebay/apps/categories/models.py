@@ -129,3 +129,19 @@ class CategoryFeaturesModel(BaseModel):
         return features
 
 
+
+class CategorySpecificModel(BaseModel):
+    category = OneToOneField(CategoryModel, related_name="specifics")
+
+    @classmethod
+    def create_or_update_from_ebay_data_for_category(cls, data, category):
+        """
+        Create or update (if it already exists) CategoryFeaturesModel out of EbayFeature instance
+        :param data: EbayCategorySpecifics instance
+        :return:
+        :type data: inventorum.ebay.lib.ebay.data.categories.specifics.EbayCategorySpecifics
+        """
+
+        specifics, c = cls.objects.get_or_create(category=category)
+        specifics.save()
+        return specifics

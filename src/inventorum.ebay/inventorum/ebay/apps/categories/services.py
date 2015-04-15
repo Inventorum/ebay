@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from django.db.transaction import atomic
 from django.utils.functional import cached_property
-from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel
+from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, CategorySpecificModel
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from django.conf import settings
 
@@ -115,15 +115,24 @@ class EbayCategoriesScraper(object):
             category.save()
 
 
-class EbayFeaturesScraper(object):
+class EbayBatchScraper(object):
     batch_size = 20
 
     def __init__(self, ebay_token):
         self.ebay_token = ebay_token
 
+    def get_queryset(self):
+        raise NotImplementedError
+
+    def get_queryset_with_country(self, country_code):
+        raise NotImplementedError
+
+    def fetch(self, limited_qs, country_code):
+        raise NotImplementedError
+
     @cached_property
     def count(self):
-        return CategoryModel.objects.count()
+        return self.get_queryset().count()
 
     @property
     def pages(self):
@@ -134,15 +143,29 @@ class EbayFeaturesScraper(object):
             self._fetch_in_batches(country_code)
 
     def _fetch_in_batches(self, country_code):
-        queryset = CategoryModel.objects.filter(country=country_code, ebay_leaf=True)
+        queryset = self.get_queryset_with_country(country_code)
 
         for page in range(0, self.pages):
             start = page * self.batch_size
             end = start + self.batch_size
-            limited_categories = queryset[start:end]
-            log.debug('Fetching categories features, starting batch: %s/%s', page+1, self.pages)
-            ebay = EbayCategories(self.ebay_token, site_id=settings.EBAY_SUPPORTED_SITES[country_code])
-            self._get_features_for_categories(limited_categories, ebay)
+            limited = queryset[start:end]
+            log.debug('Fetching [%s], starting batch: %s/%s', self.__class__.__name__, page+1, self.pages)
+            self.fetch(limited, country_code)
+
+
+class EbayFeaturesScraper(EbayBatchScraper):
+    def get_queryset(self):
+        return CategoryModel.objects.filter(ebay_leaf=True)
+
+    def get_queryset_with_country(self, country_code):
+        return self.get_queryset().filter(country=country_code)
+
+    def fetch(self, limited_qs, country_code):
+        token = self.ebay_token
+        token.site_id = settings.EBAY_SUPPORTED_SITES[country_code]
+
+        ebay = EbayCategories(token)
+        self._get_features_for_categories(limited_qs, ebay)
 
     def _get_features_for_categories(self, categories, ebay):
         categories_ids = {category.external_id: category for category in categories}
@@ -152,5 +175,24 @@ class EbayFeaturesScraper(object):
             for category_id, feature in features.iteritems():
                 CategoryFeaturesModel.create_or_update_from_ebay_data_for_category(feature, categories_ids[category_id])
 
+
+
+class EbaySpecificsScraper(EbayBatchScraper):
+    def get_queryset(self):
+        return CategoryModel.objects.filter(ebay_leaf=True)
+
+    def get_queryset_with_country(self, country_code):
+        return self.get_queryset().filter(country=country_code)
+
+    def fetch(self, limited_qs, country_code):
+        token = self.ebay_token
+        token.site_id = settings.EBAY_SUPPORTED_SITES[country_code]
+
+        ebay = EbayCategories(token)
+        categories_ids = {category.external_id: category for category in limited_qs}
+        specifics = ebay.get_specifics_for_categories(categories_ids.keys())
+        for specific in specifics:
+            CategorySpecificModel.create_or_update_from_ebay_data_for_category(specific,
+                                                                               categories_ids[specific.category_id])
 
 
