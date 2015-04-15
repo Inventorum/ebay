@@ -2,12 +2,12 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.core.exceptions import MultipleObjectsReturned
-from django.db.models.fields.related import OneToOneField, ManyToManyField
+from django.db.models.fields.related import OneToOneField, ManyToManyField, ForeignKey
 from inventorum.ebay.apps.categories import ListingDurations
 from inventorum.util.django.db.managers import ValidityManager
 import mptt
 
-from django.db.models.fields import CharField, BooleanField
+from django.db.models.fields import CharField, BooleanField, URLField, TextField, IntegerField
 from django_countries.fields import CountryField
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
 from mptt.fields import TreeForeignKey
@@ -129,19 +129,70 @@ class CategoryFeaturesModel(BaseModel):
         return features
 
 
-
 class CategorySpecificModel(BaseModel):
-    category = OneToOneField(CategoryModel, related_name="specifics")
+    category = ForeignKey(CategoryModel, related_name="specifics")
+
+    name = CharField(max_length=255)
+    help_text = TextField(blank=True, null=True)
+    help_url = URLField(null=True, blank=True)
+
+    can_use_in_variations = BooleanField(default=True)
+    max_values = IntegerField()
+    min_values = IntegerField()
+    selection_mode = CharField(max_length=255)
+    value_type = CharField(max_length=255)
+
+    class Meta:
+        unique_together = ('category', 'name', 'deleted_at')
+        ordering = ('name', 'time_added', 'pk')
+
+    @property
+    def is_required(self):
+        return self.min_values > 0
 
     @classmethod
     def create_or_update_from_ebay_data_for_category(cls, data, category):
         """
         Create or update (if it already exists) CategoryFeaturesModel out of EbayFeature instance
         :param data: EbayCategorySpecifics instance
-        :return:
+        :return: List of CategorySpecificModel
+        :rtype: list[CategorySpecificModel]
         :type data: inventorum.ebay.lib.ebay.data.categories.specifics.EbayCategorySpecifics
         """
+        specifics = []
+        for recommendation in data.name_recommendations:
+            defaults = dict(
+                help_text=recommendation.help_text,
+                help_url=recommendation.help_url,
+                can_use_in_variations=recommendation.validation_rules.can_use_in_variations,
+                max_values=recommendation.validation_rules.max_values,
+                min_values=recommendation.validation_rules.min_values,
+                selection_mode=recommendation.validation_rules.selection_mode,
+                value_type=recommendation.validation_rules.value_type,
+            )
+            specific, c = cls.objects.get_or_create(category=category, name=recommendation.name, defaults=defaults)
+            if not c:
+                specific.__dict__.update(defaults)
+                specific.save()
+            old_values_ids = {v.pk for v in specific.values.all()}
+            current_values = []
+            for value in recommendation.value_recommendations:
+                value_obj, c = SpecificValueModel.objects.get_or_create(value=value.value, specific=specific)
+                current_values.append(value_obj)
 
-        specifics, c = cls.objects.get_or_create(category=category)
-        specifics.save()
+            values_to_be_deleted = old_values_ids - set(current_values)
+
+            if values_to_be_deleted:
+                SpecificValueModel.objects.filter(pk__in=values_to_be_deleted).delete()
+
+            specifics.append(specific)
+
         return specifics
+
+
+class SpecificValueModel(BaseModel):
+    value = CharField(max_length=255)
+    specific = ForeignKey(CategorySpecificModel, related_name="values")
+
+    class Meta:
+        ordering = ('time_added', 'pk')

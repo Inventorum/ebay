@@ -42,6 +42,8 @@ class EbaySpecificsNameRecommendation(object):
         :type name: unicode | str
         :type help_text: unicode | str
         :type help_url: unicode | str
+        :type validation_rules: EbaySpecificsNameRecommendationValidationRules
+        :type value_recommendations: list[EbayValueRecommendation]
         """
         self.value_recommendations = value_recommendations or []
         self.name = name

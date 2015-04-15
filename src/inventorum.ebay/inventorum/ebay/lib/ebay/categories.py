@@ -78,7 +78,7 @@ class EbayCategories(Ebay):
         Returns specifics per category
         :param categories_ids:
         :return: List of specifics per category
-        :rtype: list[inventorum.ebay.lib.ebay.data.EbayFeature]
+        :rtype: dict[unicode, inventorum.ebay.lib.ebay.data.EbayFeature]
         """
         response = self.execute('GetCategorySpecifics', dict(
             AllFeaturesForCategory=True,

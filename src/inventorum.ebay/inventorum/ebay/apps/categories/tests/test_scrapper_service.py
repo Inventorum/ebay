@@ -4,8 +4,8 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, PaymentMethodModel, \
-    DurationModel
-from inventorum.ebay.apps.categories.services import EbayCategoriesScraper, EbayFeaturesScraper
+    DurationModel, CategorySpecificModel
+from inventorum.ebay.apps.categories.services import EbayCategoriesScraper, EbayFeaturesScraper, EbaySpecificsScraper
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 log = logging.getLogger(__name__)
@@ -94,19 +94,39 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertGreater(leaf_categories.count(), 0)
         log.debug('Leaf categories external ids: %s', [l.external_id for l in leaf_categories])
 
-        features_service = EbayFeaturesScraper(self.ebay_token)
-        features_service.fetch_all()
+        with EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_specifics_for_20_leaf_categories.json"):
+            features_service = EbaySpecificsScraper(self.ebay_token)
+            features_service.fetch_all()
 
-        self.assertEqual(CategoryFeaturesModel.objects.count(), 40)  # limit * countries = 20 * 2 = 40
+        self.assertEqual(CategorySpecificModel.objects.count(), 80)
 
-        for category in CategoryModel.objects.all():
-            features = category.features
-            self.assertGreater(features.payment_methods.count(), 0)
-            self.assertGreater(features.durations.count(), 0)
+        some_category = CategoryModel.objects.get(external_id='167050', country='DE')
+        specifics = some_category.specifics.all()
 
-        last_feature = leaf_categories.last().features
-        self.assertEqual(last_feature.item_specifics_enabled, True)
+        self.assertEqual(specifics.count(), 2)
 
-        # Models should not be duplicated!
-        self.assertEqual(PaymentMethodModel.objects.count(), 10)
-        self.assertEqual(DurationModel.objects.count(), 5)
+        first_specific = specifics[0]
+        self.assertEqual(first_specific.name, 'Anzahl der Einheiten')
+        self.assertIsNone(first_specific.help_text)
+        self.assertIsNone(first_specific.help_url)
+        self.assertFalse(first_specific.is_required)
+        self.assertEqual(first_specific.selection_mode, 'FreeText')
+        self.assertEqual(first_specific.value_type, 'Text')
+        self.assertFalse(first_specific.can_use_in_variations)
+
+        self.assertEqual(first_specific.values.all().count(), 0)
+
+        second_specific = specifics[1]
+        self.assertEqual(second_specific.name, 'Maßeinheit')
+        self.assertEqual(second_specific.help_text, None)
+        self.assertEqual(second_specific.help_url, None)
+        self.assertFalse(second_specific.is_required)
+        self.assertEqual(second_specific.selection_mode, 'SelectionOnly')
+        self.assertEqual(second_specific.value_type, 'Text')
+        self.assertFalse(second_specific.can_use_in_variations)
+
+        values = second_specific.values.all()
+        self.assertEqual(values.count(), 10)
+
+        values_values = [v.value for v in values]
+        self.assertEqual(values_values, ['kg', '100 g', '10 g', 'L', '100 ml', '10 ml', 'm³', 'm', 'm²', 'Einheit'])

@@ -121,22 +121,11 @@ class EbayBatchScraper(object):
     def __init__(self, ebay_token):
         self.ebay_token = ebay_token
 
-    def get_queryset(self):
-        raise NotImplementedError
-
     def get_queryset_with_country(self, country_code):
         raise NotImplementedError
 
     def fetch(self, limited_qs, country_code):
         raise NotImplementedError
-
-    @cached_property
-    def count(self):
-        return self.get_queryset().count()
-
-    @property
-    def pages(self):
-        return self.count/self.batch_size
 
     def fetch_all(self):
         for country_code in settings.EBAY_SUPPORTED_SITES.keys():
@@ -144,12 +133,14 @@ class EbayBatchScraper(object):
 
     def _fetch_in_batches(self, country_code):
         queryset = self.get_queryset_with_country(country_code)
+        count = queryset.count()
+        pages = count/self.batch_size
 
-        for page in range(0, self.pages):
+        for page in range(0, pages):
             start = page * self.batch_size
             end = start + self.batch_size
             limited = queryset[start:end]
-            log.debug('Fetching [%s], starting batch: %s/%s', self.__class__.__name__, page+1, self.pages)
+            log.debug('Fetching [%s], starting batch: %s/%s', self.__class__.__name__, page+1, pages)
             self.fetch(limited, country_code)
 
 
@@ -191,7 +182,7 @@ class EbaySpecificsScraper(EbayBatchScraper):
         ebay = EbayCategories(token)
         categories_ids = {category.external_id: category for category in limited_qs}
         specifics = ebay.get_specifics_for_categories(categories_ids.keys())
-        for specific in specifics:
+        for category_id, specific in specifics.iteritems():
             CategorySpecificModel.create_or_update_from_ebay_data_for_category(specific,
                                                                                categories_ids[specific.category_id])
 
