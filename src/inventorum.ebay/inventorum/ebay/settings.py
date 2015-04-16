@@ -33,6 +33,7 @@ USE_NGINX_X_ACCEL_REDIRECT = True
 # alphabetically ordered
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
+    'django.contrib.sessions',
     'django_extensions',
     'django_nose',
     # Provides the django db broker for celery
@@ -130,6 +131,7 @@ MEDIA_URL = '/uploads/'
 MIDDLEWARE_CLASSES = (
     # BH: This adds `X-Sentry-ID` header, so error can be tracked down
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     # TODO jm: Needed?
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # TODO jm: Move to utils?!
