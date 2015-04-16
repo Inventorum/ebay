@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='EbayProductSpecific',
+            name='EbayProductSpecificModel',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('time_added', models.DateTimeField(auto_now_add=True, verbose_name='Created at')),
@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, verbose_name='Is active')),
                 ('deleted_at', models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=utc), verbose_name='Time of deletion')),
                 ('value', models.CharField(max_length=255)),
+                ('product', models.ForeignKey(related_name='specific_values', to='products.EbayProductModel')),
                 ('specific', models.ForeignKey(related_name='+', to='categories.CategorySpecificModel')),
             ],
             options={

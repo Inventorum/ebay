@@ -124,6 +124,7 @@ class EbayItemModel(BaseModel):
         )
 
 
-class EbayProductSpecific(BaseModel):
+class EbayProductSpecificModel(BaseModel):
+    product = models.ForeignKey(EbayProductModel, related_name="specific_values")
     specific = models.ForeignKey(CategorySpecificModel, related_name="+")
     value = models.CharField(max_length=255)
