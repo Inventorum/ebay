@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from django.utils.functional import cached_property
 from inventorum.ebay.apps.products.models import EbayProductSpecificModel
 
 from rest_framework import status
@@ -14,6 +15,11 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
     def setUp(self):
         super(TestProductUpdateSpecifics, self).setUp()
         self.leaf_category = self._build_leaf_category_with_specifics()
+
+    @cached_property
+    def valid_category(self):
+        parent = CategoryFactory.create(name="Parent category")
+        return CategoryFactory.create(name="Valid category", parent=parent)
 
     def _build_leaf_category_with_specifics(self):
         root_category = CategoryFactory.create(name="Root category")
@@ -44,7 +50,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
 
         product = EbayProductFactory.create(category=self.leaf_category, account=self.account)
         data = self._get_valid_data_for(product)
-        data['specifics_values'] = [
+        data['specific_values'] = [
             {
                 "specific": self.specific.pk,
                 "value": "Some non-standard value - not required"  # Should be accepted!
@@ -72,7 +78,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
 
         # So everything is fine, lets remove non-required one!
         data = response.data
-        data['specifics_values'] = [
+        data['specific_values'] = [
             {
                 "specific": self.required_specific.pk,
                 "value": "Some non-standard value"  # Should be accepted!
@@ -99,26 +105,57 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
 
     def test_save_validation_handling(self):
         """
-        Test save specifics to product. Sending here specifics without one required and with one that accepts
-        only specific values, sending wrong non standard value
+        Test save specifics to product. Sending here specifics without one required
         :return:
         """
         product = EbayProductFactory.create(category=self.leaf_category, account=self.account)
+        selection_only_specific_value = self.required_specific_selection_only.values.last().value
         data = self._get_valid_data_for(product)
-        data['specifics_values'] = [
+        data['specific_values'] = [
             {
                 "specific": self.specific.pk,
-                "value": "Some non-standard value"  # Should be accepted!
+                "value": "Some non-standard value"
             },
             # Missing here one of required specifics (we have 2 required ones)
             {
                 "specific": self.required_specific_selection_only.pk,
-                "value": "Some not standard value, should fail!"
+                "value": selection_only_specific_value
             }
         ]
         response = self._request_update(product, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {})
+        specific_values = product.specific_values.all()
+        self.assertEqual(specific_values.count(), 0)
+
+    def test_save_wrong_value(self):
+        """
+        Test save specifics to product. Sending here one that accepts
+        only specific values, sending wrong non standard value.
+        :return:
+        """
+        product = EbayProductFactory.create(category=self.leaf_category, account=self.account)
+        selection_only_specific_value = self.required_specific_selection_only.values.last().value
+        data = self._get_valid_data_for(product)
+        data['specific_values'] = [
+            {
+                "specific": self.specific.pk,
+                "value": "Some non-standard value"
+            },
+            {
+                "specific": self.required_specific.pk,
+                "value": "Some non-standard value"  # Should be accepted!
+            },
+            {
+                "specific": self.required_specific_selection_only.pk,
+                "value": "Wrong value!"
+            }
+        ]
+        response = self._request_update(product, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {})
 
         specific_values = product.specific_values.all()
         self.assertEqual(specific_values.count(), 0)

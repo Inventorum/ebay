@@ -72,7 +72,8 @@ class TestEbayProductSerializer(UnitTestCase):
                 "is_leaf": True,
                 "breadcrumb": [{"id": category.parent_id, "name": "Some parent"}],
                 "specifics": []
-            }
+            },
+            "specific_values": []
         })
 
     def test_deserialize_serialized(self):
