@@ -37,7 +37,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         return self.client.put("/products/{inv_id}".format(inv_id=product.inv_id), data=data)
 
     def test_valid_saving(self):
-        product = EbayProductFactory.create(category=self.leaf_category)
+        product = EbayProductFactory.create(category=self.leaf_category, account=self.account)
         data = self._get_valid_data_for(product)
         response = self._request_update(product, data)
 
