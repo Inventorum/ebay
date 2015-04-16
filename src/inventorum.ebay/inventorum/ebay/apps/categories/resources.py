@@ -15,9 +15,10 @@ log = logging.getLogger(__name__)
 
 
 class CategoryListResource(APIResource):
+    serializer_class = CategorySerializer
 
     def get(self, request):
-        parent_id = request.GET.get('parent_id', None)
+        parent_id = request.query_params.get('parent_id', None)
         country = request.user.account.country
 
         if parent_id is not None:

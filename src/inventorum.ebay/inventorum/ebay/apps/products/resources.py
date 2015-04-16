@@ -51,6 +51,7 @@ class EbayProductResource(APIResource, ProductResourceMixin):
 
 
 class PublishResource(APIResource, ProductResourceMixin):
+    serializer_class = EbayProductSerializer
 
     def post(self, request, inv_product_id):
         product = self.get_or_create_product(inv_product_id, request.user.account)
@@ -73,7 +74,7 @@ class PublishResource(APIResource, ProductResourceMixin):
             log.error('Got ebay errors: %s', e.errors)
             raise BadRequest([unicode(err) for err in e.errors], key="ebay.api.errors")
 
-        serializer = EbayProductSerializer(service.product)
+        serializer = self.get_serializer(service.product)
         return Response(data=serializer.data)
 
         # TODO:
@@ -81,6 +82,7 @@ class PublishResource(APIResource, ProductResourceMixin):
 
 
 class UnpublishResource(APIResource, ProductResourceMixin):
+    serializer_class = EbayProductSerializer
 
     def post(self, request, inv_product_id):
         try:
@@ -95,5 +97,5 @@ class UnpublishResource(APIResource, ProductResourceMixin):
             raise exceptions.ValidationError(e.message)
 
         service.unpublish()
-        serializer = EbayProductSerializer(service.product)
+        serializer = self.get_serializer(service.product)
         return Response(data=serializer.data)
