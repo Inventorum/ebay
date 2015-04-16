@@ -86,11 +86,6 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
 }
 
-# Sentry
-RAVEN_CONFIG = {
-    'dsn': 'http://837c06463bdc4bb5857794845702e464:48487cf9d2a1435285227bad64368e44@sentry.srv.hern.as/14',
-}
-
 # Celery settings ==============================================================
 
 BROKER_URL = 'django://guest:guest@localhost//'
