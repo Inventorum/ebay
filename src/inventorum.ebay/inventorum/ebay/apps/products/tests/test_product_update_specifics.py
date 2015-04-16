@@ -11,7 +11,6 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
 class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
-
     def setUp(self):
         super(TestProductUpdateSpecifics, self).setUp()
         self.leaf_category = self._build_leaf_category_with_specifics()
@@ -25,7 +24,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         self.required_specific = CategorySpecificFactory.create_required(category=leaf_category)
 
         self.required_specific_selection_only = CategorySpecificFactory.create_required(category=leaf_category,
-                                                                                   selection_mode='SelectionOnly')
+                                                                                        selection_mode='SelectionOnly')
         self.assertFalse(self.required_specific_selection_only.can_use_own_values)
 
         self.assertEqual(leaf_category.specifics.count(), 3)
