@@ -126,7 +126,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         response = self._request_update(product, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, {'non_field_errors': ['You need to pass all required specifics (missing: [2])!']})
+        self.assertEqual(response.data, {'non_field_errors': ['You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk]})
         specific_values = product.specific_values.all()
         self.assertEqual(specific_values.count(), 0)
 
@@ -197,7 +197,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data,  {
             'non_field_errors': [
-                'Some specifics are assigned to different category than product! (wrong specific ids: [7])'
+                'Some specifics are assigned to different category than product! (wrong specific ids: [%s])' % wrong_category_specific.pk
             ]
         })
 
