@@ -6,7 +6,8 @@ from inventorum.ebay.apps.categories import ListingDurations
 
 from django.db.models.fields import CharField, BooleanField, URLField, TextField, IntegerField
 from django_countries.fields import CountryField
-from inventorum.ebay.lib.db.models import BaseModel
+from inventorum.ebay.lib.db.models import BaseModel, BaseQuerySet
+from inventorum.util.django.model_utils import PassThroughManager
 from mptt.fields import TreeForeignKey
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel
@@ -141,6 +142,11 @@ class CategoryFeaturesModel(BaseModel):
         return features
 
 
+class CategorySpecificQuerySet(BaseQuerySet):
+    def required(self):
+        return self.filter(min_values__gt=0)
+
+
 class CategorySpecificModel(BaseModel):
     category = ForeignKey(CategoryModel, related_name="specifics")
 
@@ -153,6 +159,8 @@ class CategorySpecificModel(BaseModel):
     min_values = IntegerField()
     selection_mode = CharField(max_length=255)
     value_type = CharField(max_length=255)
+
+    objects = PassThroughManager.for_queryset_class(CategorySpecificQuerySet)()
 
     class Meta:
         unique_together = ('category', 'name', 'deleted_at')

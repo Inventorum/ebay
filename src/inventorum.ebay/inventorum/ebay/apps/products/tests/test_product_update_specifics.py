@@ -126,7 +126,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         response = self._request_update(product, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, {})
+        self.assertEqual(response.data, {'non_field_errors': ['You need to pass all required specifics (missing: [2])!']})
         specific_values = product.specific_values.all()
         self.assertEqual(specific_values.count(), 0)
 
@@ -156,7 +156,10 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         response = self._request_update(product, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, {})
+        self.assertEqual(response.data, {
+            'specific_values': [{}, {},
+                {'non_field_errors': ['This item specific does not accept custom values (wrong: `Wrong value!`)']}
+            ]})
 
         specific_values = product.specific_values.all()
         self.assertEqual(specific_values.count(), 0)
@@ -192,7 +195,45 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         response = self._request_update(product, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, {})
+        self.assertEqual(response.data,  {
+            'non_field_errors': [
+                'Some specifics are assigned to different category than product! (wrong specific ids: [7])'
+            ]
+        })
 
         specific_values = product.specific_values.all()
         self.assertEqual(specific_values.count(), 0)
+
+    def test_saving_with_category(self):
+        """
+        This test proves that when we save specific with category, it will be saved correctly!
+        """
+        selection_only_specific_value = self.required_specific_selection_only.values.last().value
+
+        product = EbayProductFactory.create(account=self.account)
+        data = self._get_valid_data_for(product)
+        data['category_id'] = self.leaf_category.pk
+        data['specific_values'] = [
+            {
+                "specific": self.specific.pk,
+                "value": "Some non-standard value - not required"  # Should be accepted!
+            },
+            {
+                "specific": self.required_specific.pk,
+                "value": "Some non-standard value"  # Should be accepted!
+            },
+            {
+                "specific": self.required_specific_selection_only.pk,
+                "value": selection_only_specific_value  # Needs to be one of values
+            }
+        ]
+        response = self._request_update(product, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_simple_deserializer_serialize(self):
+
+        product = EbayProductFactory.create(account=self.account)
+        data = self._get_valid_data_for(product)
+        response = self._request_update(product, data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
