@@ -43,7 +43,7 @@ class TestCategoryList(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.data, {
             "total": 3,
             "data": expected_data,
-            "breadcrumb": []
+            "breadcrumbs": []
         })
 
     def test_with_parent_id_returns_all_children(self):
@@ -118,5 +118,5 @@ class TestCategoryList(EbayAuthenticatedAPITestCase):
         :type expected_breadrumb_categories: list of CategoryModel
         """
         expected_breadrumb_data = CategoryBreadcrumbSerializer(expected_breadrumb_categories, many=True).data
-        actual_breadcrumb_data = response.data["breadcrumb"]
+        actual_breadcrumb_data = response.data["breadcrumbs"]
         self.assertEqual(actual_breadcrumb_data, expected_breadrumb_data)
