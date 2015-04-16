@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.core_api import FakeResponse, PaginatedFakeResponse
 from inventorum.ebay.apps.core_api.pager import Pager
 
 from inventorum.ebay.tests.testcases import UnitTestCase
@@ -10,14 +11,6 @@ log = logging.getLogger(__name__)
 
 
 class TestPager(UnitTestCase):
-
-    class FakeResponse(object):
-
-        def __init__(self, json):
-            self._json = json
-
-        def json(self):
-            return self._json
 
     class FakeCoreAPIClient(object):
 
@@ -147,10 +140,7 @@ class TestPager(UnitTestCase):
                              expected_data=fake_responses_by_page[page_number].json().get("data"))
 
     def make_valid_response(self, total, data):
-        return self.FakeResponse({
-            "total": total,
-            "data": data
-        })
+        return PaginatedFakeResponse(total=total, data=data)
 
     def assert_page(self, page, expected_number, expected_response, expected_data):
         self.assertEqual(page.number, expected_number)

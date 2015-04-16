@@ -1,7 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreAccountDeserializer, CoreInfoDeserializer
+from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer,\
+    CoreProductDeltaDeserializer
+from inventorum.ebay.apps.core_api.pager import Pager
 import requests
 
 from django.conf import settings
@@ -74,6 +76,10 @@ class CoreAPIClient(object):
             response.raise_for_status()
 
         return response
+
+    def paginated_get(self, path, limit_per_page, params=None, custom_headers=None):
+        return Pager(client=self, path=path, limit_per_page=limit_per_page,
+                     params=params, custom_headers=custom_headers)
 
 
 class UserScopedCoreAPIClient(CoreAPIClient):
