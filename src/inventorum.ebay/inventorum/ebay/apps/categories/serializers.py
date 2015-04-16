@@ -40,3 +40,9 @@ class CategorySpecificsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CategorySpecificModel
         fields = ("id", "help_text", "help_url", "can_use_in_variations", "is_required", "can_use_own_values", "values")
+
+        
+class CategoryListResponseSerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+    data = CategorySerializer(many=True)
+    breadcrumbs = CategoryBreadcrumbSerializer(many=True)

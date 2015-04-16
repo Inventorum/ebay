@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from rest_framework import exceptions
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -43,7 +44,7 @@ class EbayProductResource(APIResource, ProductResourceMixin):
     def put(self, request, inv_product_id):
         product = self.get_or_create_product(inv_product_id, request.user.account)
 
-        serializer = self.get_serializer(product, data=request.DATA, many=False)
+        serializer = self.get_serializer(product, data=request.data, many=False)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
@@ -51,6 +52,7 @@ class EbayProductResource(APIResource, ProductResourceMixin):
 
 
 class PublishResource(APIResource, ProductResourceMixin):
+    serializer_class = EbayProductSerializer
 
     def post(self, request, inv_product_id):
         product = self.get_or_create_product(inv_product_id, request.user.account)
@@ -73,7 +75,7 @@ class PublishResource(APIResource, ProductResourceMixin):
             log.error('Got ebay errors: %s', e.errors)
             raise BadRequest([unicode(err) for err in e.errors], key="ebay.api.errors")
 
-        serializer = EbayProductSerializer(service.product)
+        serializer = self.get_serializer(service.product)
         return Response(data=serializer.data)
 
         # TODO:
@@ -81,12 +83,15 @@ class PublishResource(APIResource, ProductResourceMixin):
 
 
 class UnpublishResource(APIResource, ProductResourceMixin):
+    serializer_class = EbayProductSerializer
+    lookup_url_kwarg = 'inv_product_id'
+    lookup_field = 'inv_id'
+
+    def get_queryset(self):
+        return EbayProductModel.objects.filter(account=self.request.user.account)
 
     def post(self, request, inv_product_id):
-        try:
-            product = EbayProductModel.objects.get(inv_id=inv_product_id, account=request.user.account)
-        except EbayProductModel.DoesNotExist:
-            raise exceptions.NotFound
+        product = self.get_object()
 
         service = UnpublishingService(product, request.user)
         try:
@@ -95,5 +100,5 @@ class UnpublishResource(APIResource, ProductResourceMixin):
             raise exceptions.ValidationError(e.message)
 
         service.unpublish()
-        serializer = EbayProductSerializer(service.product)
+        serializer = self.get_serializer(service.product)
         return Response(data=serializer.data)
