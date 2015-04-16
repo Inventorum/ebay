@@ -36,6 +36,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         self.assertEqual(leaf_category.specifics.count(), 3)
         return leaf_category
 
+
     def _get_valid_data_for(self, product):
         return EbayProductSerializer(product).data
 
@@ -150,6 +151,42 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
             {
                 "specific": self.required_specific_selection_only.pk,
                 "value": "Wrong value!"
+            }
+        ]
+        response = self._request_update(product, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {})
+
+        specific_values = product.specific_values.all()
+        self.assertEqual(specific_values.count(), 0)
+
+
+
+    def test_save_wrong_specific_category(self):
+        """
+        Test save specifics to product. Sending here specific id that belongs to other category.
+        :return:
+        """
+
+        second_leaf_category = CategoryFactory.create(name="Leaf category 2")
+        wrong_category_specific = CategorySpecificFactory.create(category=second_leaf_category)
+
+        product = EbayProductFactory.create(category=self.leaf_category, account=self.account)
+        selection_only_specific_value = self.required_specific_selection_only.values.last().value
+        data = self._get_valid_data_for(product)
+        data['specific_values'] = [
+            {
+                "specific": wrong_category_specific.pk,
+                "value": "Some non-standard value"
+            },
+            {
+                "specific": self.required_specific.pk,
+                "value": "Some non-standard value"  # Should be accepted!
+            },
+            {
+                "specific": self.required_specific_selection_only.pk,
+                "value": selection_only_specific_value
             }
         ]
         response = self._request_update(product, data)

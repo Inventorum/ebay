@@ -50,6 +50,10 @@ class EbayProductModel(MappedInventorumModel):
 
         return settings.EBAY_LISTING_URL.format(listing_id=published_item.external_id)
 
+    @property
+    def specific_values_for_current_category(self):
+        return self.specific_values.filter(specific__category_id=self.category_id)
+
 
 # Models for data just before publishing
 
