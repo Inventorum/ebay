@@ -45,6 +45,9 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         product.category = leaf_category
         product.save()
 
+    def _add_specific_to_product(self, product):
+        EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test")
+
     def test_failed_validation(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
@@ -98,8 +101,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
             self.assertEqual(e.exception.message, 'You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk)
 
-            EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test")
-            
+            self._add_specific_to_product(product)
             # Should not raise anything finally!
             service.validate()
 
@@ -109,6 +111,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             service = PublishingService(product, self.user)
 
             self._assign_category(product)
+            self._add_specific_to_product(product)
             service.prepare()
 
         last_item = product.items.last()
@@ -125,6 +128,13 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         payment_methods = last_item.payment_methods.all()
         self.assertEqual(payment_methods.count(), 1)
         self.assertEqual(payment_methods.last().external_id, 'PayPal')
+
+
+        specific_values = last_item.specific_values.all()
+        self.assertEqual(specific_values.count(), 1)
+        last_specific = specific_values.last()
+        self.assertEqual(last_specific.value, 'Test')
+        self.assertEqual(last_specific.specific.pk, self.required_specific.pk)
 
         images = last_item.images.all()
         self.assertEqual(images.count(), 1)
@@ -167,6 +177,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             service = PublishingService(product, self.user)
 
             self._assign_category(product)
+            self._add_specific_to_product(product)
             service.prepare()
             last_item = product.items.last()
 
@@ -174,42 +185,44 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         ebay_item = last_item.ebay_object
 
         data = ebay_item.dict()
-        self.assertEqual(data, {u'Item': {
-            u'ConditionID': 1000,
-            u'Country': 'DE',
-            u'Currency': u'EUR',
-            u'Description': u'Some description',
-            u'DispatchTimeMax': 3,
-            u'ListingType': u'FixedPriceItem',
-            u'PostalCode': u'13355',
-            u'PrimaryCategory': {u'CategoryID': u'64540'},
-            u'Quantity': 3000,
-            u'ReturnPolicy': {
-                u'Description': u'',
-                u'ReturnsAcceptedOption': u'ReturnsAccepted'
+        self.assertEqual(data, {'Item': {
+            'ConditionID': 1000,
+            'Country': 'DE',
+            'Currency': 'EUR',
+            'Description': 'Some description',
+            'DispatchTimeMax': 3,
+            'ListingType': 'FixedPriceItem',
+            'PostalCode': '13355',
+            'PrimaryCategory': {'CategoryID': '64540'},
+            'Quantity': 3000,
+            'ReturnPolicy': {
+                'Description': '',
+                'ReturnsAcceptedOption': 'ReturnsAccepted'
             },
-            u'StartPrice': Decimal('599.9900000000'),
-            u'Title': u'SlowRoad Shipping Details',
-            u'ListingDuration': u'Days_120',
-            u'PayPalEmailAddress': u'john.newman@paypal.com',
-            u'PaymentMethods': ['PayPal'],
-            u'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
+            'ItemSpecifics': {'NameValueList': [{'Name': 'Specific 23',
+                                                   'Value': 'Test'}]},
+            'StartPrice': Decimal('599.9900000000'),
+            'Title': 'SlowRoad Shipping Details',
+            'ListingDuration': 'Days_120',
+            'PayPalEmailAddress': 'john.newman@paypal.com',
+            'PaymentMethods': ['PayPal'],
+            'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
                                                '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
-            u'ShippingDetails': [
+            'ShippingDetails': [
                 {
-                    u'ShippingServiceOptions': {
-                        u'ShippingService': u'DE_DHLPaket',
-                        u'ShippingServiceAdditionalCost': Decimal('3.0000000000'),
-                        u'ShippingServiceCost': Decimal('20.0000000000'),
-                        u'ShippingServicePriority': 1
+                    'ShippingServiceOptions': {
+                        'ShippingService': 'DE_DHLPaket',
+                        'ShippingServiceAdditionalCost': Decimal('3.0000000000'),
+                        'ShippingServiceCost': Decimal('20.0000000000'),
+                        'ShippingServicePriority': 1
                     }
                 },
                 {
-                    u'ShippingServiceOptions': {
-                        u'ShippingService': u'DE_HermesPaket',
-                        u'ShippingServiceAdditionalCost': Decimal('1.0000000000'),
-                        u'ShippingServiceCost': Decimal('10.0000000000'),
-                        u'ShippingServicePriority': 1
+                    'ShippingServiceOptions': {
+                        'ShippingService': 'DE_HermesPaket',
+                        'ShippingServiceAdditionalCost': Decimal('1.0000000000'),
+                        'ShippingServiceCost': Decimal('10.0000000000'),
+                        'ShippingServicePriority': 1
                     }
                 }],
         }})

@@ -5,7 +5,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
-    EbayItemShippingDetails, EbayItemPaymentMethod
+    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel
 from inventorum.ebay.lib.ebay.items import EbayItems
 from requests.exceptions import HTTPError
 
@@ -154,6 +154,14 @@ class PublishingService(PublishingUnpublishingService):
         for payment in self.core_account.settings.ebay_payment_methods:
             EbayItemPaymentMethod.objects.create(
                 external_id=payment,
+                item=item
+            )
+
+
+        for specific in db_product.specific_values.all():
+            EbayItemSpecificModel.objects.create(
+                specific=specific.specific,
+                value=specific.value,
                 item=item
             )
 
