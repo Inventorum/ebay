@@ -8,7 +8,7 @@ from inventorum.ebay import settings
 from inventorum.ebay.apps.categories.models import CategorySpecificModel
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
-from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture
+from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific
 
 
 log = logging.getLogger(__name__)
@@ -125,7 +125,19 @@ class EbayItemModel(BaseModel):
             category_id=self.category.external_id,
             shipping_services=[s.ebay_object for s in self.shipping.all()],
             pictures=[i.ebay_object for i in self.images.all()],
+            item_specifics=[i.ebay_object for i in self.specific_values.all()],
         )
+
+
+
+class EbayItemSpecificModel(BaseModel):
+    item = models.ForeignKey(EbayItemModel, related_name="specific_values")
+    specific = models.ForeignKey(CategorySpecificModel, related_name="+")
+    value = models.CharField(max_length=255)
+
+    @property
+    def ebay_object(self):
+        return EbayItemSpecific(self.specific.name, self.value)
 
 
 class EbayProductSpecificModel(BaseModel):

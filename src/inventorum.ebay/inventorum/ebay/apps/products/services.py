@@ -26,6 +26,7 @@ class PublishingCouldNotGetDataFromCoreAPI(PublishingServiceException):
     def __init__(self, response):
         self.response = response
 
+
 class PublishingUnpublishingService(object):
     def __init__(self, product, user):
         """
@@ -78,6 +79,15 @@ class PublishingService(PublishingUnpublishingService):
 
         if self.product.is_published:
             raise PublishingValidationException(ugettext('Product was already published'))
+
+        specific_values_ids = set(sv.specific.pk for sv in self.product.specific_values.all())
+        required_ones = set(self.product.category.specifics.required().values_list('id', flat=True))
+
+        missing_ids = (required_ones - specific_values_ids)
+        if missing_ids:
+            raise PublishingValidationException(
+                ugettext('You need to pass all required specifics (missing: %(missing_ids)s)!')
+                % {'missing_ids': list(missing_ids)})
 
     def prepare(self):
         """

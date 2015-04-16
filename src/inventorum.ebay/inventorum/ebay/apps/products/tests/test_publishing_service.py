@@ -4,11 +4,13 @@ from decimal import Decimal
 import logging
 import unittest
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
-from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel
+from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayProductSpecificModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService
+from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
@@ -23,19 +25,25 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
 
     def _assign_category(self, product):
-        category, c = CategoryModel.objects.get_or_create(external_id='64540')
-        product.category = category
-        product.save()
+        leaf_category = CategoryFactory.create(name="Leaf category", external_id='64540')
+
+        self.specific = CategorySpecificFactory.create(category=leaf_category)
+        self.required_specific = CategorySpecificFactory.create_required(category=leaf_category)
+
 
         features = CategoryFeaturesModel.objects.create(
-            category=category
+            category=leaf_category
         )
         durations = ['Days_5', 'Days_120']
+
         for d in durations:
             duration = DurationModel.objects.create(
                 value=d
             )
             features.durations.add(duration)
+
+        product.category = leaf_category
+        product.save()
 
     def test_failed_validation(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
@@ -81,11 +89,17 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
         item.save()
 
-        # Get product again cause it has cached item
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
             service = PublishingService(product, self.user)
 
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
+
+            self.assertEqual(e.exception.message, 'You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk)
+
+            EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test")
+            
             # Should not raise anything finally!
             service.validate()
 
