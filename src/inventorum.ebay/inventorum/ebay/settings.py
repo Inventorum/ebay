@@ -33,6 +33,7 @@ USE_NGINX_X_ACCEL_REDIRECT = True
 # alphabetically ordered
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
+    'django.contrib.sessions',
     'django_extensions',
     'django_nose',
     # Provides the django db broker for celery
@@ -45,6 +46,7 @@ INSTALLED_APPS = (
 
     'raven.contrib.django.raven_compat',
     'rest_framework',
+    'rest_framework_swagger',
     'mptt'
 )
 
@@ -82,11 +84,6 @@ REST_FRAMEWORK = {
     # 'default': '20/sec', # Default one for everything
     # },
     'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
-}
-
-# Sentry
-RAVEN_CONFIG = {
-    'dsn': 'http://837c06463bdc4bb5857794845702e464:48487cf9d2a1435285227bad64368e44@sentry.srv.hern.as/14',
 }
 
 # Celery settings ==============================================================
@@ -129,6 +126,7 @@ MEDIA_URL = '/uploads/'
 MIDDLEWARE_CLASSES = (
     # BH: This adds `X-Sentry-ID` header, so error can be tracked down
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     # TODO jm: Needed?
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # TODO jm: Move to utils?!

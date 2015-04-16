@@ -18,7 +18,6 @@ class EbayAuthorizationTest(APITestCase):
         response = self.client.get('/auth/authorize/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, {
-            'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c',
             'url': 'https://signin.ebay.de/ws/eBayISAPI.dll?SignIn&RuName=Inventorum_GmbH-Inventor-9021-4-pbiiw&'
                    'SessID=qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
         })
@@ -29,10 +28,12 @@ class EbayAuthorizationTest(APITestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_fetch_token(self):
+        with APITestCase.vcr.use_cassette("ebay_get_session_id.json"):
+            response = self.client.get('/auth/authorize/')
+            self.assertEqual(response.status_code, 200)
+
         with APITestCase.vcr.use_cassette("ebay_fetch_token.json") as cass:
-            response = self.client.post('/auth/authorize/', data={
-                'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
-            })
+            response = self.client.post('/auth/authorize/')
             log.debug('Got response: %s', response.data)
             self.assertEqual(response.status_code, 200)
 
@@ -77,12 +78,13 @@ class EbayAuthorizationTest(APITestCase):
             self.assertEqual(address.postal_code, 'default')
 
 
-
     def test_fetch_token_from_AT(self):
+        with APITestCase.vcr.use_cassette("ebay_get_session_id.json"):
+            response = self.client.get('/auth/authorize/')
+            self.assertEqual(response.status_code, 200)
+
         with APITestCase.vcr.use_cassette("ebay_fetch_token_fake_AT.json", record_mode='new_episodes') as cass:
-            response = self.client.post('/auth/authorize/', data={
-                'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
-            })
+            response = self.client.post('/auth/authorize/')
             log.debug('Got response: %s', response.data)
             self.assertEqual(response.status_code, 200)
 
@@ -126,3 +128,13 @@ class EbayAuthorizationTest(APITestCase):
             self.assertEqual(address.city, 'Berlin')
             self.assertEqual(address.country, 'DE')
             self.assertEqual(address.postal_code, '13355')
+
+    def test_post_without_get(self):
+        response = self.client.post('/auth/authorize/')
+        log.debug('Got response: %s', response.data)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data, {
+            'error': {
+                'detail': 'You need to authenticate URL from GET request first!',
+                'key': 'ebay.auth.missing.session_id'
+            }})

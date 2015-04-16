@@ -24,3 +24,9 @@ class CategoryBreadcrumbSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CategoryModel
         fields = ("id", "name")
+
+
+class CategoryListResponseSerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+    data = CategorySerializer(many=True)
+    breadcrumbs = CategoryBreadcrumbSerializer(many=True)
