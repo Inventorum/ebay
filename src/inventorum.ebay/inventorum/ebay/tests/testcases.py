@@ -1,12 +1,12 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from __builtin__ import property
 
 import os
 import logging
 import vcr
 import unittest
 
-from django.utils.datetime_safe import datetime
 from django.conf import settings
 from django.test.testcases import TestCase
 from rest_framework import test
@@ -38,10 +38,20 @@ class APITestCase(test.APITestCase):
     def setUp(self):
         super(APITestCase, self).setUp()
 
-        self.account = EbayAccountFactory(inv_id=StagingTestAccount.ACCOUNT_ID)
-        self.user = EbayUserFactory(inv_id=StagingTestAccount.USER_ID, account=self.account)
+        self._account = EbayAccountFactory(inv_id=StagingTestAccount.ACCOUNT_ID)
+        self._user = EbayUserFactory(inv_id=StagingTestAccount.USER_ID, account=self.account)
 
         self.authenticate(self.user)
+
+    @property
+    def account(self):
+        """ :rtype: inventorum.ebay.apps.accounts.models.EbayAccountModel """
+        return self._account
+
+    @property
+    def user(self):
+        """ :rtype: inventorum.ebay.apps.accounts.models.EbayUserModel """
+        return self._user
 
     def authenticate(self, user):
         """
