@@ -1,13 +1,11 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-import unittest
-import os
 from inventorum.ebay.apps.core_api.tests import EbayTest
 
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from inventorum.ebay.lib.ebay.data.categories import EbayCategory
-from inventorum.ebay.lib.ebay.data.features import EbayFeature, EbayFeatureDefinition, \
+from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature, EbayFeatureDefinition, \
     EbayListingDurationDefinition
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, long_running_test
 
@@ -56,6 +54,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(feature.details.durations_dict['FixedPriceItem'], 8)
         self.assertIsNone(feature.details.payment_methods)
+        self.assertTrue(feature.details.item_specifics_enabled)
         self.assertEqual(feature.payment_methods, [
             'PayPal',
             'Moneybookers',
@@ -79,6 +78,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(second_feature.details.durations_dict['FixedPriceItem'], 8)
         self.assertIsNone(second_feature.details.payment_methods)
+        self.assertTrue(second_feature.details.item_specifics_enabled)
         self.assertEqual(second_feature.payment_methods, [
             'PayPal',
             'Moneybookers',
@@ -107,3 +107,46 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(feature.get_duration_list_by_type('FixedPriceItem'), ['Days_3', 'Days_5', 'Days_7', 'Days_10',
                                                                                'Days_30'])
+
+    @EbayTest.use_cassette("ebay_get_categories_specifics.yaml")
+    def test_ebay_category_specifics(self):
+        leaf_categories = ['167050', '19351', '167049', '167046', '81915', '167044', '167045', '167048', '64541',
+                           '86146', '157120', '157121', '168696', '168694', '168695', '92921', '68180', '68181',
+                           '78366', '157119']
+
+        ebay = EbayCategories(self.ebay_token)
+        specifics = ebay.get_specifics_for_categories(leaf_categories)
+        self.assertEqual(len(leaf_categories), len(specifics))
+
+        for category_id in leaf_categories:
+            self.assertIn(category_id, category_id)
+
+        some_specifics = specifics['167050']
+        self.assertEqual(some_specifics.category_id, '167050')
+        self.assertEqual(len(some_specifics.name_recommendations), 2)
+
+        first_name_rn = some_specifics.name_recommendations[0]
+        self.assertEqual(first_name_rn.name, 'Anzahl der Einheiten')
+        self.assertEqual(first_name_rn.help_text, None)
+        self.assertEqual(first_name_rn.help_url, None)
+        self.assertFalse(first_name_rn.is_required)
+        self.assertEqual(first_name_rn.validation_rules.selection_mode, 'FreeText')
+        self.assertEqual(first_name_rn.validation_rules.value_type, 'Text')
+        self.assertFalse(first_name_rn.validation_rules.can_use_in_variations)
+
+        first_value_recommendations = first_name_rn.value_recommendations
+        self.assertEqual(len(first_value_recommendations), 0)
+
+        second_name_rn = some_specifics.name_recommendations[1]
+        self.assertEqual(second_name_rn.name, 'Maßeinheit')
+        self.assertEqual(second_name_rn.help_text, None)
+        self.assertEqual(second_name_rn.help_url, None)
+        self.assertFalse(second_name_rn.is_required)
+        self.assertEqual(second_name_rn.validation_rules.selection_mode, 'SelectionOnly')
+        self.assertEqual(second_name_rn.validation_rules.value_type, 'Text')
+        self.assertFalse(second_name_rn.validation_rules.can_use_in_variations)
+
+        second_value_recommendations = second_name_rn.value_recommendations
+        self.assertEqual(len(second_value_recommendations), 10)
+        values = [r.value for r in second_value_recommendations]
+        self.assertEqual(values, ['kg', '100 g', '10 g', 'L', '100 ml', '10 ml', 'm³', 'm', 'm²', 'Einheit'])

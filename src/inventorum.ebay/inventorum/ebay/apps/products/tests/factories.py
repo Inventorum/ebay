@@ -18,3 +18,9 @@ class EbayProductFactory(MappedInventorumModelFactory):
         model = models.EbayProductModel
 
     account = factory.SubFactory(EbayAccountFactory)
+
+
+class EbayProductSpecificFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = models.EbayProductSpecificModel

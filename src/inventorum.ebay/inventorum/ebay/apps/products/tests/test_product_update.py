@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.utils.functional import cached_property
+from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory

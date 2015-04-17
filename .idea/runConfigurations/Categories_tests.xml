@@ -16,7 +16,9 @@
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/bin/ebay/manage" />
     <option name="PARAMETERS" value="src/inventorum.ebay/test.ini test --noinput $PROJECT_DIR$/src/inventorum.ebay/inventorum/ebay/apps/categories/tests/" />
     <option name="SHOW_COMMAND_LINE" value="false" />
+    <RunnerSettings RunnerId="PyDebugRunner" />
     <RunnerSettings RunnerId="PythonRunner" />
+    <ConfigurationWrapper RunnerId="PyDebugRunner" />
     <ConfigurationWrapper RunnerId="PythonRunner" />
     <method />
   </configuration>
