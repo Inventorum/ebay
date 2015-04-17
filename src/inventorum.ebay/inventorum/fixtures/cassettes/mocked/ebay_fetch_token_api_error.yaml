@@ -1,0 +1,63 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetSessionIDRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials></RequesterCredentials><RuName>Inventorum_GmbH-Inventor-9021-4-pbiiw</RuName></GetSessionIDRequest>
+    headers:
+      Content-Length: ['220']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode GetSessionID]
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [ea8a72d2-1305-412b-89ac-9e94e58562f4]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <GetSessionIDResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T13:41:40.692Z</Timestamp><Ack>Success</Ack><Version>919</Version><Build>E919_INTL_APISIGNIN_17468662_R1</Build><SessionID>qeUBAA**c79d0cb514c0a7938af29cc2fffff8b6</SessionID></GetSessionIDResponse>'}
+    headers:
+      connection: [Keep-Alive]
+      content-length: ['320']
+      content-type: [text/xml]
+      date: ['Fri, 17 Apr 2015 13:41:40 GMT']
+      guid: [14cc79d0-ccc0-a5e4-5806-5c66e05f4190]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW90amJobm1saHNv]
+      x-ebay-api-server-name: [___dWtgMGQ3MmYrMjNhZCgyNSg2MTQoMjUrNzA2Pz43OzQ=]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetSessionID]
+      x-ebay-esb-guid: ['urn:uuid:c01e1676-994b-44ad-9f91-1663880b3d8c']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14cc79d0-ccc0-a5e4-5806-5c66e05f4190!ws.api.dll!10.94.69.128!esbtrading[]']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode application/json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode application/json]
+      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode 346]
+      X-Inv-User: [!!python/unicode 425]
+    method: GET
+    uri: https://app-intern.inventorum.net/api/info/
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAwMAAAAAAAAAAAA=
+    headers:
+      connection: [keep-alive]
+      content-encoding: [gzip]
+      content-language: [de]
+      content-type: [text/html; charset=utf-8]
+      date: ['Fri, 17 Apr 2015 13:41:40 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['session="e30:1Yj6Wa:afytqo7tq7s_lsz3N_UMSV9t7jQ"; Domain=app-intern.inventorum.net;
+          expires=Sun, 19-Apr-2015 13:41:40 GMT; httponly; Max-Age=172800; Path=/']
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding, 'Accept-Language, Cookie']
+      x-rid: ['1498706713963740172']
+    status: {code: 404, message: NOT FOUND}
+version: 1
