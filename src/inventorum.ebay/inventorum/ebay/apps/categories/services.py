@@ -174,7 +174,7 @@ class EbayFeaturesScraper(EbayBatchScraper):
 
 class EbaySpecificsScraper(EbayBatchScraper):
     def get_queryset(self):
-        return CategoryModel.objects.filter(ebay_leaf=True)
+        return CategoryModel.objects.filter(ebay_leaf=True, features__item_specifics_enabled=True)
 
     def get_queryset_with_country(self, country_code):
         return self.get_queryset().filter(country=country_code)
