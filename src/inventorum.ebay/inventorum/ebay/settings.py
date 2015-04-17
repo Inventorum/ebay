@@ -109,6 +109,10 @@ BUILDOUT_ROOT = os.path.join(PROJECT_DIR, '..', '..', '..')
 CASSETTES_DIR = os.path.join(PROJECT_DIR, 'fixtures', 'cassettes')
 ENCRYPTED_FIELD_KEYS_DIR = os.path.join(PROJECT_DIR, 'fieldkeys')
 
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_DIR,  'ebay', 'templates'),
+)
+
 # ==============================================================================
 # Project URLS and media settings
 # ==============================================================================
@@ -125,6 +129,7 @@ MEDIA_URL = '/uploads/'
 MIDDLEWARE_CLASSES = (
     # BH: This adds `X-Sentry-ID` header, so error can be tracked down
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+    'inventorum.ebay.lib.rest.middleware.ExceptionLoggingMiddleware',
     # TODO jm: Needed?
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # TODO jm: Move to utils?!
@@ -165,7 +170,6 @@ EBAY_SIGNIN = "https://signin.ebay.de/"
 EBAY_DEVID = "dbedb016-ee04-4fce-a8e3-22c134fbb3c7"
 EBAY_APPID = "Inventor-9021-41d8-9c25-9bae93f76429"
 EBAY_CERTID = "6be1b82a-0372-4e15-822d-e93797d623ac"
-EBAY_RUNAME = "Inventorum_GmbH-Inventor-9021-4-pbiiw"
 
 
 # https://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/SiteCodeType.html
@@ -179,17 +183,16 @@ EBAY_ERROR_LANGUAGE_BY_SITE_ID = {
     16: "de_AT"
 }
 
-EBAY_LIVE_TOKEN = 'AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x' \
-                  '9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89c' \
-                  'LIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYA' \
-                  'b183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2' \
-                  'KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fz' \
-                  'BsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XT' \
-                  'sApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5' \
-                  'O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3' \
-                  'qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFR' \
-                  'oxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZ' \
-                  'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/'
+EBAY_LIVE_TOKEN = 'AgAAAA**AQAAAA**aAAAAA**+SoxVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHloamDZGGpwmdj6x9nY+seQ**qeUBAA**' \
+                  'AAMAAA**C3hLSGxBbPWdVJyUL0CWP/+WBVv+WH+m27U0atsiRZd0O6YeiXxXIeDv0FlwDBPtiDGXqP9GXaRgrn0GPTeumA7q' \
+                  'hjocNfuHZyuwr80/bh9IqSXKA1EcNCmMbyI/696cKoaxPm7R6nczyIZV0ssT7t5vCwANcJEMsfXSJGVsJEX0Y54YV+Z70Bk6' \
+                  'E2RyxJ1B9XN4rKG3yGvnyT+dOXMZN7W7S9gQqyeMPJ7B6Ebk9TyekHaFHEBwnArRQjVWuiMxX53GuRsBGFB07ekJhe+4UgBD' \
+                  'N0v4/5LyHzAolM+UkE7/is2nZz74JQ7kHRXiLzHRstmU1aifkeBj1NsdwHV6QScA7ubNITHgFWkO4z2wmpkWfIdevnw42UHh' \
+                  'sCdKRXp2p/AYuZ1O9bwVt7uLm0gJi3EvmDRmEevMk4j/VfLRwhC15qbFAMzL+g+zNK9qIJ/gy6TwO04Pr3H4001ASE+SBpKg' \
+                  'r1CgoydwRGa3/w6IrnsQbjwgBR+tRyuad6r3251U0e7wNyXqqCGOMkk4y/8W91g6tIeuS0Iv73cw9h1fpoFz9vUf8qsy640U' \
+                  'TQPkrUQqYYn3tyootvwBmskYNV7b1S7r9MTf9ygWkxgvndaV49nJji+xnshPtFfpr1qBX3bRU/3j7pdVLpMuQUw7sz9faDGk' \
+                  'A19EKoXtefqkbzgP+f0mnOx0y6vwTADhVsfwo2sJowyqvPfNVxpYVuWJ+jBJuQDM91oukkS9uBxDrwWa8Rofe03JkTmHE/80' \
+                  '7wkzi+zg'
 
 EBAY_LIVE_TOKEN_EXPIRATION_DATE = datetime(2016, 9, 21, 13, 18, 38)
 

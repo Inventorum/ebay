@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.datetime_safe import datetime
+from inventorum.ebay.apps.core_api.tests import MockedTest
 import vcr
 from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
 from inventorum.ebay.tests.testcases import APITestCase
@@ -8,7 +9,7 @@ from inventorum.ebay.tests.testcases import APITestCase
 
 class EbayAuthenticationTest(APITestCase):
 
-    @APITestCase.vcr.use_cassette("ebay_get_session_id.json")
+    @MockedTest.use_cassette("ebay_get_session_id.yaml")
     def test_getting_session_id(self):
         auth = EbayAuthentication()
         session_id = auth.get_session_id()
@@ -19,7 +20,7 @@ class EbayAuthenticationTest(APITestCase):
         self.assertEqual(url, 'https://signin.ebay.de/ws/eBayISAPI.dll?SignIn&RuName='
                               'Inventorum_GmbH-Inventor-9021-4-pbiiw&SessID=SESSION_ID')
 
-    @APITestCase.vcr.use_cassette("ebay_fetch_token.json")
+    @MockedTest.use_cassette("ebay_fetch_token.yaml")
     def test_fetch_token(self):
         auth = EbayAuthentication()
         token = auth.fetch_token('qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c')

@@ -6,6 +6,7 @@ import logging
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, PaymentMethodModel, \
     DurationModel, CategorySpecificModel
 from inventorum.ebay.apps.categories.services import EbayCategoriesScraper, EbayFeaturesScraper, EbaySpecificsScraper
+from inventorum.ebay.apps.core_api.tests import EbayTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 log = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
             external_parent_id=None,
             country="DE"
         )
-        with EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_level_limited_categories_with_features.json"):
+        with EbayTest.use_cassette("ebay_get_level_limited_categories_with_features.yaml"):
             # First root node of ebay has 2012 children
             service = EbayCategoriesScraper(self.ebay_token, limit_root_nodes=1, limit_nodes_level=2)
             service.fetch_all()
