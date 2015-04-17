@@ -169,7 +169,7 @@ class CoreAddressDeserializer(POPOSerializer):
     address2 = serializers.CharField(allow_null=True)
     zipcode = serializers.CharField()
     city = serializers.CharField()
-    state = serializers.CharField(allow_null=True, required=False)
+    state = serializers.CharField(allow_null=True, required=False, allow_blank=True)
     country = serializers.CharField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
