@@ -4,6 +4,7 @@ import logging
 from django.db.transaction import atomic
 from django.utils.functional import cached_property
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, CategorySpecificModel
+from inventorum.ebay.lib.db.utils import batch_queryset
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from django.conf import settings
 
@@ -137,15 +138,9 @@ class EbayBatchScraper(object):
 
     def _fetch_in_batches(self, country_code):
         queryset = self.get_queryset_with_country(country_code)
-        count = queryset.count()
-        pages = count/self.batch_size
 
-        for page in range(0, pages):
-            start = page * self.batch_size
-            end = start + self.batch_size
-            limited = queryset[start:end]
-            log.debug('Fetching [%s], starting batch: %s/%s', self.__class__.__name__, page+1, pages)
-            self.fetch(limited, country_code)
+        for qs in batch_queryset(queryset, batch_size=self.batch_size):
+            self.fetch(qs, country_code)
 
 
 class EbayFeaturesScraper(EbayBatchScraper):

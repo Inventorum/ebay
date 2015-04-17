@@ -205,7 +205,7 @@ class CategorySpecificModel(BaseModel):
             current_values = []
             for value in recommendation.value_recommendations:
                 value_obj, c = SpecificValueModel.objects.get_or_create(value=value.value, specific=specific)
-                current_values.append(value_obj)
+                current_values.append(value_obj.pk)
 
             values_to_be_deleted = old_values_ids - set(current_values)
 
