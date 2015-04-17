@@ -32,7 +32,7 @@ class CoreApiTestHelpers(object):
     """
 
     def create_core_api_product(self, name, gross_price="100.00", quantity=100, description=""):
-        user = self.__get_current_user()
+        user = self.__authenticated_test_user
 
         tax_rate = D("19")
         net_price = D(gross_price) / (tax_rate/D(100) + D(1))
@@ -53,16 +53,15 @@ class CoreApiTestHelpers(object):
         return json_body["id"]
 
     def update_core_api_product(self, id, attributes):
-        user = self.__get_current_user()
+        user = self.__authenticated_test_user
         return user.core_api.put("/api/products/{product_id}/".format(product_id=id), attributes)
 
     def delete_core_api_product(self, id):
-        user = self.__get_current_user()
+        user = self.__authenticated_test_user
         return user.core_api.delete("/api/products/{product_id}/".format(product_id=id))
 
-    def __get_current_user(self):
-        """
-        :rtype: EbayUserModel
-        """
+    @property
+    def __authenticated_test_user(self):
+        """ :rtype: EbayUserModel """
         assert isinstance(self.user, EbayUserModel)
         return self.user
