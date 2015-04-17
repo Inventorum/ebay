@@ -138,7 +138,7 @@ class CoreProductDeserializer(POPOSerializer):
 
 
 class CoreAddress(object):
-    def __init__(self, id, address1, address2, zipcode, city, state, country, first_name, last_name, company):
+    def __init__(self, id, address1, address2, zipcode, city, country, first_name, last_name, company, state=""):
         """
         :type id: int
         :type address1: unicode
@@ -169,7 +169,7 @@ class CoreAddressDeserializer(POPOSerializer):
     address2 = serializers.CharField(allow_null=True)
     zipcode = serializers.CharField()
     city = serializers.CharField()
-    state = serializers.CharField(allow_null=True)
+    state = serializers.CharField(allow_null=True, required=False)
     country = serializers.CharField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
