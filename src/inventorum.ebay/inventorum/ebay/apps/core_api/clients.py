@@ -141,6 +141,33 @@ class CoreAPIClient(object):
 
         return response
 
+    def delete(self, path, params=None, custom_headers=None):
+        """
+        Performs a delete request to the given core api path with the given params/headers
+
+        :param path: The core api request path
+        :param params: Optional URL params
+        :param custom_headers: Optional custom HTTP headers (default header can be overwritten)
+        :return: The HTTP response
+
+        :type path: str | unicode
+        :type data:
+        :type params: dict
+        :type custom_headers: dict
+
+        :rtype: requests.models.Response
+
+        :raises requests.exceptions.HTTPError
+        """
+        headers = self._get_request_headers(custom_headers)
+
+        response = requests.delete(self.url_for(path), params=params, headers=headers)
+
+        if not response.ok:
+            response.raise_for_status()
+
+        return response
+
     def paginated_get(self, path, limit_per_page, params=None, custom_headers=None):
         """
         Returns a pager that paginates the given paginated core api path with the given limit per page.

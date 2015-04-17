@@ -138,3 +138,11 @@ class EbayItemUpdateModel(BaseModel):
             quantity=self.quantity,
             start_price=self.gross_price
         )
+
+    @property
+    def has_updated_quantity(self):
+        return self.quantity is not None
+
+    @property
+    def has_updated_gross_price(self):
+        return self.gross_price is not None

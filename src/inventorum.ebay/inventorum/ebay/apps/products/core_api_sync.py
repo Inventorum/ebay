@@ -60,6 +60,7 @@ class CoreAPISyncService(object):
         :rtype: EbayItemUpdateModel | None
         """
         updated_attributes = {}
+        # TODO jm: Update ebay item after update
         if ebay_item.gross_price != core_product_delta.gross_price:
             updated_attributes["gross_price"] = core_product_delta.gross_price
 
@@ -80,6 +81,7 @@ class CoreAPISyncService(object):
             ebay_product.deleted_in_core_api = True
             ebay_product.save()
 
+            # EbayProductDeletion
             tasks.schedule_product_delete(ebay_product)
 
     def _get_core_modifications_of_published_items(self, modified_since):

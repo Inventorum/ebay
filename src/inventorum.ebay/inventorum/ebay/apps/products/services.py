@@ -192,4 +192,18 @@ class EbayItemUpdateService(object):
         service = EbayItems(self.user.account.token.ebay_object)
         response = service.revise_inventory_status(self.ebay_item_update.ebay_object)
 
+        # TODO jm: Handle failures?
+
         self.ebay_item_update.status = EbayItemUpdateStatus.SUCCEEDED
+
+    def _update_ebay_item(self):
+        ebay_item = self.ebay_item_update.item
+        assert isinstance(ebay_item, EbayItemModel)
+
+        if self.ebay_item_update.has_updated_quantity:
+            ebay_item.quantity = self.ebay_item_update.quantity
+
+        if self.ebay_item_update.has_updated_gross_price:
+            ebay_item.gross_price = self.ebay_item_update.gross_price
+
+        ebay_item.save()
