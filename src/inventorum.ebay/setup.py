@@ -36,7 +36,8 @@ required_eggs = [
     'vcrpy>=1.3.0',
     'python-keyczar>=0.715',
     'django-countries>=3.3',
-    'raven>=5.2.0'
+    'raven>=5.2.0',
+    'django-rest-swagger>=0.2.9'
 ]
 
 setup(

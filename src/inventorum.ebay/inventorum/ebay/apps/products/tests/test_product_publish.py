@@ -1,26 +1,33 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-import unittest
-from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
+
+from django.utils.functional import cached_property
+
+from inventorum.ebay.apps.categories.models import CategoryFeaturesModel, DurationModel
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.tests import StagingTestAccount
 
-from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
 log = logging.getLogger(__name__)
 
 
 class TestProductPublish(EbayAuthenticatedAPITestCase):
+
+    @cached_property
+    def category(self):
+        return CategoryFactory.create(external_id="176973")
+
     def _assign_category(self, product):
-        category, c = CategoryModel.objects.get_or_create(external_id='176973')
-        product.category = category
+        product.category = self.category
         product.save()
 
         features = CategoryFeaturesModel.objects.create(
-            category=category
+            category=self.category
         )
         durations = ['Days_5', 'Days_30']
         for d in durations:
@@ -90,4 +97,3 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         response = self.client.post("/products/%s/unpublish" % inv_product_id)
         log.debug('Got response: %s', response)
         self.assertEqual(response.status_code, 200)
-

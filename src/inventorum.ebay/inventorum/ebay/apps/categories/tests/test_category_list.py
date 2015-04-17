@@ -1,13 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
+
 from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.tests import Countries
 from rest_framework import status
-from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
 log = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class TestCategoryList(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.data, {
             "total": 3,
             "data": expected_data,
-            "breadcrumb": []
+            "breadcrumbs": []
         })
 
     def test_with_parent_id_returns_all_children(self):
@@ -118,5 +118,5 @@ class TestCategoryList(EbayAuthenticatedAPITestCase):
         :type expected_breadrumb_categories: list of CategoryModel
         """
         expected_breadrumb_data = CategoryBreadcrumbSerializer(expected_breadrumb_categories, many=True).data
-        actual_breadcrumb_data = response.data["breadcrumb"]
+        actual_breadcrumb_data = response.data["breadcrumbs"]
         self.assertEqual(actual_breadcrumb_data, expected_breadrumb_data)

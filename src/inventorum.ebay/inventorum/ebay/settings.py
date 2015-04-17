@@ -45,6 +45,7 @@ INSTALLED_APPS = (
 
     'raven.contrib.django.raven_compat',
     'rest_framework',
+    'rest_framework_swagger',
     'mptt'
 )
 
@@ -82,11 +83,6 @@ REST_FRAMEWORK = {
     # 'default': '20/sec', # Default one for everything
     # },
     'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
-}
-
-# Sentry
-RAVEN_CONFIG = {
-    'dsn': 'http://837c06463bdc4bb5857794845702e464:48487cf9d2a1435285227bad64368e44@sentry.srv.hern.as/14',
 }
 
 # Celery settings ==============================================================
@@ -163,6 +159,14 @@ AUTHENTICATION_BACKENDS = (
 # Ebay
 # ==============================================================================
 
+# Ebay settings (LIVE KEYS!)
+EBAY_DOMAIN = "api.ebay.com"
+EBAY_SIGNIN = "https://signin.ebay.de/"
+EBAY_DEVID = "dbedb016-ee04-4fce-a8e3-22c134fbb3c7"
+EBAY_APPID = "Inventor-9021-41d8-9c25-9bae93f76429"
+EBAY_CERTID = "6be1b82a-0372-4e15-822d-e93797d623ac"
+
+
 # https://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/SiteCodeType.html
 EBAY_SUPPORTED_SITES = {
     "DE": 77,  # Currency EUR
@@ -187,3 +191,5 @@ EBAY_LIVE_TOKEN = 'AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj
                   'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/'
 
 EBAY_LIVE_TOKEN_EXPIRATION_DATE = datetime(2016, 9, 21, 13, 18, 38)
+
+EBAY_LISTING_URL = "http://cgi.ebay.de/ws/eBayISAPI.dll?ViewItem&item={listing_id}"
