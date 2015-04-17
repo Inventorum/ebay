@@ -75,13 +75,7 @@ class TestCategorySpecificsSerializer(UnitTestCase):
             'help_text': specific.help_text,
             'is_required': False,
             'id': specific.id,
-            'values': [
-                {'value': 'Value 1'},
-                {'value': 'Value 2'},
-                {'value': 'Value 3'},
-                {'value': 'Value 4'},
-                {'value': 'Value 5'}
-            ]
+            'values': [{'value': v.value} for v in specific.values.all()]
         })
 
         required_specific_data = CategorySpecificsSerializer(required_specific).data

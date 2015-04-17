@@ -29,7 +29,11 @@ class TestEbayCategorySerializer(UnitTestCase):
         self.assertEqual(leaf_category.specifics.count(), 2)
         subject = EbayProductCategorySerializer(leaf_category)
 
-        self.assertEqual(subject.data, {
+        data = subject.data
+        specifics = data.pop('specifics')
+        self.assertTrue(specifics)
+        
+        self.assertEqual(data, {
             "id": leaf_category.id,
             "name": "Leaf category",
             "country": "DE",
@@ -38,10 +42,6 @@ class TestEbayCategorySerializer(UnitTestCase):
             "breadcrumb": [
                 {"id": root_category.id, "name": "Root category"},
                 {"id": level_2_category.id, "name": "Level 2 category"}
-            ],
-            "specifics": [
-                CategorySpecificsSerializer(specific).data,
-                CategorySpecificsSerializer(required_specific).data
             ]
         })
 
