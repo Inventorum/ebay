@@ -122,5 +122,5 @@ class TestUserScopedCoreAPIClient(APITestCase):
         shipping_service = account_settings.shipping_services[0]
         self.assertEqual(shipping_service.id, 'DE_DHL2KGPaket')
         self.assertEqual(shipping_service.description, 'DHL 2kg Paket (nur f\xfcr kurze Zeit)')
-        self.assertEqual(shipping_service.additional_cost, None)
-        self.assertEqual(shipping_service.cost, Decimal(0))
+        self.assertEqual(shipping_service.additional_cost, Decimal('2'))
+        self.assertEqual(shipping_service.cost, Decimal('5'))
