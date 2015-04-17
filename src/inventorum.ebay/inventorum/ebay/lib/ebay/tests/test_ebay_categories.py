@@ -52,10 +52,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(len(feature.details.durations), 9)
         self.assertEqual(len(feature.details.durations_dict), 9)
 
-        self.assertEqual(feature.details.durations_dict['FixedPriceItem'], 8)
-        self.assertIsNone(feature.details.payment_methods)
-        self.assertTrue(feature.details.item_specifics_enabled)
-        self.assertEqual(feature.payment_methods, [
+        payment_methods = [
             'PayPal',
             'Moneybookers',
             'CashOnPickup',
@@ -66,7 +63,12 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
             'CCAccepted',
             'Escrow',
             'StandardPayment'
-        ])
+        ]
+
+        self.assertEqual(feature.details.durations_dict['FixedPriceItem'], 8)
+        self.assertEqual(feature.details.payment_methods, payment_methods)
+        self.assertTrue(feature.details.item_specifics_enabled)
+        self.assertEqual(feature.payment_methods, payment_methods)
 
         second_feature = features['64540']
 
@@ -77,20 +79,9 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(len(second_feature.details.durations_dict), 9)
 
         self.assertEqual(second_feature.details.durations_dict['FixedPriceItem'], 8)
-        self.assertIsNone(second_feature.details.payment_methods)
+        self.assertEqual(second_feature.details.payment_methods, payment_methods)
         self.assertTrue(second_feature.details.item_specifics_enabled)
-        self.assertEqual(second_feature.payment_methods, [
-            'PayPal',
-            'Moneybookers',
-            'CashOnPickup',
-            'MoneyXferAcceptedInCheckout',
-            'MoneyXferAccepted',
-            'COD',
-            'PaymentSeeDescription',
-            'CCAccepted',
-            'Escrow',
-            'StandardPayment'
-        ])
+        self.assertEqual(second_feature.payment_methods, payment_methods)
 
         feature_definition = feature.definition
         self.assertIsInstance(feature_definition, EbayFeatureDefinition)
