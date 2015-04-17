@@ -96,8 +96,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 # Others =======================================================================
 
 # set factory_boy log level to WARN
-logger = logging.getLogger('factory')
-logger.setLevel(logging.WARN)
+factory_logger = logging.getLogger('factory')
+factory_logger.setLevel(logging.WARN)
 
 
 # ==============================================================================

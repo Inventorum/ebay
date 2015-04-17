@@ -37,7 +37,7 @@ class CoreApiTestHelpers(object):
         tax_rate = D("19")
         net_price = D(gross_price) / (tax_rate/D(100) + D(1))
 
-        response = user.core_api.post("/api/products/", {
+        response = user.core_api.post("/api/products", data={
             "name": name,
             "description": description,
             "price": str(net_price),
