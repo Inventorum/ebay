@@ -77,7 +77,6 @@ class EbayAuthorizationTest(APITestCase):
             self.assertEqual(address.postal_code, 'default')
 
 
-
     def test_fetch_token_from_AT(self):
         with APITestCase.vcr.use_cassette("ebay_fetch_token_fake_AT.json", record_mode='new_episodes') as cass:
             response = self.client.post('/auth/authorize/', data={
@@ -126,3 +125,16 @@ class EbayAuthorizationTest(APITestCase):
             self.assertEqual(address.city, 'Berlin')
             self.assertEqual(address.country, 'DE')
             self.assertEqual(address.postal_code, '13355')
+
+
+    def test_api_error(self):
+        with APITestCase.vcr.use_cassette("mocked/ebay_fetch_token_api_error.yaml", serializer='yaml',
+                                          record_mode='never') as cass:
+            response = self.client.get('/auth/authorize/')
+            response = self.client.post('/auth/authorize/', data={
+                'session_id': response.data['session_id']
+            })
+            log.debug('Got response: %s', response.data)
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.data, {'error': {'detail': 'Could not get account info from API',
+                                                       'key': 'auth.service.error'}})
