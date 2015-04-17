@@ -108,7 +108,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(feature.get_duration_list_by_type('FixedPriceItem'), ['Days_3', 'Days_5', 'Days_7', 'Days_10',
                                                                                'Days_30'])
 
-    @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_categories_specifics.json")
+    @EbayTest.use_cassette("ebay_get_categories_specifics.yaml")
     def test_ebay_category_specifics(self):
         leaf_categories = ['167050', '19351', '167049', '167046', '81915', '167044', '167045', '167048', '64541',
                            '86146', '157120', '157121', '168696', '168694', '168695', '92921', '68180', '68181',

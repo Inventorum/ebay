@@ -30,7 +30,6 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.specific = CategorySpecificFactory.create(category=leaf_category)
         self.required_specific = CategorySpecificFactory.create_required(category=leaf_category)
 
-
         features = CategoryFeaturesModel.objects.create(
             category=leaf_category
         )
@@ -99,7 +98,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             with self.assertRaises(PublishingValidationException) as e:
                 service.validate()
 
-            self.assertEqual(e.exception.message, 'You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk)
+            self.assertEqual(e.exception.message,
+                             'You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk)
 
             self._add_specific_to_product(product)
             # Should not raise anything finally!
@@ -128,7 +128,6 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         payment_methods = last_item.payment_methods.all()
         self.assertEqual(payment_methods.count(), 1)
         self.assertEqual(payment_methods.last().external_id, 'PayPal')
-
 
         specific_values = last_item.specific_values.all()
         self.assertEqual(specific_values.count(), 1)
@@ -199,15 +198,15 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                 'Description': '',
                 'ReturnsAcceptedOption': 'ReturnsAccepted'
             },
-            'ItemSpecifics': {'NameValueList': [{'Name': 'Specific 23',
-                                                   'Value': 'Test'}]},
+            'ItemSpecifics': {'NameValueList': [{'Name': self.required_specific.name,
+                                                 'Value': 'Test'}]},
             'StartPrice': Decimal('599.9900000000'),
             'Title': 'SlowRoad Shipping Details',
             'ListingDuration': 'Days_120',
             'PayPalEmailAddress': 'bartosz@hernas.pl',
             'PaymentMethods': ['PayPal'],
             'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
-                                               '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
+                                              '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
             'ShippingDetails': [
                 {
                     'ShippingServiceOptions': {

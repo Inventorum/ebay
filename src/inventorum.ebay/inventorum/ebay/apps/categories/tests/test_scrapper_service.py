@@ -56,7 +56,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(root_category.country, "AT")
 
     def test_features(self):
-        with EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_leaf_categories.json"):
+        with EbayTest.use_cassette("ebay_get_leaf_categories.yaml"):
             # First root node of ebay has 2012 children
             service = EbayCategoriesScraper(self.ebay_token, only_leaf=True, limit=20)
             service.fetch_all()
@@ -83,7 +83,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(DurationModel.objects.count(), 5)
 
     def test_specifics(self):
-        with EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_leaf_categories.json"):
+        with EbayTest.use_cassette("ebay_get_leaf_categories.yaml"):
             # First root node of ebay has 2012 children
             service = EbayCategoriesScraper(self.ebay_token, only_leaf=True, limit=20)
             service.fetch_all()
@@ -92,11 +92,10 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertGreater(leaf_categories.count(), 0)
         log.debug('Leaf categories external ids: %s', [l.external_id for l in leaf_categories])
 
-        with EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_specifics_for_20_leaf_categories_features.json"):
-            features_service = EbayFeaturesScraper(self.ebay_token)
-            features_service.fetch_all()
+        features_service = EbayFeaturesScraper(self.ebay_token)
+        features_service.fetch_all()
 
-        with EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_specifics_for_20_leaf_categories.json"):
+        with EbayTest.use_cassette("ebay_get_specifics_for_20_leaf_categories.yaml"):
             specifics_service = EbaySpecificsScraper(self.ebay_token)
             specifics_service.fetch_all()
 
