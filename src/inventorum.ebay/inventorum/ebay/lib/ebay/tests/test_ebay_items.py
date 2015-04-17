@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+import unittest
 from inventorum.ebay.apps.core_api.tests import EbayTest, MockedTest
 
 from inventorum.ebay.lib.ebay import EbayConnectionException
@@ -48,12 +49,14 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         )
         return EbayFixedPriceItem(
             title="Inventorum iPad Stand",
-            description="Stand for iPad from Inventorum for your POS Shop",
+            description="Der stylische iPad-Stand von INVENTORUM aus edlem Holz rundet das Erscheinungsbild Ihrer neuen"
+                        " iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel ist dieser ideal, um einfach un"
+                        "d schnell Produkte mit der internen Kamera des iPads zu scannen.",
             listing_duration="Days_30",
             country="DE",
             postal_code="13355",
             quantity="1",
-            start_price="599.99",
+            start_price="45.99",
             paypal_email_address="bartosz@hernas.pl",
             payment_methods=['PayPal'],
             category_id="176973",
@@ -103,7 +106,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         self.assertEqual(errors[3].severity_code, 'Error')
         self.assertEqual(errors[3].classification, 'RequestError')
 
-
+    @unittest.skip('Ebay blocked our live account...')
     @EbayTest.use_cassette("ebay_publish_ipad_stand_correct_then_unpublish_it.yaml")
     def test_publishing(self):
         item = self._build_correct_item()

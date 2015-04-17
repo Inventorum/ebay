@@ -70,15 +70,15 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 17 Apr 2015 14:57:28 GMT']
+      date: ['Fri, 17 Apr 2015 15:32:58 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7hw:tBhJr6SDl9Zn9SqYmZnbdsYxMsQ"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:57:28 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yj8GI:I0ziqL1Dp9psBpDx_RBH4ucgcGE"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 17:32:58 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1979192716008416756']
+      x-rid: ['1687866115112887796']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -98,16 +98,16 @@ interactions:
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
-      date: ['Fri, 17 Apr 2015 14:57:28 GMT']
+      date: ['Fri, 17 Apr 2015 15:32:58 GMT']
       location: ['http://app.intern.inventorum.net/api/products/665753/']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7hw:tBhJr6SDl9Zn9SqYmZnbdsYxMsQ"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:57:28 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yj8GI:I0ziqL1Dp9psBpDx_RBH4ucgcGE"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 17:32:58 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: [Cookie]
       x-inv-account: [Anonymous]
       x-inv-user: [Anonymous]
-      x-rid: ['1979192716008416756']
+      x-rid: ['1687866115112887796']
     status: {code: 301, message: MOVED PERMANENTLY}
 - request:
     body: null
@@ -116,7 +116,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode application/json]
-      Cookie: ['sn="e30:1Yj7hw:tBhJr6SDl9Zn9SqYmZnbdsYxMsQ"']
+      Cookie: ['sn="e30:1Yj8GI:I0ziqL1Dp9psBpDx_RBH4ucgcGE"']
       User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
       X-Api-Version: [9]
       X-Inv-Account: [!!python/unicode 346]
@@ -154,11 +154,19 @@ interactions:
         "Hermes Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
         "Group3MaxFlatShippingCost", "carrier": "Hermes", "category": "[STANDARD]",
         "service": "DE_HermesPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
-        "enabled": false, "free_above_price": null}, {"id": "DE_DHLPaket", "description":
+        "enabled": true, "free_above_price": null}, {"id": "DE_DHLPaket", "description":
         "DHL Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
         "Group3MaxFlatShippingCost", "carrier": "DHL", "category": "[STANDARD]", "service":
         "DE_DHLPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
-        "enabled": true, "free_above_price": null}], "is_favourite": false, "brand":
+        "enabled": false, "free_above_price": null}, {"id": "DE_HermesPaketSperrgut",
+        "description": "Hermes Paket Sperrgut", "type": "", "time_max": 2, "time_min":
+        1, "cost_group_flat": "", "carrier": "Hermes", "category": "[STANDARD]", "service":
+        "DE_HermesPaketSperrgut", "cost": "0E-10", "additional_cost": "2.0000000000",
+        "enabled": false, "free_above_price": null}, {"id": "DE_DHL2KGPaket", "description":
+        "DHL 2kg Paket (nur f\u00fcr kurze Zeit)", "type": "", "time_max": 2, "time_min":
+        1, "cost_group_flat": "", "carrier": "DHL", "category": "[STANDARD]", "service":
+        "DE_DHL2KGPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
+        "enabled": false, "free_above_price": null}], "is_favourite": false, "brand":
         "", "supplier": "", "meta": {"shop": {"images": [], "price": "32.7731092437",
         "gross_price": "39.00", "id": 746, "channel": 5, "name": "", "description":
         ""}, "ebay": {"images": [], "price": "32.7731092437", "gross_price": "39.00",
@@ -168,15 +176,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 17 Apr 2015 14:57:29 GMT']
+      date: ['Fri, 17 Apr 2015 15:32:59 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7hx:Kib9VyyaAG-ujalWAxifuOlSu_4"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:57:29 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yj8GJ:Kiy-un8iIPYLF-pLyTYS3nl1-l8"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 17:32:59 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1979192716008416756']
+      x-rid: ['1687866115112887796']
     status: {code: 200, message: OK}
 - request:
     body: !!python/str "<?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_AT</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Der
@@ -184,10 +192,10 @@ interactions:
       Ihrer neuen iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel ist
       dieser ideal, um einfach und schnell Produkte mit der internen Kamera des iPads
       zu scannen.  Kompatibel f\xFCr iPad 2, 3 und 4, sowie das iPad Air und iPad
-      mini.</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL></PictureDetails><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL></PictureDetails><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>176973</CategoryID></PrimaryCategory><Quantity>5</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>2.0000000000</ShippingServiceAdditionalCost><ShippingServiceCost>5.0000000000</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><ShippingDetails><ShippingServiceOptions><ShippingService>DE_HermesPaket</ShippingService><ShippingServiceAdditionalCost>2.0000000000</ShippingServiceAdditionalCost><ShippingServiceCost>5.0000000000</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>39.00</StartPrice><Title>INVENTORUM
+      mini.</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL></PictureDetails><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL></PictureDetails><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>176973</CategoryID></PrimaryCategory><Quantity>5</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHL2KGPaket</ShippingService><ShippingServiceAdditionalCost>2.0000000000</ShippingServiceAdditionalCost><ShippingServiceCost>5.0000000000</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><ShippingDetails><ShippingServiceOptions><ShippingService>DE_HermesPaketSperrgut</ShippingService><ShippingServiceAdditionalCost>2.0000000000</ShippingServiceAdditionalCost><ShippingServiceCost>0E-10</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>2.0000000000</ShippingServiceAdditionalCost><ShippingServiceCost>5.0000000000</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><ShippingDetails><ShippingServiceOptions><ShippingService>DE_HermesPaket</ShippingService><ShippingServiceAdditionalCost>2.0000000000</ShippingServiceAdditionalCost><ShippingServiceCost>5.0000000000</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>39.00</StartPrice><Title>INVENTORUM
       iPad-Stand</Title></Item></AddItemRequest>"
     headers:
-      Content-Length: ['3231']
+      Content-Length: ['3862']
       Content-Type: [text/xml]
       User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
       X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
@@ -196,27 +204,26 @@ interactions:
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [16]
-      X-EBAY-SDK-REQUEST-ID: [91886adb-6212-4f7a-9cb6-8b2b395886e9]
+      X-EBAY-SDK-REQUEST-ID: [11eaddc7-6a63-4fb0-8537-24a78d757fc5]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:57:29.727Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Versandservice
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T15:32:59.806Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Versandservice
         ist nicht verf\xFCgbar.</ShortMessage><LongMessage>Versandservice Hermes Paket(7725)
         ist nicht verf\xFCgbar.</LongMessage><ErrorCode>12519</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
         ParamID=\"0\"><Value>Hermes Paket(7725)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"}
     headers:
-      connection: [Keep-Alive]
       content-length: ['602']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 14:57:29 GMT']
-      guid: [14cc7e27-6360-a788-4544-7214b8a23c01]
+      date: ['Fri, 17 Apr 2015 15:32:59 GMT']
+      guid: [14cc802f-7170-a621-f6b0-2ed0fcfcc116]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMWQ3MWYrNDo0NygyNSg2MzMoMDcrNDcxPz43OzU=]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrNWA9MCgyNSg+OyswKTI0MD07NT43]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddItem]
-      x-ebay-esb-guid: ['urn:uuid:bd81480c-caaf-4054-833d-8f5dfb912cb8']
+      x-ebay-esb-guid: ['urn:uuid:5445a241-c7b8-4bee-910d-39b4e5434601']
       x-ebay-esb-siteid: ['16']
-      x-ebay-request-id: ['14cc7e27-6360-a788-4544-7214b8a23c01!ws.api.dll!10.120.132.84!esbtrading[]']
+      x-ebay-request-id: ['14cc802f-7170-a621-f6b0-2ed0fcfcc116!ws.api.dll!10.98.31.107!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

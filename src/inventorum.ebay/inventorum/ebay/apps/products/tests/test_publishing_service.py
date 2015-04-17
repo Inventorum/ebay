@@ -200,6 +200,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                 }],
         }})
 
+    @unittest.skip('Ebay blocked our live account...')
     @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml")
     def test_publishing(self):
         product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
