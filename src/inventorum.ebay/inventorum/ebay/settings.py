@@ -165,7 +165,6 @@ EBAY_SIGNIN = "https://signin.ebay.de/"
 EBAY_DEVID = "dbedb016-ee04-4fce-a8e3-22c134fbb3c7"
 EBAY_APPID = "Inventor-9021-41d8-9c25-9bae93f76429"
 EBAY_CERTID = "6be1b82a-0372-4e15-822d-e93797d623ac"
-EBAY_RUNAME = "Inventorum_GmbH-Inventor-9021-4-pbiiw"
 
 
 # https://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/SiteCodeType.html
