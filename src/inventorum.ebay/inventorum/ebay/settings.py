@@ -109,6 +109,10 @@ BUILDOUT_ROOT = os.path.join(PROJECT_DIR, '..', '..', '..')
 CASSETTES_DIR = os.path.join(PROJECT_DIR, 'fixtures', 'cassettes')
 ENCRYPTED_FIELD_KEYS_DIR = os.path.join(PROJECT_DIR, 'fieldkeys')
 
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_DIR,  'ebay', 'templates'),
+)
+
 # ==============================================================================
 # Project URLS and media settings
 # ==============================================================================
@@ -125,6 +129,7 @@ MEDIA_URL = '/uploads/'
 MIDDLEWARE_CLASSES = (
     # BH: This adds `X-Sentry-ID` header, so error can be tracked down
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+    'inventorum.ebay.lib.rest.middleware.ExceptionLoggingMiddleware',
     # TODO jm: Needed?
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # TODO jm: Move to utils?!

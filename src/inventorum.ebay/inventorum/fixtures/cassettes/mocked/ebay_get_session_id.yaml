@@ -1,0 +1,82 @@
+{
+    "version": 1, 
+    "interactions": [
+        {
+            "request": {
+                "body": "<?xml version='1.0' encoding='utf-8'?><GetSessionIDRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials></RequesterCredentials><RuName>Inventorum_GmbH-Inventor-9021-4-pbiiw</RuName></GetSessionIDRequest>", 
+                "headers": {
+                    "X-EBAY-API-SITEID": [
+                        0
+                    ], 
+                    "Content-Length": [
+                        "220"
+                    ], 
+                    "X-EBAY-API-COMPATIBILITY-LEVEL": [
+                        911
+                    ], 
+                    "User-Agent": [
+                        "eBaySDK/2.1.0 Python/2.7.6 Darwin/14.1.0"
+                    ], 
+                    "X-EBAY-SDK-REQUEST-ID": [
+                        "889a075c-8292-40b1-b30e-7c8e54bd86a2"
+                    ], 
+                    "X-EBAY-API-CALL-NAME": [
+                        "GetSessionID"
+                    ], 
+                    "Content-Type": [
+                        "text/xml"
+                    ]
+                }, 
+                "method": "POST", 
+                "uri": "https://api.ebay.com/ws/api.dll"
+            }, 
+            "response": {
+                "status": {
+                    "message": "OK", 
+                    "code": 200
+                }, 
+                "headers": {
+                    "x-ebay-request-id": [
+                        "14c6ffa1-e840-a794-31a7-3dc7c1fa9a40!ws.api.dll!10.121.67.26!esbtrading[]"
+                    ], 
+                    "content-length": [
+                        "320"
+                    ], 
+                    "x-ebay-esb-app-name": [
+                        "Inventor-9021-41d8-9c25-9bae93f76429"
+                    ], 
+                    "content-type": [
+                        "text/xml"
+                    ], 
+                    "x-ebay-esb-call-name": [
+                        "GetSessionID"
+                    ], 
+                    "server": [
+                        "Apache-Coyote/1.1"
+                    ], 
+                    "x-ebay-api-server-name": [
+                        "___dWtgMWQ3MmYrPzo1MigyNSg+NyswNy00MDc5PTY/Mw=="
+                    ], 
+                    "date": [
+                        "Tue, 31 Mar 2015 13:16:44 GMT"
+                    ], 
+                    "x-ebay-esb-guid": [
+                        "urn:uuid:7a198810-d349-4edc-aea7-7b2d22996c74"
+                    ], 
+                    "guid": [
+                        "14c6ffa1-e840-a794-31a7-3dc7c1fa9a40"
+                    ], 
+                    "x-ebay-api-pool-name": [
+                        "___cDRidW90amJobm1maXVm"
+                    ], 
+                    "x-ebay-esb-siteid": [
+                        "0"
+                    ]
+                }, 
+                "body": {
+                    "string": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetSessionIDResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-03-31T13:16:45.143Z</Timestamp><Ack>Success</Ack><Version>915</Version><Build>E915_CORE_APISIGNIN_17436769_R1</Build><SessionID>qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c</SessionID></GetSessionIDResponse>"
+                }
+            }
+        }
+    ]
+}

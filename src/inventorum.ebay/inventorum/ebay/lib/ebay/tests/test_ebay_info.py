@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.utils.datetime_safe import datetime
+from inventorum.ebay.apps.core_api.tests import EbayTest
 from inventorum.ebay.lib.ebay.data.features import EbayFeature, EbayFeatureDefinition
 from inventorum.ebay.lib.ebay.info import EbayInfo
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -11,7 +12,7 @@ log = logging.getLogger(__name__)
 
 
 class TestEbayInfo(EbayAuthenticatedAPITestCase):
-    @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_user.json")
+    @EbayTest.use_cassette("ebay_get_user.yaml")
     def test_it(self):
         auth = EbayInfo(self.ebay_token)
         # Get current authenticated user
@@ -33,7 +34,7 @@ class TestEbayInfo(EbayAuthenticatedAPITestCase):
         self.assertEqual(address.country, 'DE')
         self.assertEqual(address.postal_code, 'default')
 
-    @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_site_defaults.json")
+    @EbayTest.use_cassette("ebay_get_site_defaults.yaml")
     def test_it(self):
         auth = EbayInfo(self.ebay_token)
         site_defaults = auth.get_site_defaults()

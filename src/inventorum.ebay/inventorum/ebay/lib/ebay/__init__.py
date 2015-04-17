@@ -32,6 +32,8 @@ class EbayConnectionException(EbayException):
             errors = [errors]
         self.errors = [EbayError.create_from_data(e) for e in errors]
 
+    def __unicode__(self):
+        return 'Message: %s ' % self.message
 
 
 class EbayReturnedErrorsException(EbayException):

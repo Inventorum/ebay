@@ -62,6 +62,7 @@ Known issues
 ------------
 
 `Deprecated? On Andis computer it works with Python 2.7.9`
+`Nope, on Mikes and Julians it works only <= 2.7.8`
 
 In case you are getting this error in test:
 
@@ -69,11 +70,11 @@ In case you are getting this error in test:
 
     TypeError: __init__() got an unexpected keyword argument 'server_hostname'
 
-You need to downgrade python to 2.7.6
+You need to downgrade python to 2.7.8
 
 ::
 
-    sudo port activate python27 @2.7.6
+    sudo port activate python27 @2.7.8
 
 
 

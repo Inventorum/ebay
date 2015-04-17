@@ -1,0 +1,88 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode application/json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode application/json]
+      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode 346]
+      X-Inv-User: [!!python/unicode 425]
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/640416
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      connection: [keep-alive]
+      content-type: [text/html; charset=utf-8]
+      date: ['Fri, 17 Apr 2015 14:57:27 GMT']
+      location: ['http://app.intern.inventorum.net/api/products/640416/']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yj7hv:Yxrz5E_dTB_Q1FUT94qtcurpbGA"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 16:57:27 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: [Cookie]
+      x-inv-account: [Anonymous]
+      x-inv-user: [Anonymous]
+      x-rid: ['480338465024173556']
+    status: {code: 301, message: MOVED PERMANENTLY}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode application/json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode application/json]
+      Cookie: ['sn="e30:1Yj7hv:Yxrz5E_dTB_Q1FUT94qtcurpbGA"']
+      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode 346]
+      X-Inv-User: [!!python/unicode 425]
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/640416/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "SlowRoad Shipping
+        Details", "id": 640416, "quantity": "3000.00", "reorder_level": "200.00",
+        "safety_stock": "200.00", "price": "560.7383177570", "tax_type": 1062, "custom_price":
+        false, "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url":
+        null, "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad.JPEG",
+        "id": 2918, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb.JPEG"},
+        "variation_count": 0, "variations": [], "average_purchase_price": "0E-10",
+        "description": "Some description", "product_code": "", "ean": null, "categories":
+        [], "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad.JPEG",
+        "id": 2918, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb.JPEG"}],
+        "custom_sale": false, "shipping_services": [{"id": "DE_HermesPaket", "description":
+        "Hermes Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
+        "Group3MaxFlatShippingCost", "carrier": "Hermes", "category": "[STANDARD]",
+        "service": "DE_HermesPaket", "cost": "10.0000000000", "additional_cost": "1.0000000000",
+        "enabled": true, "free_above_price": null}, {"id": "DE_DHLPaket", "description":
+        "DHL Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
+        "Group3MaxFlatShippingCost", "carrier": "DHL", "category": "[STANDARD]", "service":
+        "DE_DHLPaket", "cost": "20.0000000000", "additional_cost": "3.0000000000",
+        "enabled": true, "free_above_price": null}], "is_favourite": false, "brand":
+        "", "supplier": "", "meta": {"shop": {"images": [], "price": "560.7383177570",
+        "gross_price": "599.99", "id": 738, "channel": 5, "name": "", "description":
+        ""}, "ebay": {"images": [], "price": "560.7383177570", "gross_price": "599.99",
+        "id": 739, "channel": 4, "name": "", "description": ""}}, "is_giftcard": false,
+        "gross_price": "599.99", "purchase_price": "0E-10"}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Fri, 17 Apr 2015 14:57:27 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yj7hv:Yxrz5E_dTB_Q1FUT94qtcurpbGA"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 16:57:27 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1979192716008416756']
+    status: {code: 200, message: OK}
+version: 1
