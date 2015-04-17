@@ -133,3 +133,38 @@ class EbayEndItemResponseDeserializer(POPOSerializer):
 
     class Meta:
         model = EbayEndItemResponse
+
+
+class EbayInventoryStatus(object):
+
+    def __init__(self, item_id, quantity=None, start_price=None):
+        self.item_id = item_id
+        self.quantity = int(quantity)
+        self.start_price = start_price
+
+    def dict(self):
+        data = {
+            'ItemID': self.item_id
+        }
+
+        if self.quantity is not None:
+            data['Quantity'] = self.quantity
+
+        if self.start_price is not None:
+            data['StartPrice'] = self.start_price
+
+        return {'InventoryStatus': data}
+
+
+class EbayReviseInventoryStatusResponse(object):
+
+    @classmethod
+    def create_from_data(cls, data):
+        """
+        :rtype: EbayReviseInventoryStatusResponse
+        """
+        return EbayReviseInventoryStatusResponse()
+
+
+class EbayReviseInventoryStatusResponseDeserializer(POPOSerializer):
+    pass

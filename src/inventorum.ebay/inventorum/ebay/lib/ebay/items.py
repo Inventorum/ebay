@@ -1,10 +1,12 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import Ebay
-from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse
+from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse, \
+    EbayReviseInventoryStatusResponse
 
 
 class EbayItems(Ebay):
+
     def publish(self, item):
         """
         Publish item to ebay
@@ -25,3 +27,10 @@ class EbayItems(Ebay):
             'EndingReason': reason
         })
         return EbayEndItemResponse.create_from_data(response)
+
+    def revise_inventory_status(self, inventory_status):
+        """
+        :type inventory_status: inventorum.ebay.lib.ebay.data.items.EbayInventoryStatus
+        """
+        response = self.execute('ReviseInventoryStatus', inventory_status.dict())
+        return EbayReviseInventoryStatusResponse.create_from_data(response)

@@ -1,13 +1,19 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+import logging
+
 from decimal import Decimal
+
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
-from inventorum.ebay.apps.products import EbayProductPublishingStatus
+from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayItemUpdateStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod
 from inventorum.ebay.lib.ebay.items import EbayItems
 from requests.exceptions import HTTPError
+
+
+log = logging.getLogger(__name__)
 
 
 class PublishingServiceException(Exception):
@@ -28,6 +34,7 @@ class PublishingCouldNotGetDataFromCoreAPI(PublishingServiceException):
 
 
 class PublishingUnpublishingService(object):
+
     def __init__(self, product, user):
         """
         Abstract service for publishing/unpublishing products to ebay
@@ -57,6 +64,7 @@ class PublishingUnpublishingService(object):
 
 
 class PublishingService(PublishingUnpublishingService):
+
     def validate(self):
         """
         Validates account and product before publishing to ebay
@@ -152,6 +160,7 @@ class PublishingService(PublishingUnpublishingService):
 
 
 class UnpublishingService(PublishingUnpublishingService):
+
     def validate(self):
         if not self.product.is_published:
             raise PublishingValidationException(ugettext('Product is not published'))
@@ -167,16 +176,20 @@ class UnpublishingService(PublishingUnpublishingService):
         item.save()
 
 
-class SynchronizationService(object):
-    """
-    This service is responsible for synchronizing
-    """
+class EbayItemUpdateService(object):
 
-    def __init__(self, account):
-        self.account = account
+    def __init__(self, user, ebay_item_update):
+        """
+        :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
+        :type ebay_item_update: inventorum.ebay.apps.products.models.EbayItemUpdateModel
+        """
+        self.user = user
+        self.ebay_item_update = ebay_item_update
 
-    def synchronize_all(self):
-        pass
+    def update(self):
+        self.ebay_item_update.status = EbayItemUpdateStatus.IN_PROGRESS
 
-    def synchronize(self, product):
-        pass
+        service = EbayItems(self.user.account.token.ebay_object)
+        response = service.revise_inventory_status(self.ebay_item_update.ebay_object)
+
+        self.ebay_item_update.status = EbayItemUpdateStatus.SUCCEEDED

@@ -62,7 +62,3 @@ class UnpublishResource(APIResource):
         service.unpublish()
         serializer = EbayProductSerializer(service.product)
         return Response(data=serializer.data)
-
-
-
-

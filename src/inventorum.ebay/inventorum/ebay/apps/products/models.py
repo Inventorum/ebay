@@ -5,12 +5,20 @@ import logging
 from django.db import models
 
 from django_countries.fields import CountryField
-from inventorum.ebay.apps.products import EbayProductPublishingStatus
-from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
-from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture
+from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayItemUpdateStatus
+from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
+from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, \
+    EbayInventoryStatus
+from inventorum.util.django.model_utils import PassThroughManager
 
 
 log = logging.getLogger(__name__)
+
+
+class EbayProductModelQuerySet(MappedInventorumModelQuerySet):
+
+    def published(self):
+        return self.filter(items__publishing_status=EbayProductPublishingStatus.PUBLISHED)
 
 
 class EbayProductModel(MappedInventorumModel):
@@ -19,6 +27,10 @@ class EbayProductModel(MappedInventorumModel):
                                 verbose_name="Inventorum ebay account")
     category = models.ForeignKey("categories.CategoryModel", related_name="products", null=True, blank=True)
     external_item_id = models.CharField(max_length=255, null=True, blank=True)
+
+    deleted_in_core_api = models.BooleanField(default=False)
+
+    objects = PassThroughManager.for_queryset_class(MappedInventorumModelQuerySet)()
 
     @property
     def is_published(self):
@@ -106,4 +118,23 @@ class EbayItemModel(BaseModel):
             category_id=self.category.external_id,
             shipping_services=[s.ebay_object for s in self.shipping.all()],
             pictures=[i.ebay_object for i in self.images.all()],
+        )
+
+
+class EbayItemUpdateModel(BaseModel):
+    item = models.ForeignKey("products.EbayItemModel", related_name="updates")
+
+    quantity = models.IntegerField(null=True, blank=True)
+    gross_price = models.DecimalField(decimal_places=10, max_digits=20,
+                                      null=True, blank=True)
+
+    status = models.IntegerField(choices=EbayItemUpdateStatus.CHOICES,
+                                 default=EbayItemUpdateStatus.DRAFT)
+
+    @property
+    def ebay_object(self):
+        return EbayInventoryStatus(
+            item_id=self.item.external_id,
+            quantity=self.quantity,
+            start_price=self.gross_price
         )

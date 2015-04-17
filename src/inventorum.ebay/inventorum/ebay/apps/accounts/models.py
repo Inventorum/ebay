@@ -57,6 +57,22 @@ class EbayAccountModel(MappedInventorumModel):
     country = CountryField(null=True, blank=True)
     registration_date = DateTimeField(null=True, blank=True)
 
+    last_core_api_sync = DateTimeField(null=True, blank=True)
+
+    @property
+    def default_user(self):
+        """
+        :rtype: EbayUserModel
+        """
+        return self.users.first()
+
+    @property
+    def core_api(self):
+        """
+        :rtype: UserScopedCoreAPIClient
+        """
+        return self.default_user.core_api
+
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):
     """ Represents an inventorum user in the ebay context """
