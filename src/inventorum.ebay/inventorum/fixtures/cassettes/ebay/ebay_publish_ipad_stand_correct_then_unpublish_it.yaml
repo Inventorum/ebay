@@ -10,11 +10,11 @@ interactions:
       X-EBAY-API-CALL-NAME: [!!python/unicode AddItem]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [af9072e3-f81d-43aa-85e2-55ec237d0c91]
+      X-EBAY-SDK-REQUEST-ID: [3c4de378-7046-41f7-a448-0911182987e7]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T15:11:27.170Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Der
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T15:15:42.366Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Der
         Artikel kann weder eingestellt noch bearbeitet werden.</ShortMessage><LongMessage>Der
         Artikel kann weder eingestellt noch bearbeitet werden. Die Artikelbezeichnung
         und/oder -beschreibung enthalten unter Umst\xE4nden unzul\xE4ssige Begriffe
@@ -63,15 +63,15 @@ interactions:
     headers:
       content-length: ['4325']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 15:11:26 GMT']
-      guid: [14cc7ef3-6e70-a794-4441-3981f5e51aa8]
+      date: ['Fri, 17 Apr 2015 15:15:41 GMT']
+      guid: [14cc7f31-ccb0-a626-1942-ac62f4425435]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMWQ3MmYrMjoxZSgyNSg+Nys0NzErNzYxPz43OzU=]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrMzszNCgyNSg+Oys3NS0yPj07NT43]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddItem]
-      x-ebay-esb-guid: ['urn:uuid:d26b0575-77e4-4028-b536-ebead3693fa2']
+      x-ebay-esb-guid: ['urn:uuid:2cc2ef78-8a08-4feb-87a7-876aa78fd50e']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cc7ef3-6e70-a794-4441-3981f5e51aa8!ws.api.dll!10.121.68.68!esbtrading[]']
+      x-ebay-request-id: ['14cc7f31-ccb0-a626-1942-ac62f4425435!ws.api.dll!10.98.97.148!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

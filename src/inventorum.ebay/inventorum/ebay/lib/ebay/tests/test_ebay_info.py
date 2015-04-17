@@ -50,6 +50,7 @@ class TestEbayInfo(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(site_defaults.details.payment_methods, [
             'PayPal',
+            'Moneybookers',
             'CashOnPickup',
             'MoneyXferAcceptedInCheckout',
             'MoneyXferAccepted',

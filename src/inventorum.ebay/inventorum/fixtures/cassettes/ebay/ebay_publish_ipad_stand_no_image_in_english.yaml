@@ -1,35 +1,56 @@
 interactions:
 - request:
-    body: <?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_AT</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Stand
-      for iPad from Inventorum for your POS Shop</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_120</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>64540</CategoryID></PrimaryCategory><Quantity>1</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHL2KGPaket</ShippingService><ShippingServiceAdditionalCost>0</ShippingServiceAdditionalCost><ShippingServiceCost>10</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>599.99</StartPrice><Title>Inventorum
+    body: <?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Stand
+      for iPad from Inventorum for your POS Shop</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_120</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>64540</CategoryID></PrimaryCategory><Quantity>1</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>0</ShippingServiceAdditionalCost><ShippingServiceCost>10</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>599.99</StartPrice><Title>Inventorum
       iPad Stand</Title></Item></AddItemRequest>
     headers:
-      Content-Length: ['2072']
+      Content-Length: ['2069']
       Content-Type: [text/xml]
       User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
       X-EBAY-API-CALL-NAME: [!!python/unicode AddItem]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
-      X-EBAY-API-SITEID: [16]
-      X-EBAY-SDK-REQUEST-ID: [558c5e97-161f-4031-b972-653ba8fe3caa]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [5cb32e64-94b2-4861-960f-fe233781c19d]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:57:35.218Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Versandservice
-        ist nicht verf\xFCgbar.</ShortMessage><LongMessage>Versandservice DHL 2kg
-        Paket (nur f\xFCr kurze Zeit)(7740) ist nicht verf\xFCgbar.</LongMessage><ErrorCode>12519</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
-        ParamID=\"0\"><Value>DHL 2kg Paket (nur f\xFCr kurze Zeit)(7740)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"}
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T15:11:24.377Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikelzustand
+        kann nicht verwendet werden.</ShortMessage><LongMessage>F\xFCr diese Kategorie
+        ist kein Artikelzustand verf\xFCgbar. Der eingegebene Artikelzustand wurde
+        entfernt.</LongMessage><ErrorCode>21917121</ErrorCode><SeverityCode>Warning</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Erforderliche
+        Mindestanzahl an Fotos: 1 Die ideale Anzahl f\xFCr diese Kategorie ist mindestens:
+        2 </ShortMessage><LongMessage>Erforderliche Mindesanzahl an Bildern:  1 F\xFCr
+        Angebote in dieser Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen,
+        um Ihre Verkaufschancen  m\xF6glicherweise um 12 zu erh\xF6hen. (Prozentangabe
+        beruht auf Anteilen an verkauften Artikeln in dieser Kategorie mit unterschiedlich
+        vielen Bildern. Tats\xE4chliche Ergebnisse k\xF6nnen anders ausfallen und
+        der Verkauf ist nicht garantiert.)</LongMessage><ErrorCode>21919136</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
+        ParamID=\"0\"><Value>Erforderliche Mindestanzahl an Fotos: 1 Die ideale Anzahl
+        f\xFCr diese Kategorie ist mindestens: 2 </Value></ErrorParameters><ErrorParameters
+        ParamID=\"1\"><Value>Erforderliche Mindesanzahl an Bildern:  1 F\xFCr Angebote
+        in dieser Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen, um
+        Ihre Verkaufschancen  m\xF6glicherweise um 12 zu erh\xF6hen. (Prozentangabe
+        beruht auf Anteilen an verkauften Artikeln in dieser Kategorie mit unterschiedlich
+        vielen Bildern. Tats\xE4chliche Ergebnisse k\xF6nnen anders ausfallen und
+        der Verkauf ist nicht garantiert.)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Ung\xFCltige
+        Kategorie.</ShortMessage><LongMessage>Bei der ausgew\xE4hlten Kategorie handelt
+        es sich nicht um eine so genannte Unterkategorie.</LongMessage><ErrorCode>87</ErrorCode><SeverityCode>Error</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Ung\xFCltige
+        Dauer.</ShortMessage><LongMessage>Die Dauer &quot;120&quot; (in Tagen) ist
+        f\xFCr dieses Angebotsformat nicht verf\xFCgbar, bzw. ung\xFCltig f\xFCr die
+        Kategorie &quot;64540&quot;.</LongMessage><ErrorCode>83</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
+        ParamID=\"0\"><Value>120</Value></ErrorParameters><ErrorParameters ParamID=\"1\"><Value>64540</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"}
     headers:
-      content-length: ['648']
+      content-length: ['2646']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 14:57:35 GMT']
-      guid: [14cc7e28-b850-a794-3126-5296eb6c2dd5]
+      date: ['Fri, 17 Apr 2015 15:11:23 GMT']
+      guid: [14cc7ef2-ffd0-a626-0146-ff96b0ada764]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMGQ3MWYrNTs8PigyNSg2MTMoNTA2KDY3MDw/Mz02]
+      x-ebay-api-server-name: [___dm97PWQ3MGYrNjRjPygyNSgzMSswMy0yMT07NT43]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddItem]
-      x-ebay-esb-guid: ['urn:uuid:efedcef5-4e84-42e6-8557-8c8683a4ef77']
-      x-ebay-esb-siteid: ['16']
-      x-ebay-request-id: ['14cc7e28-b850-a794-3126-5296eb6c2dd5!ws.api.dll!10.121.67.18!esbtrading[]']
+      x-ebay-esb-guid: ['urn:uuid:d23fbe8b-1a92-40f7-95f8-3aa9d3386499']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14cc7ef2-ffd0-a626-0146-ff96b0ada764!ws.api.dll!10.98.96.20!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1
