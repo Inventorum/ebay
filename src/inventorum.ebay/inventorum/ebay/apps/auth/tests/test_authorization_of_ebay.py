@@ -30,7 +30,7 @@ class EbayAuthorizationTest(APITestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_fetch_token(self):
-        with ApiTest.use_cassette("do_not_touch/ebay_fetch_token.yaml") as cass:
+        with MockedTest.use_cassette("ebay_fetch_token.yaml") as cass:
             response = self.client.post('/auth/authorize/', data={
                 'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
             })
@@ -79,7 +79,7 @@ class EbayAuthorizationTest(APITestCase):
 
 
     def test_fetch_token_from_AT(self):
-        with ApiTest.use_cassette("do_not_touch/ebay_fetch_token_fake_AT.yaml", record_mode='new_episodes') as cass:
+        with MockedTest.use_cassette("ebay_fetch_token_fake_AT.yaml", record_mode='new_episodes') as cass:
             response = self.client.post('/auth/authorize/', data={
                 'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
             })
@@ -129,7 +129,7 @@ class EbayAuthorizationTest(APITestCase):
 
 
     def test_api_error(self):
-        with ApiTest.use_cassette("mocked/ebay_fetch_token_api_error.yaml", record_mode='never') as cass:
+        with MockedTest.use_cassette("ebay_fetch_token_api_error.yaml", record_mode='never') as cass:
             response = self.client.get('/auth/authorize/')
             response = self.client.post('/auth/authorize/', data={
                 'session_id': response.data['session_id']
