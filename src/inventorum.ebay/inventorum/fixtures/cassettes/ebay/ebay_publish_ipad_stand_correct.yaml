@@ -1,35 +1,35 @@
 interactions:
 - request:
     body: <?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_AT</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Stand
-      for iPad from Inventorum for your POS Shop</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PictureDetails><PictureURL>http://shop.inventorum.com/uploads/img-hash/a9fe/1db9/8c9e/564c/8877/d8a1/f1f8/a9fe1db98c9e564c8877d8a1f1f8fccf_ipad.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>176973</CategoryID></PrimaryCategory><Quantity>1</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>0</ShippingServiceAdditionalCost><ShippingServiceCost>5</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>599.99</StartPrice><Title>Inventorum
+      for iPad from Inventorum for your POS Shop</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PictureDetails><PictureURL>http://shop.inventorum.com/uploads/img-hash/a9fe/1db9/8c9e/564c/8877/d8a1/f1f8/a9fe1db98c9e564c8877d8a1f1f8fccf_ipad.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>176973</CategoryID></PrimaryCategory><Quantity>1</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHL2KGPaket</ShippingService><ShippingServiceAdditionalCost>0</ShippingServiceAdditionalCost><ShippingServiceCost>5</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>599.99</StartPrice><Title>Inventorum
       iPad Stand</Title></Item></AddItemRequest>
     headers:
-      Content-Length: ['2247']
+      Content-Length: ['2250']
       Content-Type: [text/xml]
       User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
       X-EBAY-API-CALL-NAME: [!!python/unicode AddItem]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [16]
-      X-EBAY-SDK-REQUEST-ID: [ec0d4304-bf47-403c-986d-ddc02f8ea31f]
+      X-EBAY-SDK-REQUEST-ID: [a2d227ca-72d5-47f4-95ee-de3e6f524a1a]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:52:36.403Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Versandservice
-        ist nicht verf\xFCgbar.</ShortMessage><LongMessage>Versandservice DHL Paket(7723)
-        ist nicht verf\xFCgbar.</LongMessage><ErrorCode>12519</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
-        ParamID=\"0\"><Value>DHL Paket(7723)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"}
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:57:36.008Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Versandservice
+        ist nicht verf\xFCgbar.</ShortMessage><LongMessage>Versandservice DHL 2kg
+        Paket (nur f\xFCr kurze Zeit)(7740) ist nicht verf\xFCgbar.</LongMessage><ErrorCode>12519</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
+        ParamID=\"0\"><Value>DHL 2kg Paket (nur f\xFCr kurze Zeit)(7740)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"}
     headers:
-      content-length: ['596']
+      content-length: ['648']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 14:52:35 GMT']
-      guid: [14cc7ddf-c3a0-a794-7733-9c6399bdf19a]
+      date: ['Fri, 17 Apr 2015 14:57:35 GMT']
+      guid: [14cc7e28-eb70-a786-b806-9586b8c76e0e]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMGQ3MWYrNWdjYigyNSg2MTMoMTMrPzY5PTY/Mw==]
+      x-ebay-api-server-name: [___dWtgMWQ3MWYrMzQyPigyNSg2MzMoMDErNzI6Pz43OzU=]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddItem]
-      x-ebay-esb-guid: ['urn:uuid:760c7f7b-b77b-4a66-9506-995d64043d98']
+      x-ebay-esb-guid: ['urn:uuid:b577bfc2-4412-42a4-a497-12dc19067cfe']
       x-ebay-esb-siteid: ['16']
-      x-ebay-request-id: ['14cc7ddf-c3a0-a794-7733-9c6399bdf19a!ws.api.dll!10.121.71.115!esbtrading[]']
+      x-ebay-request-id: ['14cc7e28-eb70-a786-b806-9586b8c76e0e!ws.api.dll!10.120.107.128!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

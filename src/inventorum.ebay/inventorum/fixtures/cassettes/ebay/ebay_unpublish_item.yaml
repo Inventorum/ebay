@@ -8,11 +8,11 @@ interactions:
       X-EBAY-API-CALL-NAME: [!!python/unicode EndItem]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [16]
-      X-EBAY-SDK-REQUEST-ID: [bb5619c1-a764-40a1-8488-76048d19be7c]
+      X-EBAY-SDK-REQUEST-ID: [fa009392-b57e-435d-a308-197bc30b17ee]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<EndItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:52:37.223Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikel
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<EndItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:57:37.068Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikel
         kann nicht aufgerufen werden.</ShortMessage><LongMessage>Der Artikel kann
         nicht aufgerufen werden, da er gel\xF6scht wurde, es sich um ein Half.com-Angebot
         handelt oder weil Sie nicht der Verk\xE4ufer sind.</LongMessage><ErrorCode>17</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
@@ -20,15 +20,15 @@ interactions:
     headers:
       content-length: ['684']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 14:52:37 GMT']
-      guid: [14cc7ddf-f3e0-a5e4-3724-b004c3fcf4ca]
+      date: ['Fri, 17 Apr 2015 14:57:36 GMT']
+      guid: [14cc7e29-1c30-a785-f856-8846c2fce9d8]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dm97PWQ3MGYrYWFjMygyNSgzMSs3MzMrMDM5PTY/Mw==]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrMjNhNygyNSg+OysxNS03Nz85PTY/Mw==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [EndItem]
-      x-ebay-esb-guid: ['urn:uuid:166d955a-60a9-4733-b0e1-82874da7c1c6']
+      x-ebay-esb-guid: ['urn:uuid:e6597739-3251-4042-9165-4bd797d885de']
       x-ebay-esb-siteid: ['16']
-      x-ebay-request-id: ['14cc7ddf-f3e0-a5e4-3724-b004c3fcf4ca!ws.api.dll!10.94.67.114!esbtrading[]']
+      x-ebay-request-id: ['14cc7e29-1c30-a785-f856-8846c2fce9d8!ws.api.dll!10.120.95.133!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

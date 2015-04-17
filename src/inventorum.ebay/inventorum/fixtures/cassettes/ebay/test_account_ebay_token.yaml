@@ -8,28 +8,27 @@ interactions:
       X-EBAY-API-CALL-NAME: [!!python/unicode GetUser]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [16]
-      X-EBAY-SDK-REQUEST-ID: [ce8895ff-a930-472b-9736-c331233d0768]
+      X-EBAY-SDK-REQUEST-ID: [ab2303a6-c2f5-4edd-acfd-e75d15c277f9]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
 
-        <GetUserResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T14:52:07.021Z</Timestamp><Ack>Success</Ack><Version>919</Version><Build>E919_INTL_APISIGNIN_17468662_R1</Build><User><AboutMePage>false</AboutMePage><EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ==</EIASToken><Email>tech+ebay@inventorum.com</Email><FeedbackScore>0</FeedbackScore><UniqueNegativeFeedbackCount>0</UniqueNegativeFeedbackCount><UniquePositiveFeedbackCount>0</UniquePositiveFeedbackCount><PositiveFeedbackPercent>0.0</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>true</NewUser><RegistrationAddress><Name>John
+        <GetUserResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T14:57:06.353Z</Timestamp><Ack>Success</Ack><Version>919</Version><Build>E919_INTL_APISIGNIN_17468662_R1</Build><User><AboutMePage>false</AboutMePage><EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ==</EIASToken><Email>tech+ebay@inventorum.com</Email><FeedbackScore>0</FeedbackScore><UniqueNegativeFeedbackCount>0</UniqueNegativeFeedbackCount><UniquePositiveFeedbackCount>0</UniquePositiveFeedbackCount><PositiveFeedbackPercent>0.0</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>true</NewUser><RegistrationAddress><Name>John
         Newman</Name><Street>Voltastr 5</Street><Street1>Voltastr 5</Street1><CityName>Berlin</CityName><Country>DE</Country><CountryName>Deutschland</CountryName><Phone>0172
         4694679</Phone><PostalCode>13355</PostalCode></RegistrationAddress><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATTax</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>false</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><SellerGuaranteeLevel>NotEligible</SellerGuaranteeLevel><SellerPaymentAddress/><SchedulingInfo><MaxScheduledMinutes>30240</MaxScheduledMinutes><MinScheduledMinutes>0</MinScheduledMinutes><MaxScheduledItems>3000</MaxScheduledItems></SchedulingInfo><StoreOwner>false</StoreOwner><SellerBusinessType>Private</SellerBusinessType><PaymentMethod>DirectDebit</PaymentMethod><CharityRegistered>false</CharityRegistered><SafePaymentExempt>false</SafePaymentExempt><TransactionPercent>0.0</TransactionPercent><RecoupmentPolicyConsent/></SellerInfo><BusinessRole>FullMarketPlaceParticipant</BusinessRole><eBayWikiReadOnly>false</eBayWikiReadOnly><MotorsDealer>false</MotorsDealer><UniqueNeutralFeedbackCount>0</UniqueNeutralFeedbackCount><EnterpriseSeller>false</EnterpriseSeller></User></GetUserResponse>'}
     headers:
-      connection: [Keep-Alive]
       content-length: ['2343']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 14:52:06 GMT']
-      guid: [14cc7dd8-9810-a626-78d7-0b17fa8c2fb2]
+      date: ['Fri, 17 Apr 2015 14:57:05 GMT']
+      guid: [14cc7e21-ac80-a625-48d6-abf6c7c51179]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW90amJobm1saHNv]
       x-ebay-api-server-name: [___ZW9nNGQ3MWYrPjcxYCgyNSg+OysxPi09MT07NT42]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [GetUser]
-      x-ebay-esb-guid: ['urn:uuid:e2025441-7467-4b4e-a6ba-6dc393d6fb26']
+      x-ebay-esb-guid: ['urn:uuid:ab868faf-0c1f-4c5b-8237-ee1148524c2c']
       x-ebay-esb-siteid: ['16']
-      x-ebay-request-id: ['14cc7dd8-9810-a626-78d7-0b17fa8c2fb2!ws.api.dll!10.98.103.141!esbtrading[]']
+      x-ebay-request-id: ['14cc7e21-ac80-a625-48d6-abf6c7c51179!ws.api.dll!10.98.84.141!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

@@ -70,14 +70,14 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 17 Apr 2015 14:52:27 GMT']
+      date: ['Fri, 17 Apr 2015 14:57:27 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7d5:GdwdGE4EFdgL3kRS2yTkveHKifI"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:52:27 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yj7hv:Yxrz5E_dTB_Q1FUT94qtcurpbGA"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 16:57:27 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['2635029411744245236']
+      x-rid: ['1979192716008416756']
     status: {code: 200, message: OK}
 version: 1

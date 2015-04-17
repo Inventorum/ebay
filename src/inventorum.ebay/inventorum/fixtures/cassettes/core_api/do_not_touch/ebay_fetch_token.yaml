@@ -70,15 +70,15 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 17 Apr 2015 14:52:13 GMT']
+      date: ['Fri, 17 Apr 2015 14:57:13 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7cr:zpxtAcH1dEgWVWmUrwcEXMh5mNk"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:52:13 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yj7hh:9WoaHCkTq2gxv08t_Z8yt4hMDdw"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 16:57:13 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['2635029411744245236']
+      x-rid: ['1979192716008416756']
     status: {code: 200, message: OK}
 - request:
     body: <?xml version='1.0' encoding='utf-8'?><FetchTokenRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials></RequesterCredentials><SessionID>qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c</SessionID></FetchTokenRequest>
@@ -92,26 +92,27 @@ interactions:
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [463ad5b4-4ddc-4367-b08a-35e1e9b9018e]
+      X-EBAY-SDK-REQUEST-ID: [53819805-8697-46de-83eb-215813f5b11e]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<FetchTokenResponse
-        xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:52:14.629Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Ung\xFCltige
+        xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:57:13.983Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Ung\xFCltige
         Sitzungs-ID.</ShortMessage><LongMessage>Die Sitzungs-ID in Ihrer Anfrage ist
         ung\xFCltig.</LongMessage><ErrorCode>21916015</ErrorCode><SeverityCode>Error</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Version>919</Version><Build>E919_INTL_APISIGNIN_17468662_R1</Build></FetchTokenResponse>"}
     headers:
+      connection: [Keep-Alive]
       content-length: ['516']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 14:52:14 GMT']
-      guid: [14cc7dda-77b0-a793-aef2-3672d3e215b0]
+      date: ['Fri, 17 Apr 2015 14:57:13 GMT']
+      guid: [14cc7e23-8bb0-a785-f856-8846c2fd05cf]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW90amJobm1saHNv]
-      x-ebay-api-server-name: [___dWtgMGQ3MmYrMjNhZCgyNSg2MTQoMjUrNzA2Pz43OzQ=]
+      x-ebay-api-server-name: [___dWtgMWQ3MmYrNGUwZygyNSg+NysxNC00MjI5PTY/Mg==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [FetchToken]
-      x-ebay-esb-guid: ['urn:uuid:ab8a6a12-ec38-4381-9a5c-11aa3651a7b6']
+      x-ebay-esb-guid: ['urn:uuid:6f97d6a7-5a70-49a1-b453-255f6f68cb5a']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cc7dda-77b0-a793-aef2-3672d3e215b0!ws.api.dll!10.121.58.239!esbtrading[]']
+      x-ebay-request-id: ['14cc7e23-8bb0-a785-f856-8846c2fd05cf!ws.api.dll!10.120.95.133!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

@@ -144,8 +144,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
             self.assertEqual(shipping_services.count(), 1)
             self.assertEqual(shipping_services[0].external_id, 'DE_DHL2KGPaket')
-            self.assertEqual(shipping_services[0].cost, Decimal('0'))
-            self.assertEqual(shipping_services[0].additional_cost, None)
+            self.assertEqual(shipping_services[0].cost, Decimal('5'))
+            self.assertEqual(shipping_services[0].additional_cost, Decimal('2'))
 
     def test_builder(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)

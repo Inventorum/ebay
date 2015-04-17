@@ -11,25 +11,25 @@ interactions:
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [44f1c361-0835-4c36-8fad-8462deb00b5a]
+      X-EBAY-SDK-REQUEST-ID: [1dad8500-55a2-4dca-9758-03f65a312f86]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
 
-        <GetSessionIDResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T14:52:16.555Z</Timestamp><Ack>Success</Ack><Version>919</Version><Build>E919_INTL_APISIGNIN_17468662_R1</Build><SessionID>qeUBAA**c7ddaf0c14c0a5ea5770d5d0fffff87b</SessionID></GetSessionIDResponse>'}
+        <GetSessionIDResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T14:57:16.120Z</Timestamp><Ack>Success</Ack><Version>919</Version><Build>E919_INTL_APISIGNIN_17468662_R1</Build><SessionID>qeUBAA**c7e2413914c0a5e3ca00e0d0fffff86e</SessionID></GetSessionIDResponse>'}
     headers:
       content-length: ['320']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 14:52:16 GMT']
-      guid: [14cc7dda-ef40-a794-73a1-2251973704cf]
+      date: ['Fri, 17 Apr 2015 14:57:15 GMT']
+      guid: [14cc7e24-1190-a785-f856-8846c2fd0355]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW90amJobm1saHNv]
-      x-ebay-api-server-name: [___dWtgMWQ3MmYrP2dhZCgyNSg+Nys3MTYrNzY6Pz43OzQ=]
+      x-ebay-api-server-name: [___dWtgMWQ3MmYrPzo1MigyNSg+NyswNy00MDc5PTY/Mg==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [GetSessionID]
-      x-ebay-esb-guid: ['urn:uuid:c6e91597-0e11-41a8-a6ff-ba1a73443e01']
+      x-ebay-esb-guid: ['urn:uuid:f9831fbe-4519-44c2-ac21-d19d88b33f2a']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cc7dda-ef40-a794-73a1-2251973704cf!ws.api.dll!10.121.71.58!esbtrading[]']
+      x-ebay-request-id: ['14cc7e24-1190-a785-f856-8846c2fd0355!ws.api.dll!10.120.95.133!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

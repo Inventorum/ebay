@@ -70,15 +70,15 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 17 Apr 2015 14:52:28 GMT']
+      date: ['Fri, 17 Apr 2015 14:57:28 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7d6:McjVaGKdamYZhR9LF1-0ONN9Fts"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:52:28 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yj7hw:tBhJr6SDl9Zn9SqYmZnbdsYxMsQ"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 16:57:28 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['2635029411744245236']
+      x-rid: ['1979192716008416756']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -98,16 +98,16 @@ interactions:
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
-      date: ['Fri, 17 Apr 2015 14:52:28 GMT']
+      date: ['Fri, 17 Apr 2015 14:57:28 GMT']
       location: ['http://app.intern.inventorum.net/api/products/665753/']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7d6:McjVaGKdamYZhR9LF1-0ONN9Fts"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:52:28 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yj7hw:tBhJr6SDl9Zn9SqYmZnbdsYxMsQ"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 16:57:28 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: [Cookie]
       x-inv-account: [Anonymous]
       x-inv-user: [Anonymous]
-      x-rid: ['2635029411744245236']
+      x-rid: ['1979192716008416756']
     status: {code: 301, message: MOVED PERMANENTLY}
 - request:
     body: null
@@ -116,7 +116,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode application/json]
-      Cookie: ['sn="e30:1Yj7d6:McjVaGKdamYZhR9LF1-0ONN9Fts"']
+      Cookie: ['sn="e30:1Yj7hw:tBhJr6SDl9Zn9SqYmZnbdsYxMsQ"']
       User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
       X-Api-Version: [9]
       X-Inv-Account: [!!python/unicode 346]
@@ -168,15 +168,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 17 Apr 2015 14:52:28 GMT']
+      date: ['Fri, 17 Apr 2015 14:57:29 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7d6:McjVaGKdamYZhR9LF1-0ONN9Fts"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:52:28 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yj7hx:Kib9VyyaAG-ujalWAxifuOlSu_4"; Domain=app.intern.inventorum.net;
+          expires=Fri, 17-Apr-2015 16:57:29 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['2635029411744245236']
+      x-rid: ['1979192716008416756']
     status: {code: 200, message: OK}
 - request:
     body: !!python/str "<?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_AT</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Der
@@ -196,26 +196,27 @@ interactions:
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [16]
-      X-EBAY-SDK-REQUEST-ID: [11a3f26e-84ae-4010-a1ac-8d2106d99c1f]
+      X-EBAY-SDK-REQUEST-ID: [91886adb-6212-4f7a-9cb6-8b2b395886e9]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:52:29.297Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Versandservice
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T14:57:29.727Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Versandservice
         ist nicht verf\xFCgbar.</ShortMessage><LongMessage>Versandservice Hermes Paket(7725)
         ist nicht verf\xFCgbar.</LongMessage><ErrorCode>12519</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
-        ParamID=\"0\"><Value>Hermes Paket(7725)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>915</Version><Build>E915_UNI_API5_17441606_R1</Build></AddItemResponse>"}
+        ParamID=\"0\"><Value>Hermes Paket(7725)</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"}
     headers:
+      connection: [Keep-Alive]
       content-length: ['602']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 14:52:29 GMT']
-      guid: [14cc7dde-0880-a786-8e45-2f55f9744cff]
+      date: ['Fri, 17 Apr 2015 14:57:29 GMT']
+      guid: [14cc7e27-6360-a788-4544-7214b8a23c01]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMGQ3MWYrMjU3ZygyNSg2MTMoMjUrNDM5PTY/Mw==]
+      x-ebay-api-server-name: [___dWtgMWQ3MWYrNDo0NygyNSg2MzMoMDcrNDcxPz43OzU=]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddItem]
-      x-ebay-esb-guid: ['urn:uuid:30249358-523a-42d5-9de9-1f473518a791']
+      x-ebay-esb-guid: ['urn:uuid:bd81480c-caaf-4054-833d-8f5dfb912cb8']
       x-ebay-esb-siteid: ['16']
-      x-ebay-request-id: ['14cc7dde-0880-a786-8e45-2f55f9744cff!ws.api.dll!10.120.104.228!esbtrading[]']
+      x-ebay-request-id: ['14cc7e27-6360-a788-4544-7214b8a23c01!ws.api.dll!10.120.132.84!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1
