@@ -31,7 +31,7 @@ class CoreProduct(object):
         self.quantity = quantity
         self.images = images
         self.variation_count = variation_count
-        self.shipping_services = shipping_services
+        self.shipping_services = [s for s in shipping_services if s.enabled]
 
     @property
     def is_parent(self):
@@ -61,7 +61,7 @@ class CoreProductImageDeserializer(POPOSerializer):
 class CoreShippingService(object):
     """ Represents a shipping service model """
 
-    def __init__(self, id, description, time_min, time_max, additional_cost, cost):
+    def __init__(self, id, description, time_min, time_max, additional_cost, cost, enabled):
         """
         :type id: unicode
         :type description: unicode
@@ -76,6 +76,7 @@ class CoreShippingService(object):
         self.time_max = time_max
         self.additional_cost = additional_cost
         self.cost = cost
+        self.enabled = enabled
 
 
 class CoreShippingServiceDeserializer(POPOSerializer):
@@ -86,6 +87,7 @@ class CoreShippingServiceDeserializer(POPOSerializer):
     description = serializers.CharField()
     time_min = serializers.IntegerField()
     time_max = serializers.IntegerField()
+    enabled = serializers.BooleanField()
     additional_cost = serializers.DecimalField(max_digits=20, decimal_places=10, allow_null=True)
     cost = serializers.DecimalField(max_digits=20, decimal_places=10)
 
@@ -186,7 +188,7 @@ class CoreAccountSettings(object):
         """
         :type shipping_services: list of CoreShippingService
         """
-        self.shipping_services = shipping_services
+        self.shipping_services = [s for s in shipping_services if s.enabled]
         self.ebay_paypal_email = ebay_paypal_email
         self.ebay_payment_methods = [self.EBAY_PAYMENTS_MAPPING[m] for m in ebay_payment_methods]
 
