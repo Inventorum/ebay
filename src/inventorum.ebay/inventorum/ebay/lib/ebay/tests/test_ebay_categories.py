@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 import unittest
 import os
+from inventorum.ebay.apps.core_api.tests import EbayTest
 
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from inventorum.ebay.lib.ebay.data.categories import EbayCategory
@@ -15,7 +16,7 @@ log = logging.getLogger(__name__)
 
 class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
     @long_running_test()
-    @EbayAuthenticatedAPITestCase.vcr.use_cassette("ebay_get_all_categories.json")
+    @EbayTest.use_cassette("ebay_get_all_categories.yaml")
     def test_getting_categories(self):
         ebay = EbayCategories(self.ebay_token)
         categories = ebay.get_categories()

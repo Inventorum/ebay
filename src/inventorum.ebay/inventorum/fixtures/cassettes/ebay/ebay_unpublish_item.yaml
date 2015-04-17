@@ -1,0 +1,34 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><EndItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>261844248112</ItemID></EndItemRequest>
+    headers:
+      Content-Length: ['1165']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode EndItem]
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [780ef5b6-b523-4b82-9390-3bd39ebcf5b3]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<EndItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T15:11:28.545Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikel
+        kann nicht aufgerufen werden.</ShortMessage><LongMessage>Der Artikel kann
+        nicht aufgerufen werden, da er gel\xF6scht wurde, es sich um ein Half.com-Angebot
+        handelt oder weil Sie nicht der Verk\xE4ufer sind.</LongMessage><ErrorCode>17</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
+        ParamID=\"0\"><Value>261844248112</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></EndItemResponse>"}
+    headers:
+      content-length: ['684']
+      content-type: [text/xml]
+      date: ['Fri, 17 Apr 2015 15:11:28 GMT']
+      guid: [14cc7ef4-0a90-a788-4544-7214b89f4916]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW8ydmtv]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrNGUxZygyNSg+Oys3MjMrNzM2Pz43OzU=]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [EndItem]
+      x-ebay-esb-guid: ['urn:uuid:c658792d-ccff-48d3-9ce9-011d3c8b120f']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14cc7ef4-0a90-a788-4544-7214b89f4916!ws.api.dll!10.120.132.84!esbtrading[]']
+    status: {code: 200, message: OK}
+version: 1

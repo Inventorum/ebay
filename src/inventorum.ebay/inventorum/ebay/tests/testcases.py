@@ -28,12 +28,6 @@ class APIClient(test.APIClient):
 class APITestCase(test.APITestCase):
     maxDiff = None
     client_class = APIClient
-    vcr = vcr.VCR(
-        serializer='json',
-        cassette_library_dir=settings.CASSETTES_DIR,
-        record_mode='once',
-        filter_headers=['X-EBAY-API-APP-NAME', 'X-EBAY-API-CERT-NAME', 'X-EBAY-API-DEV-NAME', 'Authorization']
-    )
 
     def setUp(self):
         super(APITestCase, self).setUp()
