@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetSessionIDRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials></RequesterCredentials><RuName>Inventorum_GmbH-Inventor-9021-4-pbiiw</RuName></GetSessionIDRequest>
+    headers:
+      Content-Length: ['220']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
+      X-EBAY-API-CALL-NAME: [!!python/unicode GetSessionID]
+      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [44f1c361-0835-4c36-8fad-8462deb00b5a]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <GetSessionIDResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T14:52:16.555Z</Timestamp><Ack>Success</Ack><Version>919</Version><Build>E919_INTL_APISIGNIN_17468662_R1</Build><SessionID>qeUBAA**c7ddaf0c14c0a5ea5770d5d0fffff87b</SessionID></GetSessionIDResponse>'}
+    headers:
+      content-length: ['320']
+      content-type: [text/xml]
+      date: ['Fri, 17 Apr 2015 14:52:16 GMT']
+      guid: [14cc7dda-ef40-a794-73a1-2251973704cf]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW90amJobm1saHNv]
+      x-ebay-api-server-name: [___dWtgMWQ3MmYrP2dhZCgyNSg+Nys3MTYrNzY6Pz43OzQ=]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetSessionID]
+      x-ebay-esb-guid: ['urn:uuid:c6e91597-0e11-41a8-a6ff-ba1a73443e01']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14cc7dda-ef40-a794-73a1-2251973704cf!ws.api.dll!10.121.71.58!esbtrading[]']
+    status: {code: 200, message: OK}
+version: 1

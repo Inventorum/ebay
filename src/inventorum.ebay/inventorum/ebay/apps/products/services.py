@@ -6,6 +6,7 @@ from django.utils.translation import ugettext
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod
+from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.items import EbayItems
 from requests.exceptions import HTTPError
 
@@ -98,7 +99,10 @@ class PublishingService(PublishingUnpublishingService):
         item.save()
 
         service = EbayItems(self.user.account.token.ebay_object)
-        response = service.publish(item.ebay_object)
+        try:
+            response = service.publish(item.ebay_object)
+        except EbayConnectionException as e:
+            raise PublishingServiceException(e.message)
 
         item.external_id = response.item_id
         item.publishing_status = EbayProductPublishingStatus.PUBLISHED

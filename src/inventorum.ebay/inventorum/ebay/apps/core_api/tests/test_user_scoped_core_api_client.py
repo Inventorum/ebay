@@ -39,7 +39,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
             "X-Inv-Account": unicode(self.account_id)
         })
 
-    @CoreApiTest.vcr.use_cassette("get_product_simple.json")
+    @CoreApiTest.use_cassette("get_product_simple.yaml")
     def test_get_products_without_ebay_meta(self):
         core_product = self.subject.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID)
 
@@ -56,7 +56,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
             "/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG"))
 
 
-    @CoreApiTest.vcr.use_cassette("get_product_with_ebay_meta.json")
+    @CoreApiTest.use_cassette("get_product_with_ebay_meta.yaml")
     def test_get_product_with_ebay_meta(self):
         core_product = self.subject.get_product(StagingTestAccount.Products.PRODUCT_WITH_EBAY_META_ID)
 
@@ -82,7 +82,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertTrue(image_2.url.endswith(
             "/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad_retina.JPEG"))
 
-    @CoreApiTest.vcr.use_cassette("get_product_with_shipping_services.json")
+    @CoreApiTest.use_cassette("get_product_with_shipping_services.yaml")
     def test_get_product_with_ebay_meta(self):
         core_product = self.subject.get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES)
 
@@ -97,7 +97,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(first_shipping.additional_cost, Decimal(1))
         self.assertEqual(first_shipping.cost, Decimal(10))
 
-    @CoreApiTest.vcr.use_cassette("get_account_info.json")
+    @CoreApiTest.use_cassette("get_account_info.yaml")
     def test_get_account_info(self):
         core_account = self.subject.get_account_info()
         self.assertEqual(core_account.account.email, "tech+slingshot-test@inventorum.com")
@@ -116,7 +116,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
 
         account_settings = core_account.account.settings
         self.assertEqual(len(account_settings.shipping_services), 1)
-        self.assertEqual(account_settings.ebay_paypal_email, 'john.newman@paypal.com')
+        self.assertEqual(account_settings.ebay_paypal_email, 'bartosz@hernas.pl')
         self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
 
         shipping_service = account_settings.shipping_services[0]

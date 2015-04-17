@@ -5,7 +5,7 @@ import logging
 import unittest
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 
-from inventorum.ebay.apps.core_api.tests import CoreApiTest
+from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService
@@ -39,7 +39,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
     def test_failed_validation(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingService(product, self.user)
 
             # No shipping services
@@ -50,7 +50,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(e.exception.message, 'Product has not shipping services selected')
 
         # Get product w/o shipping but acc has
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingService(product, self.user)
 
             with self.assertRaises(PublishingValidationException) as e:
@@ -83,7 +83,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         # Get product again cause it has cached item
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingService(product, self.user)
 
             # Should not raise anything finally!
@@ -91,7 +91,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
     def test_preparation(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
             service = PublishingService(product, self.user)
 
             self._assign_category(product)
@@ -104,7 +104,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(last_item.quantity, 3000)
         self.assertEqual(last_item.gross_price, Decimal("599.99"))
         self.assertEqual(last_item.country, 'DE')
-        self.assertEqual(last_item.paypal_email_address, 'john.newman@paypal.com')
+        self.assertEqual(last_item.paypal_email_address, 'bartosz@hernas.pl')
         self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.DRAFT)
         self.assertEqual(last_item.listing_duration, 'Days_120')
 
@@ -133,7 +133,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
     def test_account_shipping_fallback(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingService(product, self.user)
 
             self._assign_category(product)
@@ -143,13 +143,13 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             shipping_services = last_item.shipping.all()
 
             self.assertEqual(shipping_services.count(), 1)
-            self.assertEqual(shipping_services[0].external_id, 'DE_HermesPaket')
+            self.assertEqual(shipping_services[0].external_id, 'DE_DHL2KGPaket')
             self.assertEqual(shipping_services[0].cost, Decimal('0'))
             self.assertEqual(shipping_services[0].additional_cost, None)
 
     def test_builder(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
             service = PublishingService(product, self.user)
 
             self._assign_category(product)
@@ -177,7 +177,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             u'StartPrice': Decimal('599.9900000000'),
             u'Title': u'SlowRoad Shipping Details',
             u'ListingDuration': u'Days_120',
-            u'PayPalEmailAddress': u'john.newman@paypal.com',
+            u'PayPalEmailAddress': u'bartosz@hernas.pl',
             u'PaymentMethods': ['PayPal'],
             u'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
                                                '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
@@ -200,7 +200,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                 }],
         }})
 
-    @CoreApiTest.vcr.use_cassette("test_publishing_service_publish_and_unpublish.json")
+    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml")
     def test_publishing(self):
         product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
 
