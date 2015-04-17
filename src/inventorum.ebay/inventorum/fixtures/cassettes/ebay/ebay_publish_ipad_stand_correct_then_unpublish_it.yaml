@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: <?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Der
+    body: <?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**+SoxVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHloamDZGGpwmdj6x9nY+seQ**qeUBAA**AAMAAA**C3hLSGxBbPWdVJyUL0CWP/+WBVv+WH+m27U0atsiRZd0O6YeiXxXIeDv0FlwDBPtiDGXqP9GXaRgrn0GPTeumA7qhjocNfuHZyuwr80/bh9IqSXKA1EcNCmMbyI/696cKoaxPm7R6nczyIZV0ssT7t5vCwANcJEMsfXSJGVsJEX0Y54YV+Z70Bk6E2RyxJ1B9XN4rKG3yGvnyT+dOXMZN7W7S9gQqyeMPJ7B6Ebk9TyekHaFHEBwnArRQjVWuiMxX53GuRsBGFB07ekJhe+4UgBDN0v4/5LyHzAolM+UkE7/is2nZz74JQ7kHRXiLzHRstmU1aifkeBj1NsdwHV6QScA7ubNITHgFWkO4z2wmpkWfIdevnw42UHhsCdKRXp2p/AYuZ1O9bwVt7uLm0gJi3EvmDRmEevMk4j/VfLRwhC15qbFAMzL+g+zNK9qIJ/gy6TwO04Pr3H4001ASE+SBpKgr1CgoydwRGa3/w6IrnsQbjwgBR+tRyuad6r3251U0e7wNyXqqCGOMkk4y/8W91g6tIeuS0Iv73cw9h1fpoFz9vUf8qsy640UTQPkrUQqYYn3tyootvwBmskYNV7b1S7r9MTf9ygWkxgvndaV49nJji+xnshPtFfpr1qBX3bRU/3j7pdVLpMuQUw7sz9faDGkA19EKoXtefqkbzgP+f0mnOx0y6vwTADhVsfwo2sJowyqvPfNVxpYVuWJ+jBJuQDM91oukkS9uBxDrwWa8Rofe03JkTmHE/807wkzi+zg</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Der
       stylische iPad-Stand von INVENTORUM aus edlem Holz rundet das Erscheinungsbild
       Ihrer neuen iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel ist
       dieser ideal, um einfach und schnell Produkte mit der internen Kamera des iPads
@@ -13,68 +13,71 @@ interactions:
       X-EBAY-API-CALL-NAME: [!!python/unicode AddItem]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [3011523e-7197-45d4-bf2e-48758535dadd]
+      X-EBAY-SDK-REQUEST-ID: [ff645885-6ba7-41b2-b573-d2bd7770187a]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T15:22:44.992Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Der
-        Artikel kann weder eingestellt noch bearbeitet werden.</ShortMessage><LongMessage>Der
-        Artikel kann weder eingestellt noch bearbeitet werden. Die Artikelbezeichnung
-        und/oder -beschreibung enthalten unter Umst\xE4nden unzul\xE4ssige Begriffe
-        oder das Angebot verst\xF6\xDFt gegen die eBay-Grunds\xE4tze.</LongMessage><ErrorCode>240</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
-        ParamID=\"0\"><Value>&lt;div&gt;\n        \n        &lt;div class=&quot;errPanel&quot;&gt;&lt;div
-        class=&quot;panel-n&quot;&gt;&lt;div class=&quot;panel-e&quot;&gt;&lt;div
-        class=&quot;panel-w&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;panel-head&quot;&gt;&lt;table
-        border=&quot;0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td
-        class=&quot;panel-icon&quot;&gt;&lt;/td&gt;&lt;td class=&quot;err-msg&quot;&gt;&lt;div&gt;&lt;b
-        class=&quot;error&quot;&gt;Hinweis!&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;p&gt;&lt;/p&gt;\n
-        \               &lt;p&gt;Aus Sicherheitsgr\xFCnden hat eBay Ihre aktuellen
-        Angebote zur\xFCckgesetzt und die Nutzung Ihres eBay-Mitgliedskontos eingeschr\xE4nkt.
-        Sie k\xF6nnen zurzeit keine Artikel einstellen, auf Artikel bieten oder \xFCber
-        das eBay-System Nachrichten an andere eBay-Mitglieder versenden. Im Rahmen
-        von unseren \xDCberpr\xFCfungsprozessen werden Mitgliedskonten manchmal aus
-        Sicherheitsgr\xFCnden mit Beschr\xE4nkungen versehen. Dadurch wird Ihre Vertrauensw\xFCrdigkeit
-        jedoch in keiner Weise in Frage gestellt. &lt;/p&gt;\n                &lt;p&gt;
-        \ Damit Sie den \xDCberpr\xFCfungsprozess schnellstm\xF6glich abschlie\xDFen
-        k\xF6nnen, folgen Sie bitte den Anweisungen, die wir Ihnen in der E-Mail mit
-        dem Betreff &quot;eBay-Nutzung eingeschr\xE4nkt - Anforderung von Identit\xE4tsnachweisen\u201C
-        gesendet haben. Bitte \xFCberpr\xFCfen Sie dazu den Posteingang Ihres E-Mail-Programms
-        oder Ihre Nachrichten in Mein eBay.   &lt;/p&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;div
-        class=&quot;panel-s&quot;&gt;&lt;div class=&quot;panel-e&quot;&gt;&lt;div
-        class=&quot;panel-w&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;\n
-        \   &lt;/div&gt;&lt;font color=&quot;#BEBEBE&quot; size=&quot;1&quot;&gt;{e45810-769064x}&lt;/font&gt;</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Message>&lt;div&gt;\n
-        \       \n        &lt;div class=&quot;errPanel&quot;&gt;&lt;div class=&quot;panel-n&quot;&gt;&lt;div
-        class=&quot;panel-e&quot;&gt;&lt;div class=&quot;panel-w&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div
-        class=&quot;panel-head&quot;&gt;&lt;table border=&quot;0&quot; cellspacing=&quot;0&quot;
-        cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td class=&quot;panel-icon&quot;&gt;&lt;/td&gt;&lt;td
-        class=&quot;err-msg&quot;&gt;&lt;div&gt;&lt;b class=&quot;error&quot;&gt;Hinweis!&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;p&gt;&lt;/p&gt;\n
-        \               &lt;p&gt;Aus Sicherheitsgr\xFCnden hat eBay Ihre aktuellen
-        Angebote zur\xFCckgesetzt und die Nutzung Ihres eBay-Mitgliedskontos eingeschr\xE4nkt.
-        Sie k\xF6nnen zurzeit keine Artikel einstellen, auf Artikel bieten oder \xFCber
-        das eBay-System Nachrichten an andere eBay-Mitglieder versenden. Im Rahmen
-        von unseren \xDCberpr\xFCfungsprozessen werden Mitgliedskonten manchmal aus
-        Sicherheitsgr\xFCnden mit Beschr\xE4nkungen versehen. Dadurch wird Ihre Vertrauensw\xFCrdigkeit
-        jedoch in keiner Weise in Frage gestellt. &lt;/p&gt;\n                &lt;p&gt;
-        \ Damit Sie den \xDCberpr\xFCfungsprozess schnellstm\xF6glich abschlie\xDFen
-        k\xF6nnen, folgen Sie bitte den Anweisungen, die wir Ihnen in der E-Mail mit
-        dem Betreff &quot;eBay-Nutzung eingeschr\xE4nkt - Anforderung von Identit\xE4tsnachweisen\u201C
-        gesendet haben. Bitte \xFCberpr\xFCfen Sie dazu den Posteingang Ihres E-Mail-Programms
-        oder Ihre Nachrichten in Mein eBay.   &lt;/p&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;div
-        class=&quot;panel-s&quot;&gt;&lt;div class=&quot;panel-e&quot;&gt;&lt;div
-        class=&quot;panel-w&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;\n
-        \   &lt;/div&gt;&lt;font color=&quot;#BEBEBE&quot; size=&quot;1&quot;&gt;{e45810-769064x}&lt;/font&gt;</Message><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"}
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <AddItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T16:13:31.016Z</Timestamp><Ack>Success</Ack><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build><ItemID>131489845121</ItemID><StartTime>2015-04-17T16:13:29.470Z</StartTime><EndTime>2015-05-17T16:13:29.470Z</EndTime><Fees><Fee><Name>AuctionLengthFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>BoldFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>BuyItNowFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>CategoryFeaturedFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>FeaturedFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>GalleryPlusFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>FeaturedGalleryFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>FixedPriceDurationFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>GalleryFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>GiftIconFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>HighLightFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>InsertionFee</Name><Fee
+        currencyID="EUR">0.0</Fee><PromotionalDiscount currencyID="EUR">0.5</PromotionalDiscount></Fee><Fee><Name>InternationalInsertionFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>ListingDesignerFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ListingFee</Name><Fee
+        currencyID="EUR">0.0</Fee><PromotionalDiscount currencyID="EUR">0.5</PromotionalDiscount></Fee><Fee><Name>PhotoDisplayFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>PhotoFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ReserveFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>SchedulingFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>SubtitleFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>BorderFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ProPackBundleFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>BasicUpgradePackBundleFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>ValuePackBundleFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>PrivateListingFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>ProPackPlusBundleFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee></Fees><DiscountReason>SpecialOffer</DiscountReason></AddItemResponse>'}
     headers:
-      content-length: ['4325']
+      content-length: ['2351']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 15:22:45 GMT']
-      guid: [14cc7f98-e7e0-a793-8101-95c1972c602b]
+      date: ['Fri, 17 Apr 2015 16:13:30 GMT']
+      guid: [14cc8280-6d50-a794-4441-3981f5d26918]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMGQ3MWYrNDA0ZSgyNSg2MTMoNjo9KDQ1Pz43OzU=]
+      x-ebay-api-server-name: [___dWtgMWQ3MmYrMmVhNSgyNSg+Nys3MjArNzc2Pz43OzU=]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddItem]
-      x-ebay-esb-guid: ['urn:uuid:c23410db-7635-499e-ba88-72b01ff69c5a']
+      x-ebay-esb-guid: ['urn:uuid:a4058e2d-bd6c-4ec2-90a8-01e363aeeebc']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cc7f98-e7e0-a793-8101-95c1972c602b!ws.api.dll!10.121.56.16!esbtrading[]']
+      x-ebay-request-id: ['14cc8280-6d50-a794-4441-3981f5d26918!ws.api.dll!10.121.68.68!esbtrading[]']
+    status: {code: 200, message: OK}
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><EndItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**+SoxVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHloamDZGGpwmdj6x9nY+seQ**qeUBAA**AAMAAA**C3hLSGxBbPWdVJyUL0CWP/+WBVv+WH+m27U0atsiRZd0O6YeiXxXIeDv0FlwDBPtiDGXqP9GXaRgrn0GPTeumA7qhjocNfuHZyuwr80/bh9IqSXKA1EcNCmMbyI/696cKoaxPm7R6nczyIZV0ssT7t5vCwANcJEMsfXSJGVsJEX0Y54YV+Z70Bk6E2RyxJ1B9XN4rKG3yGvnyT+dOXMZN7W7S9gQqyeMPJ7B6Ebk9TyekHaFHEBwnArRQjVWuiMxX53GuRsBGFB07ekJhe+4UgBDN0v4/5LyHzAolM+UkE7/is2nZz74JQ7kHRXiLzHRstmU1aifkeBj1NsdwHV6QScA7ubNITHgFWkO4z2wmpkWfIdevnw42UHhsCdKRXp2p/AYuZ1O9bwVt7uLm0gJi3EvmDRmEevMk4j/VfLRwhC15qbFAMzL+g+zNK9qIJ/gy6TwO04Pr3H4001ASE+SBpKgr1CgoydwRGa3/w6IrnsQbjwgBR+tRyuad6r3251U0e7wNyXqqCGOMkk4y/8W91g6tIeuS0Iv73cw9h1fpoFz9vUf8qsy640UTQPkrUQqYYn3tyootvwBmskYNV7b1S7r9MTf9ygWkxgvndaV49nJji+xnshPtFfpr1qBX3bRU/3j7pdVLpMuQUw7sz9faDGkA19EKoXtefqkbzgP+f0mnOx0y6vwTADhVsfwo2sJowyqvPfNVxpYVuWJ+jBJuQDM91oukkS9uBxDrwWa8Rofe03JkTmHE/807wkzi+zg</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>131489845121</ItemID></EndItemRequest>
+    headers:
+      Content-Length: ['1165']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode EndItem]
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [c39ab4e1-0bd3-4237-9f3f-913b25a9ba7c]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <EndItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T16:13:31.854Z</Timestamp><Ack>Success</Ack><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build><EndTime>2015-04-17T16:13:31.000Z</EndTime></EndItemResponse>'}
+    headers:
+      content-length: ['284']
+      content-type: [text/xml]
+      date: ['Fri, 17 Apr 2015 16:13:30 GMT']
+      guid: [14cc8281-2e00-a788-49f3-cec3afff86a8]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW8ydmtv]
+      x-ebay-api-server-name: [___dm97MmQ3MmYrNGc0ZygyNSg/Nys3PjsrMTU5PTY/Mw==]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [EndItem]
+      x-ebay-esb-guid: ['urn:uuid:7d1fd362-46ea-4484-b167-f6db32bc4baa']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14cc8281-2e00-a788-49f3-cec3afff86a8!ws.api.dll!10.120.132.159!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1
