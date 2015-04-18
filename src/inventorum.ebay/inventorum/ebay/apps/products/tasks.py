@@ -14,5 +14,5 @@ def schedule_ebay_item_unpublish(*args):
     pass
 
 
-def schedule_product_delete(*args):
+def schedule_ebay_product_delete(*args):
     pass

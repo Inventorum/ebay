@@ -54,9 +54,12 @@ class CoreApiTestHelpers(object):
         user = self.__authenticated_test_user
 
         tax_rate = D("19")
-        net_price = D(gross_price) / (tax_rate/D(100) + D(1))
+        net_price = (D(gross_price) / (tax_rate/D(100) + D(1)))
 
-        response = user.core_api.post("/api/products", data={
+        TEN_PLACES = D(10) ** -10
+        net_price = net_price.quantize(TEN_PLACES)
+
+        response = user.core_api.post("/api/products/", data={
             "name": name,
             "description": description,
             "price": str(net_price),

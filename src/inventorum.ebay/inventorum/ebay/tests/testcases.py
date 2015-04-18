@@ -4,6 +4,7 @@ from __builtin__ import property
 
 import os
 import logging
+from inventorum.ebay.tests.utils import PatchMixin
 import vcr
 import unittest
 
@@ -72,7 +73,7 @@ class EbayAuthenticatedAPITestCase(APITestCase):
         self.account.save()
 
 
-class UnitTestCase(TestCase):
+class UnitTestCase(TestCase, PatchMixin):
     pass
 
 

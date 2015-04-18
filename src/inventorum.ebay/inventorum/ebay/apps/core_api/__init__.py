@@ -7,7 +7,7 @@ from inventorum.ebay.apps.core_api.pager import Pager
 log = logging.getLogger(__name__)
 
 
-class FakeResponse(object):
+class FakeCoreAPIResponse(object):
     """
     Very simple fake object for `requests.models.Request`, which mocks a small subset of the original interface
     """
@@ -19,13 +19,13 @@ class FakeResponse(object):
         return self._json
 
 
-class PaginatedFakeResponse(FakeResponse):
+class PaginatedFakeCoreAPIResponse(FakeCoreAPIResponse):
 
     def __init__(self, status_code=200, total=0, data=None):
         if data is None:
             data = []
 
-        super(PaginatedFakeResponse, self).__init__(status_code, json={
+        super(PaginatedFakeCoreAPIResponse, self).__init__(status_code, json={
             "total": total,
             "data": data
         })

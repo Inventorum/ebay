@@ -1,9 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-
 import datetime
-from django.utils.datetime_safe import datetime
+from datetime import datetime
+
 from inventorum.ebay.apps.accounts.models import EbayAccountModel
 from inventorum.ebay.apps.products import EbayProductPublishingStatus, tasks
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemUpdateModel
@@ -27,10 +27,9 @@ class CoreAPISyncService(object):
         self.account = account
 
     def run(self):
-        current_sync_start = datetime.now()
+        current_sync_start = datetime.utcnow()
         # if there was no sync yet, the ebay account creation is taken as starting point
         last_sync_start = self.account.last_core_api_sync or self.account.time_added
-
         self._sync_core_modifications(modified_since=last_sync_start)
         self._sync_core_deletions(deleted_since=last_sync_start)
 

@@ -30,7 +30,7 @@ class EbayProductModel(MappedInventorumModel):
 
     deleted_in_core_api = models.BooleanField(default=False)
 
-    objects = PassThroughManager.for_queryset_class(MappedInventorumModelQuerySet)()
+    objects = PassThroughManager.for_queryset_class(EbayProductModelQuerySet)()
 
     @property
     def is_published(self):
