@@ -4,18 +4,11 @@ import logging
 import datetime
 from datetime import datetime
 
-from inventorum.ebay.apps.accounts.models import EbayAccountModel
 from inventorum.ebay.apps.products import EbayProductPublishingStatus, tasks
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemUpdateModel
 
 
 log = logging.getLogger(__name__)
-
-
-def core_api_sync():
-    accounts = EbayAccountModel.objects.with_published_products().all()
-    for account in accounts:
-        CoreAPISyncService(account).run()
 
 
 class CoreAPISyncService(object):
