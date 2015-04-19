@@ -16,6 +16,7 @@ class CoreProductDeltaFactory(factory.Factory):
         model = CoreProductDelta
 
     id = factory.LazyAttribute(lambda m: randint(999, 99999))
+    name = "Some product"
     state = "updated"
     gross_price = D("1.99")
     quantity = 100

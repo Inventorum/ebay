@@ -254,14 +254,16 @@ class CoreInfoDeserializer(POPOSerializer):
 
 class CoreProductDelta(object):
 
-    def __init__(self, id, state, gross_price, quantity):
+    def __init__(self, id, name, state, gross_price, quantity):
         """
         :type id: int
+        :type id: unicode
         :type state: unicode
         :type gross_price: decimal.Decimal
         :type quantity: decimal.Decimal
         """
         self.id = id
+        self.name = name
         self.state = state
         self.gross_price = gross_price
         self.quantity = quantity
@@ -277,6 +279,7 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         model = CoreProductDelta
 
     id = serializers.IntegerField()
+    name = serializers.CharField()
     state = serializers.CharField()
     gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
