@@ -18,7 +18,17 @@ log = logging.getLogger(__name__)
 class EbayProductModelQuerySet(MappedInventorumModelQuerySet):
 
     def published(self):
+        """
+        :rtype: EbayProductModelQuerySet
+        """
         return self.filter(items__publishing_status=EbayProductPublishingStatus.PUBLISHED)
+
+    def by_account(self, account):
+        """
+        :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :rtype: EbayProductModelQuerySet
+        """
+        return self.filter(account=account)
 
 
 class EbayProductModel(MappedInventorumModel):

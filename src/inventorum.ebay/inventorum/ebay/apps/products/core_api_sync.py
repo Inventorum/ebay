@@ -44,12 +44,9 @@ class CoreAPISyncService(object):
             self._get_core_modifications_of_published_items(modified_since=modified_since)
 
         for ebay_item, core_product_delta in modifications_of_published_items:
-            if core_product_delta.quantity == 0:
-                tasks.schedule_ebay_item_unpublish(ebay_item)
-            else:
-                ebay_item_update = self._create_update_from_diff(ebay_item, core_product_delta)
-                if ebay_item_update:
-                    tasks.schedule_ebay_item_update(ebay_item_update)
+            ebay_item_update = self._create_update_from_diff(ebay_item, core_product_delta)
+            if ebay_item_update:
+                tasks.schedule_ebay_item_update(ebay_item_update)
 
     def _create_update_from_diff(self, ebay_item, core_product_delta):
         """
@@ -81,7 +78,7 @@ class CoreAPISyncService(object):
             ebay_product.save()
 
             # EbayProductDeletion
-            tasks.schedule_product_delete(ebay_product)
+            tasks.schedule_ebay_product_delete(ebay_product)
 
     def _get_core_modifications_of_published_items(self, modified_since):
         """
@@ -90,7 +87,8 @@ class CoreAPISyncService(object):
         :type modified_since: datetime
         :rtype: collections.Iterable[(EbayItemModel, inventorum.ebay.apps.core_api.models.CoreProductDelta)]
         """
-        published_core_product_ids = EbayProductModel.objects.published().values_list("inv_id", flat=True)
+        published_core_product_ids = EbayProductModel.objects.published().by_account(self.account)\
+            .values_list("inv_id", flat=True)
         is_published = lambda core_product_id: core_product_id in published_core_product_ids
 
         delta_pages = self.account.core_api.get_paginated_product_delta_modified(start_date=modified_since)
@@ -114,7 +112,7 @@ class CoreAPISyncService(object):
         deleted_ids_pages = self.account.core_api.get_paginated_product_delta_deleted(start_date=deleted_since)
 
         for deleted_ids in deleted_ids_pages:
-            deleted_core_product_ids.append(deleted_ids)
+            deleted_core_product_ids += deleted_ids
 
-        for deleted_ebay_product in EbayProductModel.objects.filter(inv_id__in=deleted_core_product_ids):
+        for deleted_ebay_product in EbayProductModel.objects.by_account(self.account).filter(inv_id__in=deleted_core_product_ids):
             yield deleted_ebay_product
