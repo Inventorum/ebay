@@ -274,4 +274,62 @@ interactions:
       x-ebay-esb-siteid: ['77']
       x-ebay-request-id: ['14cc824b-afc0-a5e4-2707-ac87c3d070e2!ws.api.dll!10.94.66.112!esbtrading[]']
     status: {code: 200, message: OK}
+- request:
+    body: '{"state": "in_progress", "details": {"success": true}, "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode application/json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['73']
+      Content-Type: [!!python/unicode application/json]
+      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode 346]
+      X-Inv-User: [!!python/unicode 425]
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Mon, 20 Apr 2015 10:47:29 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9Ef:Biut8-xy6miyjACyqB4qRyPqay8"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:47:29 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['4596065574487385588']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"state": "published", "details": {"success": true}, "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode application/json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['71']
+      Content-Type: [!!python/unicode application/json]
+      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode 346]
+      X-Inv-User: [!!python/unicode 425]
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Mon, 20 Apr 2015 10:52:29 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9JV:wRKy-WUC9livMMjB_GBdhL5r00E"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:52:29 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
 version: 1

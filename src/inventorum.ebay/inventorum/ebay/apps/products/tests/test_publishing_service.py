@@ -250,6 +250,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         service.validate()
         item = service.prepare()
         service.publish(item)
+        service.change_state(item, EbayProductPublishingStatus.PUBLISHED)
 
         item = product.published_item
         self.assertIsNotNone(item)

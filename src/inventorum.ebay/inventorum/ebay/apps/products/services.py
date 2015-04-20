@@ -1,25 +1,36 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
+import logging
 from decimal import Decimal
+
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
+from requests.exceptions import HTTPError
+
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.items import EbayItems
-from requests.exceptions import HTTPError
+
+log = logging.getLogger(__name__)
 
 
 class PublishingServiceException(Exception):
-    pass
-
+    def __init__(self, message=None, original_exception=None):
+        self.message = message
+        self.original_exception = original_exception
 
 class PublishingValidationException(PublishingServiceException):
     pass
 
 
 class PublishingNotPossibleException(PublishingServiceException):
+    pass
+
+
+class PublishingSendStateFailedException(PublishingServiceException):
     pass
 
 
@@ -33,7 +44,7 @@ class PublishingUnpublishingService(object):
         """
         Service for publishing products to ebay
         :type product: EbayProductModel
-        :type user: EbayUserModel
+        :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
         """
         self.user = user
         self.product = product
@@ -96,31 +107,42 @@ class PublishingService(PublishingUnpublishingService):
         :return:
         """
         item = self._create_db_item()
-        # TODO: At this point we should change state in API to In progress of publishing, but api is not ready yet
-
         return item
+
+    def change_state(self, item, state, details=None):
+        """
+        Purpose of this method is when you batch publish now, we will first call all products with `change_state`
+        and then all product `publish`.
+        """
+
+        item.publishing_status = state
+        item.save()
+
+        core_api_state = EbayProductPublishingStatus.core_api_state(state)
+        if core_api_state is not None:
+            try:
+                self.user.core_api.send_state(item.product.inv_id, core_api_state, details=details)
+            except HTTPError as e:
+                raise PublishingSendStateFailedException()
+        else:
+            log.warn('Got state (%s) that cannot be mapped to core api PublishState', state)
 
     def publish(self, item):
         """
         Here this method can be called asynchronously, cause it loads everything from DB again
         :type item: EbayItemModel
         """
-        item.publishing_status = EbayProductPublishingStatus.IN_PROGRESS
-        item.save()
 
         service = EbayItems(self.user.account.token.ebay_object)
         try:
             response = service.publish(item.ebay_object)
         except EbayConnectionException as e:
-            raise PublishingServiceException(e.message)
+            raise PublishingServiceException(e.message, original_exception=e)
 
         item.external_id = response.item_id
-        item.publishing_status = EbayProductPublishingStatus.PUBLISHED
         item.published_at = response.start_time
         item.ends_at = response.end_time
         item.save()
-
-        # TODO: At this point we should inform API to change quantity I think?
 
     def _create_db_item(self):
 
