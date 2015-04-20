@@ -20,14 +20,12 @@ class EbayProductPublishingStatus(object):
 
 class EbayItemUpdateStatus(object):
     DRAFT = 1
-    PENDING = 2
-    IN_PROGRESS = 3
-    SUCCEEDED = 4
-    FAILED = 5
+    IN_PROGRESS = 2
+    SUCCEEDED = 3
+    FAILED = 4
 
     CHOICES = (
         (DRAFT, "DRAFT"),
-        (PENDING, "PENDING"),
         (IN_PROGRESS, "IN_PROGRESS"),
         (SUCCEEDED, "SUCCEEDED"),
         (FAILED, "FAILED")

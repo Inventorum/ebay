@@ -21,7 +21,7 @@ class EbayProductModelQuerySet(MappedInventorumModelQuerySet):
         """
         :rtype: EbayProductModelQuerySet
         """
-        return self.filter(items__publishing_status=EbayProductPublishingStatus.PUBLISHED)
+        return self.filter(items__publishing_status=EbayProductPublishingStatus.PUBLISHED).distinct()
 
     def by_account(self, account):
         """

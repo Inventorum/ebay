@@ -72,6 +72,7 @@ class TestCoreProductDeltaDeserializer(UnitTestCase):
     def test_meta_overwrite(self):
         minimal_core_delta_product_json = {
             "id": 1,
+            "name": "Some product",
             "state": "updated",
             "gross_price": "449.99",
             "quantity": 1337,

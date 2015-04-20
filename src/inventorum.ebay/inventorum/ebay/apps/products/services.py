@@ -17,6 +17,7 @@ from requests.exceptions import HTTPError
 log = logging.getLogger(__name__)
 
 
+# TODO jm: Generalize exceptions for services
 class PublishingServiceException(Exception):
     pass
 
@@ -180,7 +181,7 @@ class UnpublishingService(PublishingUnpublishingService):
         item.save()
 
 
-class EbayItemUpdateService(object):
+class UpdateService(object):
 
     def __init__(self, user, ebay_item_update):
         """
@@ -196,11 +197,12 @@ class EbayItemUpdateService(object):
         service = EbayItems(self.user.account.token.ebay_object)
         response = service.revise_inventory_status(self.ebay_item_update.ebay_object)
 
-        # TODO jm: Handle failures?
+        # TODO jm: Handle failures
 
+        self._update_ebay_item_model()
         self.ebay_item_update.status = EbayItemUpdateStatus.SUCCEEDED
 
-    def _update_ebay_item(self):
+    def _update_ebay_item_model(self):
         ebay_item = self.ebay_item_update.item
         assert isinstance(ebay_item, EbayItemModel)
 
@@ -211,3 +213,22 @@ class EbayItemUpdateService(object):
             ebay_item.gross_price = self.ebay_item_update.gross_price
 
         ebay_item.save()
+
+
+class ProductDeletionService(object):
+
+    def __init__(self, user, product):
+        """
+        :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
+        :type product: EbayProductModel
+        """
+        self.user = user
+        self.product = product
+
+    def delete(self):
+        # TODO: No error handling, does unpublish always throw on failure?
+        if self.product.is_published:
+            service = UnpublishingService(self.product, self.user)
+            service.unpublish()
+
+        self.product.delete()

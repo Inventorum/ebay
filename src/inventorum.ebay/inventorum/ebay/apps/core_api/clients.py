@@ -73,7 +73,6 @@ class CoreAPIClient(object):
         headers.update(custom_headers)
 
         response = requests.get(self.url_for(path), params=params, headers=headers)
-
         if not response.ok:
             response.raise_for_status()
 
@@ -134,7 +133,7 @@ class CoreAPIClient(object):
 
         headers = self._get_request_headers(custom_headers)
 
-        response = requests.post(self.url_for(path), data=data, params=params, headers=headers)
+        response = requests.put(self.url_for(path), data=data, params=params, headers=headers)
 
         if not response.ok:
             response.raise_for_status()
@@ -208,7 +207,7 @@ class CoreAPIClient(object):
         """
         :type dt: datetime.datetime
         """
-        return dt.isoformat()
+        return dt.replace(microsecond=0).isoformat()
 
 
 class UserScopedCoreAPIClient(CoreAPIClient):
@@ -276,13 +275,15 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         # verbose = ebay meta attributes will be included in the response
         params = {
             "verbose": True,
-            "start_data": self._encode_datetime(start_date)
+            "start_date": self._encode_datetime(start_date)
         }
 
         pager = self.paginated_get("/api/products/delta/modified/", limit_per_page=limit_per_page, params=params)
         for page in pager.pages:
             serializer = CoreProductDeltaDeserializer(data=page.data, many=True)
-            yield serializer.build()
+            # TODO jm: Exception: ListSerializer has no method build, save works here but its ugly :-x
+            serializer.is_valid(raise_exception=True)
+            yield serializer.save()
 
     def get_paginated_product_delta_deleted(self, start_date, limit_per_page=10000):
         """
@@ -294,8 +295,8 @@ class UserScopedCoreAPIClient(CoreAPIClient):
                 rest_framework.exceptions.ValidationError
         """
         params = {
-            "start_data": self._encode_datetime(start_date)
+            "start_date": self._encode_datetime(start_date)
         }
-        pager = self.paginated_get("/api/products/delta/modified/", limit_per_page=limit_per_page, params=params)
+        pager = self.paginated_get("/api/products/delta/deleted/", limit_per_page=limit_per_page, params=params)
         for page in pager.pages:
             yield page.data

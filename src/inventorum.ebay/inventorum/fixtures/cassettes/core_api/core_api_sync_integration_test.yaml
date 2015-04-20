@@ -1,0 +1,429 @@
+interactions:
+- request:
+    body: '{"safety_stock": 5, "reorder_level": 10, "name": "Test product 1", "images":
+      [], "price": "1.6722689076", "quantity": 12, "tax_type": 1063, "description":
+      ""}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['158']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "Test product 1",
+        "id": 665994, "quantity": "12.00", "reorder_level": "10.00", "safety_stock":
+        "5.00", "price": "1.6722689076", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": null, "variation_count": 0, "variations": [], "average_purchase_price":
+        "0", "description": "", "product_code": null, "ean": null, "categories": [],
+        "images": [], "custom_sale": false, "shipping_services": [], "is_favourite":
+        false, "brand": "", "supplier": "", "meta": {}, "is_giftcard": false, "gross_price":
+        "1.99", "purchase_price": "0"}'}
+    headers:
+      allow: ['GET, POST, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:39 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QR:nHn2jlbZco0fcAk5Ocyujyg6Sf0"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:39 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"safety_stock": 5, "reorder_level": 10, "name": "Test product 2", "images":
+      [], "price": "2.8991596639", "quantity": 5, "tax_type": 1063, "description":
+      ""}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['157']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "Test product 2",
+        "id": 665995, "quantity": "5.00", "reorder_level": "10.00", "safety_stock":
+        "5.00", "price": "2.8991596639", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": null, "variation_count": 0, "variations": [], "average_purchase_price":
+        "0", "description": "", "product_code": null, "ean": null, "categories": [],
+        "images": [], "custom_sale": false, "shipping_services": [], "is_favourite":
+        false, "brand": "", "supplier": "", "meta": {}, "is_giftcard": false, "gross_price":
+        "3.45", "purchase_price": "0"}'}
+    headers:
+      allow: ['GET, POST, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:39 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QR:nHn2jlbZco0fcAk5Ocyujyg6Sf0"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:39 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['307794304300541428']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"gross_price": "2.99", "price": "2.5126050420"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['48']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: PUT
+    uri: http://app.intern.inventorum.net/api/products/665994/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "Test product 1",
+        "id": 665994, "quantity": "12.00", "reorder_level": "10.00", "safety_stock":
+        "5.00", "price": "2.5126050420", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": null, "variation_count": 0, "variations": [], "average_purchase_price":
+        "0E-10", "description": "", "product_code": null, "ean": null, "categories":
+        [], "images": [], "custom_sale": false, "shipping_services": [], "is_favourite":
+        false, "brand": "", "supplier": "", "meta": {}, "is_giftcard": false, "gross_price":
+        "2.99", "purchase_price": "0E-10"}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:39 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QR:nHn2jlbZco0fcAk5Ocyujyg6Sf0"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:39 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/delta/modified/?limit=100&page=1&verbose=True
+  response:
+    body: {string: !!python/unicode '{"total": 2, "data": [{"name": "Test product
+        2", "id": 665995, "quantity": "5.00", "reorder_level": "10.00", "safety_stock":
+        "5.00", "price": "2.8991596639", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": null, "variation_count": 0, "is_giftcard": false, "gross_price":
+        "3.45", "state": "created", "parent": null, "ean": null, "custom_sale": false,
+        "categories": []}, {"name": "Test product 1", "id": 665994, "quantity": "12.00",
+        "reorder_level": "10.00", "safety_stock": "5.00", "price": "2.5126050420",
+        "tax_type": 1063, "custom_price": false, "ebay_product_id": null, "ebay_url":
+        null, "in_shop": false, "shop_url": null, "thumbnail": null, "variation_count":
+        0, "is_giftcard": false, "gross_price": "2.99", "state": "created", "parent":
+        null, "ean": null, "custom_sale": false, "categories": []}]}'}
+    headers:
+      allow: ['GET, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:39 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QR:nHn2jlbZco0fcAk5Ocyujyg6Sf0"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:39 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/delta/deleted/?limit=10000&page=1
+  response:
+    body: {string: !!python/unicode '{"total": 0, "data": []}'}
+    headers:
+      allow: ['GET, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:40 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QS:sX3U7c6wgp6Sj5gtbOZYkLZd2vQ"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:40 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"stock": {"date": "20.04.2015", "note": "", "price": "2.99", "quantity":
+      10}}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['78']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: PUT
+    uri: http://app.intern.inventorum.net/api/products/665994/adjust_inventory/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "Test product 1",
+        "id": 665994, "quantity": "22.00", "reorder_level": "10.00", "safety_stock":
+        "5.00", "price": "2.5126050420", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": null, "variation_count": 0, "variations": [], "average_purchase_price":
+        "2.9900000000", "description": "", "product_code": null, "ean": null, "categories":
+        [], "images": [], "custom_sale": false, "shipping_services": [], "is_favourite":
+        false, "brand": "", "supplier": "", "meta": {}, "is_giftcard": false, "gross_price":
+        "2.99", "purchase_price": "2.99"}'}
+    headers:
+      allow: ['PUT, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:40 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QS:sX3U7c6wgp6Sj5gtbOZYkLZd2vQ"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:40 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/delta/modified/?limit=100&page=1&verbose=True
+  response:
+    body: {string: !!python/unicode '{"total": 2, "data": [{"name": "Test product
+        2", "id": 665995, "quantity": "5.00", "reorder_level": "10.00", "safety_stock":
+        "5.00", "price": "2.8991596639", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": null, "variation_count": 0, "is_giftcard": false, "gross_price":
+        "3.45", "state": "created", "parent": null, "ean": null, "custom_sale": false,
+        "categories": []}, {"name": "Test product 1", "id": 665994, "quantity": "22.00",
+        "reorder_level": "10.00", "safety_stock": "5.00", "price": "2.5126050420",
+        "tax_type": 1063, "custom_price": false, "ebay_product_id": null, "ebay_url":
+        null, "in_shop": false, "shop_url": null, "thumbnail": null, "variation_count":
+        0, "is_giftcard": false, "gross_price": "2.99", "state": "created", "parent":
+        null, "ean": null, "custom_sale": false, "categories": []}]}'}
+    headers:
+      allow: ['GET, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:40 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QS:sX3U7c6wgp6Sj5gtbOZYkLZd2vQ"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:40 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/delta/deleted/?limit=10000&page=1
+  response:
+    body: {string: !!python/unicode '{"total": 70, "data": [665904, 665905, 665922,
+        665923, 665924, 665925, 665926, 665927, 665928, 665929, 665930, 665931, 665933,
+        665934, 665935, 665936, 665937, 665938, 665939, 665940, 665941, 665942, 665943,
+        665944, 665945, 665946, 665947, 665948, 665949, 665950, 665952, 665953, 665954,
+        665955, 665956, 665957, 665958, 665959, 665960, 665961, 665964, 665965, 665966,
+        665967, 665968, 665969, 665970, 665971, 665972, 665973, 665974, 665975, 665976,
+        665977, 665978, 665979, 665980, 665981, 665982, 665983, 665984, 665985, 665986,
+        665987, 665988, 665989, 665990, 665991, 665992, 665993]}'}
+    headers:
+      allow: ['GET, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:40 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QS:sX3U7c6wgp6Sj5gtbOZYkLZd2vQ"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:40 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['0']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: DELETE
+    uri: http://app.intern.inventorum.net/api/products/665994/
+  response:
+    body: {string: !!python/unicode '{}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:40 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QS:sX3U7c6wgp6Sj5gtbOZYkLZd2vQ"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:40 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['0']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: DELETE
+    uri: http://app.intern.inventorum.net/api/products/665995/
+  response:
+    body: {string: !!python/unicode '{}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:41 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QT:TodkW61Dzkxg5GoSV2eVp51GZk0"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:41 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/delta/modified/?limit=100&page=1&verbose=True
+  response:
+    body: {string: !!python/unicode '{"total": 0, "data": []}'}
+    headers:
+      allow: ['GET, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:41 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QT:TodkW61Dzkxg5GoSV2eVp51GZk0"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:41 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/delta/deleted/?limit=10000&page=1
+  response:
+    body: {string: !!python/unicode '{"total": 72, "data": [665904, 665905, 665922,
+        665923, 665924, 665925, 665926, 665927, 665928, 665929, 665930, 665931, 665933,
+        665934, 665935, 665936, 665937, 665938, 665939, 665940, 665941, 665942, 665943,
+        665944, 665945, 665946, 665947, 665948, 665949, 665950, 665952, 665953, 665954,
+        665955, 665956, 665957, 665958, 665959, 665960, 665961, 665964, 665965, 665966,
+        665967, 665968, 665969, 665970, 665971, 665972, 665973, 665974, 665975, 665976,
+        665977, 665978, 665979, 665980, 665981, 665982, 665983, 665984, 665985, 665986,
+        665987, 665988, 665989, 665990, 665991, 665992, 665993, 665994, 665995]}'}
+    headers:
+      allow: ['GET, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 20 Apr 2015 10:59:41 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1Yk9QT:TodkW61Dzkxg5GoSV2eVp51GZk0"; Domain=app.intern.inventorum.net;
+          expires=Mon, 20-Apr-2015 12:59:41 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+version: 1

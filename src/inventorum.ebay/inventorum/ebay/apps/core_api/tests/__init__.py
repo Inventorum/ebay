@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from datetime import date
 
 import logging
 import os
@@ -53,12 +54,7 @@ class CoreApiTestHelpers(object):
     def create_core_api_product(self, name, gross_price="100.00", quantity=100, description=""):
         user = self.__authenticated_test_user
 
-        tax_rate = D("19")
-        net_price = (D(gross_price) / (tax_rate/D(100) + D(1)))
-
-        TEN_PLACES = D(10) ** -10
-        net_price = net_price.quantize(TEN_PLACES)
-
+        net_price = gross_to_net(gross_price, tax_rate=D("19"))
         response = user.core_api.post("/api/products/", data={
             "name": name,
             "description": description,
@@ -75,8 +71,35 @@ class CoreApiTestHelpers(object):
         return json_body["id"]
 
     def update_core_api_product(self, id, attributes):
+        if "gross_price" in attributes:
+            net_price = gross_to_net(D(attributes["gross_price"]), tax_rate=D("19"))
+            attributes["price"] = str(net_price)
+
         user = self.__authenticated_test_user
         return user.core_api.put("/api/products/{product_id}/".format(product_id=id), attributes)
+
+    def adjust_core_inventory(self, product_id, quantity, price=None, cost=None):
+        user = self.__authenticated_test_user
+
+        data = {
+            "stock": {
+                "quantity": quantity,
+                "date": date.today().strftime("%d.%m.%Y"),
+                "note": ""
+            }
+        }
+
+        if price is None and cost is None:
+            raise Exception("Either price or cost must be set")
+
+        if price is not None:
+            data["stock"]["price"] = price
+
+        if cost is not None:
+            data["stock"]["cost"] = cost
+
+        return user.core_api.put("/api/products/{product_id}/adjust_inventory/".format(product_id=product_id),
+                                 data=data)
 
     def delete_core_api_product(self, id):
         user = self.__authenticated_test_user
@@ -87,3 +110,8 @@ class CoreApiTestHelpers(object):
         """ :rtype: EbayUserModel """
         assert isinstance(self.user, EbayUserModel)
         return self.user
+
+
+def gross_to_net(price, tax_rate):
+    TEN_PLACES = D(10) ** -10
+    return (D(price) / (tax_rate/D(100) + D(1))).quantize(TEN_PLACES)

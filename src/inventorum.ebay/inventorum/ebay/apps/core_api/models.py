@@ -285,7 +285,7 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     # meta will be removed after meta overwrites
-    meta = serializers.DictField(child=MetaDeserializer())
+    meta = serializers.DictField(required=False, child=MetaDeserializer())
 
     def create(self, validated_data):
         self.overwrite_attrs_from_meta(validated_data, remove_meta=True)

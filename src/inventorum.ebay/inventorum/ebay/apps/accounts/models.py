@@ -50,8 +50,7 @@ class EbayAccountModelQuerySet(MappedInventorumModelQuerySet):
         """
         :rtype: EbayProductModelQuerySet
         """
-
-        return self.filter(products__items__publishing_status=EbayProductPublishingStatus.PUBLISHED)
+        return self.filter(products__items__publishing_status=EbayProductPublishingStatus.PUBLISHED).distinct()
 
 
 class EbayAccountModel(MappedInventorumModel):
