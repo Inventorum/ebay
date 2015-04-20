@@ -46,17 +46,6 @@ class TestTrustedHeaderAuthentication(UnitTestCase):
         self.assert_authentication_succeeds(request, expected_auth_model_inv_id=1234)
         self.assertTrue(EbayUserModel.objects.by_inv_id(1234).exists())
 
-    def test_fails_when_ebay_account_id_is_used(self):
-        user = EbayUserFactory.create(account=self.account)
-
-        assert self.account.id != self.account.inv_id
-
-        request = self.get_request({
-            self.X_ACCOUNT_HEADER: self.account.id,
-            self.X_USER_HEADER: user.inv_id
-        })
-        self.assert_authentication_fails(request)
-
     def test_skipped_without_account_or_user_header(self):
         user = EbayUserFactory.create(account=self.account)
 

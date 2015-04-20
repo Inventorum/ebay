@@ -4,11 +4,13 @@ from decimal import Decimal
 import logging
 import unittest
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 
-from inventorum.ebay.apps.core_api.tests import CoreApiTest
+from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
-from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel
+from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayProductSpecificModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService
+from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
@@ -23,38 +25,47 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
 
     def _assign_category(self, product):
-        category, c = CategoryModel.objects.get_or_create(external_id='64540')
-        product.category = category
-        product.save()
+        leaf_category = CategoryFactory.create(name="Leaf category", external_id='64540')
+
+        self.specific = CategorySpecificFactory.create(category=leaf_category)
+        self.required_specific = CategorySpecificFactory.create_required(category=leaf_category, max_values=2)
 
         features = CategoryFeaturesModel.objects.create(
-            category=category
+            category=leaf_category
         )
         durations = ['Days_5', 'Days_120']
+
         for d in durations:
             duration = DurationModel.objects.create(
                 value=d
             )
             features.durations.add(duration)
 
+        product.category = leaf_category
+        product.save()
+
+    def _add_specific_to_product(self, product):
+        EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test")
+        EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test 2")
+
     def test_failed_validation(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingService(product, self.user)
 
-        # No shipping services
-        service.core_account.settings.shipping_services = []
-        with self.assertRaises(PublishingValidationException) as e:
-            service.validate()
+            # No shipping services
+            service.core_account.settings.shipping_services = []
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
 
         self.assertEqual(e.exception.message, 'Product has not shipping services selected')
 
         # Get product w/o shipping but acc has
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingService(product, self.user)
 
-        with self.assertRaises(PublishingValidationException) as e:
-            service.validate()
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
 
         self.assertEqual(e.exception.message, 'You need to select category')
         self._assign_category(service.product)
@@ -81,21 +92,28 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
         item.save()
 
-        # Get product again cause it has cached item
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingService(product, self.user)
 
-        # Should not raise anything finally!
-        service.validate()
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
+
+            self.assertEqual(e.exception.message,
+                             'You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk)
+
+            self._add_specific_to_product(product)
+            # Should not raise anything finally!
+            service.validate()
 
     def test_preparation(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
             service = PublishingService(product, self.user)
 
-        self._assign_category(product)
-        service.prepare()
+            self._assign_category(product)
+            self._add_specific_to_product(product)
+            service.prepare()
 
         last_item = product.items.last()
         self.assertEqual(last_item.name, "SlowRoad Shipping Details")
@@ -104,13 +122,19 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(last_item.quantity, 3000)
         self.assertEqual(last_item.gross_price, Decimal("599.99"))
         self.assertEqual(last_item.country, 'DE')
-        self.assertEqual(last_item.paypal_email_address, 'john.newman@paypal.com')
+        self.assertEqual(last_item.paypal_email_address, 'bartosz@hernas.pl')
         self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.DRAFT)
         self.assertEqual(last_item.listing_duration, 'Days_120')
 
         payment_methods = last_item.payment_methods.all()
         self.assertEqual(payment_methods.count(), 1)
         self.assertEqual(payment_methods.last().external_id, 'PayPal')
+
+        specific_values = last_item.specific_values.all()
+        self.assertEqual(specific_values.count(), 2)
+        last_specific = specific_values.last()
+        self.assertEqual(last_specific.value, 'Test')
+        self.assertEqual(last_specific.specific.pk, self.required_specific.pk)
 
         images = last_item.images.all()
         self.assertEqual(images.count(), 1)
@@ -133,74 +157,77 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
     def test_account_shipping_fallback(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingService(product, self.user)
 
-        self._assign_category(product)
-        service.prepare()
+            self._assign_category(product)
+            service.prepare()
 
-        last_item = product.items.last()
-        shipping_services = last_item.shipping.all()
+            last_item = product.items.last()
+            shipping_services = last_item.shipping.all()
 
-        self.assertEqual(shipping_services.count(), 1)
-        self.assertEqual(shipping_services[0].external_id, 'DE_HermesPaket')
-        self.assertEqual(shipping_services[0].cost, Decimal('0'))
-        self.assertEqual(shipping_services[0].additional_cost, None)
+            self.assertEqual(shipping_services.count(), 1)
+            self.assertEqual(shipping_services[0].external_id, 'DE_DHL2KGPaket')
+            self.assertEqual(shipping_services[0].cost, Decimal('5'))
+            self.assertEqual(shipping_services[0].additional_cost, Decimal('2'))
 
     def test_builder(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
-        with CoreApiTest.vcr.use_cassette("get_product_simple_for_publishing_test_with_shipping.json"):
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
             service = PublishingService(product, self.user)
 
-        self._assign_category(product)
-        service.prepare()
-        last_item = product.items.last()
+            self._assign_category(product)
+            self._add_specific_to_product(product)
+            service.prepare()
+            last_item = product.items.last()
 
         # Check data builder
         ebay_item = last_item.ebay_object
 
         data = ebay_item.dict()
-        self.assertEqual(data, {u'Item': {
-            u'ConditionID': 1000,
-            u'Country': 'DE',
-            u'Currency': u'EUR',
-            u'Description': u'Some description',
-            u'DispatchTimeMax': 3,
-            u'ListingType': u'FixedPriceItem',
-            u'PostalCode': u'13355',
-            u'PrimaryCategory': {u'CategoryID': u'64540'},
-            u'Quantity': 3000,
-            u'ReturnPolicy': {
-                u'Description': u'',
-                u'ReturnsAcceptedOption': u'ReturnsAccepted'
+        self.assertEqual(data, {'Item': {
+            'ConditionID': 1000,
+            'Country': 'DE',
+            'Currency': 'EUR',
+            'Description': 'Some description',
+            'DispatchTimeMax': 3,
+            'ListingType': 'FixedPriceItem',
+            'PostalCode': '13355',
+            'PrimaryCategory': {'CategoryID': '64540'},
+            'Quantity': 3000,
+            'ReturnPolicy': {
+                'Description': '',
+                'ReturnsAcceptedOption': 'ReturnsAccepted'
             },
-            u'StartPrice': Decimal('599.9900000000'),
-            u'Title': u'SlowRoad Shipping Details',
-            u'ListingDuration': u'Days_120',
-            u'PayPalEmailAddress': u'john.newman@paypal.com',
-            u'PaymentMethods': ['PayPal'],
-            u'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
-                                               '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
-            u'ShippingDetails': [
+            'ItemSpecifics': {'NameValueList': [{'Name': self.required_specific.name,
+                                                 'Value': ['Test', 'Test 2']}]},
+            'StartPrice': Decimal('599.9900000000'),
+            'Title': 'SlowRoad Shipping Details',
+            'ListingDuration': 'Days_120',
+            'PayPalEmailAddress': 'bartosz@hernas.pl',
+            'PaymentMethods': ['PayPal'],
+            'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
+                                              '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
+            'ShippingDetails': [
                 {
-                    u'ShippingServiceOptions': {
-                        u'ShippingService': u'DE_DHLPaket',
-                        u'ShippingServiceAdditionalCost': Decimal('3.0000000000'),
-                        u'ShippingServiceCost': Decimal('20.0000000000'),
-                        u'ShippingServicePriority': 1
+                    'ShippingServiceOptions': {
+                        'ShippingService': 'DE_DHLPaket',
+                        'ShippingServiceAdditionalCost': Decimal('3.0000000000'),
+                        'ShippingServiceCost': Decimal('20.0000000000'),
+                        'ShippingServicePriority': 1
                     }
                 },
                 {
-                    u'ShippingServiceOptions': {
-                        u'ShippingService': u'DE_HermesPaket',
-                        u'ShippingServiceAdditionalCost': Decimal('1.0000000000'),
-                        u'ShippingServiceCost': Decimal('10.0000000000'),
-                        u'ShippingServicePriority': 1
+                    'ShippingServiceOptions': {
+                        'ShippingService': 'DE_HermesPaket',
+                        'ShippingServiceAdditionalCost': Decimal('1.0000000000'),
+                        'ShippingServiceCost': Decimal('10.0000000000'),
+                        'ShippingServicePriority': 1
                     }
                 }],
         }})
 
-    @CoreApiTest.vcr.use_cassette("test_publishing_service_publish_and_unpublish.json")
+    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml")
     def test_publishing(self):
         product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
 

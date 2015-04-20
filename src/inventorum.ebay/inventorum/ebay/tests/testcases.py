@@ -28,12 +28,6 @@ class APIClient(test.APIClient):
 class APITestCase(test.APITestCase):
     maxDiff = None
     client_class = APIClient
-    vcr = vcr.VCR(
-        serializer='json',
-        cassette_library_dir=settings.CASSETTES_DIR,
-        record_mode='once',
-        filter_headers=['X-EBAY-API-APP-NAME', 'X-EBAY-API-CERT-NAME', 'X-EBAY-API-DEV-NAME', 'Authorization']
-    )
 
     def setUp(self):
         super(APITestCase, self).setUp()
@@ -58,14 +52,17 @@ class APITestCase(test.APITestCase):
 
 
 class EbayAuthenticatedAPITestCase(APITestCase):
-    # Token valid till 2016.09.21 13:18:38
-    ebay_token = EbayToken(settings.EBAY_LIVE_TOKEN, expiration_time=settings.EBAY_LIVE_TOKEN_EXPIRATION_DATE)
-
     def setUp(self):
         super(EbayAuthenticatedAPITestCase, self).setUp()
+        # Token valid till 2016.09.21 13:18:38
+        self.ebay_token = self.create_ebay_token()
         self.account.token = EbayTokenModel.create_from_ebay_token(self.ebay_token)
         self.account.save()
 
+    @staticmethod
+    def create_ebay_token():
+        return EbayToken(settings.EBAY_LIVE_TOKEN, expiration_time=settings.EBAY_LIVE_TOKEN_EXPIRATION_DATE,
+                               site_id=settings.EBAY_SUPPORTED_SITES['DE'])
 
 class UnitTestCase(TestCase):
     pass

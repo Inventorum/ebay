@@ -32,6 +32,8 @@ class EbayConnectionException(EbayException):
             errors = [errors]
         self.errors = [EbayError.create_from_data(e) for e in errors]
 
+    def __unicode__(self):
+        return 'Message: %s ' % self.message
 
 
 class EbayReturnedErrorsException(EbayException):
@@ -60,21 +62,22 @@ class Ebay(object):
     version = 911
     timeout = 20
     api = None
-    error_lang = None
     _token = None
+    default_site_id = 77
 
-    def __init__(self, token=None, site_id=77, error_lang="en_US", parallel=None):
-        if site_id not in settings.EBAY_SUPPORTED_SITES.values():
-            raise EbayNotSupportedSite()
+    def __init__(self, token=None, default_site_id=None, parallel=None):
 
         self.api = Connection(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
                               certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
                               debug=settings.DEBUG, timeout=self.timeout, compatibility=self.compatibility,
                               version=self.version, parallel=parallel, config_file=None)
 
+        if default_site_id is not None:
+            self.default_site_id = default_site_id
+
+        self.site_id = self.default_site_id
+
         self.token = token
-        self.site_id = site_id
-        self.error_lang = error_lang
 
 
     # EBAY PROPERTIES
@@ -87,6 +90,12 @@ class Ebay(object):
         self._token = new_value
         value = getattr(self._token, 'value', None)
         self.api.config.set('token', value, force=True)
+
+        # Set site id
+        site_id = getattr(self._token, 'site_id', self.default_site_id)
+        if site_id not in settings.EBAY_SUPPORTED_SITES.values():
+            raise EbayNotSupportedSite()
+        self.api.config.set('siteid', site_id, force=True)
 
     @property
     def site_id(self):
@@ -106,6 +115,7 @@ class Ebay(object):
         :type data: dict
         :rtype: dict
         """
+        self._append_additional_params_to_data(data)
         try:
             response = self.api.execute(verb=verb, data=data)
         except ConnectionError as e:
@@ -118,6 +128,10 @@ class Ebay(object):
         execution = EbayResponse(response)
 
         return execution.dict()
+
+    def _append_additional_params_to_data(self, data):
+        if self._token:
+            data['ErrorLanguage'] = self._token.error_language or "en_US"
 
 
 class EbayParallel(Ebay):
@@ -145,6 +159,7 @@ class EbayParallel(Ebay):
         :type data: dict
         :rtype: Connection
         """
+        self._append_additional_params_to_data(data)
         api = self.parallel_api_constructor().api
         api.execute(verb=verb, data=data)
 

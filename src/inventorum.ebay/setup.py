@@ -35,7 +35,9 @@ required_eggs = [
     'mock>=1.0.1',
     'vcrpy>=1.3.0',
     'python-keyczar>=0.715',
-    'django-countries>=3.3'
+    'django-countries>=3.3',
+    'raven>=5.2.0',
+    'django-rest-swagger>=0.2.9'
 ]
 
 setup(

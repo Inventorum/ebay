@@ -1,23 +1,47 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
+from django.conf import settings
+from django.utils.functional import cached_property
+from django.utils.translation import ugettext
+
 from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
-from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 from inventorum.ebay.lib.ebay.info import EbayInfo
+from requests.exceptions import HTTPError
+
+
+class AuthorizationServiceException(Exception):
+    pass
 
 
 class AuthorizationService(object):
-    def __init__(self, account, auto_commit=True):
-        self.account = account
+    def __init__(self, user, auto_commit=True):
+        self.user = user
+        self.account = self.user.account
         self.auto_commit = auto_commit
 
-    def assign_token_from_session_id(self, session_id):
-        auth = EbayAuthentication()
-        token = auth.fetch_token(session_id)
+    @cached_property
+    def core_info(self):
+        try:
+            return self.user.core_api.get_account_info()
+        except HTTPError as e:
+            raise AuthorizationServiceException('Could not get account info from API')
 
+    def assign_token_from_session_id(self, session_id):
+        country = self.core_info.account.country
+        site_id = settings.EBAY_SUPPORTED_SITES.get(country, None)
+        if site_id is None:
+            raise AuthorizationServiceException(ugettext('Country %(country)s not supported') % {'country': country})
+
+        auth = EbayAuthentication(default_site_id=site_id)
+        token = auth.fetch_token(session_id)
         db_token = EbayTokenModel.create_from_ebay_token(token)
+
         self.account.token = db_token
+        self.account.country = country
+
         self._auto_committed_save()
 
     def fetch_user_data_from_ebay(self):
@@ -26,8 +50,7 @@ class AuthorizationService(object):
         :return:
 
         """
-        token = EbayToken(self.account.token.value, self.account.token.expiration_date)
-        auth = EbayInfo(token)
+        auth = EbayInfo(self.account.token.ebay_object)
         user = auth.get_user()
 
         self.account.email = user.email

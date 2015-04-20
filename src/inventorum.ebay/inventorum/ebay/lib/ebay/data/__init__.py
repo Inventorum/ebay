@@ -20,3 +20,7 @@ class EbayParser(object):
         """
         return datetime.strptime(str_date, cls.DATE_FORMAT)
 
+
+class EbayBooleanField(BooleanField):
+    TRUE_VALUES = frozenset(BooleanField.TRUE_VALUES | {'Enabled'})
+    FALSE_VALUES = frozenset(BooleanField.TRUE_VALUES | {'Disabled'})

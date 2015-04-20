@@ -6,6 +6,7 @@ import factory
 from inventorum.ebay.lib.db.models import MappedInventorumModelFactory
 
 from inventorum.ebay.apps.accounts import models
+from inventorum.ebay.tests import StagingTestAccount
 
 
 log = logging.getLogger(__name__)
@@ -15,6 +16,8 @@ class EbayAccountFactory(MappedInventorumModelFactory):
 
     class Meta:
         model = models.EbayAccountModel
+
+    country = StagingTestAccount.COUNTRY
 
 
 class EbayUserFactory(MappedInventorumModelFactory):

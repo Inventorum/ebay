@@ -4,6 +4,21 @@ from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
 
 
+class EbayItemSpecific(object):
+    def __init__(self, name, values):
+        self.name = name
+        self.values = values
+
+    def dict(self):
+        data = {
+            'Name': self.name,
+        }
+        if len(self.values) == 1:
+            data['Value'] = self.values[0]
+        elif len(self.values) > 1:
+            data['Value'] = self.values
+        return data
+
 class EbayPicture(object):
     def __init__(self, url):
         if url.startswith('https'):
@@ -36,9 +51,14 @@ class EbayShippingService(object):
 
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
-                 paypal_email_address, payment_methods, category_id, shipping_services, pictures=None):
+                 paypal_email_address, payment_methods, category_id, shipping_services, pictures=None,
+                 item_specifics=None):
+
         if not all([isinstance(s, EbayShippingService) for s in shipping_services]):
             raise TypeError("shipping_services must be list of EbayShippingService instances")
+
+        if item_specifics and not all([isinstance(s, EbayItemSpecific) for s in item_specifics]):
+            raise TypeError("item_specifics must be list of EbayShippingService instances")
 
         self.title = title
         self.description = description
@@ -52,6 +72,7 @@ class EbayFixedPriceItem(object):
         self.category_id = category_id
         self.shipping_services = shipping_services
         self.pictures = pictures or []
+        self.item_specifics = item_specifics or []
 
     def dict(self):
         data = {
@@ -70,6 +91,11 @@ class EbayFixedPriceItem(object):
             data['PictureDetails'] = [p.dict() for p in self.pictures]
         if self.shipping_services:
             data['ShippingDetails'] = [s.dict() for s in self.shipping_services]
+
+        if self.item_specifics:
+            data['ItemSpecifics'] = {
+                'NameValueList': [s.dict() for s in self.item_specifics]
+            }
 
         # Static data
         data.update(**self._static_data)
