@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 
 import factory
-from inventorum.ebay.apps.categories import ListingDurations
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.db.models import MappedInventorumModelFactory
@@ -59,3 +58,10 @@ class PublishedEbayItemFactory(EbayItemFactory):
     @factory.lazy_attribute
     def ends_at(self):
         return datetime.utcnow() + timedelta(days=13)
+
+
+class EbayProductSpecificFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = models.EbayProductSpecificModel
+

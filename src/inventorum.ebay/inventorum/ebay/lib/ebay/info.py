@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import Ebay
-from inventorum.ebay.lib.ebay.data.features import EbayFeature
+from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature
 from inventorum.ebay.lib.ebay.data.user import EbayUser
 
 

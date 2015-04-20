@@ -4,8 +4,9 @@ import logging
 
 from django.utils.functional import cached_property
 from inventorum.ebay.apps.categories.models import CategoryModel
+from inventorum.ebay.apps.categories.serializers import CategorySpecificsSerializer
 
-from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 from inventorum.ebay.apps.products.serializers import EbayProductCategorySerializer, EbayProductSerializer
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.tests import Countries
@@ -22,9 +23,17 @@ class TestEbayCategorySerializer(UnitTestCase):
         level_2_category = CategoryFactory.create(name="Level 2 category", parent=root_category)
         leaf_category = CategoryFactory.create(name="Leaf category", parent=level_2_category)
 
+        specific = CategorySpecificFactory.create(category=leaf_category)
+        required_specific = CategorySpecificFactory.create_required(category=leaf_category)
+
+        self.assertEqual(leaf_category.specifics.count(), 2)
         subject = EbayProductCategorySerializer(leaf_category)
 
-        self.assertEqual(subject.data, {
+        data = subject.data
+        specifics = data.pop('specifics')
+        self.assertTrue(specifics)
+        
+        self.assertEqual(data, {
             "id": leaf_category.id,
             "name": "Leaf category",
             "country": "DE",
@@ -61,8 +70,10 @@ class TestEbayProductSerializer(UnitTestCase):
                 "country": "DE",
                 "parent_id": category.parent_id,
                 "is_leaf": True,
-                "breadcrumb": [{"id": category.parent_id, "name": "Some parent"}]
-            }
+                "breadcrumb": [{"id": category.parent_id, "name": "Some parent"}],
+                "specifics": []
+            },
+            "specific_values": []
         })
 
     def test_deserialize_serialized(self):

@@ -4,7 +4,8 @@ import logging
 
 from inventorum.ebay.lib.ebay import Ebay, EbayParallel
 from inventorum.ebay.lib.ebay.data.categories import EbayCategorySerializer, EbayCategory
-from inventorum.ebay.lib.ebay.data.features import EbayFeature
+from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature
+from inventorum.ebay.lib.ebay.data.categories.specifics import EbayCategorySpecifics
 
 
 log = logging.getLogger(__name__)
@@ -17,7 +18,7 @@ class EbayCategories(Ebay):
         super(EbayCategories, self).__init__(*args, **kwargs)
         self.parallel_api = EbayParallel(*args, **kwargs)
 
-    def get_categories(self, level_limit=None):
+    def get_categories(self, level_limit=None, only_leaf=False):
         """
         Returns generator to iterate over categories
         :return: Generator of categories
@@ -28,6 +29,7 @@ class EbayCategories(Ebay):
         fields_to_retrieve = EbayCategorySerializer._declared_fields.keys()
         data = dict(
             DetailLevel='ReturnAll',
+            ViewAllNodes=not only_leaf,
             OutputSelector=fields_to_retrieve
         )
 
@@ -54,7 +56,11 @@ class EbayCategories(Ebay):
                 ViewAllNodes=True,
                 CategoryID=category_id,
                 LevelLimit=7,
-                DetailLevel='ReturnAll'
+                DetailLevel='ReturnAll',
+                FeatureID=['ListingDurations', 'PaymentMethods', 'ItemSpecificsEnabled']
+                # If you input specific category features with FeatureID fields and set DetailLevel to ReturnAll,
+                # eBay returns just the requested feature settings for the specified category, regardless of the
+                # site defaults.
             ))
 
         category_features = self.parallel_api.wait_and_validate()
@@ -62,6 +68,31 @@ class EbayCategories(Ebay):
         for i, response in enumerate(category_features):
             data = response.response.dict()
             feature = EbayFeature.create_from_data(data)
+            log.debug('Parsing %d category: %s', i, data)
             features[feature.details.category_id] = feature
 
         return features
+
+    def get_specifics_for_categories(self, categories_ids):
+        """
+        Returns specifics per category
+        :param categories_ids:
+        :return: List of specifics per category
+        :rtype: dict[unicode, inventorum.ebay.lib.ebay.data.EbayFeature]
+        """
+        response = self.execute('GetCategorySpecifics', dict(
+            AllFeaturesForCategory=True,
+            ViewAllNodes=True,
+            CategoryID=categories_ids,
+            LevelLimit=7,
+            DetailLevel='ReturnAll',
+        ))
+
+        category_specifics = response['Recommendations']
+        specifics = {}
+        for i, data in enumerate(category_specifics):
+            specific = EbayCategorySpecifics.create_from_data(data)
+            log.debug('Parsing %d category specific: %s', i, data)
+            specifics[specific.category_id] = specific
+
+        return specifics

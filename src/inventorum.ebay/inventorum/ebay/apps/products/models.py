@@ -5,9 +5,12 @@ import logging
 from django.db import models
 from django_countries.fields import CountryField
 from inventorum.ebay import settings
+
+from inventorum.ebay.apps.categories.models import CategorySpecificModel
 from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayItemUpdateStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
-from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayInventoryStatus
+from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific,\
+    EbayInventoryStatus
 
 from inventorum.util.django.model_utils import PassThroughManager
 
@@ -70,6 +73,10 @@ class EbayProductModel(MappedInventorumModel):
             return None
 
         return settings.EBAY_LISTING_URL.format(listing_id=published_item.external_id)
+
+    @property
+    def specific_values_for_current_category(self):
+        return self.specific_values.filter(specific__category_id=self.category_id)
 
 
 # Models for data just before publishing
@@ -142,6 +149,7 @@ class EbayItemModel(BaseModel):
             category_id=self.category.external_id,
             shipping_services=[s.ebay_object for s in self.shipping.all()],
             pictures=[i.ebay_object for i in self.images.all()],
+            item_specifics=[i.ebay_object for i in self.specific_values.all()],
         )
 
 
@@ -170,3 +178,19 @@ class EbayItemUpdateModel(BaseModel):
     @property
     def has_updated_gross_price(self):
         return self.gross_price is not None
+
+
+class EbayItemSpecificModel(BaseModel):
+    item = models.ForeignKey(EbayItemModel, related_name="specific_values")
+    specific = models.ForeignKey(CategorySpecificModel, related_name="+")
+    value = models.CharField(max_length=255)
+
+    @property
+    def ebay_object(self):
+        return EbayItemSpecific(self.specific.name, self.value)
+
+
+class EbayProductSpecificModel(BaseModel):
+    product = models.ForeignKey(EbayProductModel, related_name="specific_values")
+    specific = models.ForeignKey(CategorySpecificModel, related_name="+")
+    value = models.CharField(max_length=255)

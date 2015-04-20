@@ -21,7 +21,7 @@ class TestDjangoEbayAuthenticator(APITestCase):
         response = self.client.post('/products/1/publish')
         self.assertEqual(response.status_code, 403)
 
-        token = EbayTokenModel.create_from_ebay_token(EbayAuthenticatedAPITestCase.ebay_token)
+        token = EbayTokenModel.create_from_ebay_token(EbayAuthenticatedAPITestCase.create_ebay_token())
         token.expiration_date = datetime(2000, 1, 1)
         token.save()
         self.account.token = token
