@@ -1,22 +1,29 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-import unittest
 
 from django.utils.functional import cached_property
 
 from inventorum.ebay.apps.categories.models import CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
-from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
+from inventorum.ebay.apps.core_api.tests import ApiTest
 from inventorum.ebay.apps.products.models import EbayProductModel
+from inventorum.ebay.apps.products.tasks import foo
+from inventorum.ebay.tests import StagingTestAccount
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+from inventorum.util.celery import celery_test_case, TaskExecutionContext
 
 
 log = logging.getLogger(__name__)
 
 
 class TestProductPublish(EbayAuthenticatedAPITestCase):
+
+    @celery_test_case()
+    def test_foo(self):
+        with self.assertRaises(Exception):
+            foo.delay(context=TaskExecutionContext(user_id=1, account_id=2, request_id=None))
 
     @cached_property
     def category(self):

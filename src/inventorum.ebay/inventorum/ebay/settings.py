@@ -35,8 +35,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'django_nose',
-    # Provides the django db broker for celery
-    'kombu.transport.django',
 
     'inventorum.ebay.apps.accounts',
     'inventorum.ebay.apps.auth',
@@ -87,11 +85,7 @@ REST_FRAMEWORK = {
 
 # Celery settings ==============================================================
 
-BROKER_URL = 'django://'
-# CELERY_IMPORTS = ()
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 
 # Others =======================================================================
 

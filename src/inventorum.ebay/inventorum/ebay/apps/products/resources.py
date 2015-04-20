@@ -1,9 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.util.celery import TaskExecutionContext
 
 from rest_framework import exceptions
-from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -70,8 +70,6 @@ class PublishResource(APIResource, ProductResourceMixin):
 
         item = service.prepare()
         # TODO: Move this to celery task!
-
-        foo.delay(context=TaskExecutionContext(user_id=1, account_id=1, request_id=1245))
 
         try:
             service.publish(item)

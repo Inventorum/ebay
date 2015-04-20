@@ -1,0 +1,7 @@
+# https://www.rabbitmq.com/relocate.html
+RABBITMQ_NODE_IP_ADDRESS=127.0.0.1
+RABBITMQ_NODE_PORT=5672
+RABBITMQ_BASE=${buildout:directory}/parts/rabbitmq
+RABBITMQ_CONFIG_FILE=${buildout:directory}/etc/rabbitmq
+RABBITMQ_MNESIA_BASE=${buildout:directory}/var/lib/rabbitmq/mnesia
+RABBITMQ_LOG_BASE=${buildout:directory}/var/log/rabbitmq

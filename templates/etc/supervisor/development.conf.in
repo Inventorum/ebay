@@ -26,6 +26,15 @@ priority = 10
 redirect_stderr = false
 stopsignal=INT
 
+[program:rabbitmq]
+command = ${buildout:directory}/bin/rabbitmq-server
+process_name = rabbitmq
+directory = ${buildout:directory}/parts/rabbitmq
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${buildout:directory}/var/log/rabbit.development.log
+stopsignal=INT
+
 [program:celery]
 command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/development.ini -A inventorum.ebay.celery worker -l debug
 process_name = celery

@@ -128,4 +128,3 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         json = response.json()
         serializer = CoreInfoDeserializer(data=json)
         return serializer.build()
-

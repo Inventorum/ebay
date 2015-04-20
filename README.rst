@@ -12,6 +12,13 @@ Install some required packages
 
   apt-get install libxml2-dev libxslt1-dev python2.7-dev
 
+
+Mac OS X:
+
+::
+
+  sudo port -v install erlang xmlto
+
 Quickstart
 ----------
 
