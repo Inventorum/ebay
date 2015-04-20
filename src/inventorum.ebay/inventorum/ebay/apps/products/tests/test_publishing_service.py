@@ -262,7 +262,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         # And now unpublish
         unpublish_service = UnpublishingService(product, self.user)
         unpublish_service.validate()
-        unpublish_service.unpublish()
+        unpublish_service.unpublish(unpublish_service.get_item())
 
         item = product.published_item
         self.assertIsNone(item)

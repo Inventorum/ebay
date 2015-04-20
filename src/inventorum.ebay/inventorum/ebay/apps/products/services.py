@@ -67,6 +67,25 @@ class PublishingUnpublishingService(object):
     def core_account(self):
         return self.core_info.account
 
+    def change_state(self, item, state, details=None):
+        """
+        Purpose of this method is when you batch publish now, we will first call all products with `change_state`
+        and then all product `publish`.
+        """
+
+        item.publishing_status = state
+        item.save()
+
+        core_api_state = EbayProductPublishingStatus.core_api_state(state)
+        if core_api_state is not None:
+            try:
+                self.user.core_api.send_state(item.product.inv_id, core_api_state, details=details)
+            except HTTPError as e:
+                raise PublishingSendStateFailedException()
+        else:
+            log.warn('Got state (%s) that cannot be mapped to core api PublishState', state)
+
+
 
 class PublishingService(PublishingUnpublishingService):
     def validate(self):
@@ -108,24 +127,6 @@ class PublishingService(PublishingUnpublishingService):
         """
         item = self._create_db_item()
         return item
-
-    def change_state(self, item, state, details=None):
-        """
-        Purpose of this method is when you batch publish now, we will first call all products with `change_state`
-        and then all product `publish`.
-        """
-
-        item.publishing_status = state
-        item.save()
-
-        core_api_state = EbayProductPublishingStatus.core_api_state(state)
-        if core_api_state is not None:
-            try:
-                self.user.core_api.send_state(item.product.inv_id, core_api_state, details=details)
-            except HTTPError as e:
-                raise PublishingSendStateFailedException()
-        else:
-            log.warn('Got state (%s) that cannot be mapped to core api PublishState', state)
 
     def publish(self, item):
         """
@@ -210,8 +211,10 @@ class UnpublishingService(PublishingUnpublishingService):
         if not self.product.is_published:
             raise PublishingValidationException(ugettext('Product is not published'))
 
-    def unpublish(self):
-        item = self.product.published_item
+    def get_item(self):
+        return self.product.published_item
+
+    def unpublish(self, item):
 
         service = EbayItems(self.user.account.token.ebay_object)
         try:

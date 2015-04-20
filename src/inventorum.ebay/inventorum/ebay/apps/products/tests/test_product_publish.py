@@ -11,6 +11,7 @@ from inventorum.ebay.apps.core_api import PublishStates
 from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
 from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel
+from inventorum.ebay.apps.products.services import PublishingService
 from inventorum.ebay.tests import StagingTestAccount
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -169,4 +170,39 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             self.assertEqual(last_attempt.response.url, 'https://api.ebay.com/ws/api.dll')
             self.assertIn('AddItemResponse', last_attempt.response.content)
 
+    def test_failing_unpublish(self):
+        with ApiTest.use_cassette("failing_unpublishing.yaml", record_mode='new_episodes') as cass:
+            inv_product_id = StagingTestAccount.Products.IPAD_STAND
+            product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
+            self._assign_category(product)
 
+            service = PublishingService(product, self.user)
+            item = service.prepare()
+            item.external_id = '1234'
+            item.publishing_status = EbayProductPublishingStatus.PUBLISHED
+            item.save()
+
+            response = self.client.post("/products/%s/unpublish" % inv_product_id)
+            log.debug('Got response: %s', response)
+            self.assertEqual(response.status_code, 200)
+
+            self.assertEqual(item.attempts.count(), 1)
+            last_attempt = item.attempts.last()
+            self.assertFalse(last_attempt.success)
+            self.assertEqual(last_attempt.type, EbayApiAttemptType.UNPUBLISH)
+
+            requests = cass.requests
+            status_change_requests = [r for r in requests if r.url.endswith('/state/')]
+            self.assertEqual(len(status_change_requests), 1)
+
+            state_body = json.loads(status_change_requests[0].body)
+            self.assertEqual(state_body['state'], PublishStates.PUBLISHED)
+            self.assertEqual(state_body['details'], [
+                {
+                    'classification': 'RequestError',
+                    'code': 17,
+                    'long_message': 'Der Artikel kann nicht aufgerufen werden, da er gel\xf6scht wurde, es sich um ein '
+                                    'Half.com-Angebot handelt oder weil Sie nicht der Verk\xe4ufer sind.',
+                    'severity_code': 'Error',
+                    'short_message': 'Artikel kann nicht aufgerufen werden.'
+                }])

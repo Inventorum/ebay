@@ -110,6 +110,16 @@ class UnpublishResource(APIResource, ProductResourceMixin):
         except PublishingValidationException as e:
             raise exceptions.ValidationError(e.message)
 
-        service.unpublish()
+        item = service.get_item()
+        try:
+            service.unpublish(item)
+        except PublishingServiceException as exc:
+            e = exc.original_exception
+            log.error('Got ebay errors: %s', e.errors)
+            service.change_state(item, EbayProductPublishingStatus.PUBLISHED,
+                                 details=[err.api_dict() for err in e.errors])
+        else:
+            service.change_state(item, EbayProductPublishingStatus.UNPUBLISHED)
+
         serializer = self.get_serializer(service.product)
         return Response(data=serializer.data)
