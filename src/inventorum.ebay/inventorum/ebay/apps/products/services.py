@@ -8,9 +8,9 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from requests.exceptions import HTTPError
 
-from inventorum.ebay.apps.products import EbayProductPublishingStatus
+from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
-    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel
+    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.items import EbayItems
 
@@ -137,12 +137,23 @@ class PublishingService(PublishingUnpublishingService):
         try:
             response = service.publish(item.ebay_object)
         except EbayConnectionException as e:
+            EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
+                exception=e,
+                item=item,
+                type=EbayApiAttemptType.PUBLISH
+            )
             raise PublishingServiceException(e.message, original_exception=e)
 
         item.external_id = response.item_id
         item.published_at = response.start_time
         item.ends_at = response.end_time
         item.save()
+
+        EbayApiAttempt.create_from_service_for_item_and_type(
+            service=service,
+            item=item,
+            type=EbayApiAttemptType.PUBLISH
+        )
 
     def _create_db_item(self):
 
@@ -203,8 +214,22 @@ class UnpublishingService(PublishingUnpublishingService):
         item = self.product.published_item
 
         service = EbayItems(self.user.account.token.ebay_object)
-        response = service.unpublish(item.external_id)
+        try:
+            response = service.unpublish(item.external_id)
+        except EbayConnectionException as e:
+            EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
+                exception=e,
+                item=item,
+                type=EbayApiAttemptType.UNPUBLISH
+            )
+            raise PublishingServiceException(e.message, original_exception=e)
 
         item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
         item.unpublished_at = response.end_time
         item.save()
+
+        EbayApiAttempt.create_from_service_for_item_and_type(
+            service=service,
+            item=item,
+            type=EbayApiAttemptType.UNPUBLISH
+        )

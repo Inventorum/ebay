@@ -29,3 +29,13 @@ class EbayProductPublishingStatus(object):
     @classmethod
     def core_api_state(cls, state):
         return cls.CORE_API_MAP.get(state, None)
+
+
+class EbayApiAttemptType(object):
+    PUBLISH = 'publish'
+    UNPUBLISH = 'unpublish'
+
+    CHOICES = (
+        (PUBLISH, 'Publish'),
+        (UNPUBLISH, 'Unpublish')
+    )
