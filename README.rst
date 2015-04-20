@@ -28,7 +28,9 @@ To bootstrap the project:
 
     python2.7 -sS bootstrap.py
     bin/buildout -vv
-    bin/db_provision src/inventorum.ebay/development.ini inventorum_ebay_develop -D
+
+    bin/provisioning/provision_db src/inventorum.ebay/development.ini inventorum_ebay_develop -D
+    bin/provisioning/provision_rabbitmq src/inventorum.ebay/development.ini
 
 Running tests
 -------------

@@ -11,7 +11,8 @@ ebay_main = inventorum.util.paste:make_wsgi_application
 
 [console_scripts]
 celery = inventorum.ebay.scripts.celery:run
-db_provision = inventorum.ebay.scripts.db:db_provision
+provisioning/provision_db = inventorum.ebay.scripts.provisioning:provision_db
+provisioning/provision_rabbitmq = inventorum.ebay.scripts.provisioning:provision_rabbitmq
 manage = inventorum.util.paste:manage
 """
 

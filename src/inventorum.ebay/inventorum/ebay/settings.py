@@ -83,9 +83,13 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
 }
 
-# Celery settings ==============================================================
+# RabbitMQ/Celery settings ==============================================================
 
-BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+RABBITMQ_VHOST = 'inventorum_ebay'
+RABBITMQ_USER = 'ebay'
+RABBITMQ_PASSWORD = 'ebay'
+
+BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum_ebay"
 
 # Others =======================================================================
 
