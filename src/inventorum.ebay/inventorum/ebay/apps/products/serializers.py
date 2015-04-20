@@ -78,13 +78,13 @@ class EbayProductSerializer(serializers.ModelSerializer):
         category = attrs.get('category', None)
         if specific_values and category:
             self._validate_specific_values_categories_are_correct(specific_values, category)
-            self._validate_specific_values_if_all_required_were_sent(specific_values, category)
+            self._validate_specific_values_if_min_values_are_ok(specific_values, category)
             self._validate_specific_values_if_max_values_are_ok(specific_values, category)
         return attrs
 
     # METHODS FOR SPECIFIC_VALUES
 
-    def _validate_specific_values_if_all_required_were_sent(self, specific_values, category):
+    def _validate_specific_values_if_min_values_are_ok(self, specific_values, category):
         specific_values_ids_count = defaultdict(lambda: 0)
         for sv in specific_values:
             specific_values_ids_count[sv['specific'].pk] += 1
