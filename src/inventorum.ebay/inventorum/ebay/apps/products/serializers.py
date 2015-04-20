@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from collections import defaultdict
 import logging
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext
@@ -32,10 +33,10 @@ class EbayProductSpecificSerializer(serializers.ModelSerializer):
         values = specific.values.all().values_list('value', flat=True)
         if value not in values:
             raise ValidationError(ugettext('This item specific does not accept custom values (wrong: `%(value)s`)')
-                                  % {'value':value})
+                                  % {'value': value})
+
 
 class EbayProductCategorySerializer(CategorySerializer):
-
     class Meta:
         model = CategoryModel
         fields = CategorySerializer.Meta.fields + ("breadcrumb", "specifics")
@@ -45,7 +46,6 @@ class EbayProductCategorySerializer(CategorySerializer):
 
 
 class EbayProductSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = EbayProductModel
         fields = ('id', 'category', 'is_published', 'listing_url', 'specific_values')
@@ -77,31 +77,55 @@ class EbayProductSerializer(serializers.ModelSerializer):
         specific_values = attrs.get('specific_values', None)
         category = attrs.get('category', None)
         if specific_values and category:
-            try:
-                self._validate_specific_values_if_all_required_were_sent(specific_values, category)
-                self._validate_specific_values_categories_are_correct(specific_values, category)
-            except ValidationError as e:
-                raise ValidationError({
-                    'specific_values': [e]
-                })
+            self._validate_specific_values_categories_are_correct(specific_values, category)
+            self._validate_specific_values_if_all_required_were_sent(specific_values, category)
+            self._validate_specific_values_if_max_values_are_ok(specific_values, category)
         return attrs
 
     # METHODS FOR SPECIFIC_VALUES
 
     def _validate_specific_values_if_all_required_were_sent(self, specific_values, category):
-        specific_values_ids = set(sv['specific'].pk for sv in specific_values)
-        required_ones = set(category.specifics.required().values_list('id', flat=True))
+        specific_values_ids_count = defaultdict(lambda: 0)
+        for sv in specific_values:
+            specific_values_ids_count[sv['specific'].pk] += 1
 
-        missing_ids = (required_ones - specific_values_ids)
+        required_ones = dict(category.specifics.required().values_list('id', 'min_values'))
+
+        missing_ids = []
+        for specific_id, min_value in required_ones.iteritems():
+            send_value = specific_values_ids_count.get(specific_id, None)
+            if not send_value or send_value < min_value:
+                missing_ids.append(specific_id)
+
         if missing_ids:
             raise ValidationError(ugettext('You need to pass all required specifics (missing: %(missing_ids)s)!')
                                   % {'missing_ids': list(missing_ids)})
 
         return specific_values
 
+    def _validate_specific_values_if_max_values_are_ok(self, specific_values, category):
+        specific_values_ids_count = defaultdict(lambda: 0)
+        for sv in specific_values:
+            specific_values_ids_count[sv['specific'].pk] += 1
+
+        max_values = dict(category.specifics.required().values_list('id', 'max_values'))
+
+        too_many_values_ids = []
+        for specific_id, max_value in max_values.iteritems():
+            send_value = specific_values_ids_count.get(specific_id, None)
+            if send_value and send_value > max_value:
+                too_many_values_ids.append(specific_id)
+
+        if too_many_values_ids:
+            raise ValidationError(ugettext('You send too many values for one specific '
+                                           '(specific_ids: %(too_many_values_ids)s)!')
+                                  % {'too_many_values_ids': list(too_many_values_ids)})
+
+        return specific_values
+
     def _validate_specific_values_categories_are_correct(self, specific_values, category):
         wrong_ids = [sv['specific'].id for sv in specific_values
-                          if sv['specific'].category_id != category.id]
+                     if sv['specific'].category_id != category.id]
 
         if wrong_ids:
             raise ValidationError(ugettext('Some specifics are assigned to different category than product! '

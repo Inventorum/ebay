@@ -28,7 +28,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         leaf_category = CategoryFactory.create(name="Leaf category", external_id='64540')
 
         self.specific = CategorySpecificFactory.create(category=leaf_category)
-        self.required_specific = CategorySpecificFactory.create_required(category=leaf_category)
+        self.required_specific = CategorySpecificFactory.create_required(category=leaf_category, max_values=2)
 
         features = CategoryFeaturesModel.objects.create(
             category=leaf_category
@@ -46,6 +46,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
     def _add_specific_to_product(self, product):
         EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test")
+        EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test 2")
 
     def test_failed_validation(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
@@ -130,7 +131,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(payment_methods.last().external_id, 'PayPal')
 
         specific_values = last_item.specific_values.all()
-        self.assertEqual(specific_values.count(), 1)
+        self.assertEqual(specific_values.count(), 2)
         last_specific = specific_values.last()
         self.assertEqual(last_specific.value, 'Test')
         self.assertEqual(last_specific.specific.pk, self.required_specific.pk)
@@ -199,7 +200,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                 'ReturnsAcceptedOption': 'ReturnsAccepted'
             },
             'ItemSpecifics': {'NameValueList': [{'Name': self.required_specific.name,
-                                                 'Value': 'Test'}]},
+                                                 'Value': ['Test', 'Test 2']}]},
             'StartPrice': Decimal('599.9900000000'),
             'Title': 'SlowRoad Shipping Details',
             'ListingDuration': 'Days_120',

@@ -31,6 +31,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
 
         self.required_specific_selection_only = CategorySpecificFactory.create_required(category=leaf_category,
                                                                                         selection_mode='SelectionOnly')
+
         self.assertFalse(self.required_specific_selection_only.can_use_own_values)
 
         self.assertEqual(leaf_category.specifics.count(), 3)
@@ -126,7 +127,8 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         response = self._request_update(product, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, {'non_field_errors': ['You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk]})
+        self.assertEqual(response.data, {
+        'non_field_errors': ['You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk]})
         specific_values = product.specific_values.all()
         self.assertEqual(specific_values.count(), 0)
 
@@ -165,7 +167,6 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         self.assertEqual(specific_values.count(), 0)
 
 
-
     def test_save_wrong_specific_category(self):
         """
         Test save specifics to product. Sending here specific id that belongs to other category.
@@ -195,9 +196,10 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         response = self._request_update(product, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data,  {
+        self.assertEqual(response.data, {
             'non_field_errors': [
-                'Some specifics are assigned to different category than product! (wrong specific ids: [%s])' % wrong_category_specific.pk
+                'Some specifics are assigned to different category than product! (wrong specific ids: [%s])'
+                % wrong_category_specific.pk
             ]
         })
 
@@ -212,7 +214,9 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
 
         product = EbayProductFactory.create(account=self.account)
         data = self._get_valid_data_for(product)
-        data['category_id'] = self.leaf_category.pk
+        data['category'] = {
+            'id': self.leaf_category.pk
+        }
         data['specific_values'] = [
             {
                 "specific": self.specific.pk,
@@ -231,9 +235,82 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_simple_deserializer_serialize(self):
-
         product = EbayProductFactory.create(account=self.account)
         data = self._get_valid_data_for(product)
         response = self._request_update(product, data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_more_than_one_value_in_one_specific_miss_one(self):
+        """
+        We said we have required 2 but we are sending only one, should fail!
+        :return:
+        """
+
+        multiple_required = CategorySpecificFactory.create(category=self.leaf_category,
+                                                           selection_mode='SelectionOnly',
+                                                           min_values=2,
+                                                           max_values=5)
+        selection_only_specific_value = self.required_specific_selection_only.values.last().value
+
+        product = EbayProductFactory.create(account=self.account)
+        data = self._get_valid_data_for(product)
+        data['category'] = {
+            'id': self.leaf_category.pk
+        }
+        data['specific_values'] = [
+            {
+                "specific": multiple_required.pk,
+                "value": multiple_required.values.all()[0].value
+            },
+            {
+                "specific": self.required_specific.pk,
+                "value": "Some non-standard value"  # Should be accepted!
+            },
+            {
+                "specific": self.required_specific_selection_only.pk,
+                "value": selection_only_specific_value  # Needs to be one of values
+            }
+        ]
+        response = self._request_update(product, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {
+            'non_field_errors':
+                ['You need to pass all required specifics (missing: [%s])!' % multiple_required.pk]
+        })
+
+    def test_more_than_one_value_in_one_specific_send_more_than_max(self):
+        """
+        self.required_specific has max_values as 1 but we are sending 2, so it should fail
+        """
+
+        selection_only_specific_value = self.required_specific_selection_only.values.last().value
+
+        product = EbayProductFactory.create(account=self.account)
+        data = self._get_valid_data_for(product)
+        data['category'] = {
+            'id': self.leaf_category.pk
+        }
+        data['specific_values'] = [
+            {
+                "specific": self.required_specific.pk,
+                "value": "Some non-standard value"  # Should be accepted!
+            },
+            {
+                "specific": self.required_specific.pk,
+                "value": "Max was 1, so we are sending to much"  # Should fail!
+            },
+            {
+                "specific": self.required_specific_selection_only.pk,
+                "value": selection_only_specific_value  # Needs to be one of values
+            }
+        ]
+        response = self._request_update(product, data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {
+            'non_field_errors': ['You send too many values for one specific (specific_ids: [%s])!'
+                                 % self.required_specific.pk]
+        })
+
