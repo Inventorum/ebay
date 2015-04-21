@@ -30,10 +30,11 @@ class EbayConnectionException(EbayException):
     def __init__(self, message, response):
         self.message = message
         self.response = response
-        errors = self.response.dict()['Errors']
-        if not isinstance(errors, list):
-            errors = [errors]
-        self.errors = [EbayError.create_from_data(e) for e in errors]
+        if self.response is not None:
+            errors = self.response.dict()['Errors']
+            if not isinstance(errors, list):
+                errors = [errors]
+            self.errors = [EbayError.create_from_data(e) for e in errors]
 
     def __unicode__(self):
         return 'Message: %s ' % self.message
