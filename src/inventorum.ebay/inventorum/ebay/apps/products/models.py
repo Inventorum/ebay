@@ -3,12 +3,13 @@ from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 import logging
 
+import jsonfield
 from django.db import models
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
 from inventorum.ebay.apps.categories.models import CategorySpecificModel
-from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
+from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific
@@ -32,7 +33,7 @@ class EbayProductModel(MappedInventorumModel):
     @property
     def published_item(self):
         try:
-            return self.items.get(publishing_status=EbayProductPublishingStatus.PUBLISHED)
+            return self.items.get(publishing_status=EbayItemPublishingStatus.PUBLISHED)
         except EbayItemModel.DoesNotExist:
             return None
 
@@ -113,15 +114,17 @@ class EbayItemModel(BaseModel):
     quantity = models.IntegerField(default=0)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20)
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
-    publishing_status = models.IntegerField(choices=EbayProductPublishingStatus.CHOICES,
-                                            default=EbayProductPublishingStatus.DRAFT)
+    ends_at = models.DateTimeField(null=True, blank=True)
+    external_id = models.CharField(max_length=255, null=True, blank=True)
+
+    country = CountryField()
+
+    publishing_status = models.CharField(max_length=255, choices=EbayItemPublishingStatus.CHOICES,
+                                         default=EbayItemPublishingStatus.DRAFT)
+    publishing_status_details = jsonfield.JSONField(null=True, blank=True)
 
     published_at = models.DateTimeField(null=True, blank=True)
     unpublished_at = models.DateTimeField(null=True, blank=True)
-    ends_at = models.DateTimeField(null=True, blank=True)
-
-    external_id = models.CharField(max_length=255, null=True, blank=True)
-    country = CountryField()
 
     objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
 
@@ -151,6 +154,18 @@ class EbayItemModel(BaseModel):
             specific_dict[specific.specific.name].append(specific.value)
 
         return [EbayItemSpecific(name=key, values=values) for key, values in specific_dict.iteritems()]
+
+    def set_publishing_status(self, publishing_status, details=None, save=True):
+        """
+        :type publishing_status: unicode
+        :type details:
+        :type save: bool
+        """
+        self.publishing_status = publishing_status
+        self.publishing_status_details = details
+
+        if save:
+            self.save()
 
 
 class EbayItemSpecificModel(BaseModel):

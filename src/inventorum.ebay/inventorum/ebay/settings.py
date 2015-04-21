@@ -96,9 +96,10 @@ CELERY_EXCEPTION_HANDLER = 'inventorum.ebay.celery.CustomCeleryExceptionHandler'
 
 # Others =======================================================================
 
-# set factory_boy log level to WARN
-logger = logging.getLogger('factory')
-logger.setLevel(logging.WARN)
+logging.getLogger('factory').setLevel(logging.WARN)
+logging.getLogger("requests").setLevel(logging.WARN)
+logging.getLogger("ebaysdk").setLevel(logging.WARN)
+logging.getLogger("vcr").setLevel(logging.WARN)
 
 
 # ==============================================================================

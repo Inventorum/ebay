@@ -7,7 +7,7 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
-from inventorum.ebay.apps.products import EbayProductPublishingStatus
+from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayProductSpecificModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
@@ -81,7 +81,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         # mock that product was published
         item = service._create_db_item()
-        item.publishing_status = EbayProductPublishingStatus.PUBLISHED
+        item.publishing_status = EbayItemPublishingStatus.PUBLISHED
         item.save()
 
         with self.assertRaises(PublishingValidationException) as e:
@@ -89,7 +89,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(e.exception.message, 'Product was already published')
 
-        item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
+        item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
         item.save()
 
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
@@ -123,7 +123,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(last_item.gross_price, Decimal("599.99"))
         self.assertEqual(last_item.country, 'DE')
         self.assertEqual(last_item.paypal_email_address, 'bartosz@hernas.pl')
-        self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.DRAFT)
+        self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.DRAFT)
         self.assertEqual(last_item.listing_duration, 'Days_120')
 
         payment_methods = last_item.payment_methods.all()
@@ -250,12 +250,13 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         service = PublishingService(product, self.user)
         service.validate()
         item = service.prepare()
+        # service.initialize_publish_attempt(item)
         service.publish(item)
-        service.change_state(item, EbayProductPublishingStatus.PUBLISHED)
+        service.finalize_publish_attempt(item)
 
         item = product.published_item
         self.assertIsNotNone(item)
-        self.assertEqual(item.publishing_status, EbayProductPublishingStatus.PUBLISHED)
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
         self.assertIsNotNone(item.published_at)
         self.assertIsNotNone(item.ends_at)
         self.assertIsNone(item.unpublished_at)
@@ -269,8 +270,6 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertIsNone(item)
 
         last_item = product.items.last()
-        self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.UNPUBLISHED)
+        self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
         self.assertIsNotNone(last_item.published_at)
         self.assertIsNotNone(last_item.unpublished_at)
-
-

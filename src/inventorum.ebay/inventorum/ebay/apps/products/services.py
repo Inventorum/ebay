@@ -8,7 +8,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from requests.exceptions import HTTPError
 
-from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
+from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt
 from inventorum.ebay.lib.ebay import EbayConnectionException
@@ -21,6 +21,15 @@ class PublishingServiceException(Exception):
     def __init__(self, message=None, original_exception=None):
         self.message = message
         self.original_exception = original_exception
+
+
+class PublishingException(PublishingServiceException):
+    pass
+
+
+class UnpublishingException(PublishingServiceException):
+    pass
+
 
 class PublishingValidationException(PublishingServiceException):
     pass
@@ -40,6 +49,7 @@ class PublishingCouldNotGetDataFromCoreAPI(PublishingServiceException):
 
 
 class PublishingUnpublishingService(object):
+
     def __init__(self, product, user):
         """
         Service for publishing products to ebay
@@ -67,27 +77,25 @@ class PublishingUnpublishingService(object):
     def core_account(self):
         return self.core_info.account
 
-    def change_state(self, item, state, details=None):
+    def send_publishing_status_to_core_api(self, publishing_status, details=None):
         """
-        Method to change state of publishing item. It will save state to DB and also publish it to API.
-        Usefull when you want to first change states of products in batch_publish and then you want to publish.
+        :param publishing_status: see `EbayItemPublishingStatus`
+        :type publishing_status: unicode
+        :param details: Additional details, must be json serializable
         """
-
-        item.publishing_status = state
-        item.save()
-
-        core_api_state = EbayProductPublishingStatus.core_api_state(state)
+        core_api_state = EbayItemPublishingStatus.core_api_state(publishing_status)
         if core_api_state is not None:
             try:
-                self.user.core_api.post_product_publishing_state(item.product.inv_id, core_api_state, details=details)
+                self.user.core_api.post_product_publishing_state(self.product.inv_id, core_api_state, details=details)
             except HTTPError as e:
+                log.error(e)
                 raise PublishingSendStateFailedException()
         else:
-            log.warn('Got state (%s) that cannot be mapped to core api PublishState', state)
-
+            log.warn('Got state (%s) that cannot be mapped to core api PublishState', publishing_status)
 
 
 class PublishingService(PublishingUnpublishingService):
+
     def validate(self):
         """
         Validates account and product before publishing to ebay
@@ -128,34 +136,6 @@ class PublishingService(PublishingUnpublishingService):
         item = self._create_db_item()
         return item
 
-    def publish(self, item):
-        """
-        Here this method can be called asynchronously, cause it loads everything from DB again
-        :type item: EbayItemModel
-        """
-
-        service = EbayItems(self.user.account.token.ebay_object)
-        try:
-            response = service.publish(item.ebay_object)
-        except EbayConnectionException as e:
-            EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
-                exception=e,
-                item=item,
-                type=EbayApiAttemptType.PUBLISH
-            )
-            raise PublishingServiceException(e.message, original_exception=e)
-
-        item.external_id = response.item_id
-        item.published_at = response.start_time
-        item.ends_at = response.end_time
-        item.save()
-
-        EbayApiAttempt.create_from_service_for_item_and_type(
-            service=service,
-            item=item,
-            type=EbayApiAttemptType.PUBLISH
-        )
-
     def _create_db_item(self):
 
         db_product = EbayProductModel.objects.get(inv_id=self.core_product.id)
@@ -195,7 +175,6 @@ class PublishingService(PublishingUnpublishingService):
                 item=item
             )
 
-
         for specific in db_product.specific_values.all():
             EbayItemSpecificModel.objects.create(
                 specific=specific.specific,
@@ -205,8 +184,60 @@ class PublishingService(PublishingUnpublishingService):
 
         return item
 
+    def initialize_publish_attempt(self, item):
+        """
+        :type item: EbayItemModel
+
+        :raises PublishingSendStateFailedException
+        """
+        # TODO jm: PUBLISH_IN_PROGRESS?
+        item.set_publishing_status(EbayItemPublishingStatus.IN_PROGRESS)
+        self.send_publishing_status_to_core_api(item.publishing_status)
+
+    def publish(self, item):
+        """
+        :type item: EbayItemModel
+
+        :raises PublishingException
+        """
+        ebay_api = EbayItems(self.user.account.token.ebay_object)
+        try:
+            response = ebay_api.publish(item.ebay_object)
+        except EbayConnectionException as e:
+            # TODO jm: PUBLISH_FAILED?
+            item.set_publishing_status(EbayItemPublishingStatus.FAILED, details=[err.api_dict() for err in e.errors])
+
+            EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
+                exception=e,
+                item=item,
+                type=EbayApiAttemptType.PUBLISH
+            )
+
+            raise PublishingException(e.message, original_exception=e)
+
+        item.external_id = response.item_id
+        item.published_at = response.start_time
+        item.ends_at = response.end_time
+        item.set_publishing_status(EbayItemPublishingStatus.PUBLISHED, save=False)
+        item.save()
+
+        EbayApiAttempt.create_from_service_for_item_and_type(
+            service=ebay_api,
+            item=item,
+            type=EbayApiAttemptType.PUBLISH
+        )
+
+    def finalize_publish_attempt(self, item):
+        """
+        :type item: EbayItemModel
+
+        :raises: PublishingSendStateFailedException
+        """
+        self.send_publishing_status_to_core_api(item.publishing_status, details=item.publishing_status_details)
+
 
 class UnpublishingService(PublishingUnpublishingService):
+
     def validate(self):
         if not self.product.is_published:
             raise PublishingValidationException(ugettext('Product is not published'))
@@ -214,21 +245,39 @@ class UnpublishingService(PublishingUnpublishingService):
     def get_item(self):
         return self.product.published_item
 
-    def unpublish(self, item):
+    def initialize_unpublish_attempt(self, item):
+        """
+        :type item: EbayItemModel
 
+        :raises PublishingSendStateFailedException
+        """
+        # TODO jm: UNPUBLISH_IN_PROGRESS?
+        item.set_publishing_status(EbayItemPublishingStatus.IN_PROGRESS)
+        self.send_publishing_status_to_core_api(item.publishing_status)
+
+    def unpublish(self, item):
+        """
+        :type item: EbayItemModel
+
+        :raises UnpublishingException
+        """
         service = EbayItems(self.user.account.token.ebay_object)
         try:
             response = service.unpublish(item.external_id)
         except EbayConnectionException as e:
+            # TODO jm: UNPUBLISH_FAILED?
+            item.set_publishing_status(EbayItemPublishingStatus.PUBLISHED, details=[err.api_dict() for err in e.errors])
+
             EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
                 exception=e,
                 item=item,
                 type=EbayApiAttemptType.UNPUBLISH
             )
-            raise PublishingServiceException(e.message, original_exception=e)
 
-        item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
+            raise UnpublishingException(e.message, original_exception=e)
+
         item.unpublished_at = response.end_time
+        item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
         item.save()
 
         EbayApiAttempt.create_from_service_for_item_and_type(
@@ -236,3 +285,11 @@ class UnpublishingService(PublishingUnpublishingService):
             item=item,
             type=EbayApiAttemptType.UNPUBLISH
         )
+
+    def finalize_unpublish_attempt(self, item):
+        """
+        :type item: EbayItemModel
+
+        :raises: PublishingSendStateFailedException
+        """
+        self.send_publishing_status_to_core_api(item.publishing_status, details=item.publishing_status_details)

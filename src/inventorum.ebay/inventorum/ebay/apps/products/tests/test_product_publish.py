@@ -7,27 +7,21 @@ from django.utils.functional import cached_property
 
 from inventorum.ebay.apps.categories.models import CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
-from inventorum.ebay.apps.products.tasks import schedule_ebay_item_publish
 from inventorum.ebay.apps.core_api import PublishStates
 from inventorum.ebay.apps.core_api.tests import ApiTest
-from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
+from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService
 from inventorum.ebay.tests import StagingTestAccount
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from inventorum.util.celery import TaskExecutionContext, celery_test_case
+from inventorum.util.celery import celery_test_case
 
 
 log = logging.getLogger(__name__)
 
 
 class TestProductPublish(EbayAuthenticatedAPITestCase):
-
-    # @celery_test_case()
-    def test_foo(self):
-        for i in range(0, 8):
-            schedule_ebay_item_publish(i, context=TaskExecutionContext(user_id=i, account_id=i, request_id=i))
 
     @cached_property
     def category(self):
@@ -86,7 +80,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 200)
 
         item = product.items.last()
-        self.assertEqual(item.publishing_status, EbayProductPublishingStatus.PUBLISHED)
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
 
         self.assertEqual(item.attempts.count(), 1)
         last_attempt = item.attempts.last()
@@ -98,7 +92,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 200)
 
         item = product.items.last()
-        self.assertEqual(item.publishing_status, EbayProductPublishingStatus.UNPUBLISHED)
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
 
         # Publish & Unpublish = 2
         self.assertEqual(item.attempts.count(), 2)
@@ -118,7 +112,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             self.assertEqual(response.status_code, 200)
 
             item = product.items.last()
-            self.assertEqual(item.publishing_status, EbayProductPublishingStatus.FAILED)
+            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.FAILED)
 
             requests = cass.requests
             status_change_requests = [r for r in requests if r.url.endswith('/state/')]
@@ -163,6 +157,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             self.assertEqual(last_attempt.response.url, 'https://api.ebay.com/ws/api.dll')
             self.assertIn('AddItemResponse', last_attempt.response.content)
 
+    @celery_test_case()
     def test_failing_unpublish(self):
         with ApiTest.use_cassette("failing_unpublishing.yaml", record_mode='new_episodes') as cass:
             inv_product_id = StagingTestAccount.Products.IPAD_STAND
@@ -172,7 +167,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             service = PublishingService(product, self.user)
             item = service.prepare()
             item.external_id = '1234'
-            item.publishing_status = EbayProductPublishingStatus.PUBLISHED
+            item.publishing_status = EbayItemPublishingStatus.PUBLISHED
             item.save()
 
             response = self.client.post("/products/%s/unpublish" % inv_product_id)
@@ -186,7 +181,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
 
             requests = cass.requests
             status_change_requests = [r for r in requests if r.url.endswith('/state/')]
-            self.assertEqual(len(status_change_requests), 1)
+            self.assertEqual(len(status_change_requests), 2)
 
             state_body = json.loads(status_change_requests[0].body)
             self.assertEqual(state_body['state'], PublishStates.PUBLISHED)

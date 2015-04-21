@@ -179,5 +179,5 @@ class UserScopedCoreAPIClient(CoreAPIClient):
             'state': state,
             'details': details or {'success': True}
         }
-        self.post('/api/products/{}/state/'.format(inv_product_id), data=data)
+        return self.post('/api/products/{}/state/'.format(inv_product_id), data=data)
 
