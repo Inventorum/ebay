@@ -1,6 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+import unittest
+
 from inventorum.ebay.apps.core_api.tests import EbayTest
 
 from inventorum.ebay.lib.ebay.categories import EbayCategories
@@ -14,6 +16,7 @@ log = logging.getLogger(__name__)
 
 class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
     @long_running_test()
+    @unittest.skip('We reached ebay limits')
     @EbayTest.use_cassette("ebay_get_all_categories.yaml")
     def test_getting_categories(self):
         ebay = EbayCategories(self.ebay_token)
@@ -39,6 +42,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
     # TODO: We cannot use here cassette cause it is not supporting gevent (somehow, second response is empty
     # if taken from cassette)
     @long_running_test()
+    @unittest.skip('We reached ebay limits')
     def test_ebay_categories_features(self):
         ebay = EbayCategories(self.ebay_token)
         features = ebay.get_features_for_categories(['353', '64540'])

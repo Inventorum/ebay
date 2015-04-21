@@ -30,10 +30,11 @@ class EbayConnectionException(EbayException):
     def __init__(self, message, response):
         self.message = message
         self.response = response
-        errors = self.response.dict()['Errors']
-        if not isinstance(errors, list):
-            errors = [errors]
-        self.errors = [EbayError.create_from_data(e) for e in errors]
+        if self.response is not None:
+            errors = self.response.dict()['Errors']
+            if not isinstance(errors, list):
+                errors = [errors]
+            self.errors = [EbayError.create_from_data(e) for e in errors]
 
     def __unicode__(self):
         return 'Message: %s ' % self.message
@@ -182,6 +183,8 @@ class EbayParallel(Ebay):
         rt = self.wait()
 
         if self.parallel.error():
-            raise EbayConnectionException(self.parallel.error())
+            err = self.parallel.error()
+            log.error('Got error when getting something in parallel: %s', err)
+            raise EbayConnectionException(err, None)
 
         return rt
