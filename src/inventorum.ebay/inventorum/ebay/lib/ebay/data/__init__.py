@@ -1,12 +1,15 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
+import re
+
 from django.utils.datetime_safe import datetime
-from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from rest_framework.fields import CharField, IntegerField, BooleanField, DateTimeField, ListField
+from rest_framework.fields import BooleanField
 
 
 class EbayParser(object):
     DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+    RE_SECURE_BODY = re.compile("<RequesterCredentials>(.+?)</RequesterCredentials>")
 
     @classmethod
     def parse_date(cls, str_date):
@@ -19,6 +22,16 @@ class EbayParser(object):
         :rtype: datetime
         """
         return datetime.strptime(str_date, cls.DATE_FORMAT)
+
+    @classmethod
+    def make_body_secure(cls, body):
+        """
+        Clears all credentials from body.
+        :param body: unicode
+        :return: unicode
+        """
+        return cls.RE_SECURE_BODY.sub("<RequesterCredentials>***</RequesterCredentials>", body)
+
 
 
 class EbayBooleanField(BooleanField):

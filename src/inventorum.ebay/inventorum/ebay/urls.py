@@ -13,6 +13,6 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('inventorum.ebay.apps.accounts.urls', namespace='accounts')),
     url(r'^auth/', include('inventorum.ebay.apps.auth.urls', namespace='auth')),
     url(r'^products/', include('inventorum.ebay.apps.products.urls', namespace='products')),
-    url(r'^categories', include('inventorum.ebay.apps.categories.urls', namespace='categories')),
+    url(r'^categories/', include('inventorum.ebay.apps.categories.urls', namespace='categories')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

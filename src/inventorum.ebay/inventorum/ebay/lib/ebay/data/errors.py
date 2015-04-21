@@ -2,6 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
+from rest_framework.fields import IntegerField
+from rest_framework.serializers import Serializer
 
 
 class EbayError(object):
@@ -25,6 +27,9 @@ class EbayError(object):
         serializer = EbayErrorDeserializer(data=data)
         return serializer.build()
 
+    def api_dict(self):
+        return EbayCoreApiSerializer(instance=self).data
+
 
 class EbayErrorDeserializer(POPOSerializer):
     ErrorCode = fields.IntegerField(source='code')
@@ -36,3 +41,10 @@ class EbayErrorDeserializer(POPOSerializer):
     class Meta:
         model = EbayError
 
+
+class EbayCoreApiSerializer(Serializer):
+    code = fields.IntegerField()
+    long_message = fields.CharField()
+    short_message = fields.CharField()
+    severity_code = fields.CharField()
+    classification = fields.CharField()

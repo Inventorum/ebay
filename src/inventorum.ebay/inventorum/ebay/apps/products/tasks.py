@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+
 from celery.exceptions import MaxRetriesExceededError
 from inventorum.ebay.apps.accounts.models import EbayUserModel
 from inventorum.ebay.apps.products.models import EbayItemModel

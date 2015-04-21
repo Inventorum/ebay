@@ -31,8 +31,8 @@ required_eggs = [
     'requests>=2.6.0',
     'waitress>=0.8.9',
     'django-mptt>=0.6.1',
-    'ebaysdk>=2.1.0-dev1',
-    'grequests>=0.2.0',
+    'ebaysdk>=2.1.1-dev1',
+    'grequests>=0.3.1',
     'mock>=1.0.1',
     'vcrpy>=1.3.0',
     'python-keyczar>=0.715',
@@ -68,8 +68,10 @@ setup(
     entry_points=entry_points,
     dependency_links=[
         # use the last commit-id in our branch that we rely on
-        'https://github.com/bimusiek/ebaysdk-python/archive/inventorum.zip'
-        '#egg=ebaysdk-2.1.0-dev1',
+        'https://github.com/bimusiek/ebaysdk-python/archive/master.zip'
+        '#egg=ebaysdk-2.1.1-dev1',
+        'https://github.com/rtdean/grequests/archive/0.3.0.zip'
+        '#egg=grequests-0.3.1',
     ],
 )
 # https://github.com/bimusiek/ebaysdk-python/archive/c8365ee3cb2db29fdaae6d96fbdeff482a65ac29.zip

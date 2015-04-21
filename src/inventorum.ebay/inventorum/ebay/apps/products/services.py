@@ -1,25 +1,36 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
+import logging
 from decimal import Decimal
+
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
-from inventorum.ebay.apps.products import EbayProductPublishingStatus
+from requests.exceptions import HTTPError
+
+from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
-    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel
+    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.items import EbayItems
-from requests.exceptions import HTTPError
+
+log = logging.getLogger(__name__)
 
 
 class PublishingServiceException(Exception):
-    pass
-
+    def __init__(self, message=None, original_exception=None):
+        self.message = message
+        self.original_exception = original_exception
 
 class PublishingValidationException(PublishingServiceException):
     pass
 
 
 class PublishingNotPossibleException(PublishingServiceException):
+    pass
+
+
+class PublishingSendStateFailedException(PublishingServiceException):
     pass
 
 
@@ -33,7 +44,7 @@ class PublishingUnpublishingService(object):
         """
         Service for publishing products to ebay
         :type product: EbayProductModel
-        :type user: EbayUserModel
+        :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
         """
         self.user = user
         self.product = product
@@ -55,6 +66,25 @@ class PublishingUnpublishingService(object):
     @property
     def core_account(self):
         return self.core_info.account
+
+    def change_state(self, item, state, details=None):
+        """
+        Method to change state of publishing item. It will save state to DB and also publish it to API.
+        Usefull when you want to first change states of products in batch_publish and then you want to publish.
+        """
+
+        item.publishing_status = state
+        item.save()
+
+        core_api_state = EbayProductPublishingStatus.core_api_state(state)
+        if core_api_state is not None:
+            try:
+                self.user.core_api.post_product_publishing_state(item.product.inv_id, core_api_state, details=details)
+            except HTTPError as e:
+                raise PublishingSendStateFailedException()
+        else:
+            log.warn('Got state (%s) that cannot be mapped to core api PublishState', state)
+
 
 
 class PublishingService(PublishingUnpublishingService):
@@ -96,8 +126,6 @@ class PublishingService(PublishingUnpublishingService):
         :return:
         """
         item = self._create_db_item()
-        # TODO: At this point we should change state in API to In progress of publishing, but api is not ready yet
-
         return item
 
     def publish(self, item):
@@ -105,22 +133,28 @@ class PublishingService(PublishingUnpublishingService):
         Here this method can be called asynchronously, cause it loads everything from DB again
         :type item: EbayItemModel
         """
-        item.publishing_status = EbayProductPublishingStatus.IN_PROGRESS
-        item.save()
 
         service = EbayItems(self.user.account.token.ebay_object)
         try:
             response = service.publish(item.ebay_object)
         except EbayConnectionException as e:
-            raise PublishingServiceException(e.message)
+            EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
+                exception=e,
+                item=item,
+                type=EbayApiAttemptType.PUBLISH
+            )
+            raise PublishingServiceException(e.message, original_exception=e)
 
         item.external_id = response.item_id
-        item.publishing_status = EbayProductPublishingStatus.PUBLISHED
         item.published_at = response.start_time
         item.ends_at = response.end_time
         item.save()
 
-        # TODO: At this point we should inform API to change quantity I think?
+        EbayApiAttempt.create_from_service_for_item_and_type(
+            service=service,
+            item=item,
+            type=EbayApiAttemptType.PUBLISH
+        )
 
     def _create_db_item(self):
 
@@ -177,12 +211,28 @@ class UnpublishingService(PublishingUnpublishingService):
         if not self.product.is_published:
             raise PublishingValidationException(ugettext('Product is not published'))
 
-    def unpublish(self):
-        item = self.product.published_item
+    def get_item(self):
+        return self.product.published_item
+
+    def unpublish(self, item):
 
         service = EbayItems(self.user.account.token.ebay_object)
-        response = service.unpublish(item.external_id)
+        try:
+            response = service.unpublish(item.external_id)
+        except EbayConnectionException as e:
+            EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
+                exception=e,
+                item=item,
+                type=EbayApiAttemptType.UNPUBLISH
+            )
+            raise PublishingServiceException(e.message, original_exception=e)
 
         item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
         item.unpublished_at = response.end_time
         item.save()
+
+        EbayApiAttempt.create_from_service_for_item_and_type(
+            service=service,
+            item=item,
+            type=EbayApiAttemptType.UNPUBLISH
+        )
