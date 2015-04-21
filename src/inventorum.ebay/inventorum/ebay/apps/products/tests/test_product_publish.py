@@ -8,11 +8,11 @@ from inventorum.ebay.apps.categories.models import CategoryFeaturesModel, Durati
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.core_api.tests import ApiTest
 from inventorum.ebay.apps.products.models import EbayProductModel
-from inventorum.ebay.apps.products.tasks import foo
+from inventorum.ebay.apps.products.tasks import foo, schedule_ebay_item_publish
 from inventorum.ebay.tests import StagingTestAccount
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from inventorum.util.celery import celery_test_case, TaskExecutionContext
+from inventorum.util.celery import TaskExecutionContext, celery_test_case
 
 
 log = logging.getLogger(__name__)
@@ -22,8 +22,8 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
 
     @celery_test_case()
     def test_foo(self):
-        with self.assertRaises(Exception):
-            foo.delay(context=TaskExecutionContext(user_id=1, account_id=2, request_id=None))
+        for i in range(0, 100):
+            schedule_ebay_item_publish(1, context=TaskExecutionContext(user_id=1, account_id=2, request_id=1))
 
     @cached_property
     def category(self):
