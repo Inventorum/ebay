@@ -140,6 +140,22 @@ class EbayItemModel(BaseModel):
         return [EbayItemSpecific(name=key, values=values) for key, values in specific_dict.iteritems()]
 
 
+class EbayItemVariationModel(BaseModel):
+    quantity = models.IntegerField(default=0)
+    gross_price = models.DecimalField(decimal_places=10, max_digits=20)
+    item = models.ForeignKey(EbayItemModel, related_name="variations")
+
+
+class EbayItemVariationSpecificModel(BaseModel):
+    name = models.CharField(max_length=255)
+    variation = models.ForeignKey(EbayItemVariationModel, related_name="specifics")
+
+
+class EbayItemVariationSpecificValueModel(BaseModel):
+    value = models.CharField(max_length=255)
+    specific = models.ForeignKey(EbayItemVariationSpecificModel, related_name="values")
+
+
 class EbayItemSpecificModel(BaseModel):
     item = models.ForeignKey(EbayItemModel, related_name="specific_values")
     specific = models.ForeignKey(CategorySpecificModel, related_name="+")

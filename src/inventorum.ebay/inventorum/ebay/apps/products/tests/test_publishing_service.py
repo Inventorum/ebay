@@ -283,6 +283,17 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             service.prepare()
             last_item = product.items.last()
 
+        self.assertEqual(last_item.variations.count(), 2)
+
+        first_variation_obj = last_item.variations.first()
+        self.assertEqual(first_variation_obj.quantity, 30)
+        self.assertEqual(first_variation_obj.gross_price, Decimal("150"))
+        self.assertEqual(first_variation_obj.specifics.count(), 3)
+
+        for specific in first_variation_obj.specifics.all():
+            self.assertEqual(specific.values.count(), 1)
+
+
         # Check data builder
         ebay_item = last_item.ebay_object
 
