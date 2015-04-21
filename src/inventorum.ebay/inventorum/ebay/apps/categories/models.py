@@ -70,7 +70,9 @@ class CategoryModel(MPTTModel):
         )
 
         if not created:
-            category.update(**defaults)
+            for key, value in defaults.iteritems():
+                setattr(category, key, value)
+            category.save()
 
         return category
 
