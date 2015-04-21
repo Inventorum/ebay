@@ -14,7 +14,7 @@ class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
     def __init__(self, id, name, gross_price, quantity, images, variation_count=0, shipping_services=None,
-                 variations=None, description=None):
+                 variations=None, description=None, attributes=None):
         """
         :type id: int
         :type name: unicode
@@ -25,6 +25,7 @@ class CoreProduct(object):
         :type variation_count: int
         :type shipping_services: list of CoreShippingService
         :type variations: list[CoreProduct]
+        :type attributes: list[CoreProductAttribute]
         """
         self.id = id
         self.name = name
@@ -35,6 +36,7 @@ class CoreProduct(object):
         self.variation_count = variation_count
         self.shipping_services = [s for s in shipping_services or [] if s.enabled]
         self.variations = variations
+        self.attributes = attributes
 
     @property
     def is_parent(self):
@@ -95,6 +97,35 @@ class CoreShippingServiceDeserializer(POPOSerializer):
     cost = serializers.DecimalField(max_digits=20, decimal_places=10)
 
 
+class CoreProductAttribute(object):
+    def __init__(self, key, values):
+        self.key = key
+        self.values = values
+
+
+class CoreProductAttributeListSerializer(serializers.ListSerializer):
+    def to_internal_value(self, data):
+        new_data = []
+        if isinstance(data, dict):
+            for key, value in data.iteritems():
+                new_data.append({
+                    'key': key,
+                    'values': value
+                })
+        else:
+            raise serializers.ValidationError('In `attributes` got something that is not dict: %s' % data)
+        return super(CoreProductAttributeListSerializer, self).to_internal_value(new_data)
+
+
+class CoreProductAttributeSerializer(POPOSerializer):
+    key = serializers.CharField()
+    values = serializers.ListField(child=serializers.CharField())
+
+    class Meta:
+        model = CoreProductAttribute
+        list_serializer_class = CoreProductAttributeListSerializer
+
+
 class CoreBasicProductDeserializer(POPOSerializer):
     class Meta:
         model = CoreProduct
@@ -113,6 +144,7 @@ class CoreBasicProductDeserializer(POPOSerializer):
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     images = CoreProductImageDeserializer(many=True)
+    attributes = CoreProductAttributeSerializer(many=True)
 
     meta = serializers.DictField(child=MetaDeserializer())
 
@@ -191,6 +223,7 @@ class CoreAccountSettings(object):
         1: 'PayPal',
         2: 'MoneyXferAccepted'
     }
+
     def __init__(self, shipping_services, ebay_paypal_email, ebay_payment_methods):
         """
         :type shipping_services: list of CoreShippingService

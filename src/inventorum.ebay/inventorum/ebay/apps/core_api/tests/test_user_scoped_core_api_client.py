@@ -142,7 +142,27 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(first_variation.gross_price, D("150"))
         self.assertEqual(first_variation.quantity, D("30"))
 
+        self.assertEqual(len(first_variation.attributes), 3)
+        self.assertEqual(first_variation.attributes[0].key, "color")
+        self.assertEqual(first_variation.attributes[0].values, ['Red'])
+
+        self.assertEqual(first_variation.attributes[1].key, "material")
+        self.assertEqual(first_variation.attributes[1].values, ['Denim'])
+
+        self.assertEqual(first_variation.attributes[2].key, "size")
+        self.assertEqual(first_variation.attributes[2].values, ['22'])
+
         second_variation = product.variations[1]
         self.assertEqual(second_variation.name, "Blue, 50")
         self.assertEqual(second_variation.gross_price, D("130"))
         self.assertEqual(second_variation.quantity, D("50"))
+
+        self.assertEqual(len(second_variation.attributes), 3)
+        self.assertEqual(second_variation.attributes[0].key, "color")
+        self.assertEqual(second_variation.attributes[0].values, ['Blue'])
+
+        self.assertEqual(second_variation.attributes[1].key, "material")
+        self.assertEqual(second_variation.attributes[1].values, ['Leather'])
+
+        self.assertEqual(second_variation.attributes[2].key, "size")
+        self.assertEqual(second_variation.attributes[2].values, ['50'])
