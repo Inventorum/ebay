@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.products.tasks import schedule_ebay_item_publish
 
 from rest_framework import exceptions
 from rest_framework.response import Response
@@ -67,13 +68,13 @@ class PublishResource(APIResource, ProductResourceMixin):
             raise ApiException(e.response.data, key="core.api.error", status_code=e.response.status_code)
 
         item = service.prepare()
-        # TODO: Move this to celery task!
+        schedule_ebay_item_publish(ebay_item_id=item.id, context=self.get_task_execution_context())
 
-        try:
-            service.publish(item)
-        except EbayConnectionException as e:
-            log.error('Got ebay errors: %s', e.errors)
-            raise BadRequest([unicode(err) for err in e.errors], key="ebay.api.errors")
+        # try:
+        #     service.publish(item)
+        # except EbayConnectionException as e:
+        #    log.error('Got ebay errors: %s', e.errors)
+        #    raise BadRequest([unicode(err) for err in e.errors], key="ebay.api.errors")
 
         serializer = self.get_serializer(service.product)
         return Response(data=serializer.data)

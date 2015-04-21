@@ -8,8 +8,9 @@ from django_countries.fields import CountryField
 from inventorum.ebay import settings
 from inventorum.ebay.apps.categories.models import CategorySpecificModel
 from inventorum.ebay.apps.products import EbayProductPublishingStatus
-from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
+from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet
 from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific
+from inventorum.util.django.model_utils import PassThroughManager
 
 
 log = logging.getLogger(__name__)
@@ -87,6 +88,16 @@ class EbayItemPaymentMethod(BaseModel):
     external_id = models.CharField(max_length=255)
 
 
+class EbayItemModelQuerySet(BaseQuerySet):
+
+    def get_for_publishing(self, **kwargs):
+        """
+
+        :rtype EbayItemModelQuerySet
+        """
+        return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
+
+
 class EbayItemModel(BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="items",
                                 verbose_name="Inventorum ebay account")
@@ -109,6 +120,8 @@ class EbayItemModel(BaseModel):
 
     external_id = models.CharField(max_length=255, null=True, blank=True)
     country = CountryField()
+
+    objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
 
     @property
     def ebay_object(self):

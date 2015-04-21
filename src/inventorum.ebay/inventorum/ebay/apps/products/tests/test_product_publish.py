@@ -70,6 +70,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         log.debug('Got response: %s', response)
         self.assertEqual(response.status_code, 404)
 
+    @celery_test_case()
     @ApiTest.use_cassette("publish_and_unpublish_full.yaml")
     def test_publish_then_unpublish(self):
         inv_product_id = StagingTestAccount.Products.IPAD_STAND
