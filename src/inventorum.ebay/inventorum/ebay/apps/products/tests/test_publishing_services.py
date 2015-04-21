@@ -9,7 +9,8 @@ from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, Cat
 from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayProductSpecificModel
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService
+from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService, \
+    PublishingPreparationService
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -17,9 +18,7 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 log = logging.getLogger(__name__)
 
 
-class TestPublishingService(EbayAuthenticatedAPITestCase):
-    def setUp(self):
-        super(TestPublishingService, self).setUp()
+class TestPublishingServices(EbayAuthenticatedAPITestCase):
 
     def _get_product(self, inv_product_id, account):
         return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
@@ -51,7 +50,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_failed_validation(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             # No shipping services
             service.core_account.settings.shipping_services = []
@@ -62,7 +61,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         # Get product w/o shipping but acc has
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             with self.assertRaises(PublishingValidationException) as e:
                 service.validate()
@@ -80,7 +79,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         service.core_product.gross_price = 1
 
         # mock that product was published
-        item = service._create_db_item()
+        item = service.create_ebay_item()
         item.publishing_status = EbayItemPublishingStatus.PUBLISHED
         item.save()
 
@@ -94,7 +93,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             with self.assertRaises(PublishingValidationException) as e:
                 service.validate()
@@ -109,11 +108,11 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_preparation(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             self._assign_category(product)
             self._add_specific_to_product(product)
-            service.prepare()
+            service.create_ebay_item()
 
         last_item = product.items.last()
         self.assertEqual(last_item.name, "SlowRoad Shipping Details")
@@ -158,10 +157,10 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_account_shipping_fallback(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             self._assign_category(product)
-            service.prepare()
+            service.create_ebay_item()
 
             last_item = product.items.last()
             shipping_services = last_item.shipping.all()
@@ -174,11 +173,11 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_builder(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             self._assign_category(product)
             self._add_specific_to_product(product)
-            service.prepare()
+            service.create_ebay_item()
             last_item = product.items.last()
 
         # Check data builder
@@ -247,12 +246,14 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             features.durations.add(duration)
 
         # Try to publish
-        service = PublishingService(product, self.user)
-        service.validate()
-        item = service.prepare()
-        # service.initialize_publish_attempt(item)
-        service.publish(item)
-        service.finalize_publish_attempt(item)
+        preparation_service = PublishingPreparationService(product, self.user)
+        preparation_service.validate()
+        item = preparation_service.create_ebay_item()
+
+        publishing_service = PublishingService(item, self.user)
+        # publishing_service.initialize_publish_attempt(item)
+        publishing_service.publish()
+        publishing_service.finalize_publish_attempt()
 
         item = product.published_item
         self.assertIsNotNone(item)
@@ -262,9 +263,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertIsNone(item.unpublished_at)
 
         # And now unpublish
-        unpublish_service = UnpublishingService(product, self.user)
-        unpublish_service.validate()
-        unpublish_service.unpublish(unpublish_service.get_item())
+        unpublishing_service = UnpublishingService(item, self.user)
+        unpublishing_service.unpublish()
 
         item = product.published_item
         self.assertIsNone(item)

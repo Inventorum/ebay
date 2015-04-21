@@ -11,7 +11,7 @@ from inventorum.ebay.apps.core_api import PublishStates
 from inventorum.ebay.apps.core_api.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel
-from inventorum.ebay.apps.products.services import PublishingService
+from inventorum.ebay.apps.products.services import PublishingPreparationService
 from inventorum.ebay.tests import StagingTestAccount
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -51,7 +51,6 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 400)
         data = response.data
         self.assertEqual(data, ['You need to select category'])
-
 
     @ApiTest.use_cassette("publish_product_that_does_not_exists.yaml")
     def test_publish_not_existing_one(self):
@@ -164,8 +163,8 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             self._assign_category(product)
 
-            service = PublishingService(product, self.user)
-            item = service.prepare()
+            service = PublishingPreparationService(product, self.user)
+            item = service.create_ebay_item()
             item.external_id = '1234'
             item.publishing_status = EbayItemPublishingStatus.PUBLISHED
             item.save()

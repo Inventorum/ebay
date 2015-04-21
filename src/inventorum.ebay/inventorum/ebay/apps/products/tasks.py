@@ -23,10 +23,10 @@ def _initialize_ebay_item_publish(self, ebay_item_id):
     user = EbayUserModel.objects.get(id=self.context.user_id)
     ebay_item = EbayItemModel.objects.get_for_publishing(id=ebay_item_id)
 
-    service = PublishingService(ebay_item.product, user)
+    service = PublishingService(ebay_item, user)
 
     try:
-        service.initialize_publish_attempt(ebay_item)
+        service.initialize_publish_attempt()
     except PublishingSendStateFailedException:
         self.retry()
 
@@ -40,10 +40,10 @@ def _ebay_item_publish(self, ebay_item_id):
     user = EbayUserModel.objects.get(id=self.context.user_id)
     ebay_item = EbayItemModel.objects.get_for_publishing(id=ebay_item_id)
 
-    service = PublishingService(ebay_item.product, user)
+    service = PublishingService(ebay_item, user)
 
     try:
-        service.publish(ebay_item)
+        service.publish()
     except PublishingException as e:
         log.error("Publishing failed with ebay errors: %s", e.original_exception.errors)
         # no retry, finalize will still be executed to finalize the failed publishing attempt
@@ -58,10 +58,10 @@ def _finalize_ebay_item_publish(self, ebay_item_id):
     user = EbayUserModel.objects.get(id=self.context.user_id)
     ebay_item = EbayItemModel.objects.get_for_publishing(id=ebay_item_id)
 
-    service = PublishingService(ebay_item.product, user)
+    service = PublishingService(ebay_item, user)
 
     try:
-        service.finalize_publish_attempt(ebay_item)
+        service.finalize_publish_attempt()
     except PublishingSendStateFailedException:
         self.retry()
 
@@ -89,10 +89,10 @@ def _initialize_ebay_item_unpublish(self, ebay_item_id):
     user = EbayUserModel.objects.get(id=self.context.user_id)
     ebay_item = EbayItemModel.objects.get_for_publishing(id=ebay_item_id)
 
-    service = UnpublishingService(ebay_item.product, user)
+    service = UnpublishingService(ebay_item, user)
 
     try:
-        service.initialize_unpublish_attempt(ebay_item)
+        service.initialize_unpublish_attempt()
     except PublishingSendStateFailedException:
         self.retry()
 
@@ -106,10 +106,10 @@ def _ebay_item_unpublish(self, ebay_item_id):
     user = EbayUserModel.objects.get(id=self.context.user_id)
     ebay_item = EbayItemModel.objects.get_for_publishing(id=ebay_item_id)
 
-    service = UnpublishingService(ebay_item.product, user)
+    service = UnpublishingService(ebay_item, user)
 
     try:
-        service.unpublish(ebay_item)
+        service.unpublish()
     except UnpublishingException as e:
         log.error("Unpublishing failed with ebay errors: %s", e.original_exception.errors)
         # no retry, finalize will still be executed to finalize the failed unpublishing attempt
@@ -124,10 +124,10 @@ def _finalize_ebay_item_unpublish(self, ebay_item_id):
     user = EbayUserModel.objects.get(id=self.context.user_id)
     ebay_item = EbayItemModel.objects.get_for_publishing(id=ebay_item_id)
 
-    service = UnpublishingService(ebay_item.product, user)
+    service = UnpublishingService(ebay_item, user)
 
     try:
-        service.finalize_unpublish_attempt(ebay_item)
+        service.finalize_unpublish_attempt()
     except PublishingSendStateFailedException:
         self.retry()
 
