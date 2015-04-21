@@ -91,7 +91,7 @@ if proc.returncode != 0:
 db_migrate = [
     os.path.join(install_dir, 'bin', 'ebay', 'manage'),
     os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
-    'migrate'
+    '--noinput', 'migrate'
 ]
 print '[inv-ebay] running migrations: %s ...' % db_migrate
 proc = subprocess.Popen(db_migrate, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
