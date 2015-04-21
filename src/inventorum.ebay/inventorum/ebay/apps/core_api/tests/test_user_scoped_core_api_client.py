@@ -124,3 +124,25 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(shipping_service.description, 'DHL 2kg Paket (nur f\xfcr kurze Zeit)')
         self.assertEqual(shipping_service.additional_cost, Decimal('2'))
         self.assertEqual(shipping_service.cost, Decimal('5'))
+
+    @CoreApiTest.use_cassette("get_product_with_variations.yaml")
+    def test_product_with_variations(self):
+        product = self.subject.get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS)
+
+        self.assertEqual(product.name, "Jeans Valid Attrs")
+        self.assertEqual(product.description, "Photo of jeans for sell.")
+        self.assertEqual(product.gross_price, D("0.00"))
+        self.assertEqual(product.quantity, D("80"))
+
+        self.assertEqual(product.variation_count, 2)
+        self.assertEqual(len(product.variations), 2)
+
+        first_variation = product.variations[0]
+        self.assertEqual(first_variation.name, "Red, 22")
+        self.assertEqual(first_variation.gross_price, D("150"))
+        self.assertEqual(first_variation.quantity, D("30"))
+
+        second_variation = product.variations[1]
+        self.assertEqual(second_variation.name, "Blue, 50")
+        self.assertEqual(second_variation.gross_price, D("130"))
+        self.assertEqual(second_variation.quantity, D("50"))

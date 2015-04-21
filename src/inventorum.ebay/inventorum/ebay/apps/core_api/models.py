@@ -13,7 +13,8 @@ log = logging.getLogger(__name__)
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
-    def __init__(self, id, name, description, gross_price, quantity, images, variation_count, shipping_services):
+    def __init__(self, id, name, gross_price, quantity, images, variation_count=0, shipping_services=None,
+                 variations=None, description=None):
         """
         :type id: int
         :type name: unicode
@@ -23,6 +24,7 @@ class CoreProduct(object):
         :type images: list of CoreProductImage
         :type variation_count: int
         :type shipping_services: list of CoreShippingService
+        :type variations: list[CoreProduct]
         """
         self.id = id
         self.name = name
@@ -31,7 +33,8 @@ class CoreProduct(object):
         self.quantity = quantity
         self.images = images
         self.variation_count = variation_count
-        self.shipping_services = [s for s in shipping_services if s.enabled]
+        self.shipping_services = [s for s in shipping_services or [] if s.enabled]
+        self.variations = variations
 
     @property
     def is_parent(self):
@@ -92,7 +95,7 @@ class CoreShippingServiceDeserializer(POPOSerializer):
     cost = serializers.DecimalField(max_digits=20, decimal_places=10)
 
 
-class CoreProductDeserializer(POPOSerializer):
+class CoreBasicProductDeserializer(POPOSerializer):
     class Meta:
         model = CoreProduct
 
@@ -106,13 +109,10 @@ class CoreProductDeserializer(POPOSerializer):
 
     id = serializers.IntegerField()
     name = serializers.CharField()
-    description = serializers.CharField(allow_blank=True)
     gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
-    variation_count = serializers.IntegerField()
 
     images = CoreProductImageDeserializer(many=True)
-    shipping_services = CoreShippingServiceDeserializer(many=True)
 
     meta = serializers.DictField(child=MetaDeserializer())
 
@@ -134,7 +134,14 @@ class CoreProductDeserializer(POPOSerializer):
             # we need meta only for attr overwrites => throw it away afterwards
             del validated_data["meta"]
 
-        return super(CoreProductDeserializer, self).create(validated_data)
+        return super(CoreBasicProductDeserializer, self).create(validated_data)
+
+
+class CoreProductDeserializer(CoreBasicProductDeserializer):
+    variations = CoreBasicProductDeserializer(many=True, required=False)
+    variation_count = serializers.IntegerField()
+    shipping_services = CoreShippingServiceDeserializer(many=True)
+    description = serializers.CharField(allow_blank=True)
 
 
 class CoreAddress(object):

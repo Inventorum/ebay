@@ -146,7 +146,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
         :param product_id:
         :return:
-
+        :rtype: inventorum.ebay.apps.core_api.models.CoreProduct
         :raises requests.exceptions.HTTPError
                 rest_framework.exceptions.ValidationError
         """
