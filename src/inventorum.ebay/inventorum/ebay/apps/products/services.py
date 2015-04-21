@@ -69,8 +69,8 @@ class PublishingUnpublishingService(object):
 
     def change_state(self, item, state, details=None):
         """
-        Purpose of this method is when you batch publish now, we will first call all products with `change_state`
-        and then all product `publish`.
+        Method to change state of publishing item. It will save state to DB and also publish it to API.
+        Usefull when you want to first change states of products in batch_publish and then you want to publish.
         """
 
         item.publishing_status = state
@@ -79,7 +79,7 @@ class PublishingUnpublishingService(object):
         core_api_state = EbayProductPublishingStatus.core_api_state(state)
         if core_api_state is not None:
             try:
-                self.user.core_api.send_state(item.product.inv_id, core_api_state, details=details)
+                self.user.core_api.post_product_publishing_state(item.product.inv_id, core_api_state, details=details)
             except HTTPError as e:
                 raise PublishingSendStateFailedException()
         else:

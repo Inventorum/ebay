@@ -167,7 +167,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         serializer = CoreInfoDeserializer(data=json)
         return serializer.build()
 
-    def send_state(self, inv_product_id, state, details):
+    def post_product_publishing_state(self, inv_product_id, state, details):
         """
         Send state about publishing product to Inventorum api. Returns nothing, in case of failure raises
         :param inv_product_id: Product id of inventorum database

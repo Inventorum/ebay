@@ -135,17 +135,12 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             self.assertEqual(last_attempt.type, EbayApiAttemptType.PUBLISH)
 
             headers = last_attempt.request.headers
-            headers.pop('X-EBAY-SDK-REQUEST-ID')
-            self.assertEqual(headers, {
-                "X-EBAY-API-SITEID": 77,
-                "X-EBAY-API-DEV-NAME": "dbedb016-ee04-4fce-a8e3-22c134fbb3c7",
-                "X-EBAY-API-CERT-NAME": "6be1b82a-0372-4e15-822d-e93797d623ac",
-                "Content-Length": "2925",
-                "X-EBAY-API-APP-NAME": "Inventor-9021-41d8-9c25-9bae93f76429",
-                "X-EBAY-API-COMPATIBILITY-LEVEL": 911,
-                "X-EBAY-API-CALL-NAME": "AddItem",
-                "User-Agent": "eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0",
-                "Content-Type": "text/xml"})
+
+            self.assertEqual(headers['X-EBAY-API-DEV-NAME'], "dbedb016-ee04-4fce-a8e3-22c134fbb3c7")
+            self.assertEqual(headers['X-EBAY-API-CERT-NAME'], "6be1b82a-0372-4e15-822d-e93797d623ac")
+            self.assertEqual(headers['X-EBAY-API-APP-NAME'], "Inventor-9021-41d8-9c25-9bae93f76429")
+            self.assertEqual(headers['X-EBAY-API-SITEID'], 77)
+
             self.assertEqual(last_attempt.request.method, 'POST')
             self.assertEqual(last_attempt.request.url, 'https://api.ebay.com/ws/api.dll')
 
@@ -153,19 +148,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             self.assertNotIn("<eBayAuthToken>", last_attempt.request.body)
 
             self.assertEqual(last_attempt.response.status_code, 200)
-            self.assertEqual(last_attempt.response.headers, {
-                "x-ebay-request-id": "14cd670a-4170-a626-1634-21b4e6572b63!ws.api.dll!10.98.97.99!esbtrading[]",
-                "content-length": "717",
-                "x-ebay-esb-app-name": "Inventor-9021-41d8-9c25-9bae93f76429",
-                "x-ebay-api-pool-name": "___cDRidW8ydmtv",
-                "x-ebay-esb-call-name": "AddItem",
-                "server": "Apache-Coyote/1.1",
-                "x-ebay-api-server-name": "___ZW9nNGQ3MWYrNzY9ZSgyNSg+Oys3MjQrNzQyPz43OzU=",
-                "date": "Mon, 20 Apr 2015 10:47:28 GMT",
-                "x-ebay-esb-guid": "urn:uuid:ac65da94-45c2-4bf3-80c2-02f7938cf164",
-                "guid": "14cd670a-4170-a626-1634-21b4e6572b63",
-                "content-type": "text/xml",
-                "x-ebay-esb-siteid": "77"})
+            self.assertTrue(last_attempt.response.headers)
 
             self.assertEqual(last_attempt.response.url, 'https://api.ebay.com/ws/api.dll')
             self.assertIn('AddItemResponse', last_attempt.response.content)
