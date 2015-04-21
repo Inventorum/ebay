@@ -63,16 +63,21 @@ class EbayCategoriesScraper(object):
         api = EbayCategories(self.ebay_token)
         categories_generator = api.get_categories(level_limit=self.limit_nodes_level, only_leaf=self.only_leaf)
 
-        for category in categories_generator:
-            log.debug('Parsing category: %s [%s], level: %s', category.name, category.category_id, category.level)
-            if self._did_we_reach_limit_of_root_nodes(category, country_code):
-                log.debug('Skipped because we reached limit of root nodes')
-                break
-            if self._did_we_reach_limit_of_nodes(country_code):
-                log.debug('Skipped because we reached limit of nodes')
-                break
-            category = CategoryModel.create_or_update_from_ebay_category(category, country_code)
-            categories_ids.append(category.pk)
+        with atomic():
+            # Disabling mptt updates and then rebuilding tree as suggested in
+            # http://django-mptt.github.io/django-mptt/mptt.managers.html#mptt.managers.TreeManager.disable_mptt_updates
+            with CategoryModel.objects.disable_mptt_updates():
+                for category in categories_generator:
+                    log.debug('Parsing category: %s [%s], level: %s', category.name, category.category_id, category.level)
+                    if self._did_we_reach_limit_of_root_nodes(category, country_code):
+                        log.debug('Skipped because we reached limit of root nodes')
+                        break
+                    if self._did_we_reach_limit_of_nodes(country_code):
+                        log.debug('Skipped because we reached limit of nodes')
+                        break
+                    category = CategoryModel.create_or_update_from_ebay_category(category, country_code)
+                    categories_ids.append(category.pk)
+            CategoryModel.objects.rebuild()
         return categories_ids
 
     def _remove_all_categories_except_these_ids(self, categories_ids):
