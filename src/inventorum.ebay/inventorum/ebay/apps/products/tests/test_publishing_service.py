@@ -273,4 +273,84 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertIsNotNone(last_item.published_at)
         self.assertIsNotNone(last_item.unpublished_at)
 
+    def test_builder_with_variations(self):
+        product = self._get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS, self.account)
+        with ApiTest.use_cassette("get_product_with_variations_fro_testing_builder.yaml"):
+            service = PublishingService(product, self.user)
+
+            self._assign_category(product)
+            self._add_specific_to_product(product)
+            service.prepare()
+            last_item = product.items.last()
+
+        # Check data builder
+        ebay_item = last_item.ebay_object
+
+        data = ebay_item.dict()
+        self.assertEqual(data['Variations']['VariationSpecificsSet'], {
+            'NameValueList': [
+                {
+                    'Name': 'color',
+                    'Value': ['Red', 'Blue']
+                },
+                {
+                    'Name': 'material',
+                    'Value': ['Denim', 'Leather']
+                },
+                {
+                    'Name': 'size',
+                    'Value': ['22', '50']
+                }
+            ]
+        })
+
+        variations_data = data['Variations']['Variation']
+        self.assertEqual(len(variations_data), 2)
+
+        first_variation = variations_data[0]
+
+        self.assertEqual(first_variation, {
+            'Quantity': 30,
+            'StartPrice': Decimal('150'),
+            'VariationSpecifics': {
+                'NameValueList': [
+                    {
+                        'Name': 'color',
+                        'Value': ['Red']
+                    },
+                    {
+                        'Name': 'material',
+                        'Value': ['Denim']
+                    },
+                    {
+                        'Name': 'size',
+                        'Value': ['22']
+                    }
+                ]
+            }
+        })
+
+        second_variation = variations_data[0]
+
+        self.assertEqual(second_variation, {
+            'Quantity': 50,
+            'StartPrice': Decimal('130'),
+            'VariationSpecifics': {
+                'NameValueList': [
+                    {
+                        'Name': 'color',
+                        'Value': ['Blue']
+                    },
+                    {
+                        'Name': 'material',
+                        'Value': ['Leather']
+                    },
+                    {
+                        'Name': 'size',
+                        'Value': ['50']
+                    }
+                ]
+            }
+        })
+
 
