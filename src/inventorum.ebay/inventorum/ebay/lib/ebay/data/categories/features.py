@@ -1,6 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.lib.ebay.data import EbayBooleanField
+from inventorum.ebay.lib.ebay.data import EbayBooleanField, EbayListSerializer
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework.fields import IntegerField, ListField, CharField, BooleanField
 
@@ -20,6 +20,7 @@ class EbayListingDurationSerializer(POPOSerializer):
 
     class Meta:
         model = EbayListingDuration
+        list_serializer_class = EbayListSerializer
 
 
 class EbayFeatureDetails(object):
@@ -85,6 +86,7 @@ class EbayListingDurationDefinitionSerializer(POPOSerializer):
 
     class Meta:
         model = EbayListingDurationDefinition
+        list_serializer_class = EbayListSerializer
 
 
 class EbayFeatureDefinition(object):

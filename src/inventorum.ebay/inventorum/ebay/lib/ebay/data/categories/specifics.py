@@ -1,6 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.lib.ebay.data import EbayBooleanField
+from inventorum.ebay.lib.ebay.data import EbayBooleanField, EbayListSerializer
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework.fields import CharField, IntegerField
 
@@ -14,6 +14,7 @@ class EbayValueRecommendationSerializer(POPOSerializer):
 
     class Meta:
         model = EbayValueRecommendation
+        list_serializer_class = EbayListSerializer
 
 
 class EbaySpecificsNameRecommendationValidationRules(object):
@@ -65,6 +66,7 @@ class EbaySpecificsNameRecommendationSerializer(POPOSerializer):
 
     class Meta:
         model = EbaySpecificsNameRecommendation
+        list_serializer_class = EbayListSerializer
 
 
 class EbayCategorySpecifics(object):
