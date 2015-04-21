@@ -91,6 +91,9 @@ RABBITMQ_PASSWORD = 'ebay'
 
 BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum_ebay"
 
+# will be used by util.celery.InventorumTask to handle async celery exceptions
+CELERY_EXCEPTION_HANDLER = 'inventorum.ebay.celery.CustomCeleryExceptionHandler'
+
 # Others =======================================================================
 
 # set factory_boy log level to WARN

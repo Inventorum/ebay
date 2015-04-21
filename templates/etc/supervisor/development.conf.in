@@ -36,7 +36,7 @@ stdout_logfile = ${buildout:directory}/var/log/rabbit.development.log
 stopsignal=INT
 
 [program:celery]
-command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/development.ini -A inventorum.ebay.celery worker -l debug
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/development.ini -A inventorum.ebay.celery worker -l debug -c 4
 process_name = celery
 directory = ${buildout:directory}
 priority = 10

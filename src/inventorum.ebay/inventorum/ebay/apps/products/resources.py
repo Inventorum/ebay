@@ -1,7 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.util.celery import TaskExecutionContext
 
 from rest_framework import exceptions
 from rest_framework.response import Response
@@ -11,7 +10,6 @@ from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
     PublishingCouldNotGetDataFromCoreAPI, UnpublishingService
-from inventorum.ebay.apps.products.tasks import foo
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.rest.exceptions import BadRequest, ApiException
 
