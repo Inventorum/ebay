@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.ebay.apps.categories.services import EbayCategoriesScraper, EbayFeaturesScraper, EbaySpecificsScraper
 from django.conf import settings
-from inventorum.ebay.lib.ebay.data import EbayToken
+from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 
 log = logging.getLogger(__name__)
 

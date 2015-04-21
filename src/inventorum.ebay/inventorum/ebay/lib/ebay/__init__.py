@@ -13,17 +13,20 @@ from inventorum.ebay.lib.ebay.data.errors import EbayError
 log = logging.getLogger(__name__)
 
 
-
 class EbayException(Exception):
     pass
 
 
-class EbayNotSupportedSite(Exception):
+class EbayNotSupportedSite(EbayException):
     pass
 
 
 class EbayConnectionException(EbayException):
+    """
+    :type errors: list[EbayError]
+    """
     errors = None
+
     def __init__(self, message, response):
         self.message = message
         self.response = response
@@ -34,10 +37,6 @@ class EbayConnectionException(EbayException):
 
     def __unicode__(self):
         return 'Message: %s ' % self.message
-
-
-class EbayReturnedErrorsException(EbayException):
-    pass
 
 
 class EbayResponse(object):
@@ -122,9 +121,6 @@ class Ebay(object):
             log.error('Got ebay error: %s', e)
             raise EbayConnectionException(e.message, e.response)
 
-        if self.api.error():
-            raise EbayReturnedErrorsException(self.api.error())
-
         execution = EbayResponse(response)
 
         return execution.dict()
@@ -186,6 +182,6 @@ class EbayParallel(Ebay):
         rt = self.wait()
 
         if self.parallel.error():
-            raise EbayReturnedErrorsException(self.parallel.error())
+            raise EbayConnectionException(self.parallel.error())
 
         return rt

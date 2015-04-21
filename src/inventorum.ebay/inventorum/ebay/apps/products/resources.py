@@ -1,16 +1,17 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.products import EbayProductPublishingStatus
 
 from rest_framework import exceptions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 
-from inventorum.ebay.apps.products.models import EbayProductModel
+from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
-    PublishingCouldNotGetDataFromCoreAPI, UnpublishingService
+    PublishingCouldNotGetDataFromCoreAPI, UnpublishingService, PublishingServiceException
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.rest.exceptions import BadRequest, ApiException
 
@@ -68,12 +69,22 @@ class PublishResource(APIResource, ProductResourceMixin):
             raise ApiException(e.response.data, key="core.api.error", status_code=e.response.status_code)
 
         item = service.prepare()
+
+        def publish_task(item_id):
+            item = EbayItemModel.objects.get(id=item_id)
+            service.change_state(item, EbayProductPublishingStatus.IN_PROGRESS)
+            try:
+                service.publish(item)
+            except PublishingServiceException as exc:
+                e = exc.original_exception
+                log.error('Got ebay errors: %s', e.errors)
+                service.change_state(item, EbayProductPublishingStatus.FAILED,
+                                     details=[err.api_dict() for err in e.errors])
+            else:
+                service.change_state(item, EbayProductPublishingStatus.PUBLISHED)
+
         # TODO: Move this to celery task!
-        try:
-            service.publish(item)
-        except EbayConnectionException as e:
-            log.error('Got ebay errors: %s', e.errors)
-            raise BadRequest([unicode(err) for err in e.errors], key="ebay.api.errors")
+        publish_task(item.id)
 
         serializer = self.get_serializer(service.product)
         return Response(data=serializer.data)
@@ -99,6 +110,16 @@ class UnpublishResource(APIResource, ProductResourceMixin):
         except PublishingValidationException as e:
             raise exceptions.ValidationError(e.message)
 
-        service.unpublish()
+        item = service.get_item()
+        try:
+            service.unpublish(item)
+        except PublishingServiceException as exc:
+            e = exc.original_exception
+            log.error('Got ebay errors: %s', e.errors)
+            service.change_state(item, EbayProductPublishingStatus.PUBLISHED,
+                                 details=[err.api_dict() for err in e.errors])
+        else:
+            service.change_state(item, EbayProductPublishingStatus.UNPUBLISHED)
+
         serializer = self.get_serializer(service.product)
         return Response(data=serializer.data)

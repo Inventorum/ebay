@@ -75,6 +75,44 @@ class CoreAPIClient(object):
 
         return response
 
+    def post(self, path, data=None, params=None, custom_headers=None):
+        """
+        Performs a post request to the given core api path with the given params/headers
+
+        :param path: The core api request path
+        :param data: Payload
+        :param params: Optional URL params
+        :param custom_headers: Optional custom HTTP headers (default header can be overwritten)
+        :return: The HTTP response
+
+        :type path: str | unicode
+        :type data: dict
+        :type params: dict
+        :type custom_headers: dict
+
+        :rtype: requests.models.Response
+
+        :raises requests.exceptions.HTTPError
+        """
+        if params is None:
+            params = {}
+
+        if custom_headers is None:
+            custom_headers = {}
+
+        if data is None:
+            data = {}
+
+        headers = self.default_headers
+        headers.update(custom_headers)
+
+        response = requests.post(self.url_for(path), json=data, params=params, headers=headers)
+
+        if not response.ok:
+            response.raise_for_status()
+
+        return response
+
 
 class UserScopedCoreAPIClient(CoreAPIClient):
 
@@ -129,3 +167,16 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         serializer = CoreInfoDeserializer(data=json)
         return serializer.build()
 
+    def post_product_publishing_state(self, inv_product_id, state, details):
+        """
+        Send state about publishing product to Inventorum api. Returns nothing, in case of failure raises
+        :param inv_product_id: Product id of inventorum database
+        :param state: State of publishing (check PublishStates)
+        :param details: Additional details (optional)
+        """
+        data = {
+            'channel': 'ebay',
+            'state': state,
+            'details': details or {'success': True}
+        }
+        self.post('/api/products/{}/state/'.format(inv_product_id), data=data)
