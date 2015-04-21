@@ -183,6 +183,8 @@ class EbayParallel(Ebay):
         rt = self.wait()
 
         if self.parallel.error():
-            raise EbayConnectionException(self.parallel.error(), None)
+            err = self.parallel.error()
+            log.error('Got error when getting something in parallel: %s', err)
+            raise EbayConnectionException(err, None)
 
         return rt
