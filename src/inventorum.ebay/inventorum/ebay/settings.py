@@ -131,6 +131,7 @@ MIDDLEWARE_CLASSES = (
     # BH: This adds `X-Sentry-ID` header, so error can be tracked down
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
     'inventorum.ebay.lib.rest.middleware.ExceptionLoggingMiddleware',
+    'inventorum.util.django.middlewares.CrequestMiddleware',
     # TODO jm: Needed?
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # TODO jm: Move to utils?!
