@@ -182,6 +182,6 @@ class EbayParallel(Ebay):
         rt = self.wait()
 
         if self.parallel.error():
-            raise EbayConnectionException(self.parallel.error())
+            raise EbayConnectionException(self.parallel.error(), None)
 
         return rt
