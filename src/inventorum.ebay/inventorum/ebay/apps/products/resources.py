@@ -57,9 +57,6 @@ class PublishResource(APIResource, ProductResourceMixin):
     def post(self, request, inv_product_id):
         product = self.get_or_create_product(inv_product_id, request.user.account)
 
-        if product.is_published:
-            raise BadRequest(ugettext('Product is not published'))
-
         preparation_service = PublishingPreparationService(product, user=request.user)
         try:
             preparation_service.validate()

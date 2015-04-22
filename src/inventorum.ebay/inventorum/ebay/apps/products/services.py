@@ -81,6 +81,9 @@ class PublishingPreparationService(object):
         Validates account and product before publishing to ebay
         :raises: PublishingValidationException
         """
+        if self.product.is_published:
+            raise PublishingValidationException(ugettext('Product was already published'))
+
         if not self.core_account.billing_address:
             raise PublishingValidationException(ugettext('To publish product we need your billing address'))
 

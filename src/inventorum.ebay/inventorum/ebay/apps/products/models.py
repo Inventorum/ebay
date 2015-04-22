@@ -226,7 +226,7 @@ class EbayApiAttempt(BaseModel):
     type = models.CharField(max_length=255, choices=EbayApiAttemptType.CHOICES)
     request = models.OneToOneField(EbayApiAttemptRequest, related_name="attempt")
     response = models.OneToOneField(EbayApiAttemptResponse, related_name="attempt")
-    success = models.BooleanField()
+    success = models.BooleanField(default=False)
 
     item = models.ForeignKey(EbayItemModel, null=True, blank=True, related_name="attempts")
 
