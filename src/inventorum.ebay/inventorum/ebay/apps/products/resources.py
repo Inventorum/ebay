@@ -1,19 +1,18 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.products import EbayProductPublishingStatus
+from django.utils.translation import ugettext
+from inventorum.ebay.apps.products.tasks import schedule_ebay_item_publish, schedule_ebay_item_unpublish
 
 from rest_framework import exceptions
-from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 
-from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel
+from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
-    PublishingCouldNotGetDataFromCoreAPI, UnpublishingService, PublishingServiceException
-from inventorum.ebay.lib.ebay import EbayConnectionException
-from inventorum.ebay.lib.rest.exceptions import BadRequest, ApiException
+from inventorum.ebay.apps.products.services import PublishingValidationException, \
+    PublishingCouldNotGetDataFromCoreAPI, PublishingPreparationService
+from inventorum.ebay.lib.rest.exceptions import ApiException, BadRequest
 
 from inventorum.ebay.lib.rest.resources import APIResource
 
@@ -58,9 +57,9 @@ class PublishResource(APIResource, ProductResourceMixin):
     def post(self, request, inv_product_id):
         product = self.get_or_create_product(inv_product_id, request.user.account)
 
-        service = PublishingService(product, request.user)
+        preparation_service = PublishingPreparationService(product, user=request.user)
         try:
-            service.validate()
+            preparation_service.validate()
         except PublishingValidationException as e:
             raise exceptions.ValidationError(e.message)
         except PublishingCouldNotGetDataFromCoreAPI as e:
@@ -68,29 +67,11 @@ class PublishResource(APIResource, ProductResourceMixin):
                 raise exceptions.NotFound
             raise ApiException(e.response.data, key="core.api.error", status_code=e.response.status_code)
 
-        item = service.prepare()
+        item = preparation_service.create_ebay_item()
+        schedule_ebay_item_publish(ebay_item_id=item.id, context=self.get_task_execution_context())
 
-        def publish_task(item_id):
-            item = EbayItemModel.objects.get(id=item_id)
-            service.change_state(item, EbayProductPublishingStatus.IN_PROGRESS)
-            try:
-                service.publish(item)
-            except PublishingServiceException as exc:
-                e = exc.original_exception
-                log.error('Got ebay errors: %s', e.errors)
-                service.change_state(item, EbayProductPublishingStatus.FAILED,
-                                     details=[err.api_dict() for err in e.errors])
-            else:
-                service.change_state(item, EbayProductPublishingStatus.PUBLISHED)
-
-        # TODO: Move this to celery task!
-        publish_task(item.id)
-
-        serializer = self.get_serializer(service.product)
+        serializer = self.get_serializer(product)
         return Response(data=serializer.data)
-
-        # TODO:
-        # 3. async: publish ebay listing
 
 
 class UnpublishResource(APIResource, ProductResourceMixin):
@@ -104,22 +85,10 @@ class UnpublishResource(APIResource, ProductResourceMixin):
     def post(self, request, inv_product_id):
         product = self.get_object()
 
-        service = UnpublishingService(product, request.user)
-        try:
-            service.validate()
-        except PublishingValidationException as e:
-            raise exceptions.ValidationError(e.message)
+        if not product.is_published:
+            raise BadRequest(ugettext('Product is not published'))
 
-        item = service.get_item()
-        try:
-            service.unpublish(item)
-        except PublishingServiceException as exc:
-            e = exc.original_exception
-            log.error('Got ebay errors: %s', e.errors)
-            service.change_state(item, EbayProductPublishingStatus.PUBLISHED,
-                                 details=[err.api_dict() for err in e.errors])
-        else:
-            service.change_state(item, EbayProductPublishingStatus.UNPUBLISHED)
+        schedule_ebay_item_unpublish(ebay_item_id=product.published_item.id, context=self.get_task_execution_context())
 
-        serializer = self.get_serializer(service.product)
+        serializer = self.get_serializer(product)
         return Response(data=serializer.data)

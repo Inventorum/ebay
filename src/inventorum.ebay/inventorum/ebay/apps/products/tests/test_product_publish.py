@@ -8,11 +8,12 @@ from django.utils.functional import cached_property
 from inventorum.ebay.apps.categories.models import CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.core_api import PublishStates
-from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
-from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
+from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel
-from inventorum.ebay.apps.products.services import PublishingService
+from inventorum.ebay.apps.products.services import PublishingPreparationService
 from inventorum.ebay.tests import StagingTestAccount
+from inventorum.ebay.lib.celery import celery_test_case
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
@@ -21,6 +22,7 @@ log = logging.getLogger(__name__)
 
 
 class TestProductPublish(EbayAuthenticatedAPITestCase):
+
     @cached_property
     def category(self):
         return CategoryFactory.create(external_id="176973")
@@ -50,7 +52,6 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         data = response.data
         self.assertEqual(data, ['You need to select category'])
 
-
     @ApiTest.use_cassette("publish_product_that_does_not_exists.yaml")
     def test_publish_not_existing_one(self):
         inv_product_id = StagingTestAccount.Products.PRODUCT_NOT_EXISTING
@@ -66,6 +67,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         log.debug('Got response: %s', response)
         self.assertEqual(response.status_code, 404)
 
+    @celery_test_case()
     @ApiTest.use_cassette("publish_and_unpublish_full.yaml", record_mode="new_episodes")
     def test_publish_then_unpublish(self):
         inv_product_id = StagingTestAccount.Products.IPAD_STAND
@@ -77,7 +79,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 200)
 
         item = product.items.last()
-        self.assertEqual(item.publishing_status, EbayProductPublishingStatus.PUBLISHED)
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
 
         self.assertEqual(item.attempts.count(), 1)
         last_attempt = item.attempts.last()
@@ -89,7 +91,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 200)
 
         item = product.items.last()
-        self.assertEqual(item.publishing_status, EbayProductPublishingStatus.UNPUBLISHED)
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
 
         # Publish & Unpublish = 2
         self.assertEqual(item.attempts.count(), 2)
@@ -97,6 +99,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertTrue(last_attempt.success)
         self.assertEqual(last_attempt.type, EbayApiAttemptType.UNPUBLISH)
 
+    @celery_test_case()
     def test_failing_publish(self):
         with ApiTest.use_cassette("failing_publish.yaml") as cass:
             inv_product_id = StagingTestAccount.Products.IPAD_STAND
@@ -108,7 +111,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             self.assertEqual(response.status_code, 200)
 
             item = product.items.last()
-            self.assertEqual(item.publishing_status, EbayProductPublishingStatus.FAILED)
+            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.FAILED)
 
             requests = cass.requests
             status_change_requests = [r for r in requests if r.url.endswith('/state/')]
@@ -153,16 +156,17 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             self.assertEqual(last_attempt.response.url, 'https://api.ebay.com/ws/api.dll')
             self.assertIn('AddItemResponse', last_attempt.response.content)
 
+    @celery_test_case()
     def test_failing_unpublish(self):
         with ApiTest.use_cassette("failing_unpublishing.yaml", record_mode='new_episodes') as cass:
             inv_product_id = StagingTestAccount.Products.IPAD_STAND
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             self._assign_category(product)
 
-            service = PublishingService(product, self.user)
-            item = service.prepare()
+            service = PublishingPreparationService(product, self.user)
+            item = service.create_ebay_item()
             item.external_id = '1234'
-            item.publishing_status = EbayProductPublishingStatus.PUBLISHED
+            item.publishing_status = EbayItemPublishingStatus.PUBLISHED
             item.save()
 
             response = self.client.post("/products/%s/unpublish" % inv_product_id)
@@ -176,7 +180,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
 
             requests = cass.requests
             status_change_requests = [r for r in requests if r.url.endswith('/state/')]
-            self.assertEqual(len(status_change_requests), 1)
+            self.assertEqual(len(status_change_requests), 2)
 
             state_body = json.loads(status_change_requests[0].body)
             self.assertEqual(state_body['state'], PublishStates.PUBLISHED)

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 import datetime
 from django.utils.timezone import utc
+import django_extensions.db.fields.json
 import django.utils.timezone
 import inventorum.util.django.db.models
 
@@ -11,7 +12,7 @@ import inventorum.util.django.db.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0008_auto_20150422_1028'),
+        ('products', '0009_auto_20150422_1701'),
     ]
 
     operations = [
@@ -63,5 +64,17 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
             bases=(inventorum.util.django.db.models.ModelMixins, models.Model),
+        ),
+        migrations.AlterField(
+            model_name='ebayitemimagemodel',
+            name='item',
+            field=models.ForeignKey(related_name='images', blank=True, to='products.EbayItemModel', null=True),
+            preserve_default=True,
+        ),
+        migrations.AlterField(
+            model_name='ebayitemmodel',
+            name='publishing_status_details',
+            field=django_extensions.db.fields.json.JSONField(null=True, blank=True),
+            preserve_default=True,
         ),
     ]

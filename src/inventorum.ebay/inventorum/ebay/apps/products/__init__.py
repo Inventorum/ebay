@@ -6,12 +6,12 @@ from inventorum.ebay.apps.core_api import PublishStates
 __import__('pkg_resources').declare_namespace(__name__)
 
 
-class EbayProductPublishingStatus(object):
-    DRAFT = 1
-    IN_PROGRESS = 2
-    PUBLISHED = 3
-    UNPUBLISHED = 4
-    FAILED = 5
+class EbayItemPublishingStatus(object):
+    DRAFT = 'draft'
+    IN_PROGRESS = 'in_progress'
+    PUBLISHED = 'published'
+    UNPUBLISHED = 'unpublished'
+    FAILED = 'failed'
 
     CHOICES = (
         (DRAFT, "Draft"),
@@ -23,7 +23,8 @@ class EbayProductPublishingStatus(object):
     CORE_API_MAP = {
         IN_PROGRESS: PublishStates.IN_PROGRESS,
         PUBLISHED: PublishStates.PUBLISHED,
-        FAILED: PublishStates.FAILED
+        FAILED: PublishStates.FAILED,
+        UNPUBLISHED: PublishStates.UNPUBLISHED
     }
 
     @classmethod
