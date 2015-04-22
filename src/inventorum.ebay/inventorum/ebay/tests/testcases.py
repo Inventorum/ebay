@@ -73,7 +73,7 @@ class EbayAuthenticatedAPITestCase(APITestCase):
     @staticmethod
     def create_ebay_token():
         return EbayToken(settings.EBAY_LIVE_TOKEN, expiration_time=settings.EBAY_LIVE_TOKEN_EXPIRATION_DATE,
-                               site_id=settings.EBAY_SUPPORTED_SITES['DE'])
+                         site_id=settings.EBAY_SUPPORTED_SITES['DE'])
 
 class UnitTestCase(TestCase, PatchMixin):
     pass

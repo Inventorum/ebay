@@ -1,17 +1,19 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from collections import defaultdict
 import logging
 
+import jsonfield
 from django.db import models
 from django_countries.fields import CountryField
+from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
 
 from inventorum.ebay.apps.categories.models import CategorySpecificModel
-from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayItemUpdateStatus
-from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
-from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific,\
-    EbayInventoryStatus
-
+from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
+from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
+from inventorum.ebay.lib.ebay.data import EbayParser
+from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific, EbayInventoryStatus
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -24,7 +26,7 @@ class EbayProductModelQuerySet(MappedInventorumModelQuerySet):
         """
         :rtype: EbayProductModelQuerySet
         """
-        return self.filter(items__publishing_status=EbayProductPublishingStatus.PUBLISHED).distinct()
+        return self.filter(items__publishing_status=EbayItemPublishingStatus.PUBLISHED).distinct()
 
     def by_account(self, account):
         """
@@ -52,7 +54,7 @@ class EbayProductModel(MappedInventorumModel):
     @property
     def published_item(self):
         try:
-            return self.items.get(publishing_status=EbayProductPublishingStatus.PUBLISHED)
+            return self.items.get(publishing_status=EbayItemPublishingStatus.PUBLISHED)
         except EbayItemModel.DoesNotExist:
             return None
 
@@ -110,6 +112,15 @@ class EbayItemPaymentMethod(BaseModel):
     external_id = models.CharField(max_length=255)
 
 
+class EbayItemModelQuerySet(BaseQuerySet):
+
+    def get_for_publishing(self, **kwargs):
+        """
+        :rtype EbayItemModelQuerySet
+        """
+        return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
+
+
 class EbayItemModel(BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="items",
                                 verbose_name="Inventorum ebay account")
@@ -123,15 +134,19 @@ class EbayItemModel(BaseModel):
     quantity = models.IntegerField(default=0)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20)
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
-    publishing_status = models.IntegerField(choices=EbayProductPublishingStatus.CHOICES,
-                                            default=EbayProductPublishingStatus.DRAFT)
+    ends_at = models.DateTimeField(null=True, blank=True)
+    external_id = models.CharField(max_length=255, null=True, blank=True)
+
+    country = CountryField()
+
+    publishing_status = models.CharField(max_length=255, choices=EbayItemPublishingStatus.CHOICES,
+                                         default=EbayItemPublishingStatus.DRAFT)
+    publishing_status_details = jsonfield.JSONField(null=True, blank=True)
 
     published_at = models.DateTimeField(null=True, blank=True)
     unpublished_at = models.DateTimeField(null=True, blank=True)
-    ends_at = models.DateTimeField(null=True, blank=True)
 
-    external_id = models.CharField(max_length=255, null=True, blank=True)
-    country = CountryField()
+    objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
 
     @property
     def ebay_object(self):
@@ -149,9 +164,28 @@ class EbayItemModel(BaseModel):
             category_id=self.category.external_id,
             shipping_services=[s.ebay_object for s in self.shipping.all()],
             pictures=[i.ebay_object for i in self.images.all()],
-            item_specifics=[i.ebay_object for i in self.specific_values.all()],
+            item_specifics=self._build_item_specifics(),
         )
 
+    def _build_item_specifics(self):
+        specifics = self.specific_values.all()
+        specific_dict = defaultdict(list)
+        for specific in specifics:
+            specific_dict[specific.specific.name].append(specific.value)
+
+        return [EbayItemSpecific(name=key, values=values) for key, values in specific_dict.iteritems()]
+
+    def set_publishing_status(self, publishing_status, details=None, save=True):
+        """
+        :type publishing_status: unicode
+        :type details:
+        :type save: bool
+        """
+        self.publishing_status = publishing_status
+        self.publishing_status_details = details
+
+        if save:
+            self.save()
 
 class EbayItemUpdateModel(BaseModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="updates")
@@ -187,10 +221,91 @@ class EbayItemSpecificModel(BaseModel):
 
     @property
     def ebay_object(self):
-        return EbayItemSpecific(self.specific.name, self.value)
+        return EbayItemSpecific(self.specific.name, [self.value])
 
 
 class EbayProductSpecificModel(BaseModel):
     product = models.ForeignKey(EbayProductModel, related_name="specific_values")
     specific = models.ForeignKey(CategorySpecificModel, related_name="+")
     value = models.CharField(max_length=255)
+
+
+class EbayApiAttemptRequest(BaseModel):
+    body = models.TextField()
+    headers = JSONField()
+    url = models.TextField()
+    method = models.TextField()
+
+    @classmethod
+    def create_from_ebay_request(cls, request):
+        """
+        :type request: requests.models.PreparedRequest
+        """
+        body = EbayParser.make_body_secure(request.body.decode('utf-8'))
+        return cls.objects.create(
+            body=body,
+            headers=dict(request.headers),
+            url=request.url,
+            method=request.method
+        )
+
+
+class EbayApiAttemptResponse(BaseModel):
+    content = models.TextField()
+    headers = JSONField()
+    url = models.TextField()
+    status_code = models.IntegerField()
+
+    @classmethod
+    def create_from_response(cls, response):
+        """
+        :type response: requests.models.Response
+        """
+        return cls.objects.create(
+            content=response.text,
+            headers=dict(response.headers),
+            url=response.url,
+            status_code=response.status_code
+        )
+
+
+class EbayApiAttempt(BaseModel):
+    type = models.CharField(max_length=255, choices=EbayApiAttemptType.CHOICES)
+    request = models.OneToOneField(EbayApiAttemptRequest, related_name="attempt")
+    response = models.OneToOneField(EbayApiAttemptResponse, related_name="attempt")
+    success = models.BooleanField(default=False)
+
+    item = models.ForeignKey(EbayItemModel, null=True, blank=True, related_name="attempts")
+
+    @classmethod
+    def create_from_ebay_exception_for_item_and_type(cls, exception, item, type):
+        """
+        :type exception: inventorum.ebay.lib.ebay.EbayConnectionException
+        :type item: EbayItemModel
+        :param type: unicode
+        :return: EbayApiAttempt
+        """
+        return cls.objects.create(
+            type=type,
+            request=EbayApiAttemptRequest.create_from_ebay_request(exception.response.request),
+            response=EbayApiAttemptResponse.create_from_response(exception.response),
+            success=False,
+            item=item
+        )
+
+    @classmethod
+    def create_from_service_for_item_and_type(cls, service, item, type):
+        """
+        Create Model with success true as there was no exception!
+        :type service: inventorum.ebay.lib.ebay.items.EbayItems
+        :type item: EbayItemModel
+        :param type: unicode
+        :return: EbayApiAttempt
+        """
+        return cls.objects.create(
+            type=type,
+            request=EbayApiAttemptRequest.create_from_ebay_request(service.api.request),
+            response=EbayApiAttemptResponse.create_from_response(service.api.response),
+            success=True,
+            item=item
+        )

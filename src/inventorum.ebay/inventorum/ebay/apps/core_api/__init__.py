@@ -7,6 +7,13 @@ from inventorum.ebay.apps.core_api.pager import Pager
 log = logging.getLogger(__name__)
 
 
+class PublishStates(object):
+    PUBLISHED = 'published'
+    UNPUBLISHED = 'unpublished'
+    FAILED = 'failed'
+    IN_PROGRESS = 'in_progress'
+
+
 class FakeCoreAPIResponse(object):
     """
     Very simple fake object for `requests.models.Request`, which mocks a small subset of the original interface

@@ -18,12 +18,25 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 serverurl=unix:///${os:root-prefix}/var/run/com.inventorum.ebay/supervisor.sock
 
 
-[program:celery]
+[group:celery]
+programs=celery_worker, flower
+
+[program:celery_worker]
 command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -l info
-process_name = com.inventorum.ebay.celery
+process_name = com.inventorum.ebay.celery_worker
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery-worker.log
+stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.log
+autostart=true
+autorestart=true
+
+[program:flower]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini flower -A inventorum.ebay.celery --port=5555
+process_name = flower
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${os:root-prefix}/var/log/flower.production.log
 autostart=true
 autorestart=true

@@ -80,16 +80,16 @@ class CoreAPIClient(object):
 
     def post(self, path, data=None, params=None, custom_headers=None):
         """
-        Performs a post request to the given core api path with the given data and params/headers
+        Performs a post request to the given core api path with the given params/headers
 
         :param path: The core api request path
-        :param data: The payload sent in the request body (will be json encoded)
+        :param data: Payload
         :param params: Optional URL params
         :param custom_headers: Optional custom HTTP headers (default header can be overwritten)
         :return: The HTTP response
 
         :type path: str | unicode
-        :type data:
+        :type data: dict
         :type params: dict
         :type custom_headers: dict
 
@@ -97,12 +97,19 @@ class CoreAPIClient(object):
 
         :raises requests.exceptions.HTTPError
         """
-        if data is not None:
-            data = self._encode_request_data(data)
+        if params is None:
+            params = {}
 
-        headers = self._get_request_headers(custom_headers)
+        if custom_headers is None:
+            custom_headers = {}
 
-        response = requests.post(self.url_for(path), data=data, params=params, headers=headers)
+        if data is None:
+            data = {}
+
+        headers = self.default_headers
+        headers.update(custom_headers)
+
+        response = requests.post(self.url_for(path), json=data, params=params, headers=headers)
 
         if not response.ok:
             response.raise_for_status()
@@ -300,3 +307,17 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         pager = self.paginated_get("/api/products/delta/deleted/", limit_per_page=limit_per_page, params=params)
         for page in pager.pages:
             yield page.data
+
+    def post_product_publishing_state(self, inv_product_id, state, details):
+        """
+        Send state about publishing product to Inventorum api. Returns nothing, in case of failure raises
+        :param inv_product_id: Product id of inventorum database
+        :param state: State of publishing (check PublishStates)
+        :param details: Additional details (optional)
+        """
+        data = {
+            'channel': 'ebay',
+            'state': state,
+            'details': details
+        }
+        return self.post('/api/products/{}/state/'.format(inv_product_id), data=data)

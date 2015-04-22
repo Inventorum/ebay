@@ -7,9 +7,10 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
-from inventorum.ebay.apps.products import EbayProductPublishingStatus
+from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayProductSpecificModel
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService
+from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService, \
+    PublishingPreparationService
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -17,9 +18,7 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 log = logging.getLogger(__name__)
 
 
-class TestPublishingService(EbayAuthenticatedAPITestCase):
-    def setUp(self):
-        super(TestPublishingService, self).setUp()
+class TestPublishingServices(EbayAuthenticatedAPITestCase):
 
     def _get_product(self, inv_product_id, account):
         return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
@@ -28,7 +27,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         leaf_category = CategoryFactory.create(name="Leaf category", external_id='64540')
 
         self.specific = CategorySpecificFactory.create(category=leaf_category)
-        self.required_specific = CategorySpecificFactory.create_required(category=leaf_category)
+        self.required_specific = CategorySpecificFactory.create_required(category=leaf_category, max_values=2)
 
         features = CategoryFeaturesModel.objects.create(
             category=leaf_category
@@ -46,11 +45,12 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
     def _add_specific_to_product(self, product):
         EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test")
+        EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test 2")
 
     def test_failed_validation(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             # No shipping services
             service.core_account.settings.shipping_services = []
@@ -61,7 +61,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         # Get product w/o shipping but acc has
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             with self.assertRaises(PublishingValidationException) as e:
                 service.validate()
@@ -79,8 +79,8 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         service.core_product.gross_price = 1
 
         # mock that product was published
-        item = service._create_db_item()
-        item.publishing_status = EbayProductPublishingStatus.PUBLISHED
+        item = service.create_ebay_item()
+        item.publishing_status = EbayItemPublishingStatus.PUBLISHED
         item.save()
 
         with self.assertRaises(PublishingValidationException) as e:
@@ -88,12 +88,12 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(e.exception.message, 'Product was already published')
 
-        item.publishing_status = EbayProductPublishingStatus.UNPUBLISHED
+        item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
         item.save()
 
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             with self.assertRaises(PublishingValidationException) as e:
                 service.validate()
@@ -108,11 +108,11 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_preparation(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             self._assign_category(product)
             self._add_specific_to_product(product)
-            service.prepare()
+            service.create_ebay_item()
 
         last_item = product.items.last()
         self.assertEqual(last_item.name, "SlowRoad Shipping Details")
@@ -122,7 +122,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(last_item.gross_price, Decimal("599.99"))
         self.assertEqual(last_item.country, 'DE')
         self.assertEqual(last_item.paypal_email_address, 'bartosz@hernas.pl')
-        self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.DRAFT)
+        self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.DRAFT)
         self.assertEqual(last_item.listing_duration, 'Days_120')
 
         payment_methods = last_item.payment_methods.all()
@@ -130,7 +130,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(payment_methods.last().external_id, 'PayPal')
 
         specific_values = last_item.specific_values.all()
-        self.assertEqual(specific_values.count(), 1)
+        self.assertEqual(specific_values.count(), 2)
         last_specific = specific_values.last()
         self.assertEqual(last_specific.value, 'Test')
         self.assertEqual(last_specific.specific.pk, self.required_specific.pk)
@@ -157,10 +157,10 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_account_shipping_fallback(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             self._assign_category(product)
-            service.prepare()
+            service.create_ebay_item()
 
             last_item = product.items.last()
             shipping_services = last_item.shipping.all()
@@ -173,11 +173,11 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
     def test_builder(self):
         product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
-            service = PublishingService(product, self.user)
+            service = PublishingPreparationService(product, self.user)
 
             self._assign_category(product)
             self._add_specific_to_product(product)
-            service.prepare()
+            service.create_ebay_item()
             last_item = product.items.last()
 
         # Check data builder
@@ -199,7 +199,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                 'ReturnsAcceptedOption': 'ReturnsAccepted'
             },
             'ItemSpecifics': {'NameValueList': [{'Name': self.required_specific.name,
-                                                 'Value': 'Test'}]},
+                                                 'Value': ['Test', 'Test 2']}]},
             'StartPrice': Decimal('599.9900000000'),
             'Title': 'SlowRoad Shipping Details',
             'ListingDuration': 'Days_120',
@@ -246,29 +246,30 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
             features.durations.add(duration)
 
         # Try to publish
-        service = PublishingService(product, self.user)
-        service.validate()
-        item = service.prepare()
-        service.publish(item)
+        preparation_service = PublishingPreparationService(product, self.user)
+        preparation_service.validate()
+        item = preparation_service.create_ebay_item()
+
+        publishing_service = PublishingService(item, self.user)
+        # publishing_service.initialize_publish_attempt(item)
+        publishing_service.publish()
+        publishing_service.finalize_publish_attempt()
 
         item = product.published_item
         self.assertIsNotNone(item)
-        self.assertEqual(item.publishing_status, EbayProductPublishingStatus.PUBLISHED)
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
         self.assertIsNotNone(item.published_at)
         self.assertIsNotNone(item.ends_at)
         self.assertIsNone(item.unpublished_at)
 
         # And now unpublish
-        unpublish_service = UnpublishingService(product, self.user)
-        unpublish_service.validate()
-        unpublish_service.unpublish()
+        unpublishing_service = UnpublishingService(item, self.user)
+        unpublishing_service.unpublish()
 
         item = product.published_item
         self.assertIsNone(item)
 
         last_item = product.items.last()
-        self.assertEqual(last_item.publishing_status, EbayProductPublishingStatus.UNPUBLISHED)
+        self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
         self.assertIsNotNone(last_item.published_at)
         self.assertIsNotNone(last_item.unpublished_at)
-
-

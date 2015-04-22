@@ -95,11 +95,11 @@ class TestCategoryList(EbayAuthenticatedAPITestCase):
         self.assert_breadcrumb_in_response(response, [root, level_2, level_3])
 
     def get_categories(self, parent_id=None):
-        data = {}
+        params = {}
         if parent_id is not None:
-            data['parent_id'] = parent_id
+            params['parent_id'] = parent_id
 
-        return self.client.get("/categories", data=data)
+        return self.client.get("/categories/", data=params)
 
     def assert_categories_in_response(self, response, expected_categories):
         """

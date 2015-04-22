@@ -5,15 +5,19 @@ from rest_framework import fields
 
 
 class EbayItemSpecific(object):
-    def __init__(self, name, value):
+    def __init__(self, name, values):
         self.name = name
-        self.value = value
+        self.values = values
 
     def dict(self):
-        return {
+        data = {
             'Name': self.name,
-            'Value': self.value
         }
+        if len(self.values) == 1:
+            data['Value'] = self.values[0]
+        elif len(self.values) > 1:
+            data['Value'] = self.values
+        return data
 
 class EbayPicture(object):
     def __init__(self, url):

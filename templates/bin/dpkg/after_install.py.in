@@ -24,6 +24,9 @@ except OSError:
 links = [
     (os.path.join(install_dir, 'etc', 'uwsgi', 'apps-available', 'com.inventorum.ebay.ini'),
         '/' + os.path.join('etc', 'uwsgi', 'apps-enabled', 'com.inventorum.ebay.ini', )),
+
+    ('/' + os.path.join(install_dir, 'etc', 'init.d', 'com.inventorum.ebay_worker'),
+        '/' + os.path.join('etc', 'init.d', 'com.inventorum.ebay_worker', )),
 ]
 
 crontab_chowns_paths = []
@@ -75,7 +78,7 @@ if proc.returncode != 0:
 
 
 db_provision = [
-    os.path.join(install_dir, 'bin', 'db_provision'),
+    os.path.join(install_dir, 'bin', 'provisioning', 'provision_db'),
     os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
     '${config:postgres_db}'
 ]
@@ -88,13 +91,41 @@ if proc.returncode != 0:
     exit(proc.returncode)
 
 
+db_migrationlist = [
+    os.path.join(install_dir, 'bin', 'ebay', 'manage'),
+    os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
+     'migrate', '--list'
+]
+print '[inv-ebay] check for migrations: %s ...' % db_migrationlist
+proc = subprocess.Popen(db_migrationlist, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+_out, _err = proc.communicate()
+print '[inv-ebay] %s' % _out
+if proc.returncode != 0:
+    print '[inv-ebay] %s' % _err
+    exit(proc.returncode)
+
+
 db_migrate = [
     os.path.join(install_dir, 'bin', 'ebay', 'manage'),
     os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
-    'migrate'
+     'migrate', '--noinput'
 ]
 print '[inv-ebay] running migrations: %s ...' % db_migrate
 proc = subprocess.Popen(db_migrate, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+_out, _err = proc.communicate()
+print '[inv-ebay] %s' % _out
+if proc.returncode != 0:
+    print '[inv-ebay] %s' % _err
+    exit(proc.returncode)
+
+
+rabbitmq_provision = [
+    os.path.join(install_dir, 'bin', 'provisioning', 'provision_rabbitmq'),
+    os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
+    '${config:postgres_db}'
+]
+print '[inv-ebay] provisioning rabbitmq ...'
+proc = subprocess.Popen(rabbitmq_provision, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 _out, _err = proc.communicate()
 print '[inv-ebay] %s' % _out
 if proc.returncode != 0:

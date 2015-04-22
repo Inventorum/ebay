@@ -42,14 +42,18 @@ class EbayCategoriesScraper(object):
         Get all categories as a tree from ebay and put them to database
         """
         with atomic():
-            imported_ids = []
-            for country_code in settings.EBAY_SUPPORTED_SITES.keys():
-                self.count_root_nodes_by_country[country_code] = 0
-                self.count_nodes_by_country[country_code] = 0
-                imported_ids += self._scrap_all_categories(country_code)
+            # Disabling mptt updates and then rebuilding tree as suggested in
+            # http://django-mptt.github.io/django-mptt/mptt.managers.html#mptt.managers.TreeManager.disable_mptt_updates
+            with CategoryModel.objects.disable_mptt_updates():
+                imported_ids = []
+                for country_code in settings.EBAY_SUPPORTED_SITES.keys():
+                    self.count_root_nodes_by_country[country_code] = 0
+                    self.count_nodes_by_country[country_code] = 0
+                    imported_ids += self._scrap_all_categories(country_code)
 
-            self._convert_children_and_parents()
-            self._remove_all_categories_except_these_ids(imported_ids)
+                self._convert_children_and_parents()
+                self._remove_all_categories_except_these_ids(imported_ids)
+            CategoryModel.objects.rebuild()
 
     # FETCH ALL helpers
 

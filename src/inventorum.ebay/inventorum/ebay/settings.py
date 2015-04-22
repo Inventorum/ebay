@@ -35,8 +35,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'django_nose',
-    # Provides the django db broker for celery
-    'kombu.transport.django',
 
     'inventorum.ebay.apps.accounts',
     'inventorum.ebay.apps.auth',
@@ -85,19 +83,21 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
 }
 
-# Celery settings ==============================================================
+# RabbitMQ/Celery settings ==============================================================
 
-BROKER_URL = 'django://guest:guest@localhost//'
-# CELERY_IMPORTS = ()
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+RABBITMQ_VHOST = 'inventorum_ebay'
+RABBITMQ_USER = 'ebay'
+RABBITMQ_PASSWORD = 'ebay'
+
+BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum_ebay"
+
 
 # Others =======================================================================
 
-# set factory_boy log level to WARN
-factory_logger = logging.getLogger('factory')
-factory_logger.setLevel(logging.WARN)
+logging.getLogger('factory').setLevel(logging.WARN)
+logging.getLogger("requests").setLevel(logging.WARN)
+logging.getLogger("ebaysdk").setLevel(logging.WARN)
+logging.getLogger("vcr").setLevel(logging.WARN)
 
 
 # ==============================================================================
@@ -130,6 +130,7 @@ MIDDLEWARE_CLASSES = (
     # BH: This adds `X-Sentry-ID` header, so error can be tracked down
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
     'inventorum.ebay.lib.rest.middleware.ExceptionLoggingMiddleware',
+    'inventorum.util.django.middlewares.CrequestMiddleware',
     # TODO jm: Needed?
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # TODO jm: Move to utils?!
