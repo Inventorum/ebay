@@ -4,6 +4,13 @@ from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
 
 
+class EbayVariation(object):
+    def __init__(self, gross_price, quantity, specifics):
+        self.gross_price = gross_price
+        self.quantity = quantity
+        self.specifics = specifics
+
+
 class EbayItemSpecific(object):
     def __init__(self, name, values):
         self.name = name
@@ -52,13 +59,16 @@ class EbayShippingService(object):
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
                  paypal_email_address, payment_methods, category_id, shipping_services, pictures=None,
-                 item_specifics=None):
+                 item_specifics=None, variations=None):
 
         if not all([isinstance(s, EbayShippingService) for s in shipping_services]):
             raise TypeError("shipping_services must be list of EbayShippingService instances")
 
         if item_specifics and not all([isinstance(s, EbayItemSpecific) for s in item_specifics]):
             raise TypeError("item_specifics must be list of EbayShippingService instances")
+
+        if variations and not all([isinstance(v, EbayVariation) for v in variations]):
+            raise TypeError("variations must be list of EbayVariation instances")
 
         self.title = title
         self.description = description
@@ -73,6 +83,7 @@ class EbayFixedPriceItem(object):
         self.shipping_services = shipping_services
         self.pictures = pictures or []
         self.item_specifics = item_specifics or []
+        self.variations = variations or []
 
     def dict(self):
         data = {

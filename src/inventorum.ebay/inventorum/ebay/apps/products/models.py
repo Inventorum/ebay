@@ -11,7 +11,8 @@ from inventorum.ebay.apps.categories.models import CategorySpecificModel
 from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
 from inventorum.ebay.lib.ebay.data import EbayParser
-from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific
+from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific, \
+    EbayVariation
 
 
 log = logging.getLogger(__name__)
@@ -129,6 +130,7 @@ class EbayItemModel(BaseModel):
             shipping_services=[s.ebay_object for s in self.shipping.all()],
             pictures=[i.ebay_object for i in self.images.all()],
             item_specifics=self._build_item_specifics(),
+            variations=[v.ebay_object for v in self.variations.all()]
         )
 
     def _build_item_specifics(self):
@@ -145,10 +147,22 @@ class EbayItemVariationModel(BaseModel):
     gross_price = models.DecimalField(decimal_places=10, max_digits=20)
     item = models.ForeignKey(EbayItemModel, related_name="variations")
 
+    @property
+    def ebay_object(self):
+        return EbayVariation(
+            gross_price=self.gross_price,
+            quantity=self.quantity,
+            specifics=[s.ebay_object for s in self.specifics.all()]
+        )
+
 
 class EbayItemVariationSpecificModel(BaseModel):
     name = models.CharField(max_length=255)
     variation = models.ForeignKey(EbayItemVariationModel, related_name="specifics")
+
+    @property
+    def ebay_object(self):
+        return EbayItemSpecific(self.name, self.values.all().values_list('value', flat=True))
 
 
 class EbayItemVariationSpecificValueModel(BaseModel):
