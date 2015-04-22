@@ -11,7 +11,7 @@ import inventorum.util.django.db.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0006_ebayitemspecificmodel'),
+        ('products', '0009_auto_20150422_1701'),
     ]
 
     operations = [
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('deleted_at', models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=utc), verbose_name='Time of deletion')),
                 ('quantity', models.IntegerField(null=True, blank=True)),
                 ('gross_price', models.DecimalField(null=True, max_digits=20, decimal_places=10, blank=True)),
-                ('status', models.IntegerField(default=1, choices=[(1, b'DRAFT'), (2, b'IN_PROGRESS'), (3, b'SUCCEEDED'), (4, b'FAILED')])),
+                ('status', models.IntegerField(default=1, choices=[(1, 'DRAFT'), (2, 'IN_PROGRESS'), (3, 'SUCCEEDED'), (4, 'FAILED')])),
                 ('item', models.ForeignKey(related_name='updates', to='products.EbayItemModel')),
             ],
             options={
@@ -37,6 +37,12 @@ class Migration(migrations.Migration):
             model_name='ebayproductmodel',
             name='deleted_in_core_api',
             field=models.BooleanField(default=False),
+            preserve_default=True,
+        ),
+        migrations.AlterField(
+            model_name='ebayitemmodel',
+            name='publishing_status',
+            field=models.CharField(default='draft', max_length=255, choices=[('draft', 'Draft'), ('in_progress', 'In progress'), ('published', 'Published'), ('unpublished', 'Unpublished'), ('failed', 'Failed')]),
             preserve_default=True,
         ),
     ]

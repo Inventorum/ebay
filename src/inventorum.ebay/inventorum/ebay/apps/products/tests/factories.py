@@ -10,7 +10,7 @@ from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.db.models import MappedInventorumModelFactory
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 
-from inventorum.ebay.apps.products import models, EbayProductPublishingStatus
+from inventorum.ebay.apps.products import models, EbayItemPublishingStatus
 from inventorum.ebay.tests import StagingTestAccount
 
 
@@ -49,7 +49,7 @@ class EbayItemFactory(factory.DjangoModelFactory):
 
 class PublishedEbayItemFactory(EbayItemFactory):
     external_id = "1002"
-    publishing_status=EbayProductPublishingStatus.PUBLISHED
+    publishing_status=EbayItemPublishingStatus.PUBLISHED
 
     @factory.lazy_attribute
     def published_at(self):
@@ -64,4 +64,3 @@ class EbayProductSpecificFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = models.EbayProductSpecificModel
-

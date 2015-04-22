@@ -4,7 +4,6 @@ import logging
 
 from django.utils.functional import cached_property
 from inventorum.ebay.apps.categories.models import CategoryModel
-from inventorum.ebay.apps.categories.serializers import CategorySpecificsSerializer
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 from inventorum.ebay.apps.products.serializers import EbayProductCategorySerializer, EbayProductSerializer
