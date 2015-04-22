@@ -28,7 +28,7 @@ bin/clean_python > /dev/null
 bin/supervisorctl restart postgres
 
 if ! $local_flag; then
-    bin/db_provision src/inventorum.ebay/test.ini inventorum_ebay_develop -D
+    bin/provisioning/provision_db src/inventorum.ebay/test.ini inventorum_ebay_develop -D
     bin/ebay/manage src/inventorum.ebay/test.ini migrate --noinput
 fi
 
