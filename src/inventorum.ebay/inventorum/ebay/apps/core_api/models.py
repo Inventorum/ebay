@@ -35,12 +35,12 @@ class CoreProduct(object):
         self.images = images
         self.variation_count = variation_count
         self.shipping_services = [s for s in shipping_services or [] if s.enabled]
-        self.variations = variations
+        self.variations = variations or []
         self.attributes = attributes
 
     @property
     def is_parent(self):
-        return self.variation_count > 0
+        return len(self.variations) > 0
 
 
 class CoreProductImage(object):

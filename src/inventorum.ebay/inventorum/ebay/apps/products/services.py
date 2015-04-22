@@ -88,14 +88,10 @@ class PublishingPreparationService(object):
         if not self.core_account.billing_address:
             raise PublishingValidationException(ugettext('To publish product we need your billing address'))
 
-        if self.core_product.is_parent:
-            raise PublishingValidationException(ugettext('Cannot publish products with variations'))
-
         if not (self.core_product.shipping_services or self.core_account.settings.shipping_services):
             raise PublishingValidationException(ugettext('Product has not shipping services selected'))
 
-        if self.core_product.gross_price < Decimal("1"):
-            raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
+        self._check_price_validity()
 
         if not self.product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
@@ -108,6 +104,13 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(
                 ugettext('You need to pass all required specifics (missing: %(missing_ids)s)!')
                 % {'missing_ids': list(missing_ids)})
+
+    def _check_price_validity(self):
+        if not self.core_product.is_parent and self.core_product.gross_price < Decimal("1"):
+            raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
+
+        if self.core_product.is_parent and any([v.gross_price < Decimal("1") for v in self.core_product.variations]):
+            raise PublishingValidationException(ugettext('Prices needs to be greater or equal than 1'))
 
     def create_ebay_item(self):
         """
