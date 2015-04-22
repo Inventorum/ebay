@@ -13,9 +13,9 @@ from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttem
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingPreparationService
 from inventorum.ebay.tests import StagingTestAccount
+from inventorum.ebay.lib.celery import celery_test_case
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from inventorum.util.celery import celery_test_case
 
 
 log = logging.getLogger(__name__)
