@@ -307,7 +307,57 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         # Check data builder
         ebay_item = last_item.ebay_object
 
-        data = ebay_item.dict()
+        data = ebay_item.dict()['Item']
+
+        variations_data = data['Variations']['Variation']
+        self.assertEqual(len(variations_data), 2)
+
+        first_variation = variations_data[0]
+
+        self.assertEqual(first_variation, {
+            'Quantity': 30,
+            'StartPrice': Decimal('150'),
+            'VariationSpecifics': {
+                'NameValueList': [
+                    {
+                        'Name': 'size',
+                        'Value': '22'
+                    },
+                    {
+                        'Name': 'material',
+                        'Value': 'Denim'
+                    },
+                    {
+                        'Name': 'color',
+                        'Value': 'Red'
+                    },
+                ]
+            }
+        })
+
+        second_variation = variations_data[1]
+
+        self.assertEqual(second_variation, {
+            'Quantity': 50,
+            'StartPrice': Decimal('130'),
+            'VariationSpecifics': {
+                'NameValueList': [
+                    {
+                        'Name': 'size',
+                        'Value': '50'
+                    },
+                    {
+                        'Name': 'material',
+                        'Value': 'Leather'
+                    },
+                    {
+                        'Name': 'color',
+                        'Value': 'Blue'
+                    },
+                ]
+            }
+        })
+        
         self.assertEqual(data['Variations']['VariationSpecificsSet'], {
             'NameValueList': [
                 {
@@ -323,55 +373,6 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                     'Value': ['22', '50']
                 }
             ]
-        })
-
-        variations_data = data['Variations']['Variation']
-        self.assertEqual(len(variations_data), 2)
-
-        first_variation = variations_data[0]
-
-        self.assertEqual(first_variation, {
-            'Quantity': 30,
-            'StartPrice': Decimal('150'),
-            'VariationSpecifics': {
-                'NameValueList': [
-                    {
-                        'Name': 'color',
-                        'Value': ['Red']
-                    },
-                    {
-                        'Name': 'material',
-                        'Value': ['Denim']
-                    },
-                    {
-                        'Name': 'size',
-                        'Value': ['22']
-                    }
-                ]
-            }
-        })
-
-        second_variation = variations_data[0]
-
-        self.assertEqual(second_variation, {
-            'Quantity': 50,
-            'StartPrice': Decimal('130'),
-            'VariationSpecifics': {
-                'NameValueList': [
-                    {
-                        'Name': 'color',
-                        'Value': ['Blue']
-                    },
-                    {
-                        'Name': 'material',
-                        'Value': ['Leather']
-                    },
-                    {
-                        'Name': 'size',
-                        'Value': ['50']
-                    }
-                ]
-            }
         })
 
 

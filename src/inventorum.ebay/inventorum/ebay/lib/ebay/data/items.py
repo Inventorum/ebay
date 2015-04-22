@@ -10,6 +10,14 @@ class EbayVariation(object):
         self.quantity = quantity
         self.specifics = specifics
 
+    def dict(self):
+        return {
+            'Quantity': self.quantity,
+            'StartPrice': self.gross_price,
+            'VariationSpecifics': {
+                'NameValueList': [s.dict() for s in self.specifics]
+            }
+        }
 
 class EbayItemSpecific(object):
     def __init__(self, name, values):
@@ -106,6 +114,11 @@ class EbayFixedPriceItem(object):
         if self.item_specifics:
             data['ItemSpecifics'] = {
                 'NameValueList': [s.dict() for s in self.item_specifics]
+            }
+
+        if self.variations:
+            data['Variations'] = {
+                'Variation': [v.dict() for v in self.variations]
             }
 
         # Static data
