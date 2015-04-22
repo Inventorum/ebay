@@ -95,7 +95,6 @@ class EbayItemModelQuerySet(BaseQuerySet):
 
     def get_for_publishing(self, **kwargs):
         """
-
         :rtype EbayItemModelQuerySet
         """
         return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
