@@ -11,33 +11,36 @@ ebay_main = inventorum.util.paste:make_wsgi_application
 
 [console_scripts]
 celery = inventorum.ebay.scripts.celery:run
-db_provision = inventorum.ebay.scripts.db:db_provision
+provisioning/provision_db = inventorum.ebay.scripts.provisioning:provision_db
+provisioning/provision_rabbitmq = inventorum.ebay.scripts.provisioning:provision_rabbitmq
 manage = inventorum.util.paste:manage
 """
 
-# alphabetically ordered
+# alphabetically ordered(!)
 required_eggs = [
     'celery>=3.1.17',
+    'ebaysdk>=2.1.1-dev2',
+    'flower>=0.8.1',
+    'grequests>=0.3.1',
 
     'Django>=1.7.7',
+    'django-countries>=3.3',
     'django-extensions>=1.5.2',
     'djangorestframework>=3.1.1',
+    'django-mptt>=0.6.1',
     'django-pastedeploy-settings>=1.0rc4dev',
+    'django-rest-swagger>=0.2.9',
 
     'inventorum.util==9.3.7-dev',
 
-    'plac>=0.9.1',
-    'requests>=2.6.0',
-    'waitress>=0.8.9',
-    'django-mptt>=0.6.1',
-    'ebaysdk>=2.1.1-dev2',
-    'grequests>=0.3.1',
+    'jsonfield>=1.0.3',
     'mock>=1.0.1',
-    'vcrpy>=1.3.0',
+    'plac>=0.9.1',
     'python-keyczar>=0.715',
-    'django-countries>=3.3',
     'raven>=5.2.0',
-    'django-rest-swagger>=0.2.9'
+    'requests>=2.6.0',
+    'vcrpy>=1.3.0',
+    'waitress>=0.8.9',
 ]
 
 setup(

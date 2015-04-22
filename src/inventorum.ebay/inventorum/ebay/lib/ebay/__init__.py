@@ -30,11 +30,24 @@ class EbayConnectionException(EbayException):
     def __init__(self, message, response):
         self.message = message
         self.response = response
+        self.errors = None
+
         if self.response is not None:
             errors = self.response.dict()['Errors']
             if not isinstance(errors, list):
                 errors = [errors]
             self.errors = [EbayError.create_from_data(e) for e in errors]
+
+    @property
+    def serialized_errors(self):
+        """
+        :returns a serialized representation of the ebay errors for api responses or status details
+        :rtype: dict
+        """
+        if self.errors is None:
+            return []
+
+        return [err.api_dict() for err in self.errors]
 
     def __unicode__(self):
         return 'Message: %s ' % self.message

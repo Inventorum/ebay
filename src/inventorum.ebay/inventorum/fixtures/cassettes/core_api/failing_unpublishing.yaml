@@ -2,14 +2,14 @@ interactions:
 - request:
     body: null
     headers:
-      Accept: [!!python/unicode application/json]
+      Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Type: [!!python/unicode application/json]
-      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [9]
-      X-Inv-Account: [!!python/unicode 346]
-      X-Inv-User: [!!python/unicode 425]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/665753
   response:
@@ -31,15 +31,15 @@ interactions:
 - request:
     body: null
     headers:
-      Accept: [!!python/unicode application/json]
+      Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Type: [!!python/unicode application/json]
+      Content-Type: [!!python/unicode 'application/json']
       Cookie: ['sn="e30:1YkBCh:synYWrXlZQzaqvdCZ7GoxuN6_FM"']
-      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [9]
-      X-Inv-Account: [!!python/unicode 346]
-      X-Inv-User: [!!python/unicode 425]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/665753/
   response:
@@ -108,14 +108,14 @@ interactions:
 - request:
     body: null
     headers:
-      Accept: [!!python/unicode application/json]
+      Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Type: [!!python/unicode application/json]
-      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [9]
-      X-Inv-Account: [!!python/unicode 346]
-      X-Inv-User: [!!python/unicode 425]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
     method: GET
     uri: http://app.intern.inventorum.net/api/info/
   response:
@@ -193,7 +193,7 @@ interactions:
       Content-Type: [text/xml]
       User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
       X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
-      X-EBAY-API-CALL-NAME: [!!python/unicode EndItem]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'EndItem']
       X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
@@ -202,11 +202,12 @@ interactions:
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<EndItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-20T12:53:37.136Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikel
-        kann nicht aufgerufen werden.</ShortMessage><LongMessage>Der Artikel kann
-        nicht aufgerufen werden, da er gel\xF6scht wurde, es sich um ein Half.com-Angebot
-        handelt oder weil Sie nicht der Verk\xE4ufer sind.</LongMessage><ErrorCode>17</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
-        ParamID=\"0\"><Value>1234</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></EndItemResponse>"}
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<EndItemResponse xmlns=\"\
+        urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-20T12:53:37.136Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikel\
+        \ kann nicht aufgerufen werden.</ShortMessage><LongMessage>Der Artikel kann\
+        \ nicht aufgerufen werden, da er gel\xF6scht wurde, es sich um ein Half.com-Angebot\
+        \ handelt oder weil Sie nicht der Verk\xE4ufer sind.</LongMessage><ErrorCode>17</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters\
+        \ ParamID=\"0\"><Value>1234</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></EndItemResponse>"}
     headers:
       content-length: ['676']
       content-type: [text/xml]
@@ -228,15 +229,15 @@ interactions:
       kann nicht aufgerufen werden.", "severity_code": "Error", "classification":
       "RequestError"}], "channel": "ebay"}'
     headers:
-      Accept: [!!python/unicode application/json]
+      Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Length: ['359']
-      Content-Type: [!!python/unicode application/json]
-      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [9]
-      X-Inv-Account: [!!python/unicode 346]
-      X-Inv-User: [!!python/unicode 425]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
     method: POST
     uri: http://app.intern.inventorum.net/api/products/665753/state/
   response:
@@ -253,5 +254,38 @@ interactions:
       x-inv-account: ['346']
       x-inv-user: ['425']
       x-rid: ['1034562694167455220']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"state": "published", "details": [{"long_message": "Der Artikel kann nicht
+      aufgerufen werden, da er gel\u00f6scht wurde, es sich um ein Half.com-Angebot
+      handelt oder weil Sie nicht der Verk\u00e4ufer sind.", "code": 17, "severity_code":
+      "Error", "classification": "RequestError", "short_message": "Artikel kann nicht
+      aufgerufen werden."}], "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['359']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [9]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Tue, 21 Apr 2015 22:19:37 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YkgW1:BvNx8fAQeTJow6U1LUqVFTryzE0"; Domain=app.intern.inventorum.net;
+          expires=Wed, 22-Apr-2015 00:19:37 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['2984902807795590644']
     status: {code: 200, message: OK}
 version: 1

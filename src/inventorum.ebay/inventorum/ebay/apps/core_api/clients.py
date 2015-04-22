@@ -177,6 +177,6 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         data = {
             'channel': 'ebay',
             'state': state,
-            'details': details or {'success': True}
+            'details': details
         }
-        self.post('/api/products/{}/state/'.format(inv_product_id), data=data)
+        return self.post('/api/products/{}/state/'.format(inv_product_id), data=data)

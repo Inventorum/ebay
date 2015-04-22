@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec ${buildout:directory}/parts/rabbitmq/sbin/rabbitmqctl $@
