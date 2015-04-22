@@ -10,7 +10,8 @@ from requests.exceptions import HTTPError
 
 from inventorum.ebay.apps.products import EbayProductPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
-    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt
+    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt, EbayItemVariationModel, \
+    EbayItemVariationSpecificModel, EbayItemVariationSpecificValueModel
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.items import EbayItems
 
@@ -21,6 +22,7 @@ class PublishingServiceException(Exception):
     def __init__(self, message=None, original_exception=None):
         self.message = message
         self.original_exception = original_exception
+
 
 class PublishingValidationException(PublishingServiceException):
     pass
@@ -51,6 +53,9 @@ class PublishingUnpublishingService(object):
 
     @cached_property
     def core_product(self):
+        """
+        :rtype: inventorum.ebay.apps.core_api.models.CoreProduct
+        """
         try:
             return self.user.core_api.get_product(self.product.inv_id)
         except HTTPError as e:
@@ -84,7 +89,6 @@ class PublishingUnpublishingService(object):
                 raise PublishingSendStateFailedException()
         else:
             log.warn('Got state (%s) that cannot be mapped to core api PublishState', state)
-
 
 
 class PublishingService(PublishingUnpublishingService):
@@ -195,13 +199,29 @@ class PublishingService(PublishingUnpublishingService):
                 item=item
             )
 
-
         for specific in db_product.specific_values.all():
             EbayItemSpecificModel.objects.create(
                 specific=specific.specific,
                 value=specific.value,
                 item=item
             )
+
+        for product in self.core_product.variations:
+            variation_obj = EbayItemVariationModel.objects.create(
+                quantity=product.quantity,
+                gross_price=product.gross_price,
+                item=item
+            )
+            for attribute in product.attributes:
+                specific_obj = EbayItemVariationSpecificModel.objects.create(
+                    name=attribute.key,
+                    variation=variation_obj
+                )
+                for value in attribute.values:
+                    EbayItemVariationSpecificValueModel.objects.create(
+                        specific=specific_obj,
+                        value=value
+                    )
 
         return item
 

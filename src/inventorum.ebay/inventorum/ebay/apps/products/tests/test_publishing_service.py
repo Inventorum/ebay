@@ -290,9 +290,19 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
         self.assertEqual(first_variation_obj.gross_price, Decimal("150"))
         self.assertEqual(first_variation_obj.specifics.count(), 3)
 
-        for specific in first_variation_obj.specifics.all():
+        specifics = first_variation_obj.specifics.all()
+
+        for specific in specifics:
             self.assertEqual(specific.values.count(), 1)
 
+        self.assertEqual(specifics[0].name,  "size")
+        self.assertEqual(specifics[0].values.first().value,  "22")
+
+        self.assertEqual(specifics[1].name,  "material")
+        self.assertEqual(specifics[1].values.first().value,  "Denim")
+
+        self.assertEqual(specifics[2].name,  "color")
+        self.assertEqual(specifics[2].values.first().value,  "Red")
 
         # Check data builder
         ebay_item = last_item.ebay_object
