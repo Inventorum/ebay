@@ -20,6 +20,7 @@ manage = inventorum.util.paste:manage
 required_eggs = [
     'celery>=3.1.17',
     'ebaysdk>=2.1.1-dev2',
+    'flower>=0.8.1',
     'grequests>=0.3.1',
 
     'Django>=1.7.7',
