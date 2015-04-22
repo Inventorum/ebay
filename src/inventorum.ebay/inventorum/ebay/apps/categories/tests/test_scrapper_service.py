@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
+import unittest
 
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, PaymentMethodModel, \
     DurationModel, CategorySpecificModel
@@ -55,6 +56,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(root_category.ebay_leaf, False)
         self.assertEqual(root_category.country, "AT")
 
+    @unittest.skip('We reached ebay limits')
     def test_features(self):
         with EbayTest.use_cassette("ebay_get_leaf_categories.yaml"):
             # First root node of ebay has 2012 children
@@ -82,6 +84,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(PaymentMethodModel.objects.count(), 10)
         self.assertEqual(DurationModel.objects.count(), 5)
 
+    @unittest.skip('We reached ebay limits')
     def test_specifics(self):
         with EbayTest.use_cassette("ebay_get_leaf_categories.yaml"):
             # First root node of ebay has 2012 children

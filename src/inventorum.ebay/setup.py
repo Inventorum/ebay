@@ -30,7 +30,7 @@ required_eggs = [
     'requests>=2.6.0',
     'waitress>=0.8.9',
     'django-mptt>=0.6.1',
-    'ebaysdk>=2.1.1-dev1',
+    'ebaysdk>=2.1.1-dev2',
     'grequests>=0.3.1',
     'mock>=1.0.1',
     'vcrpy>=1.3.0',
@@ -68,7 +68,7 @@ setup(
     dependency_links=[
         # use the last commit-id in our branch that we rely on
         'https://github.com/bimusiek/ebaysdk-python/archive/master.zip'
-        '#egg=ebaysdk-2.1.1-dev1',
+        '#egg=ebaysdk-2.1.1-dev2',
         'https://github.com/rtdean/grequests/archive/0.3.0.zip'
         '#egg=grequests-0.3.1',
     ],
