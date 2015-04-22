@@ -10,8 +10,8 @@ from rest_framework import status
 
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
-    PublishingCouldNotGetDataFromCoreAPI, UnpublishingService, PublishingServiceException, PublishingPreparationService
+from inventorum.ebay.apps.products.services import PublishingValidationException, \
+    PublishingCouldNotGetDataFromCoreAPI, PublishingPreparationService
 from inventorum.ebay.lib.rest.exceptions import ApiException, BadRequest
 
 from inventorum.ebay.lib.rest.resources import APIResource
