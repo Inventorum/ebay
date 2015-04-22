@@ -5,7 +5,6 @@ import os
 
 from celery import Celery
 from django.conf import settings
-from inventorum.util.celery import CeleryBaseMiddleware
 
 
 log = logging.getLogger(__name__)
