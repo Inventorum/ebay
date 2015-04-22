@@ -357,7 +357,7 @@ class TestPublishingService(EbayAuthenticatedAPITestCase):
                 ]
             }
         })
-        
+
         self.assertEqual(data['Variations']['VariationSpecificsSet'], {
             'NameValueList': [
                 {

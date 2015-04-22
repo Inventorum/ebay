@@ -1,11 +1,17 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from collections import defaultdict
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
 
 
 class EbayVariation(object):
     def __init__(self, gross_price, quantity, specifics):
+        """
+        :type gross_price: decimal.Decimal
+        :type quantity: int
+        :type specifics: list[EbayItemSpecific]
+        """
         self.gross_price = gross_price
         self.quantity = quantity
         self.specifics = specifics
@@ -68,6 +74,22 @@ class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
                  paypal_email_address, payment_methods, category_id, shipping_services, pictures=None,
                  item_specifics=None, variations=None):
+        """
+        :type title: unicode
+        :type description: unicode
+        :type listing_duration: unicode
+        :type country: unicode
+        :type postal_code: unicode
+        :type quantity: int
+        :type start_price: decimal.Decimal
+        :type paypal_email_address: unicode
+        :type payment_methods: list[unicode]
+        :type category_id: unicode
+        :type shipping_services: list[EbayShippingService]
+        :type pictures: list[EbayPicture]
+        :type item_specifics: list[EbayItemSpecific]
+        :type variations: list[EbayVariation]
+        """
 
         if not all([isinstance(s, EbayShippingService) for s in shipping_services]):
             raise TypeError("shipping_services must be list of EbayShippingService instances")
@@ -118,7 +140,8 @@ class EbayFixedPriceItem(object):
 
         if self.variations:
             data['Variations'] = {
-                'Variation': [v.dict() for v in self.variations]
+                'Variation': [v.dict() for v in self.variations],
+                'VariationSpecificsSet': self._build_variation_specifics_set()
             }
 
         # Static data
@@ -139,6 +162,15 @@ class EbayFixedPriceItem(object):
             'ConditionID': 1000
         }
 
+    def _build_variation_specifics_set(self):
+        specifics = defaultdict(list)
+        for variation in self.variations:
+            for specific in variation.specifics:
+                specifics[specific.name].extend(specific.values)
+
+        specifics_objects = [EbayItemSpecific(key, values) for key, values in specifics.iteritems()]
+        return {'NameValueList': [so.dict() for so in specifics_objects]}
+                
 
 class EbayAddItemResponse(object):
     def __init__(self, item_id, start_time, end_time):
