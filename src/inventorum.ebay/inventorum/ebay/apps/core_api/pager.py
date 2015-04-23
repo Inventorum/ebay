@@ -29,6 +29,8 @@ class Page(object):
 
 
 class Pager(object):
+    TOTAL_ATTR_NAME = "total"
+    DATA_ATTR_NAME = "data"
 
     def __init__(self, client, path, limit_per_page, params=None, custom_headers=None):
         """
@@ -75,12 +77,13 @@ class Pager(object):
 
         :raises requests.exceptions.HTTPError, PagerException
         """
-        yield Page(pager=self, number=1, response=self._initial_response, data=self._initial_json_body["data"])
+        yield Page(pager=self, number=1, response=self._initial_response,
+                   data=self._initial_json_body[self.DATA_ATTR_NAME])
 
         for i in range(2, self.total_pages + 1):
             response = self._request_page(i)
             json_body = self._parse_and_validate_json(response)
-            yield Page(pager=self, number=i, response=response, data=json_body["data"])
+            yield Page(pager=self, number=i, response=response, data=json_body[self.DATA_ATTR_NAME])
 
     def _init_with_initial_request(self):
         """
@@ -90,7 +93,7 @@ class Pager(object):
         initial_json_body = self._parse_and_validate_json(initial_response)
 
         try:
-            self._total_items = int(initial_json_body["total"])
+            self._total_items = int(initial_json_body[self.TOTAL_ATTR_NAME])
         except (ValueError, TypeError):
             raise PagerException("Malformed response body: Invalid `total` received in '{}'".format(initial_json_body))
 
@@ -112,10 +115,10 @@ class Pager(object):
         except (ValueError, TypeError):
             raise PagerException("Malformed response body: {}".format(response.content))
 
-        if "total" not in json_body:
+        if self.TOTAL_ATTR_NAME not in json_body:
             raise PagerException("Malformed response body: No `total` received in '{}'".format(json_body))
 
-        if "data" not in json_body:
+        if self.DATA_ATTR_NAME not in json_body:
             raise PagerException("Malformed response body: No `data` received in '{}'".format(json_body))
 
         return json_body
