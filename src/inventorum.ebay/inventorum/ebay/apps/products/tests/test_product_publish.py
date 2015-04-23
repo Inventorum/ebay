@@ -275,23 +275,23 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             log.debug('Got response: %s', response)
             self.assertEqual(response.status_code, 200)
 
-        item = product.items.last()
-        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
+            item = product.items.last()
+            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
 
-        self.assertEqual(item.attempts.count(), 1)
-        last_attempt = item.attempts.last()
-        self.assertTrue(last_attempt.success)
-        self.assertEqual(last_attempt.type, EbayApiAttemptType.PUBLISH)
+            self.assertEqual(item.attempts.count(), 1)
+            last_attempt = item.attempts.last()
+            self.assertTrue(last_attempt.success)
+            self.assertEqual(last_attempt.type, EbayApiAttemptType.PUBLISH)
 
-        response = self.client.post("/products/%s/unpublish" % inv_product_id)
-        log.debug('Got response: %s', response)
-        self.assertEqual(response.status_code, 200)
+            response = self.client.post("/products/%s/unpublish" % inv_product_id)
+            log.debug('Got response: %s', response)
+            self.assertEqual(response.status_code, 200)
 
-        item = product.items.last()
-        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
+            item = product.items.last()
+            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
 
-        # Publish & Unpublish = 2
-        self.assertEqual(item.attempts.count(), 2)
-        last_attempt = item.attempts.last()
-        self.assertTrue(last_attempt.success)
-        self.assertEqual(last_attempt.type, EbayApiAttemptType.UNPUBLISH)
+            # Publish & Unpublish = 2
+            self.assertEqual(item.attempts.count(), 2)
+            last_attempt = item.attempts.last()
+            self.assertTrue(last_attempt.success)
+            self.assertEqual(last_attempt.type, EbayApiAttemptType.UNPUBLISH)

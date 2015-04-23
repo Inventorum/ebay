@@ -34,10 +34,9 @@ class EbayParser(object):
         return cls.RE_SECURE_BODY.sub("<RequesterCredentials>***</RequesterCredentials>", body)
 
 
-
 class EbayBooleanField(BooleanField):
     TRUE_VALUES = frozenset(BooleanField.TRUE_VALUES | {'Enabled'})
-    FALSE_VALUES = frozenset(BooleanField.TRUE_VALUES | {'Disabled'})
+    FALSE_VALUES = frozenset(BooleanField.FALSE_VALUES | {'Disabled'})
 
 
 class EbayListSerializer(ListSerializer):
