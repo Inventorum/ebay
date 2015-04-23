@@ -41,7 +41,7 @@ class CoreAPISyncService(object):
         for ebay_item, core_product_delta in modifications_of_published_items:
             ebay_item_update = self._create_update_from_diff(ebay_item, core_product_delta)
             if ebay_item_update:
-                tasks.schedule_ebay_item_update(ebay_item_update, context=self.get_task_execution_context())
+                tasks.schedule_ebay_item_update(ebay_item_update.id, context=self.get_task_execution_context())
 
     def _create_update_from_diff(self, ebay_item, core_product_delta):
         """
@@ -77,7 +77,7 @@ class CoreAPISyncService(object):
             ebay_product.deleted_in_core_api = True
             ebay_product.save()
 
-            tasks.schedule_ebay_product_deletion(ebay_product, context=self.get_task_execution_context())
+            tasks.schedule_ebay_product_deletion(ebay_product.id, context=self.get_task_execution_context())
 
     def _get_core_modifications_of_published_items(self, modified_since):
         """
