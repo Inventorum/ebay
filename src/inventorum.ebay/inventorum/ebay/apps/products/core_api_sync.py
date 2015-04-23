@@ -6,6 +6,8 @@ from datetime import datetime
 
 from inventorum.ebay.apps.products import tasks, EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemUpdateModel
+from inventorum.util.celery import TaskExecutionContext
+from inventorum.util.django.middlewares import fallback_uuid
 
 
 log = logging.getLogger(__name__)
@@ -39,9 +41,7 @@ class CoreAPISyncService(object):
         for ebay_item, core_product_delta in modifications_of_published_items:
             ebay_item_update = self._create_update_from_diff(ebay_item, core_product_delta)
             if ebay_item_update:
-                # TODO
-                # tasks.schedule_ebay_item_update(ebay_item_update)
-                pass
+                tasks.schedule_ebay_item_update(ebay_item_update, context=self.get_task_execution_context())
 
     def _create_update_from_diff(self, ebay_item, core_product_delta):
         """
@@ -63,6 +63,11 @@ class CoreAPISyncService(object):
 
         return None
 
+    def get_task_execution_context(self):
+        return TaskExecutionContext(user_id=self.account.default_user.id,
+                                    account_id=self.account.id,
+                                    request_id=fallback_uuid())
+
     def _sync_core_deletions(self, deleted_since):
         """
         :type deleted_since: datetime
@@ -71,8 +76,8 @@ class CoreAPISyncService(object):
         for ebay_product in deletions:
             ebay_product.deleted_in_core_api = True
             ebay_product.save()
-            # TODO
-            # tasks.schedule_ebay_product_deletion(ebay_product)
+
+            tasks.schedule_ebay_product_deletion(ebay_product, context=self.get_task_execution_context())
 
     def _get_core_modifications_of_published_items(self, modified_since):
         """

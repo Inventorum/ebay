@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import Ebay
 from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse, \
-    EbayReviseInventoryStatusResponse
+    EbayReviseFixedPriceItemResponse
 
 
 class EbayItems(Ebay):
@@ -28,9 +28,10 @@ class EbayItems(Ebay):
         })
         return EbayEndItemResponse.create_from_data(response)
 
-    def revise_inventory_status(self, inventory_status):
+    def revise_fixed_price_item(self, revise_fixed_price_item):
         """
-        :type inventory_status: inventorum.ebay.lib.ebay.data.items.EbayInventoryStatus
+        :type revise_fixed_price_item: inventorum.ebay.lib.ebay.data.items.EbayReviseFixedPriceItem
+        :rtype: EbayReviseFixedPriceItemResponse
         """
-        response = self.execute('ReviseInventoryStatus', inventory_status.dict())
-        return EbayReviseInventoryStatusResponse.create_from_data(response)
+        response = self.execute('ReviseInventoryStatus', revise_fixed_price_item.dict())
+        return EbayReviseFixedPriceItemResponse.create_from_data(response)

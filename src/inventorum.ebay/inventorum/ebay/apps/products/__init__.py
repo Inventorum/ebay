@@ -38,10 +38,10 @@ class EbayItemPublishingStatus(object):
 
 # TODO jm: Change to string
 class EbayItemUpdateStatus(object):
-    DRAFT = 1
-    IN_PROGRESS = 2
-    SUCCEEDED = 3
-    FAILED = 4
+    DRAFT = "draft"
+    IN_PROGRESS = "in_progress"
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
 
     CHOICES = (
         (DRAFT, "DRAFT"),
@@ -54,8 +54,10 @@ class EbayItemUpdateStatus(object):
 class EbayApiAttemptType(object):
     PUBLISH = 'publish'
     UNPUBLISH = 'unpublish'
+    UPDATE = 'update'
 
     CHOICES = (
         (PUBLISH, 'Publish'),
-        (UNPUBLISH, 'Unpublish')
+        (UNPUBLISH, 'Unpublish'),
+        (UPDATE, 'Update')
     )

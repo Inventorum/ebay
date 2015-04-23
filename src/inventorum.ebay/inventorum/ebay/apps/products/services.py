@@ -8,7 +8,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from requests.exceptions import HTTPError
 
-from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
+from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt
 from inventorum.ebay.lib.ebay import EbayConnectionException
@@ -17,6 +17,7 @@ from inventorum.ebay.lib.ebay.items import EbayItems
 log = logging.getLogger(__name__)
 
 
+# TODO jm: Generalize to EbayServiceException?!
 class PublishingServiceException(Exception):
     def __init__(self, message=None, original_exception=None):
         self.message = message
@@ -284,63 +285,72 @@ class UnpublishingService(PublishingUnpublishingService):
         self.send_publishing_status_to_core_api(self.item.publishing_status,
                                                 details=self.item.publishing_status_details)
 
-# class UpdateService(object):
-#
-#     def __init__(self, user, ebay_item_update):
-#         """
-#         :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
-#         :type ebay_item_update: inventorum.ebay.apps.products.models.EbayItemUpdateModel
-#         """
-#         self.user = user
-#         self.ebay_item_update = ebay_item_update
-#
-#     def update(self):
-#         self.ebay_item_update.status = EbayItemUpdateStatus.IN_PROGRESS
-#
-#         service = EbayItems(self.user.account.token.ebay_object)
-#         response = service.revise_inventory_status(self.ebay_item_update.ebay_object)
-#
-#         # TODO jm: Handle failures
-#
-#         self._update_ebay_item_model()
-#         self.ebay_item_update.status = EbayItemUpdateStatus.SUCCEEDED
-#
-#     def _update_ebay_item_model(self):
-#         ebay_item = self.ebay_item_update.item
-#         assert isinstance(ebay_item, EbayItemModel)
-#
-#         if self.ebay_item_update.has_updated_quantity:
-#             ebay_item.quantity = self.ebay_item_update.quantity
-#
-#         if self.ebay_item_update.has_updated_gross_price:
-#             ebay_item.gross_price = self.ebay_item_update.gross_price
-#
-#         ebay_item.save()
-#
-#
-# class ProductDeletionService(object):
-#
-#     def __init__(self, user, product):
-#         """
-#         :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
-#         :type product: EbayProductModel
-#         """
-#         self.user = user
-#         self.product = product
-#
-#     def delete(self):
-#         # TODO: No error handling, does unpublish always throw on failure?
-#         if self.product.is_published:
-#             service = UnpublishingService(self.product, self.user)
-#             service.unpublish()
-#
-#         self.product.delete()
-#         self.item.unpublished_at = response.end_time
-#         self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
-#         self.item.save()
-#
-#         EbayApiAttempt.create_from_service_for_item_and_type(
-#             service=service,
-#             item=self.item,
-#             type=EbayApiAttemptType.UNPUBLISH
-#         )
+
+class UpdateFailedException(PublishingServiceException):
+    pass
+
+
+class UpdateService(object):
+
+    def __init__(self, item_update, user):
+        """
+        :type item_update: inventorum.ebay.apps.products.models.EbayItemUpdateModel
+        :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
+        """
+        self.user = user
+        self.item_update = item_update
+
+    def update(self):
+        self.item_update.status = EbayItemUpdateStatus.IN_PROGRESS
+
+        ebay_api = EbayItems(self.user.account.token.ebay_object)
+
+        try:
+            response = ebay_api.revise_fixed_price_item(self.item_update.ebay_object)
+        except EbayConnectionException as e:
+            self.item_update.set_status(EbayItemUpdateStatus.FAILED, details=e.serialized_errors)
+            EbayApiAttempt.create_failed_update_attempt(self.item_update, exception=e)
+
+            raise UpdateFailedException(e.message, original_exception=e)
+
+        self.item_update.set_status(EbayItemUpdateStatus.SUCCEEDED)
+        self._update_ebay_item_model()
+
+        EbayApiAttempt.create_succeeded_update_attempt(item_update=self.item_update, ebay=ebay_api)
+
+    def _update_ebay_item_model(self):
+        """ Updates the item model after the update has been acked by ebay """
+        ebay_item = self.item_update.item
+
+        if self.item_update.has_updated_quantity:
+            ebay_item.quantity = self.item_update.quantity
+
+        if self.item_update.has_updated_gross_price:
+            ebay_item.gross_price = self.item_update.gross_price
+
+        ebay_item.save()
+
+
+class ProductDeletionService(object):
+
+    def __init__(self, product, user):
+        """
+        :type product: EbayProductModel
+        :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
+        """
+        self.product = product
+        self.user = user
+
+    def delete(self):
+        """
+        :raises UnpublishingException
+        :rtype: bool
+        """
+        if self.product.is_published:
+
+            ebay_item = self.product.published_item
+
+            service = UnpublishingService(ebay_item, self.user)
+            service.unpublish()
+
+        self.product.delete()
