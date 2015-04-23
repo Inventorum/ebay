@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from collections import defaultdict
 
 import logging
 from decimal import Decimal
@@ -91,7 +92,8 @@ class PublishingPreparationService(object):
         if not (self.core_product.shipping_services or self.core_account.settings.shipping_services):
             raise PublishingValidationException(ugettext('Product has not shipping services selected'))
 
-        self._check_price_validity()
+        self._validate_prices()
+        self._validate_attributes_in_variations()
 
         if not self.product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
@@ -105,12 +107,29 @@ class PublishingPreparationService(object):
                 ugettext('You need to pass all required specifics (missing: %(missing_ids)s)!')
                 % {'missing_ids': list(missing_ids)})
 
-    def _check_price_validity(self):
+    def _validate_prices(self):
         if not self.core_product.is_parent and self.core_product.gross_price < Decimal("1"):
             raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
 
         if self.core_product.is_parent and any([v.gross_price < Decimal("1") for v in self.core_product.variations]):
             raise PublishingValidationException(ugettext('Prices needs to be greater or equal than 1'))
+
+    def _validate_attributes_in_variations(self):
+        variations = self.core_product.variations
+        if not variations:
+            return
+
+        specifics_in_variations = defaultdict(int)
+        for variation in variations:
+            for attribute in variation.attributes:
+                specifics_in_variations[attribute.key] += len(attribute.values)
+
+        max_attrs = max(specifics_in_variations.values())
+        all_variations_has_the_same_attributes = all([a == max_attrs for a in specifics_in_variations.values()])
+        if not all_variations_has_the_same_attributes:
+            raise PublishingValidationException(ugettext("All variations needs to have exactly the same number of "
+                                                         "attributes"))
+
 
     def create_ebay_item(self):
         """

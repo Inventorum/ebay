@@ -393,3 +393,15 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
                                  }
                              ]
                          })
+
+    def test_product_with_invalid_attributes_for_ebay(self):
+        product = self._get_product(StagingTestAccount.Products.WITH_VARIATIONS_INVALID_ATTRS, self.account)
+        with ApiTest.use_cassette("get_product_with_variations_invalid_attrs_for_testing_builder.yaml"):
+            self._assign_category(product)
+            self._add_specific_to_product(product)
+
+            preparation_service = PublishingPreparationService(product, self.user)
+            with self.assertRaises(PublishingValidationException) as exc:
+                preparation_service.validate()
+
+            self.assertEqual(exc.exception.message, "All variations needs to have exactly the same number of attributes")
