@@ -22,17 +22,17 @@ log = logging.getLogger(__name__)
 
 
 class TestProductPublish(EbayAuthenticatedAPITestCase):
-
     @cached_property
     def category(self):
         return CategoryFactory.create(external_id="176973")
 
-    def _assign_category(self, product, durations=None):
-        product.category = self.category
+    def _assign_category(self, product, category=None, durations=None):
+        category = category or self.category
+        product.category = category
         product.save()
 
         features = CategoryFeaturesModel.objects.create(
-            category=self.category
+            category=category
         )
         durations = durations or ['Days_5', 'Days_30']
         for d in durations:
@@ -193,3 +193,71 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
                     'severity_code': 'Error',
                     'short_message': 'Artikel kann nicht aufgerufen werden.'
                 }])
+
+
+    @celery_test_case()
+    def test_publish_then_unpublish_variation_unsupported_category(self):
+        with ApiTest.use_cassette("publish_and_unpublish_full_variation_unsupported_cat.yaml") as cass:
+            inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
+            product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
+            self._assign_category(product)
+
+            response = self.client.post("/products/%s/publish" % inv_product_id)
+            log.debug('Got response: %s', response)
+            self.assertEqual(response.status_code, 200)
+
+            item = product.items.last()
+            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.FAILED)
+            last_request = cass.requests[5]
+            body = json.loads(last_request.body)
+            self.assertEqual(body, {
+                'channel': 'ebay',
+                'details': [
+                    {
+                        'classification': 'RequestError',
+                        'code': 21916564,
+                        'long_message': 'Die ausgew\xe4hlte Kategorie unterst\xfctzt keine Angebote mit Varianten',
+                        'severity_code': 'Error',
+                        'short_message': 'In dieser Kategorie werden keine Varianten unterst\xfctzt'
+                    }, {
+                        'classification': 'RequestError',
+                        'code': 21916672,
+                        'long_message': 'Das bzw. die Tags material sind als Variante deaktiviert.',
+                        'severity_code': 'Error',
+                        'short_message': 'Als Variantenfehler deaktiviert.'
+                    }],
+                'state': 'failed'
+            })
+
+
+    # @celery_test_case()
+    # def test_publish_then_unpublish_variation_supported_category(self):
+    #     with ApiTest.use_cassette("publish_and_unpublish_full_variation.yaml") as cass:
+    #         inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
+    #         product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
+    #         self._assign_category(product, category=CategoryFactory.create(external_id="53159"))
+    #
+    #         response = self.client.post("/products/%s/publish" % inv_product_id)
+    #         log.debug('Got response: %s', response)
+    #         self.assertEqual(response.status_code, 200)
+    #
+    #     item = product.items.last()
+    #     self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
+    #
+    #     self.assertEqual(item.attempts.count(), 1)
+    #     last_attempt = item.attempts.last()
+    #     self.assertTrue(last_attempt.success)
+    #     self.assertEqual(last_attempt.type, EbayApiAttemptType.PUBLISH)
+    #
+    #     response = self.client.post("/products/%s/unpublish" % inv_product_id)
+    #     log.debug('Got response: %s', response)
+    #     self.assertEqual(response.status_code, 200)
+    #
+    #     item = product.items.last()
+    #     self.assertEqual(item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
+    #
+    #     # Publish & Unpublish = 2
+    #     self.assertEqual(item.attempts.count(), 2)
+    #     last_attempt = item.attempts.last()
+    #     self.assertTrue(last_attempt.success)
+    #     self.assertEqual(last_attempt.type, EbayApiAttemptType.UNPUBLISH)

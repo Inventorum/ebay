@@ -132,8 +132,6 @@ class EbayFixedPriceItem(object):
             'ListingDuration': self.listing_duration,
             'Country': self.country,
             'PostalCode': self.postal_code,
-            'Quantity': self.quantity,
-            'StartPrice': self.start_price,
             'PayPalEmailAddress': self.paypal_email_address,
             'PaymentMethods': self.payment_methods,
             'PrimaryCategory': {'CategoryID': self.category_id},
@@ -154,6 +152,9 @@ class EbayFixedPriceItem(object):
                 'VariationSpecificsSet': self._build_variation_specifics_set(),
                 'Pictures': self._build_variation_pictures_set()
             }
+        else:
+            data['Quantity'] = self.quantity
+            data['StartPrice'] = self.start_price
 
         # Static data
         data.update(**self._static_data)
