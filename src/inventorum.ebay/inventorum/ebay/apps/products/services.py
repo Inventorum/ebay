@@ -17,34 +17,33 @@ from inventorum.ebay.lib.ebay.items import EbayItems
 log = logging.getLogger(__name__)
 
 
-# TODO jm: Generalize to EbayServiceException?!
-class PublishingServiceException(Exception):
+class EbayServiceException(Exception):
     def __init__(self, message=None, original_exception=None):
         self.message = message
         self.original_exception = original_exception
 
 
-class PublishingException(PublishingServiceException):
+class PublishingException(EbayServiceException):
     pass
 
 
-class UnpublishingException(PublishingServiceException):
+class UnpublishingException(EbayServiceException):
     pass
 
 
-class PublishingValidationException(PublishingServiceException):
+class PublishingValidationException(EbayServiceException):
     pass
 
 
-class PublishingNotPossibleException(PublishingServiceException):
+class PublishingNotPossibleException(EbayServiceException):
     pass
 
 
-class PublishingSendStateFailedException(PublishingServiceException):
+class PublishingSendStateFailedException(EbayServiceException):
     pass
 
 
-class PublishingCouldNotGetDataFromCoreAPI(PublishingServiceException):
+class PublishingCouldNotGetDataFromCoreAPI(EbayServiceException):
     def __init__(self, response):
         self.response = response
 
@@ -286,7 +285,7 @@ class UnpublishingService(PublishingUnpublishingService):
                                                 details=self.item.publishing_status_details)
 
 
-class UpdateFailedException(PublishingServiceException):
+class UpdateFailedException(EbayServiceException):
     pass
 
 
