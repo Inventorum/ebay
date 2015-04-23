@@ -43,6 +43,20 @@ class EbayCategories(Ebay):
             # It is so much data I dont want to store in memory here, thats why we return generator
             yield EbayCategory.create_from_data(category)
 
+    def get_features_for_category(self, category_id):
+        data = self.execute('GetCategoryFeatures', dict(
+            AllFeaturesForCategory=True,
+            ViewAllNodes=True,
+            CategoryID=category_id,
+            LevelLimit=7,
+            DetailLevel='ReturnAll',
+            FeatureID=['ListingDurations', 'PaymentMethods', 'ItemSpecificsEnabled']
+            # If you input specific category features with FeatureID fields and set DetailLevel to ReturnAll,
+            # eBay returns just the requested feature settings for the specified category, regardless of the
+            # site defaults.
+        ))
+        return EbayFeature.create_from_data(data)
+
     def get_features_for_categories(self, categories_ids):
         """
         Returns features per category

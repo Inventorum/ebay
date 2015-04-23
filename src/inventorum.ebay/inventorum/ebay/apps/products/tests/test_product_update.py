@@ -62,3 +62,6 @@ class TestProductUpdate(EbayAuthenticatedAPITestCase):
 
         updated_product = self.product.reload()
         self.assertEqual(updated_product.category_id, None)
+
+        get_product = self.client.get("/products/{inv_id}".format(inv_id=self.product.inv_id))
+        self.assertEqual(get_product.data, self.get_valid_data_for(self.product))

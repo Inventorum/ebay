@@ -33,19 +33,8 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         # 2 root nodes because AT & DE
         self.assertEqual(CategoryModel.objects.root_nodes().count(), 2)
 
-        root_category = CategoryModel.objects.root_nodes().last()
-        self.assertEqual(root_category.name, "Antiquit\xe4ten & Kunst")
-        self.assertEqual(root_category.external_id, "353")
-        self.assertEqual(root_category.external_parent_id, None)
-        self.assertEqual(root_category.b2b_vat_enabled, False)
-        self.assertEqual(root_category.best_offer_enabled, True)
-        self.assertEqual(root_category.auto_pay_enabled, True)
-        self.assertEqual(root_category.item_lot_size_disabled, False)
-        self.assertEqual(root_category.ebay_leaf, False)
-        self.assertEqual(root_category.country, "DE")
-
-        # AT root category
-        root_category = CategoryModel.objects.root_nodes().first()
+        root_nodes = CategoryModel.objects.root_nodes().order_by('country')
+        root_category = root_nodes.first()
         self.assertEqual(root_category.name, "Antiquit\xe4ten & Kunst")
         self.assertEqual(root_category.external_id, "353")
         self.assertEqual(root_category.external_parent_id, None)
@@ -56,7 +45,19 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(root_category.ebay_leaf, False)
         self.assertEqual(root_category.country, "AT")
 
-    @unittest.skip('We reached ebay limits')
+        # AT root category
+        root_category = root_nodes.last()
+        self.assertEqual(root_category.name, "Antiquit\xe4ten & Kunst")
+        self.assertEqual(root_category.external_id, "353")
+        self.assertEqual(root_category.external_parent_id, None)
+        self.assertEqual(root_category.b2b_vat_enabled, False)
+        self.assertEqual(root_category.best_offer_enabled, True)
+        self.assertEqual(root_category.auto_pay_enabled, True)
+        self.assertEqual(root_category.item_lot_size_disabled, False)
+        self.assertEqual(root_category.ebay_leaf, False)
+        self.assertEqual(root_category.country, "DE")
+
+    @EbayTest.use_cassette("ebay_test_scraper_features.yaml")
     def test_features(self):
         with EbayTest.use_cassette("ebay_get_leaf_categories.yaml"):
             # First root node of ebay has 2012 children
@@ -84,12 +85,13 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(PaymentMethodModel.objects.count(), 10)
         self.assertEqual(DurationModel.objects.count(), 5)
 
-    @unittest.skip('We reached ebay limits')
+    @EbayTest.use_cassette("ebay_test_scraper_specifics.yaml")
     def test_specifics(self):
         with EbayTest.use_cassette("ebay_get_leaf_categories.yaml"):
             # First root node of ebay has 2012 children
             service = EbayCategoriesScraper(self.ebay_token, only_leaf=True, limit=20)
             service.fetch_all()
+
 
         leaf_categories = CategoryModel.objects.filter(ebay_leaf=True)
         self.assertGreater(leaf_categories.count(), 0)
@@ -98,9 +100,8 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         features_service = EbayFeaturesScraper(self.ebay_token)
         features_service.fetch_all()
 
-        with EbayTest.use_cassette("ebay_get_specifics_for_20_leaf_categories.yaml"):
-            specifics_service = EbaySpecificsScraper(self.ebay_token)
-            specifics_service.fetch_all()
+        specifics_service = EbaySpecificsScraper(self.ebay_token)
+        specifics_service.fetch_all()
 
         self.assertEqual(CategorySpecificModel.objects.count(), 80)
 
