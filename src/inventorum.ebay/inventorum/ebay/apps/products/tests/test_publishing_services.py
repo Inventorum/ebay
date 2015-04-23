@@ -2,7 +2,6 @@
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
 import logging
-import unittest
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 
@@ -226,7 +225,9 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
                 }],
         }})
 
-    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml")
+    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml",
+                          record_mode="new_episodes",
+                          match_on=['body'])
     def test_publishing(self):
         product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
 
@@ -251,7 +252,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
         item = preparation_service.create_ebay_item()
 
         publishing_service = PublishingService(item, self.user)
-        # publishing_service.initialize_publish_attempt(item)
+        publishing_service.initialize_publish_attempt()
         publishing_service.publish()
         publishing_service.finalize_publish_attempt()
 
