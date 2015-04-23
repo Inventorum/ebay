@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
+from inventorum.ebay.lib.utils import int_or_none
 from rest_framework import fields
 
 
@@ -47,6 +48,7 @@ class EbayItemSpecific(object):
         elif len(self.values) > 1:
             data['Value'] = self.values
         return data
+
 
 class EbayPicture(object):
     def __init__(self, url):
@@ -244,3 +246,38 @@ class EbayEndItemResponseDeserializer(POPOSerializer):
 
     class Meta:
         model = EbayEndItemResponse
+
+
+class EbayReviseFixedPriceItem(object):
+
+    def __init__(self, item_id, quantity=None, start_price=None):
+        self.item_id = item_id
+        self.quantity = int_or_none(quantity)
+        self.start_price = start_price
+
+    def dict(self):
+        data = {
+            'ItemID': self.item_id
+        }
+
+        if self.quantity is not None:
+            data['Quantity'] = self.quantity
+
+        if self.start_price is not None:
+            data['StartPrice'] = self.start_price
+
+        return {'Item': data}
+
+
+class EbayReviseFixedPriceItemResponse(object):
+
+    @classmethod
+    def create_from_data(cls, data):
+        """
+        :rtype: EbayReviseInventoryStatusResponse
+        """
+        return EbayReviseFixedPriceItemResponse()
+
+
+class EbayReviseFixedPriceItemResponseDeserializer(POPOSerializer):
+    ItemID = fields.CharField(source='item_id')

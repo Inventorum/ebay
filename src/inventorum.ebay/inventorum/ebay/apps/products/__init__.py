@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+# encoding: utf-8
+from __future__ import absolute_import, unicode_literals
+import logging
 
-# this is a namespace package
 from inventorum.ebay.apps.core_api import PublishStates
 
-__import__('pkg_resources').declare_namespace(__name__)
+
+log = logging.getLogger(__name__)
 
 
 class EbayItemPublishingStatus(object):
@@ -17,6 +20,7 @@ class EbayItemPublishingStatus(object):
         (DRAFT, "Draft"),
         (IN_PROGRESS, "In progress"),
         (PUBLISHED, "Published"),
+        (UNPUBLISHED, "Unpublished"),
         (FAILED, "Failed"),
     )
 
@@ -32,11 +36,28 @@ class EbayItemPublishingStatus(object):
         return cls.CORE_API_MAP.get(state, None)
 
 
+# TODO jm: Change to string
+class EbayItemUpdateStatus(object):
+    DRAFT = "draft"
+    IN_PROGRESS = "in_progress"
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
+
+    CHOICES = (
+        (DRAFT, "DRAFT"),
+        (IN_PROGRESS, "IN_PROGRESS"),
+        (SUCCEEDED, "SUCCEEDED"),
+        (FAILED, "FAILED"),
+    )
+
+
 class EbayApiAttemptType(object):
     PUBLISH = 'publish'
     UNPUBLISH = 'unpublish'
+    UPDATE = 'update'
 
     CHOICES = (
         (PUBLISH, 'Publish'),
-        (UNPUBLISH, 'Unpublish')
+        (UNPUBLISH, 'Unpublish'),
+        (UPDATE, 'Update')
     )

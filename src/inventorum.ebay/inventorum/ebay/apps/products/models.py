@@ -7,16 +7,33 @@ from django.db import models
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
+
 from inventorum.ebay.apps.categories.models import CategorySpecificModel
-from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
-from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet
+from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
+from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific, \
-    EbayVariation
+    EbayVariation, EbayReviseFixedPriceItem
 from inventorum.util.django.model_utils import PassThroughManager
 
 
 log = logging.getLogger(__name__)
+
+
+class EbayProductModelQuerySet(MappedInventorumModelQuerySet):
+
+    def published(self):
+        """
+        :rtype: EbayProductModelQuerySet
+        """
+        return self.filter(items__publishing_status=EbayItemPublishingStatus.PUBLISHED).distinct()
+
+    def by_account(self, account):
+        """
+        :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :rtype: EbayProductModelQuerySet
+        """
+        return self.filter(account=account)
 
 
 class EbayProductModel(MappedInventorumModel):
@@ -25,6 +42,10 @@ class EbayProductModel(MappedInventorumModel):
                                 verbose_name="Inventorum ebay account")
     category = models.ForeignKey("categories.CategoryModel", related_name="products", null=True, blank=True)
     external_item_id = models.CharField(max_length=255, null=True, blank=True)
+
+    deleted_in_core_api = models.BooleanField(default=False)
+
+    objects = PassThroughManager.for_queryset_class(EbayProductModelQuerySet)()
 
     @property
     def is_published(self):
@@ -198,6 +219,46 @@ class EbayItemVariationSpecificValueModel(BaseModel):
     specific = models.ForeignKey(EbayItemVariationSpecificModel, related_name="values")
 
 
+class EbayItemUpdateModel(BaseModel):
+    item = models.ForeignKey("products.EbayItemModel", related_name="updates")
+
+    quantity = models.IntegerField(null=True, blank=True)
+    gross_price = models.DecimalField(decimal_places=10, max_digits=20,
+                                      null=True, blank=True)
+
+    status = models.CharField(max_length=255, choices=EbayItemUpdateStatus.CHOICES,
+                              default=EbayItemUpdateStatus.DRAFT)
+    status_details = JSONField()
+
+    @property
+    def ebay_object(self):
+        return EbayReviseFixedPriceItem(
+            item_id=self.item.external_id,
+            quantity=self.quantity,
+            start_price=self.gross_price
+        )
+
+    @property
+    def has_updated_quantity(self):
+        return self.quantity is not None
+
+    @property
+    def has_updated_gross_price(self):
+        return self.gross_price is not None
+
+    def set_status(self, status, details=None, save=True):
+        """
+        :type status: unicode
+        :type details:
+        :type save: bool
+        """
+        self.status = status
+        self.status_details = details
+
+        if save:
+            self.save()
+
+
 class EbayItemSpecificModel(BaseModel):
     item = models.ForeignKey(EbayItemModel, related_name="specific_values")
     specific = models.ForeignKey(CategorySpecificModel, related_name="+")
@@ -260,6 +321,7 @@ class EbayApiAttempt(BaseModel):
     success = models.BooleanField(default=False)
 
     item = models.ForeignKey(EbayItemModel, null=True, blank=True, related_name="attempts")
+    item_update = models.ForeignKey(EbayItemUpdateModel, null=True, blank=True, related_name="attempts")
 
     @classmethod
     def create_from_ebay_exception_for_item_and_type(cls, exception, item, type):
@@ -292,4 +354,50 @@ class EbayApiAttempt(BaseModel):
             response=EbayApiAttemptResponse.create_from_response(service.api.response),
             success=True,
             item=item
+        )
+
+    @classmethod
+    def _create_update_attempt(cls, item_update, request, response, success):
+        """
+        :type item_update: EbayItemUpdateModel
+        :type request: EbayApiAttemptRequest
+        :type response: EbayApiAttemptResponse
+        :type success: bool
+        :rtype: EbayApiAttempt
+        """
+        return cls.objects.create(
+            type=EbayApiAttemptType.UPDATE,
+            request=request,
+            response=response,
+            success=success,
+            item=item_update.item,
+            item_update=item_update
+        )
+
+    @classmethod
+    def create_failed_update_attempt(cls, item_update, exception):
+        """
+        :type item_update: EbayItemUpdateModel
+        :type exception: inventorum.ebay.lib.ebay.EbayConnectionException
+        :return: EbayApiAttempt
+        """
+        return cls._create_update_attempt(
+            item_update=item_update,
+            request=EbayApiAttemptRequest.create_from_ebay_request(exception.response.request),
+            response=EbayApiAttemptResponse.create_from_response(exception.response),
+            success=False,
+        )
+
+    @classmethod
+    def create_succeeded_update_attempt(cls, item_update, ebay):
+        """
+        :type item_update: EbayItemUpdateModel
+        :type ebay_api: inventorum.ebay.lib.ebay.Ebay
+        :return: EbayApiAttempt
+        """
+        return cls._create_update_attempt(
+            item_update=item_update,
+            request=EbayApiAttemptRequest.create_from_ebay_request(ebay.api.request),
+            response=EbayApiAttemptResponse.create_from_response(ebay.api.response),
+            success=True
         )

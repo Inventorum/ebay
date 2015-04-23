@@ -137,8 +137,9 @@ class EbayBatchScraper(object):
         raise NotImplementedError
 
     def fetch_all(self):
-        for country_code in settings.EBAY_SUPPORTED_SITES.keys():
-            self._fetch_in_batches(country_code)
+        with atomic():
+            for country_code in settings.EBAY_SUPPORTED_SITES.keys():
+                self._fetch_in_batches(country_code)
 
     def _fetch_in_batches(self, country_code):
         queryset = self.get_queryset_with_country(country_code)
@@ -148,35 +149,22 @@ class EbayBatchScraper(object):
 
 
 class EbayFeaturesScraper(EbayBatchScraper):
-    def get_queryset(self):
-        return CategoryModel.objects.filter(ebay_leaf=True)
-
     def get_queryset_with_country(self, country_code):
-        return self.get_queryset().filter(country=country_code)
+        return CategoryModel.objects.filter(ebay_leaf=True, country=country_code)
 
     def fetch(self, limited_qs, country_code):
         token = self.ebay_token
         token.site_id = settings.EBAY_SUPPORTED_SITES[country_code]
 
         ebay = EbayCategories(token)
-        self._get_features_for_categories(limited_qs, ebay)
-
-    def _get_features_for_categories(self, categories, ebay):
-        categories_ids = {category.external_id: category for category in categories}
-        features = ebay.get_features_for_categories(categories_ids.keys())
-
-        with atomic():
-            for category_id, feature in features.iteritems():
-                CategoryFeaturesModel.create_or_update_from_ebay_data_for_category(feature, categories_ids[category_id])
-
+        for category in limited_qs:
+            feature = ebay.get_features_for_category(category.external_id)
+            CategoryFeaturesModel.create_or_update_from_ebay_data_for_category(feature, category)
 
 
 class EbaySpecificsScraper(EbayBatchScraper):
-    def get_queryset(self):
-        return CategoryModel.objects.filter(ebay_leaf=True, features__item_specifics_enabled=True)
-
     def get_queryset_with_country(self, country_code):
-        return self.get_queryset().filter(country=country_code)
+        return CategoryModel.objects.filter(ebay_leaf=True, features__item_specifics_enabled=True, country=country_code)
 
     def fetch(self, limited_qs, country_code):
         token = self.ebay_token

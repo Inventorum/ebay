@@ -74,6 +74,9 @@ class TestCategorySpecificsSerializer(UnitTestCase):
             'help_url': specific.help_url,
             'help_text': specific.help_text,
             'is_required': False,
+            'min_values': 0,
+            'max_values': 1,
+            'name': specific.name,
             'id': specific.id,
             'values': [{'value': v.value} for v in specific.values.all()]
         })

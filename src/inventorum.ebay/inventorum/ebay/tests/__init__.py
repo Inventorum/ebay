@@ -14,6 +14,8 @@ class Countries:
 class StagingTestAccount:
     ACCOUNT_ID = 346
     USER_ID = 425
+    TAX_TYPE_19_ID = 1063
+
     EMAIL = "tech+ebay@inventorum.com"
 
     COUNTRY = Countries.DE

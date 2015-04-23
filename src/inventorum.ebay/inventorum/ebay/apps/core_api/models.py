@@ -10,6 +10,36 @@ from inventorum.ebay.lib.rest.serializers import POPOSerializer
 log = logging.getLogger(__name__)
 
 
+class CoreProductMetaOverrideMixin(object):
+    def overwrite_attrs_from_meta(self, validated_data, remove_meta=True):
+        """
+        Overwrites channeled core product attributes from ebay meta in the given validated data
+        and removes the meta information afterwards.
+
+        If `remove_meta` is True, the meta information will be removed from the validated data afterwards.
+
+        :type validated_data: dict
+        :type remove_meta: bool
+        """
+        if "meta" in validated_data:
+            if "ebay" in validated_data["meta"]:
+                ebay_meta = validated_data["meta"]["ebay"]
+
+                def overwrite_from_meta(attr):
+                    if attr in ebay_meta and ebay_meta[attr]:
+                        validated_data[attr] = ebay_meta[attr]
+
+                overwrite_from_meta("name")
+                overwrite_from_meta("description")
+                overwrite_from_meta("gross_price")
+
+                overwrite_from_meta("images")
+
+            if remove_meta:
+                # we need meta only for attr overwrites => throw it away afterwards
+                del validated_data["meta"]
+
+
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
@@ -126,10 +156,7 @@ class CoreProductAttributeSerializer(POPOSerializer):
         list_serializer_class = CoreProductAttributeListSerializer
 
 
-class CoreBasicProductDeserializer(POPOSerializer):
-    class Meta:
-        model = CoreProduct
-
+class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin):
     class MetaDeserializer(serializers.Serializer):
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
         name = serializers.CharField(allow_null=True, allow_blank=True)
@@ -137,6 +164,9 @@ class CoreBasicProductDeserializer(POPOSerializer):
         gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
 
         images = CoreProductImageDeserializer(many=True)
+
+    class Meta:
+        model = CoreProduct
 
     id = serializers.IntegerField()
     name = serializers.CharField()
@@ -146,26 +176,11 @@ class CoreBasicProductDeserializer(POPOSerializer):
     images = CoreProductImageDeserializer(many=True)
     attributes = CoreProductAttributeSerializer(many=True)
 
+    # meta will be removed after meta overwrites
     meta = serializers.DictField(child=MetaDeserializer())
 
     def create(self, validated_data):
-        if "meta" in validated_data:
-            if "ebay" in validated_data["meta"]:
-                ebay_meta = validated_data["meta"]["ebay"]
-
-                def overwrite_from_meta(attr):
-                    if attr in ebay_meta and ebay_meta[attr]:
-                        validated_data[attr] = ebay_meta[attr]
-
-                overwrite_from_meta("name")
-                overwrite_from_meta("description")
-                overwrite_from_meta("gross_price")
-
-                overwrite_from_meta("images")
-
-            # we need meta only for attr overwrites => throw it away afterwards
-            del validated_data["meta"]
-
+        self.overwrite_attrs_from_meta(validated_data, remove_meta=True)
         return super(CoreBasicProductDeserializer, self).create(validated_data)
 
 
@@ -275,3 +290,41 @@ class CoreInfoDeserializer(POPOSerializer):
 
     class Meta:
         model = CoreInfo
+
+
+class CoreProductDelta(object):
+    def __init__(self, id, name, state, gross_price, quantity):
+        """
+        :type id: int
+        :type id: unicode
+        :type state: unicode
+        :type gross_price: decimal.Decimal
+        :type quantity: decimal.Decimal
+        """
+        self.id = id
+        self.name = name
+        self.state = state
+        self.gross_price = gross_price
+        self.quantity = quantity
+
+
+class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin):
+    class MetaDeserializer(serializers.Serializer):
+        """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
+        gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        model = CoreProductDelta
+
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    state = serializers.CharField()
+    gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+    # meta will be removed after meta overwrites
+    meta = serializers.DictField(required=False, child=MetaDeserializer())
+
+    def create(self, validated_data):
+        self.overwrite_attrs_from_meta(validated_data, remove_meta=True)
+        return super(CoreProductDeltaDeserializer, self).create(validated_data)

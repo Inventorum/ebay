@@ -121,8 +121,7 @@ if proc.returncode != 0:
 
 rabbitmq_provision = [
     os.path.join(install_dir, 'bin', 'provisioning', 'provision_rabbitmq'),
-    os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
-    '${config:postgres_db}'
+    os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini')
 ]
 print '[inv-ebay] provisioning rabbitmq ...'
 proc = subprocess.Popen(rabbitmq_provision, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
