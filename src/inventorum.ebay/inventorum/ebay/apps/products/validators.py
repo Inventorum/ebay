@@ -11,6 +11,15 @@ class CategorySpecificsValidatorError(serializers.ValidationError):
 
 class CategorySpecificsValidator(object):
     def __init__(self, category, specifics):
+        """
+        Validate specifics with category.
+        We do not validate here values of specifics!
+
+        :param category: To which category this specifics should belong
+        :param specifics: List of specifics we want to validate (no value validation though!)
+        :type category: inventorum.ebay.apps.categories.models.CategoryModel
+        :type specifics: list[inventorum.ebay.apps.categories.models.CategorySpecificModel]
+        """
         self.category = category
         self.specifics = specifics
         self.errors = []
