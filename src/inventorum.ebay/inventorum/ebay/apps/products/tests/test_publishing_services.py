@@ -225,9 +225,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
                 }],
         }})
 
-    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml",
-                          record_mode="new_episodes",
-                          match_on=['body'])
+    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml", match_on=['body'])
     def test_publishing(self):
         product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
 
