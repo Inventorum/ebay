@@ -3,14 +3,16 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from inventorum.ebay.apps.accounts.models import EbayUserModel
-from inventorum.ebay.apps.products.models import EbayItemModel
+from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateModel, EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingSendStateFailedException,\
-    PublishingException, UnpublishingService, UnpublishingException
+    PublishingException, UnpublishingService, UnpublishingException, UpdateService, UpdateFailedException, \
+    ProductDeletionService
 
 from inventorum.util.celery import inventorum_task
 
 
 log = logging.getLogger(__name__)
+
 
 # - Publishing tasks ----------------------------------------------------
 
@@ -136,9 +138,60 @@ def schedule_ebay_item_unpublish(ebay_item_id, context):
     """
     :type ebay_item_id: int
     :type context: inventorum.util.celery.TaskExecutionContext
+
+    :rtype: celery.result.AsyncResult
     """
     initialize_unpublish = _initialize_ebay_item_unpublish.si(ebay_item_id, context=context)
     unpublish = _ebay_item_unpublish.si(ebay_item_id, context=context)
     finalize_unpublish = _finalize_ebay_item_unpublish.si(ebay_item_id, context=context)
 
-    (initialize_unpublish | unpublish | finalize_unpublish)()
+    return (initialize_unpublish | unpublish | finalize_unpublish)()
+
+
+# - Update tasks --------------------------------------------------------
+
+@inventorum_task()
+def ebay_item_update(self, ebay_item_update_id):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    :type ebay_item_update_id: int
+    """
+    user = EbayUserModel.objects.get(id=self.context.user_id)
+    item_update = EbayItemUpdateModel.objects.get(id=ebay_item_update_id)
+
+    service = UpdateService(item_update, user=user)
+
+    try:
+        service.update()
+    except UpdateFailedException as e:
+        log.error("Update failed with ebay errors: %s", e.original_exception.errors)
+
+
+def schedule_ebay_item_update(ebay_item_update_id, context):
+    """
+    :type ebay_item_update_id: int
+    :type context: inventorum.util.celery.TaskExecutionContext
+    """
+    ebay_item_update.delay(ebay_item_update_id, context=context)
+
+
+@inventorum_task()
+def ebay_product_deletion(self, ebay_product_id):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    :type ebay_product_id: int
+    """
+    user = EbayUserModel.objects.get(id=self.context.user_id)
+    product = EbayProductModel.objects.get(pk=ebay_product_id, account_id=self.context.account_id)
+
+    service = ProductDeletionService(product, user=user)
+    # may raise UnpublishingException in case required unpublishing failed -> this task fails as well, which is intended
+    service.delete()
+
+
+def schedule_ebay_product_deletion(ebay_product_id, context):
+    """
+    :type ebay_product_id: int
+    :type context: inventorum.util.celery.TaskExecutionContext
+    """
+    ebay_product_deletion.delay(ebay_product_id, context=context)

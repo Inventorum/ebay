@@ -6,9 +6,11 @@ from django.db.models.fields.related import ForeignKey
 from django_countries.fields import CountryField
 
 from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
+from inventorum.ebay.apps.products import EbayItemPublishingStatus
 
 from inventorum.ebay.lib.auth.models import AuthenticableModelMixin
-from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
+from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
+from inventorum.util.django.model_utils import PassThroughManager
 
 
 log = logging.getLogger(__name__)
@@ -42,6 +44,15 @@ class AddressModel(BaseModel):
         )
 
 
+class EbayAccountModelQuerySet(MappedInventorumModelQuerySet):
+
+    def with_published_products(self):
+        """
+        :rtype: EbayProductModelQuerySet
+        """
+        return self.filter(products__items__publishing_status=EbayItemPublishingStatus.PUBLISHED).distinct()
+
+
 class EbayAccountModel(MappedInventorumModel):
     """ Represents an inventorum account in the ebay context """
     token = ForeignKey("auth.EbayTokenModel", null=True, blank=True, related_name="accounts",
@@ -56,6 +67,24 @@ class EbayAccountModel(MappedInventorumModel):
     user_id = CharField(max_length=255, null=True, blank=True)
     country = CountryField(null=True, blank=True)
     registration_date = DateTimeField(null=True, blank=True)
+
+    last_core_api_sync = DateTimeField(null=True, blank=True)
+
+    objects = PassThroughManager.for_queryset_class(EbayAccountModelQuerySet)()
+
+    @property
+    def default_user(self):
+        """
+        :rtype: EbayUserModel
+        """
+        return self.users.first()
+
+    @property
+    def core_api(self):
+        """
+        :rtype: UserScopedCoreAPIClient
+        """
+        return self.default_user.core_api
 
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):
