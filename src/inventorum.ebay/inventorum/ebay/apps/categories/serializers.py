@@ -39,7 +39,8 @@ class CategorySpecificsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CategorySpecificModel
-        fields = ("id", "help_text", "help_url", "can_use_in_variations", "is_required", "can_use_own_values", "values")
+        fields = ("id", "help_text", "help_url", "can_use_in_variations", "is_required", "can_use_own_values",
+                  "values", "min_values", "max_values", "name")
 
 
 class CategoryListResponseSerializer(serializers.Serializer):
