@@ -10,5 +10,6 @@ log = logging.getLogger(__name__)
 
 
 urlpatterns = patterns('',
-    url(r'^$', resources.CategoryListResource.as_view(), name='category_list'),
+    url(r'^$', resources.CategoryListResource.as_view(), name='list'),
+    url(r'^(?P<pk>[0-9]+)/specifics$', resources.CategorySpecificsResponse.as_view(), name='specifics'),
 )

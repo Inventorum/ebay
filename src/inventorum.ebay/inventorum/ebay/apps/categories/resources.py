@@ -2,9 +2,9 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.utils.translation import gettext
-from inventorum.ebay.apps.categories.models import CategoryModel
+from inventorum.ebay.apps.categories.models import CategoryModel, CategorySpecificModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer, \
-    CategoryListResponseSerializer
+    CategoryListResponseSerializer, CategorySpecificsSerializer
 
 from inventorum.ebay.lib.rest.exceptions import NotFound
 from inventorum.ebay.lib.rest.resources import APIResource
@@ -47,4 +47,17 @@ class CategoryListResource(APIResource):
             breadcrumbs=ancestors
         )
         serializer = self.get_serializer(obj)
+        return Response(data=serializer.data)
+
+
+class CategorySpecificsResponse(APIResource):
+    serializer_class = CategorySpecificsSerializer
+
+    def get_queryset(self):
+        country = self.request.user.account.country
+        return CategoryModel.objects.filter(country=country)
+
+    def get(self, request, pk):
+        category = self.get_object()
+        serializer = self.get_serializer(category.specifics.all(), many=True)
         return Response(data=serializer.data)

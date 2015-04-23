@@ -41,6 +41,12 @@ class ProductResourceMixin(object):
 class EbayProductResource(APIResource, ProductResourceMixin):
     serializer_class = EbayProductSerializer
 
+    def get(self, request, inv_product_id):
+        product = self.get_or_create_product(inv_product_id, request.user.account)
+
+        serializer = self.get_serializer(product, many=False)
+        return Response(data=serializer.data)
+
     def put(self, request, inv_product_id):
         product = self.get_or_create_product(inv_product_id, request.user.account)
 
