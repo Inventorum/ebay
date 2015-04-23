@@ -7,6 +7,7 @@ from decimal import Decimal
 
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
+from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
 from requests.exceptions import HTTPError
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
@@ -51,7 +52,6 @@ class PublishingCouldNotGetDataFromCoreAPI(EbayServiceException):
 
 
 class PublishingPreparationService(object):
-
     def __init__(self, product, user):
         """
         :type product: EbayProductModel
@@ -106,6 +106,12 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(
                 ugettext('You need to pass all required specifics (missing: %(missing_ids)s)!')
                 % {'missing_ids': list(missing_ids)})
+
+        validator = CategorySpecificsValidator(category=self.product.category,
+                                               specifics=[sv.specific for sv in self.product.specific_values.all()])
+        validator.validate(raise_exception=False)
+        if validator.errors:
+            raise PublishingValidationException("\n".join(validator.errors))
 
     def _validate_prices(self):
         if not self.core_product.is_parent and self.core_product.gross_price < Decimal("1"):
@@ -206,7 +212,6 @@ class PublishingPreparationService(object):
 
 
 class PublishingUnpublishingService(object):
-
     def __init__(self, item, user):
         """
         Abstract base service for publishing/unpublishing products to ebay
@@ -238,7 +243,6 @@ class PublishingUnpublishingService(object):
 
 
 class PublishingService(PublishingUnpublishingService):
-
     def initialize_publish_attempt(self):
         """
         :raises PublishingSendStateFailedException
@@ -286,7 +290,6 @@ class PublishingService(PublishingUnpublishingService):
 
 
 class UnpublishingService(PublishingUnpublishingService):
-
     def initialize_unpublish_attempt(self):
         """
         :raises PublishingSendStateFailedException
@@ -336,7 +339,6 @@ class UpdateFailedException(EbayServiceException):
 
 
 class UpdateService(object):
-
     def __init__(self, item_update, user):
         """
         :type item_update: inventorum.ebay.apps.products.models.EbayItemUpdateModel
@@ -377,7 +379,6 @@ class UpdateService(object):
 
 
 class ProductDeletionService(object):
-
     def __init__(self, product, user):
         """
         :type product: EbayProductModel
@@ -392,7 +393,6 @@ class ProductDeletionService(object):
         :rtype: bool
         """
         if self.product.is_published:
-
             ebay_item = self.product.published_item
 
             service = UnpublishingService(ebay_item, self.user)

@@ -98,3 +98,18 @@ Account we are using for testing
   User id: 425
   Pin: 1111
   Password: login
+
+
+How to add images in console on slingshot
+-----------------------------------------
+
+::
+
+  >>> parent = ProductModel.objects.get(id=666032)
+  >>> first_child = parent.childrens.first()
+  >>> last_child = parent.childrens.last()
+  >>> first_hash_image = ImageHashModel.objects.get(id=2978)
+  >>> second_hash_image = ImageHashModel.objects.get(id=2979)
+  >>> first_child.images.add(first_hash_image)
+  >>> last_child.images.add(second_hash_image)
+
