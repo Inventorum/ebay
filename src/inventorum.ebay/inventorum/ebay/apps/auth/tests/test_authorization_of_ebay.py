@@ -79,7 +79,7 @@ class EbayAuthorizationTest(APITestCase):
 
 
     def test_fetch_token_from_AT(self):
-        with MockedTest.use_cassette("ebay_fetch_token_fake_AT.yaml", record_mode='new_episodes') as cass:
+        with MockedTest.use_cassette("ebay_fetch_token_fake_AT.yaml") as cass:
             response = self.client.post('/auth/authorize/', data={
                 'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
             })

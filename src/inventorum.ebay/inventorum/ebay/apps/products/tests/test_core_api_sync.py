@@ -32,8 +32,8 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
 
     @celery_test_case()
     def test_integration(self):
-        with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date'],
-                                  record_mode="new_episodes") as cassette:
+        with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date']) \
+                as cassette:
 
             # create some core products to play with
             product_1_inv_id = self.create_core_api_product(name="Test product 1",

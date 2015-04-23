@@ -68,7 +68,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.status_code, 404)
 
     @celery_test_case()
-    @ApiTest.use_cassette("publish_and_unpublish_full.yaml", record_mode="new_episodes")
+    @ApiTest.use_cassette("publish_and_unpublish_full.yaml")
     def test_publish_then_unpublish(self):
         inv_product_id = StagingTestAccount.Products.IPAD_STAND
         product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
@@ -158,7 +158,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
 
     @celery_test_case()
     def test_failing_unpublish(self):
-        with ApiTest.use_cassette("failing_unpublishing.yaml", record_mode='new_episodes') as cass:
+        with ApiTest.use_cassette("failing_unpublishing.yaml") as cass:
             inv_product_id = StagingTestAccount.Products.IPAD_STAND
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             self._assign_category(product)
