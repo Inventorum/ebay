@@ -135,12 +135,9 @@ class CoreAPIClient(object):
 
         :raises requests.exceptions.HTTPError
         """
-        if data is not None:
-            data = self._encode_request_data(data)
-
         headers = self._get_request_headers(custom_headers)
 
-        response = requests.put(self.url_for(path), data=data, params=params, headers=headers)
+        response = requests.put(self.url_for(path), json=data, params=params, headers=headers)
 
         if not response.ok:
             response.raise_for_status()
