@@ -75,6 +75,7 @@ class EbayAuthenticatedAPITestCase(APITestCase):
         return EbayToken(settings.EBAY_LIVE_TOKEN, expiration_time=settings.EBAY_LIVE_TOKEN_EXPIRATION_DATE,
                          site_id=settings.EBAY_SUPPORTED_SITES['DE'])
 
+
 class UnitTestCase(TestCase, PatchMixin):
     pass
 
