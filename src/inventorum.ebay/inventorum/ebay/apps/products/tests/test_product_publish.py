@@ -154,7 +154,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             self.assertTrue(last_attempt.response.headers)
 
             self.assertEqual(last_attempt.response.url, 'https://api.ebay.com/ws/api.dll')
-            self.assertIn('AddItemResponse', last_attempt.response.content)
+            self.assertIn('AddFixedPriceItemResponse', last_attempt.response.content)
 
     @celery_test_case()
     def test_failing_unpublish(self):
@@ -182,7 +182,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             status_change_requests = [r for r in requests if r.url.endswith('/state/')]
             self.assertEqual(len(status_change_requests), 2)
 
-            state_body = json.loads(status_change_requests[0].body)
+            state_body = json.loads(status_change_requests[1].body)
             self.assertEqual(state_body['state'], PublishStates.PUBLISHED)
             self.assertEqual(state_body['details'], [
                 {
