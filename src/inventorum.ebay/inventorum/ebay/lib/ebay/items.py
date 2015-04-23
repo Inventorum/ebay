@@ -13,7 +13,7 @@ class EbayItems(Ebay):
         :type item: inventorum.ebay.lib.ebay.data.items.EbayFixedPriceItem
         :rtype: EbayAddItemResponse
         """
-        response = self.execute('AddItem', item.dict())
+        response = self.execute('AddFixedPriceItem', item.dict())
         return EbayAddItemResponse.create_from_data(response)
 
     def unpublish(self, item_id, reason=EbayUnpublishReasons.NOT_AVAILABLE):
@@ -22,7 +22,7 @@ class EbayItems(Ebay):
         :type reason: unicode
         :rtype: EbayEndItemResponse
         """
-        response = self.execute('EndItem', {
+        response = self.execute('EndFixedPriceItem', {
             'ItemID': item_id,
             'EndingReason': reason
         })
