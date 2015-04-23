@@ -12,7 +12,7 @@ import inventorum.util.django.db.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0009_auto_20150422_1701'),
+        ('products', '0011_auto_20150423_1124'),
     ]
 
     operations = [
@@ -64,6 +64,12 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
             bases=(inventorum.util.django.db.models.ModelMixins, models.Model),
+        ),
+        migrations.AddField(
+            model_name='ebayitemimagemodel',
+            name='variation',
+            field=models.ForeignKey(related_name='images', blank=True, to='products.EbayItemVariationModel', null=True),
+            preserve_default=True,
         ),
         migrations.AlterField(
             model_name='ebayitemimagemodel',
