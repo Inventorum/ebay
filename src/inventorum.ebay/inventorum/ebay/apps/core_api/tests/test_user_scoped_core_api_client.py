@@ -152,6 +152,9 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(first_variation.attributes[2].key, "size")
         self.assertEqual(first_variation.attributes[2].values, ['22'])
 
+        self.assertEqual(len(first_variation.images), 1)
+        self.assertTrue(first_variation.images[0].url.startswith("https://app.inventorum.net/uploads/"))
+
         second_variation = product.variations[1]
         self.assertEqual(second_variation.name, "Blue, 50")
         self.assertEqual(second_variation.gross_price, D("130"))
@@ -166,3 +169,6 @@ class TestUserScopedCoreAPIClient(APITestCase):
 
         self.assertEqual(second_variation.attributes[2].key, "size")
         self.assertEqual(second_variation.attributes[2].values, ['50'])
+
+        self.assertEqual(len(second_variation.images), 1)
+        self.assertTrue(second_variation.images[0].url.startswith("https://app.inventorum.net/uploads/"))

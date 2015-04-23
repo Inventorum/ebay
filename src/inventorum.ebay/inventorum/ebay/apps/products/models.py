@@ -64,6 +64,7 @@ class EbayProductModel(MappedInventorumModel):
 
 class EbayItemImageModel(MappedInventorumModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="images", null=True, blank=True)
+    variation = models.ForeignKey("products.EbayItemVariationModel", related_name="images", null=True, blank=True)
     url = models.TextField()
 
     @property
@@ -178,7 +179,8 @@ class EbayItemVariationModel(BaseModel):
         return EbayVariation(
             gross_price=self.gross_price,
             quantity=self.quantity,
-            specifics=[s.ebay_object for s in self.specifics.all()]
+            specifics=[s.ebay_object for s in self.specifics.all()],
+            images=[i.ebay_object for i in self.images.all()]
         )
 
 

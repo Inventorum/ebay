@@ -9,7 +9,8 @@ from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, Cat
 from inventorum.ebay.apps.core_api.tests import CoreApiTest, ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayProductSpecificModel
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService, \
+from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
+    UnpublishingService, \
     PublishingPreparationService
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
 from inventorum.ebay.tests import StagingTestAccount
@@ -19,7 +20,6 @@ log = logging.getLogger(__name__)
 
 
 class TestPublishingServices(EbayAuthenticatedAPITestCase):
-
     def _get_product(self, inv_product_id, account):
         return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
 
@@ -276,8 +276,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
 
     def test_builder_with_variations(self):
         product = self._get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS, self.account)
-        with ApiTest.use_cassette("get_product_with_variations_fro_testing_builder.yaml"):
-
+        with ApiTest.use_cassette("get_product_with_variations_for_testing_builder.yaml"):
             self._assign_category(product)
             self._add_specific_to_product(product)
 
@@ -292,20 +291,21 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
         self.assertEqual(first_variation_obj.quantity, 30)
         self.assertEqual(first_variation_obj.gross_price, Decimal("150"))
         self.assertEqual(first_variation_obj.specifics.count(), 3)
+        self.assertEqual(first_variation_obj.images.count(), 1)
 
         specifics = first_variation_obj.specifics.all()
 
         for specific in specifics:
             self.assertEqual(specific.values.count(), 1)
 
-        self.assertEqual(specifics[0].name,  "size")
-        self.assertEqual(specifics[0].values.first().value,  "22")
+        self.assertEqual(specifics[0].name, "size")
+        self.assertEqual(specifics[0].values.first().value, "22")
 
-        self.assertEqual(specifics[1].name,  "material")
-        self.assertEqual(specifics[1].values.first().value,  "Denim")
+        self.assertEqual(specifics[1].name, "material")
+        self.assertEqual(specifics[1].values.first().value, "Denim")
 
-        self.assertEqual(specifics[2].name,  "color")
-        self.assertEqual(specifics[2].values.first().value,  "Red")
+        self.assertEqual(specifics[2].name, "color")
+        self.assertEqual(specifics[2].values.first().value, "Red")
 
         # Check data builder
         ebay_item = last_item.ebay_object
@@ -377,3 +377,19 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
                 }
             ]
         })
+
+        pictures_set = data['Variations']['Pictures']
+        self.assertEqual(pictures_set,
+                         {
+                             'VariationSpecificName': 'size',
+                             'VariationSpecificPictureSet': [
+                                 {
+                                     'PictureURL': ['http://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad_retina.JPEG'],
+                                     'VariationSpecificValue': '22'
+                                 },
+                                 {
+                                     'PictureURL': ['http://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad_retina.JPEG'],
+                                     'VariationSpecificValue': '50'
+                                 }
+                             ]
+                         })

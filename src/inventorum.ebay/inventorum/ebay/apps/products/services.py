@@ -166,6 +166,12 @@ class PublishingPreparationService(object):
                 gross_price=product.gross_price,
                 item=item
             )
+            for image in product.images:
+                EbayItemImageModel.objects.create(
+                    inv_id=image.id,
+                    url=image.url,
+                    variation=variation_obj
+                )
             for attribute in product.attributes:
                 specific_obj = EbayItemVariationSpecificModel.objects.create(
                     name=attribute.key,

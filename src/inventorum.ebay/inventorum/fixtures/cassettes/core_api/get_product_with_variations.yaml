@@ -17,16 +17,16 @@ interactions:
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
-      date: ['Tue, 21 Apr 2015 14:00:34 GMT']
+      date: ['Thu, 23 Apr 2015 08:25:05 GMT']
       location: ['http://app.intern.inventorum.net/api/products/666032/']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YkYj4:U7XcBoOMeN8UD-uHdbwrouSZOc0"; Domain=inventorum.net;
-          expires=Tue, 21-Apr-2015 16:00:34 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YlCRV:IL85zADDsYrw0bc1p8nVWJUBNAE"; Domain=app.intern.inventorum.net;
+          expires=Thu, 23-Apr-2015 10:25:05 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: [Cookie]
       x-inv-account: [Anonymous]
       x-inv-user: [Anonymous]
-      x-rid: ['2026761987072517620']
+      x-rid: ['2978428883331245556']
     status: {code: 301, message: MOVED PERMANENTLY}
 - request:
     body: null
@@ -35,7 +35,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode application/json]
-      Cookie: ['sn="e30:1YkYj4:U7XcBoOMeN8UD-uHdbwrouSZOc0"']
+      Cookie: ['sn="e30:1YlCRV:IL85zADDsYrw0bc1p8nVWJUBNAE"']
       User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
       X-Api-Version: [9]
       X-Inv-Account: [!!python/unicode 346]
@@ -50,28 +50,46 @@ interactions:
         "variation_count": 2, "variations": [{"id": 666030, "attributes": {"color":
         ["Red"], "material": ["Denim"], "size": ["22"]}, "quantity": "30.00", "reorder_level":
         "20.00", "safety_stock": "20.00", "ean": null, "price": "140.1869158879",
-        "product_code": null, "tax_type": 1062, "name": "Red, 22", "images": [], "meta":
-        {}, "gross_price": "150.00"}, {"id": 666031, "attributes": {"color": ["Blue"],
-        "material": ["Leather"], "size": ["50"]}, "quantity": "50.00", "reorder_level":
-        "20.00", "safety_stock": "20.00", "ean": null, "price": "121.4953271028",
-        "product_code": null, "tax_type": 1062, "name": "Blue, 50", "images": [],
-        "meta": {}, "gross_price": "130.00"}], "average_purchase_price": "0", "description":
-        "Photo of jeans for sell.", "product_code": null, "ean": null, "categories":
-        [], "images": [], "custom_sale": false, "shipping_services": [], "is_favourite":
-        false, "brand": "Test", "supplier": "", "meta": {}, "is_giftcard": false,
-        "gross_price": "0.00", "purchase_price": "0"}'}
+        "product_code": null, "tax_type": 1062, "name": "Red, 22", "images": [{"ipad":
+        "https://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad.JPEG",
+        "id": 2973, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_thumb.JPEG"}],
+        "meta": {"shop": {"images": [], "price": "140.1869158879", "gross_price":
+        "150.00", "id": 960, "channel": 5, "name": null, "description": null}, "ebay":
+        {"images": [], "price": "140.1869158879", "gross_price": "150.00", "id": 961,
+        "channel": 4, "name": null, "description": null}}, "gross_price": "150.00"},
+        {"id": 666031, "attributes": {"color": ["Blue"], "material": ["Leather"],
+        "size": ["50"]}, "quantity": "50.00", "reorder_level": "20.00", "safety_stock":
+        "20.00", "ean": null, "price": "121.4953271028", "product_code": null, "tax_type":
+        1062, "name": "Blue, 50", "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad.JPEG",
+        "id": 2974, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_thumb.JPEG"}],
+        "meta": {"shop": {"images": [], "price": "121.4953271028", "gross_price":
+        "130.00", "id": 962, "channel": 5, "name": null, "description": null}, "ebay":
+        {"images": [], "price": "121.4953271028", "gross_price": "130.00", "id": 963,
+        "channel": 4, "name": null, "description": null}}, "gross_price": "130.00"}],
+        "average_purchase_price": "0", "description": "Photo of jeans for sell.",
+        "product_code": null, "ean": null, "categories": [], "images": [], "custom_sale":
+        false, "shipping_services": [], "is_favourite": false, "brand": "Test", "supplier":
+        "", "meta": {"shop": {"images": [], "price": "0E-10", "gross_price": "0.00",
+        "id": 958, "channel": 5, "name": null, "description": null}, "ebay": {"images":
+        [], "price": "0E-10", "gross_price": "0.00", "id": 959, "channel": 4, "name":
+        null, "description": null}}, "is_giftcard": false, "gross_price": "0.00",
+        "purchase_price": "0"}'}
     headers:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Tue, 21 Apr 2015 14:00:36 GMT']
+      date: ['Thu, 23 Apr 2015 08:25:05 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YkYj6:pFouI7vnKZohXrJftw4EtzYUto0"; Domain=app.intern.inventorum.net;
-          expires=Tue, 21-Apr-2015 16:00:36 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YlCRV:IL85zADDsYrw0bc1p8nVWJUBNAE"; Domain=app.intern.inventorum.net;
+          expires=Thu, 23-Apr-2015 10:25:05 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['2790966548841948660']
+      x-rid: ['2978428883331245556']
     status: {code: 200, message: OK}
 version: 1

@@ -6,15 +6,23 @@ from rest_framework import fields
 
 
 class EbayVariation(object):
-    def __init__(self, gross_price, quantity, specifics):
+    def __init__(self, gross_price, quantity, specifics, images):
         """
         :type gross_price: decimal.Decimal
         :type quantity: int
         :type specifics: list[EbayItemSpecific]
+        :type images: list[EbayPicture]
         """
         self.gross_price = gross_price
         self.quantity = quantity
         self.specifics = specifics
+        self.images = images
+
+    def get_specific_values_by_name(self, name):
+        for specific in self.specifics:
+            if specific.name == name:
+                return specific.values
+        return None
 
     def dict(self):
         return {
@@ -141,7 +149,8 @@ class EbayFixedPriceItem(object):
         if self.variations:
             data['Variations'] = {
                 'Variation': [v.dict() for v in self.variations],
-                'VariationSpecificsSet': self._build_variation_specifics_set()
+                'VariationSpecificsSet': self._build_variation_specifics_set(),
+                'Pictures': self._build_variation_pictures_set()
             }
 
         # Static data
@@ -170,7 +179,27 @@ class EbayFixedPriceItem(object):
 
         specifics_objects = [EbayItemSpecific(key, values) for key, values in specifics.iteritems()]
         return {'NameValueList': [so.dict() for so in specifics_objects]}
-                
+
+    def _build_variation_pictures_set(self):
+        first_specific_from_first_variation = self.variations[0].specifics[0]
+        main_name = first_specific_from_first_variation.name
+
+        def build_picture_set(value, pictures):
+            return {
+                'VariationSpecificValue': value,
+                'PictureURL': [p.url for p in pictures]
+            }
+
+        picture_sets = []
+        for variation in self.variations:
+            specifics_values = variation.get_specific_values_by_name(main_name)
+            picture_sets.extend([build_picture_set(value, variation.images) for value in specifics_values])
+
+        return {
+            'VariationSpecificName': main_name,
+            'VariationSpecificPictureSet': picture_sets
+        }
+
 
 class EbayAddItemResponse(object):
     def __init__(self, item_id, start_time, end_time):
