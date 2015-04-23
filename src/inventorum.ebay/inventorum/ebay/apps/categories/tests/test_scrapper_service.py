@@ -57,6 +57,13 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(root_category.ebay_leaf, False)
         self.assertEqual(root_category.country, "DE")
 
+        categories = CategoryModel.objects.all()
+        for category in categories:
+            descendants = category.get_descendants(include_self=True)
+            for descendant in descendants:
+                self.assertEqual(descendant.country, category.country)
+
+
     @EbayTest.use_cassette("ebay_test_scraper_features.yaml")
     def test_features(self):
         with EbayTest.use_cassette("ebay_get_leaf_categories.yaml"):

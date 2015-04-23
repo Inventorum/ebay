@@ -51,7 +51,8 @@ class EbayCategoriesScraper(object):
                     self.count_nodes_by_country[country_code] = 0
                     imported_ids += self._scrap_all_categories(country_code)
 
-                self._convert_children_and_parents()
+                    self._convert_children_and_parents(country_code)
+
                 self._remove_all_categories_except_these_ids(imported_ids)
             CategoryModel.objects.rebuild()
 
@@ -113,14 +114,15 @@ class EbayCategoriesScraper(object):
         if self.count_nodes_by_country[country_code] > self.limit:
             return True
 
-    def _convert_children_and_parents(self):
-        all_categories = CategoryModel.objects.all()
+    def _convert_children_and_parents(self, country_code):
+        all_categories = CategoryModel.objects.filter(country=country_code)
         children_categories = all_categories.exclude(external_parent_id=None)
-        categories_by_external_id = {c.external_id: c for c in all_categories}
         for category in children_categories:
-            if not category.external_parent_id in categories_by_external_id:
+            try:
+                category.parent = CategoryModel.objects.get(country=country_code,
+                                                            external_id=category.external_parent_id)
+            except CategoryModel.DoesNotExist:
                 continue
-            category.parent = categories_by_external_id[category.external_parent_id]
             category.save()
 
 
