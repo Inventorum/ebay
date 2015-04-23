@@ -148,7 +148,8 @@ class EbayProductSerializer(serializers.ModelSerializer):
                 defaults=defaults
             )
             if not c:
-                prod_spec_obj.__dict__.update(defaults)
+                for key, value in defaults.iteritems():
+                    setattr(prod_spec_obj, key, value)
                 prod_spec_obj.save()
             new_specific_values.append(prod_spec_obj.id)
 

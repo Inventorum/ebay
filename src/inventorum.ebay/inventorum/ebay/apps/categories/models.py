@@ -201,7 +201,8 @@ class CategorySpecificModel(BaseModel):
             )
             specific, c = cls.objects.get_or_create(category=category, name=recommendation.name, defaults=defaults)
             if not c:
-                specific.__dict__.update(defaults)
+                for key, value in defaults.iteritems():
+                    setattr(specific, key, value)
                 specific.save()
             old_values_ids = {v.pk for v in specific.values.all()}
             current_values = []
