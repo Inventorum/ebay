@@ -341,7 +341,7 @@ class EbayApiAttempt(BaseModel):
             response=response,
             success=success,
             item=item_update.item,
-            update_item=item_update
+            item_update=item_update
         )
 
     @classmethod
@@ -352,7 +352,7 @@ class EbayApiAttempt(BaseModel):
         :return: EbayApiAttempt
         """
         return cls._create_update_attempt(
-            item_update=item_update.item,
+            item_update=item_update,
             request=EbayApiAttemptRequest.create_from_ebay_request(exception.response.request),
             response=EbayApiAttemptResponse.create_from_response(exception.response),
             success=False,

@@ -33,5 +33,5 @@ class EbayItems(Ebay):
         :type revise_fixed_price_item: inventorum.ebay.lib.ebay.data.items.EbayReviseFixedPriceItem
         :rtype: EbayReviseFixedPriceItemResponse
         """
-        response = self.execute('ReviseInventoryStatus', revise_fixed_price_item.dict())
+        response = self.execute('ReviseFixedPriceItem', revise_fixed_price_item.dict())
         return EbayReviseFixedPriceItemResponse.create_from_data(response)

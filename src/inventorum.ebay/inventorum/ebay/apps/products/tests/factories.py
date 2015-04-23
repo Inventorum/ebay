@@ -64,3 +64,13 @@ class EbayProductSpecificFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = models.EbayProductSpecificModel
+
+
+class EbayItemUpdateFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = models.EbayItemUpdateModel
+
+    item = factory.SubFactory(PublishedEbayItemFactory)
+    quantity = 1
+    gross_price = Decimal("1.99")
