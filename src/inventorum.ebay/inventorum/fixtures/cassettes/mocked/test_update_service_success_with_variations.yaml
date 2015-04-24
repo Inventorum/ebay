@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><ReviseFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**VPo4VQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkYKnDpiFoQ6dj6x9nY+seQ**qeUBAA**AAMAAA**hm7IZ6+9b1WTNSGOMQEdijzrGPgniZfog17a2QN3WsUAcoZk67KsJGj55R+Q9vyfPQjVOgcfH7CcK587xCEu9EzWIKFgBfBvZ5q0Ykk9UUOLxiHfaZJcdWNnQ3RG1EkXgYPt95COGQjZx0rSLACHhhI5c2kc5QuI+8AsG4pPH/px7HQmjM8RDFD9/6wmor5PgKYMWlF3iCTDUEVS1m36+AOthGjyTvUApZ9JoXkwhHXeStvKyNwsbaU+VjSlzp/L+Rxk0H16MwFhFc6jx8yPDcccbVbKejcB30lxHQFyHOm5d3BVTxEnw2un1GXr0uE7qd9fynAdGnsNUk/zf8D/U/RNFHHDOEvaz/XuCy6HS7asJL0duLdG+RtjMuWy0lHmaY84yd47aTLL0t1q374O2ypvUDyvyuCEEKbV+PTHG83VJDQbivlPitI2o9wNg81xIiGW+qpGbwffWHU2B42MmreA3XcOL/cqQtHBK+gz1j3a9MuXl36LiXETYFC7F/t6OXHnIJFzbiKYU4ozWERb+2wDhVadw1JcKxJako9J74caQUmMJ1Shg/FvbO7QtnxbjzR63rp7661O64I6GFe6EgvFQVLGXcbEmsoPAE0mE4QkVEBKrvgfPCDjCZZcvpIy5yzibT6KNZMvBizlC5vx5+xPSvXRMjc5bWsT1kVZb7hiao9/uC4e7UZDanykuyUfYHsuj2aHWdtgqcb92WCaJQ28zlwudRlsmTsrSngI0yP7IG4ZwhXsKVRFTzZ9pWEh</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ItemID>1002</ItemID><Quantity>23</Quantity><StartPrice>4.20</StartPrice></Item></ReviseFixedPriceItemRequest>
+    headers:
+      Content-Length: ['1207']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.1-dev2 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
+      X-EBAY-API-CALL-NAME: [!!python/unicode ReviseFixedPriceItem]
+      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [2c009fa0-5d1d-4e60-a7cb-ee8adb1642ae]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ReviseFixedPriceItemResponse
+        xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-24T13:06:38.454Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikel
+        kann nicht aufgerufen werden.</ShortMessage><LongMessage>Der Artikel kann
+        nicht aufgerufen werden, da er gel\xF6scht wurde, es sich um ein Half.com-Angebot
+        handelt oder weil Sie nicht der Verk\xE4ufer sind.</LongMessage><ErrorCode>17</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
+        ParamID=\"0\"><Value>1002</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></ReviseFixedPriceItemResponse>"}
+    headers:
+      content-length: ['702']
+      content-type: [text/xml]
+      date: ['Fri, 24 Apr 2015 13:06:37 GMT']
+      guid: [14ceb897-c510-a5e4-58f5-0fc5be7f718b]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW8ydmtv]
+      x-ebay-api-server-name: [___dWtgMGQ3MWYrMzU8ZSgyNSg2MTMoNjoyKD86Pz43OzU=]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [ReviseFixedPriceItem]
+      x-ebay-esb-guid: ['urn:uuid:633ab0be-facc-40d7-95c6-5fb0e6e16539']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14ceb897-c510-a5e4-58f5-0fc5be7f718b!ws.api.dll!10.94.69.143!esbtrading[]']
+    status: {code: 200, message: OK}
+version: 1

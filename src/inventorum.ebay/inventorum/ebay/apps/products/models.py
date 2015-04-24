@@ -132,8 +132,8 @@ class EbayItemModel(BaseModel):
     listing_duration = models.CharField(max_length=255)
     description = models.TextField()
     postal_code = models.CharField(max_length=255, null=True, blank=True)
-    quantity = models.IntegerField(default=0)
-    gross_price = models.DecimalField(decimal_places=10, max_digits=20)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
+    gross_price = models.DecimalField(decimal_places=10, max_digits=20, null=True, blank=True)
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
     external_id = models.CharField(max_length=255, null=True, blank=True)
@@ -190,7 +190,7 @@ class EbayItemModel(BaseModel):
             self.save()
 
 
-class EbayItemVariationModel(BaseModel):
+class EbayItemVariationModel(MappedInventorumModel):
     quantity = models.IntegerField(default=0)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20)
     item = models.ForeignKey(EbayItemModel, related_name="variations")
@@ -219,8 +219,9 @@ class EbayItemVariationSpecificValueModel(BaseModel):
     specific = models.ForeignKey(EbayItemVariationSpecificModel, related_name="values")
 
 
-class EbayItemUpdateModel(BaseModel):
-    item = models.ForeignKey("products.EbayItemModel", related_name="updates")
+class EbayUpdateModel(BaseModel):
+    class Meta:
+        abstract = True
 
     quantity = models.IntegerField(null=True, blank=True)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20,
@@ -229,14 +230,6 @@ class EbayItemUpdateModel(BaseModel):
     status = models.CharField(max_length=255, choices=EbayItemUpdateStatus.CHOICES,
                               default=EbayItemUpdateStatus.DRAFT)
     status_details = JSONField()
-
-    @property
-    def ebay_object(self):
-        return EbayReviseFixedPriceItem(
-            item_id=self.item.external_id,
-            quantity=self.quantity,
-            start_price=self.gross_price
-        )
 
     @property
     def has_updated_quantity(self):
@@ -257,6 +250,26 @@ class EbayItemUpdateModel(BaseModel):
 
         if save:
             self.save()
+
+
+class EbayItemUpdateModel(EbayUpdateModel):
+    item = models.ForeignKey("products.EbayItemModel", related_name="updates")
+
+    @property
+    def ebay_object(self):
+        return EbayReviseFixedPriceItem(
+            item_id=self.item.external_id,
+            quantity=self.quantity,
+            start_price=self.gross_price,
+        )
+
+
+class EbayItemVariationUpdateModel(EbayUpdateModel):
+    variation = models.ForeignKey("products.EbayItemVariationModel", related_name="updates")
+
+    @property
+    def ebay_object(self):
+        return None
 
 
 class EbayItemSpecificModel(BaseModel):

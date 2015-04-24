@@ -189,7 +189,8 @@ class PublishingPreparationService(object):
             variation_obj = EbayItemVariationModel.objects.create(
                 quantity=product.quantity,
                 gross_price=product.gross_price,
-                item=item
+                item=item,
+                inv_id=product.id
             )
             for image in product.images:
                 EbayItemImageModel.objects.create(

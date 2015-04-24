@@ -16,6 +16,11 @@ from inventorum.ebay.tests import StagingTestAccount
 
 log = logging.getLogger(__name__)
 
+class EbayItemVariationModel(factory.DjangoModelFactory):
+
+    class Meta:
+        model = models.EbayItemVariationModel
+
 
 class EbayProductFactory(MappedInventorumModelFactory):
 
