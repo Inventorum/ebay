@@ -8,6 +8,8 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
     DurationModel, CategorySpecificModel
 from inventorum.ebay.apps.categories.services import EbayCategoriesScraper, EbayFeaturesScraper, EbaySpecificsScraper
 from inventorum.ebay.apps.core_api.tests import EbayTest
+from inventorum.ebay.apps.products.models import EbayProductModel
+from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 log = logging.getLogger(__name__)
@@ -16,12 +18,15 @@ log = logging.getLogger(__name__)
 class TestScrappingCategories(EbayAuthenticatedAPITestCase):
     def test_it(self):
         # Create first one to prove categories scrapper removes them
-        CategoryModel.objects.create(
+        category_to_be_deleted = CategoryModel.objects.create(
             name="Test",
             external_id="123",
             external_parent_id=None,
             country="DE"
         )
+
+        product = EbayProductFactory.create(category=category_to_be_deleted)
+
         with EbayTest.use_cassette("ebay_get_level_limited_categories_with_features.yaml"):
             # First root node of ebay has 2012 children
             service = EbayCategoriesScraper(self.ebay_token, limit_root_nodes=1, limit_nodes_level=2)
@@ -56,6 +61,19 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         self.assertEqual(root_category.item_lot_size_disabled, False)
         self.assertEqual(root_category.ebay_leaf, False)
         self.assertEqual(root_category.country, "DE")
+
+        categories = CategoryModel.objects.all()
+        for category in categories:
+            descendants = category.get_descendants(include_self=True)
+            for descendant in descendants:
+                self.assertEqual(descendant.country, category.country)
+
+        with self.assertRaises(CategoryModel.DoesNotExist):
+            CategoryModel.objects.get(pk=category_to_be_deleted.pk)
+
+        product = EbayProductModel.objects.get(pk=product.pk)
+        self.assertIsNone(product.category)
+
 
     @EbayTest.use_cassette("ebay_test_scraper_features.yaml")
     def test_features(self):
