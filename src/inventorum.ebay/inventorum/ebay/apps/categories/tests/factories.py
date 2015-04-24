@@ -9,6 +9,10 @@ from inventorum.ebay.tests import StagingTestAccount
 
 log = logging.getLogger(__name__)
 
+class CategoryFeaturesFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = models.CategoryFeaturesModel
 
 class CategoryFactory(factory.DjangoModelFactory):
 
@@ -20,6 +24,7 @@ class CategoryFactory(factory.DjangoModelFactory):
     parent = None
 
     external_id = factory.Sequence(lambda n: "{0}")
+    features = factory.RelatedFactory(CategoryFeaturesFactory, 'category')
 
     @factory.lazy_attribute_sequence
     def external_parent_id(self, n):

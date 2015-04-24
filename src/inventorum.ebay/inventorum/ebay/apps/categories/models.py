@@ -106,6 +106,7 @@ class CategoryFeaturesModel(BaseModel):
     durations = ManyToManyField(DurationModel, related_name="features")
     payment_methods = ManyToManyField(PaymentMethodModel, related_name="features")
     item_specifics_enabled = BooleanField(default=False)
+    variations_enabled = BooleanField(default=False)
 
     @property
     def max_listing_duration(self):
@@ -140,6 +141,7 @@ class CategoryFeaturesModel(BaseModel):
         features.durations = durations_db
         features.payment_methods = payment_methods_db
         features.item_specifics_enabled = data.details.item_specifics_enabled
+        features.variations_enabled = data.details.variations_enabled
         features.save()
         return features
 
