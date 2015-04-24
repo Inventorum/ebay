@@ -215,7 +215,7 @@ class EbayItemVariationSpecificModel(BaseModel):
 
     @property
     def ebay_object(self):
-        return EbayItemSpecific(self.name, self.values.all().values_list('value', flat=True))
+        return EbayItemSpecific(self.name, list(self.values.all().values_list('value', flat=True)))
 
 
 class EbayItemVariationSpecificValueModel(BaseModel):

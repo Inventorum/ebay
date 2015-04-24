@@ -16,6 +16,32 @@ from inventorum.ebay.tests import StagingTestAccount
 
 log = logging.getLogger(__name__)
 
+class EbayItemVariationSpecificValueFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = models.EbayItemVariationSpecificValueModel
+
+class EbayItemVariationSpecificFactory(factory.DjangoModelFactory):
+    name = factory.Sequence(lambda n: 'Specific 1')
+
+    class Meta:
+        model = models.EbayItemVariationSpecificModel
+
+    @factory.post_generation
+    def values(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if not extracted:
+            extracted = ['Value 1', 'Value 2']
+
+        for value in extracted:
+            EbayItemVariationSpecificValueFactory.create(
+                value=value,
+                specific=self
+            )
+
+
 class EbayItemVariationFactory(MappedInventorumModelFactory):
 
     class Meta:

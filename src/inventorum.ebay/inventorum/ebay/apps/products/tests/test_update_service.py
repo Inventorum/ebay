@@ -6,7 +6,7 @@ from inventorum.ebay.apps.core_api.tests import ApiTest, MockedTest
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
 from inventorum.ebay.apps.products.services import UpdateService, UpdateFailedException
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory, \
-    EbayItemUpdateFactory, EbayItemVariationUpdateFactory, EbayItemVariationFactory
+    EbayItemUpdateFactory, EbayItemVariationUpdateFactory, EbayItemVariationFactory, EbayItemVariationSpecificFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 from ebaysdk.response import Response as EbayResponse, ResponseDataObject
@@ -16,7 +16,6 @@ log = logging.getLogger(__name__)
 
 
 class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
-
     def setUp(self):
         super(IntegrationTestUpdateService, self).setUp()
 
@@ -76,11 +75,12 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
 
             self.assertEqual(item_update.status, EbayItemUpdateStatus.FAILED)
             self.assertEqual(item_update.status_details, [
-                {"long_message": "Das eBay-Konto f\u00fcr den in dieser Anfrage angegebenen Nutzernamen \"dejoh_dnju7\" wurde aufgehoben. Sie k\u00f6nnen leider nur Informationen f\u00fcr aktuelle Nutzer anfordern.",
-                 "code": 841,
-                 "severity_code": "Error",
-                 "classification": "RequestError",
-                 "short_message": "Das eBay-Konto des angeforderten Nutzers wurde aufgehoben."}])
+                {
+                "long_message": "Das eBay-Konto f\u00fcr den in dieser Anfrage angegebenen Nutzernamen \"dejoh_dnju7\" wurde aufgehoben. Sie k\u00f6nnen leider nur Informationen f\u00fcr aktuelle Nutzer anfordern.",
+                "code": 841,
+                "severity_code": "Error",
+                "classification": "RequestError",
+                "short_message": "Das eBay-Konto des angeforderten Nutzers wurde aufgehoben."}])
 
             # ebay item model should *not* have been updated
             self.published_item = self.published_item.reload()
@@ -100,8 +100,28 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
                 quantity=1
             )
 
+            EbayItemVariationSpecificFactory.create(
+                variation=variation,
+                name='Specific 1'
+            )
+
+            EbayItemVariationSpecificFactory.create(
+                variation=variation,
+                name='Specific 2'
+            )
+
             second_variation = EbayItemVariationFactory.create(
                 item=self.published_item
+            )
+
+            EbayItemVariationSpecificFactory.create(
+                variation=second_variation,
+                name='Specific 1'
+            )
+
+            EbayItemVariationSpecificFactory.create(
+                variation=second_variation,
+                name='Specific 2'
             )
 
             EbayItemVariationUpdateFactory.create(
@@ -139,14 +159,34 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(first_variation, {
                 'Quantity': '0',
                 'StartPrice': '1.9900000000',
-                'VariationSpecifics': None
+                'VariationSpecifics': {
+                    'NameValueList': [
+                        {
+                            'Name': 'Specific 2',
+                            'Value': ['Value 2', 'Value 1']
+                        },
+                        {
+                            'Name': 'Specific 1',
+                            'Value': ['Value 2', 'Value 1']
+                        }
+                    ]}
             })
 
             second_variation = variation[1]
             self.assertEqual(second_variation, {
                 'Quantity': '22',
                 'StartPrice': '123.4500000000',
-                'VariationSpecifics': None
+                'VariationSpecifics': {
+                    'NameValueList': [
+                        {
+                            'Name': 'Specific 2',
+                            'Value': ['Value 2', 'Value 1']
+                        },
+                        {
+                            'Name': 'Specific 1',
+                            'Value': ['Value 2', 'Value 1']
+                        }
+                    ]}
             })
 
             # ebay item model should have been updated
