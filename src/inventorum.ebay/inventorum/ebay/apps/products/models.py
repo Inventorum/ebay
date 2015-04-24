@@ -271,6 +271,7 @@ class EbayItemUpdateModel(EbayUpdateModel):
 class EbayItemVariationUpdateModel(EbayUpdateModel):
     variation = models.ForeignKey("products.EbayItemVariationModel", related_name="updates")
     update_item = models.ForeignKey(EbayItemUpdateModel, related_name="variations")
+    is_deleted = models.BooleanField(default=False)
 
     @property
     def ebay_object(self):

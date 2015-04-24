@@ -386,6 +386,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         subject.run()
 
         self.assertEqual(item_a.updates.count(), 1)
+        self.assertEqual(item_a.updates.last().variations.count(), 5)
         self.assertEqual(variation_a.updates.count(), 1)
 
         variation_a_update = variation_a.updates.last()
@@ -401,6 +402,18 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         variation_c_update = variation_c.updates.last()
         self.assertEqual(variation_c_update.gross_price, D("111.11"))
         self.assertEqual(variation_c_update.quantity, 22)
+
+        self.assertEqual(variation_d.updates.count(), 1)
+        variation_d_update = variation_d.updates.last()
+        self.assertEqual(variation_d_update.gross_price, None)
+        self.assertEqual(variation_d_update.quantity, None)
+        self.assertEqual(variation_d_update.is_deleted, True)
+
+        self.assertEqual(variation_e.updates.count(), 1)
+        variation_e_update = variation_e.updates.last()
+        self.assertEqual(variation_e_update.gross_price, None)
+        self.assertEqual(variation_e_update.quantity, None)
+        self.assertEqual(variation_e_update.is_deleted, True)
 
 
         self.assertEqual(self.schedule_ebay_item_update_mock.call_count, 1)
