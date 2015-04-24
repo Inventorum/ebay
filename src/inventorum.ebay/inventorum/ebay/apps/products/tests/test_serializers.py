@@ -9,6 +9,7 @@ from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, Cat
 from inventorum.ebay.apps.products.serializers import EbayProductCategorySerializer, EbayProductSerializer
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.tests import Countries
+from inventorum.ebay.apps.shipping.tests import ShippingServiceConfigurableSerializerTest
 from inventorum.ebay.tests.testcases import UnitTestCase
 
 
@@ -22,8 +23,8 @@ class TestEbayCategorySerializer(UnitTestCase):
         level_2_category = CategoryFactory.create(name="Level 2 category", parent=root_category)
         leaf_category = CategoryFactory.create(name="Leaf category", parent=level_2_category)
 
-        specific = CategorySpecificFactory.create(category=leaf_category)
-        required_specific = CategorySpecificFactory.create_required(category=leaf_category)
+        CategorySpecificFactory.create(category=leaf_category)
+        CategorySpecificFactory.create_required(category=leaf_category)
 
         self.assertEqual(leaf_category.specifics.count(), 2)
         subject = EbayProductCategorySerializer(leaf_category)
@@ -45,8 +46,17 @@ class TestEbayCategorySerializer(UnitTestCase):
         })
 
 
-# TODO: Test for published product (create factory for items)
-class TestEbayProductSerializer(UnitTestCase):
+class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSerializerTest):
+
+    # Required interface for ShippingServiceConfigurableSerializerTest
+
+    def get_serializer_class(self):
+        return EbayProductSerializer
+
+    def get_entity(self):
+        return EbayProductFactory.create()
+
+    # / Required interface for ShippingServiceConfigurableSerializerTest
 
     @cached_property
     def some_category_with_parent(self):
@@ -72,7 +82,8 @@ class TestEbayProductSerializer(UnitTestCase):
                 "breadcrumb": [{"id": category.parent_id, "name": "Some parent"}],
                 "specifics": []
             },
-            "specific_values": []
+            "specific_values": [],
+            "shipping_services": []
         })
 
     def test_deserialize_serialized(self):

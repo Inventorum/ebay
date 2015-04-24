@@ -32,6 +32,7 @@ USE_NGINX_X_ACCEL_REDIRECT = True
 
 # alphabetically ordered
 INSTALLED_APPS = (
+    'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'django_extensions',
     'django_nose',

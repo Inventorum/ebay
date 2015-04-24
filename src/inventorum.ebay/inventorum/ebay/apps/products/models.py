@@ -1,7 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from collections import defaultdict
 import logging
+
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 
 import jsonfield
 from django.db import models
@@ -37,7 +38,7 @@ class EbayProductModelQuerySet(MappedInventorumModelQuerySet):
         return self.filter(account=account)
 
 
-class EbayProductModel(MappedInventorumModel):
+class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
     """ Represents an inventorum product in the ebay context """
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="products",
                                 verbose_name="Inventorum ebay account")
