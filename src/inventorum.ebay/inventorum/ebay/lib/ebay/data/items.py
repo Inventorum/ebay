@@ -34,8 +34,7 @@ class EbayPicture(object):
         }
 
 
-# TODO jm: Rename to EbayItemShippingService
-class EbayShippingService(object):
+class EbayItemShippingService(object):
     def __init__(self, id, cost, additional_cost=None):
         self.id = id
         self.cost = cost
@@ -57,11 +56,11 @@ class EbayFixedPriceItem(object):
                  paypal_email_address, payment_methods, category_id, shipping_services, pictures=None,
                  item_specifics=None):
 
-        if not all([isinstance(s, EbayShippingService) for s in shipping_services]):
-            raise TypeError("shipping_services must be list of EbayShippingService instances")
+        if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
+            raise TypeError("shipping_services must be list of EbayItemShippingService instances")
 
         if item_specifics and not all([isinstance(s, EbayItemSpecific) for s in item_specifics]):
-            raise TypeError("item_specifics must be list of EbayShippingService instances")
+            raise TypeError("item_specifics must be list of EbayItemSpecific instances")
 
         self.title = title
         self.description = description

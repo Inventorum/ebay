@@ -13,7 +13,7 @@ from inventorum.ebay.apps.categories.models import CategorySpecificModel
 from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
-from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific, \
+from inventorum.ebay.lib.ebay.data.items import EbayItemShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific, \
     EbayReviseFixedPriceItem
 from inventorum.util.django.model_utils import PassThroughManager
 
@@ -101,7 +101,7 @@ class EbayItemShippingDetails(BaseModel):
 
     @property
     def ebay_object(self):
-        return EbayShippingService(
+        return EbayItemShippingService(
             id=self.external_id,
             cost=self.cost,
             additional_cost=self.additional_cost

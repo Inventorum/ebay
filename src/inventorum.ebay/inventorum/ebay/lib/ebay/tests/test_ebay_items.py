@@ -5,7 +5,7 @@ import unittest
 from inventorum.ebay.apps.core_api.tests import EbayTest, MockedTest
 
 from inventorum.ebay.lib.ebay import EbayConnectionException
-from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayShippingService, EbayPicture
+from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayItemShippingService, EbayPicture
 from inventorum.ebay.lib.ebay.items import EbayItems
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from inventorum.util.django.timezone import datetime
@@ -20,7 +20,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         Build item for ebay with missing photos, wrong category_id (not leaf), wrong duration (120 is not supported in
         this category)
         """
-        shipping = EbayShippingService(
+        shipping = EbayItemShippingService(
             id="DE_DHLPaket",
             cost="10"
         )
@@ -43,7 +43,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
             url='http://shop.inventorum.com/uploads/img-hash/a9fe/1db9/8c9e/564c/8877/d8a1/f1f8/a9fe1db98c9e564c8877d8'
                 'a1f1f8fccf_ipad.JPEG'
         )
-        shipping = EbayShippingService(
+        shipping = EbayItemShippingService(
             id="DE_DHLPaket",
             cost="5"
         )
