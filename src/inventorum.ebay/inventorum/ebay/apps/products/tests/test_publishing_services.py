@@ -28,17 +28,6 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
         self.specific = CategorySpecificFactory.create(category=leaf_category)
         self.required_specific = CategorySpecificFactory.create_required(category=leaf_category, max_values=2)
 
-        features = CategoryFeaturesModel.objects.create(
-            category=leaf_category
-        )
-        durations = ['Days_5', 'Days_120']
-
-        for d in durations:
-            duration = DurationModel.objects.create(
-                value=d
-            )
-            features.durations.add(duration)
-
         product.category = leaf_category
         product.save()
 

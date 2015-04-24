@@ -6,7 +6,8 @@ import json
 from django.utils.functional import cached_property
 
 from inventorum.ebay.apps.categories.models import CategoryFeaturesModel, DurationModel
-from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, \
+    CategoryFeaturesFactory, DurationFactory
 from inventorum.ebay.apps.core_api import PublishStates
 from inventorum.ebay.apps.core_api.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
@@ -32,15 +33,8 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         product.category = category
         product.save()
 
-        features = CategoryFeaturesModel.objects.create(
-            category=category
-        )
-        durations = durations or ['Days_5', 'Days_30']
-        for d in durations:
-            duration = DurationModel.objects.create(
-                value=d
-            )
-            features.durations.add(duration)
+        for value in durations or []:
+            category.features.durations.add(DurationFactory.create(value=value))
 
     @ApiTest.use_cassette("publish_product_resource_no_category.yaml")
     def test_publish_no_category(self):

@@ -48,15 +48,6 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
 
             # Create and assign valid ebay category
             category = CategoryFactory.create(external_id="176973")
-            features = CategoryFeaturesModel.objects.create(
-                category=category
-            )
-            durations = ['Days_5', 'Days_30']
-            for d in durations:
-                duration = DurationModel.objects.create(
-                    value=d
-                )
-                features.durations.add(duration)
 
             ebay_product_1.category = category
             ebay_product_1.save()

@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal as D
 import logging
-from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.apps.core_api.tests import ApiTest, MockedTest
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
 from inventorum.ebay.apps.products.services import UpdateService, UpdateFailedException
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory, \
@@ -26,7 +26,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
 
     def test_update_succeeded(self):
         # Note: The recorded cassette has been manually modified to return a successful response
-        with ApiTest.use_cassette("test_update_service_success.yaml") as cassette:
+        with MockedTest.use_cassette("test_update_service_success.yaml") as cassette:
             item_update = EbayItemUpdateFactory.create(item=self.published_item,
                                                        gross_price=D("4.20"),
                                                        quantity=23)
@@ -55,7 +55,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
 
     def test_update_failed(self):
         # Note: The recorded cassette fails because the ebay account was blocked
-        with ApiTest.use_cassette("test_update_service_failure.yaml"):
+        with MockedTest.use_cassette("test_update_service_failure.yaml"):
             item_update = EbayItemUpdateFactory.create(item=self.published_item,
                                                        gross_price=D("2.50"),
                                                        quantity=12)
