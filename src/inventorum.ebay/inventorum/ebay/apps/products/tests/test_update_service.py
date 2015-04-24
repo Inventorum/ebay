@@ -6,8 +6,10 @@ from inventorum.ebay.apps.core_api.tests import ApiTest, MockedTest
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
 from inventorum.ebay.apps.products.services import UpdateService, UpdateFailedException
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory, \
-    EbayItemUpdateFactory
+    EbayItemUpdateFactory, EbayItemVariationUpdateFactory, EbayItemVariationFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+
+from ebaysdk.response import Response as EbayResponse, ResponseDataObject
 
 
 log = logging.getLogger(__name__)
@@ -84,3 +86,56 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.published_item = self.published_item.reload()
             self.assertEqual(self.published_item.gross_price, D("1.99"))
             self.assertEqual(self.published_item.quantity, 10)
+
+
+    def test_update_succeeded_with_variations(self):
+        # Note: The recorded cassette has been manually modified to return a successful response
+        with MockedTest.use_cassette("test_update_service_success_with_variations.yaml") as cassette:
+            item_update = EbayItemUpdateFactory.create(item=self.published_item,
+                                                       gross_price=None,
+                                                       quantity=None)
+            variation = EbayItemVariationFactory.create(
+                item=self.published_item,
+                gross_price=D("4.45"),
+                quantity=1
+            )
+
+            second_variation = EbayItemVariationFactory.create(
+                item=self.published_item
+            )
+
+            EbayItemVariationUpdateFactory.create(
+                update_item=item_update,
+                variation=variation,
+                gross_price=D("123.45"),
+                quantity=22
+            )
+
+            EbayItemVariationUpdateFactory.create(
+                update_item=item_update,
+                variation=second_variation,
+                is_deleted=True
+            )
+
+            subject = UpdateService(item_update, user=self.user)
+            subject.update()
+
+            item_update = item_update.reload()
+            self.assertEqual(item_update.status, EbayItemUpdateStatus.SUCCEEDED)
+
+            self.assertEqual(item_update.attempts.count(), 1)
+            attempt = item_update.attempts.first()
+
+            self.assertEqual(attempt.item.id, self.published_item.id)
+            self.assertEqual(attempt.success, True)
+
+            request = EbayResponse(ResponseDataObject({'content': attempt.request.body.encode('utf-8')}, []))
+            data = request.dict()
+            variation = data['ReviseFixedPriceItemRequest']['Variations']['Variation']
+
+            self.assertEqual(len(variation), 2)
+
+            # ebay item model should have been updated
+            self.published_item = self.published_item.reload()
+            self.assertEqual(self.published_item.gross_price, D("4.20"))
+            self.assertEqual(self.published_item.quantity, 23)

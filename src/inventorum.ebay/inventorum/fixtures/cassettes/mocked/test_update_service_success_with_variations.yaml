@@ -15,12 +15,14 @@ interactions:
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ReviseFixedPriceItemResponse
-        xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-24T13:06:38.454Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikel
-        kann nicht aufgerufen werden.</ShortMessage><LongMessage>Der Artikel kann
-        nicht aufgerufen werden, da er gel\xF6scht wurde, es sich um ein Half.com-Angebot
-        handelt oder weil Sie nicht der Verk\xE4ufer sind.</LongMessage><ErrorCode>17</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
-        ParamID=\"0\"><Value>1002</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></ReviseFixedPriceItemResponse>"}
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="utf-8"?>
+      <ReviseFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents">
+          <Ack>Success</Ack>
+          <ItemID>1002</ItemID>
+          <Timestamp>2015-04-17T16:09:51.786Z</Timestamp>
+          <Version>917</Version>
+          <Build>E917_UNI_API5_17456394_R1</Build>
+      </ReviseFixedPriceItemResponse>'}
     headers:
       content-length: ['702']
       content-type: [text/xml]

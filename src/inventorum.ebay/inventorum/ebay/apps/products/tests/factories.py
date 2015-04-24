@@ -16,10 +16,13 @@ from inventorum.ebay.tests import StagingTestAccount
 
 log = logging.getLogger(__name__)
 
-class EbayItemVariationModel(factory.DjangoModelFactory):
+class EbayItemVariationFactory(MappedInventorumModelFactory):
 
     class Meta:
         model = models.EbayItemVariationModel
+
+    gross_price = Decimal("1.99")
+    quantity = 10
 
 
 class EbayProductFactory(MappedInventorumModelFactory):
@@ -69,6 +72,15 @@ class EbayProductSpecificFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = models.EbayProductSpecificModel
+
+
+class EbayItemVariationUpdateFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = models.EbayItemVariationUpdateModel
+
+    quantity = 1
+    gross_price = Decimal("1.99")
 
 
 class EbayItemUpdateFactory(factory.DjangoModelFactory):
