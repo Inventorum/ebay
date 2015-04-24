@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.auth',
     'inventorum.ebay.apps.categories',
     'inventorum.ebay.apps.products',
+    'inventorum.ebay.apps.shipping',
 
     'raven.contrib.django.raven_compat',
     'rest_framework',

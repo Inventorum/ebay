@@ -34,6 +34,7 @@ class EbayPicture(object):
         }
 
 
+# TODO jm: Rename to EbayItemShippingService
 class EbayShippingService(object):
     def __init__(self, id, cost, additional_cost=None):
         self.id = id
