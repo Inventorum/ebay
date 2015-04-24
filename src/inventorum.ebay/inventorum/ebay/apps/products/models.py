@@ -12,7 +12,7 @@ from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptTy
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific, \
-    EbayVariation, EbayReviseFixedPriceItem
+    EbayVariation, EbayReviseFixedPriceItem, EbayReviseFixedPriceVariation
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -260,11 +260,16 @@ class EbayItemUpdateModel(EbayUpdateModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="updates")
 
     @property
+    def has_variations(self):
+        return self.variations.exists()
+
+    @property
     def ebay_object(self):
         return EbayReviseFixedPriceItem(
             item_id=self.item.external_id,
             quantity=self.quantity,
             start_price=self.gross_price,
+            variations=[v.ebay_object for v in self.variations.all()]
         )
 
 
@@ -273,9 +278,21 @@ class EbayItemVariationUpdateModel(EbayUpdateModel):
     update_item = models.ForeignKey(EbayItemUpdateModel, related_name="variations")
     is_deleted = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        if self.is_deleted:
+            # If a variation has any purchases (i.e., an order line item was created and QuantitySold is greater
+            # than 0), you can't delete the variation, but you can set its quantity to zero. If a variation has no
+            # purchases, you can delete it.
+            self.quantity = 0
+        super(EbayItemVariationUpdateModel, self).save(*args, **kwargs)
     @property
     def ebay_object(self):
-        return None
+        return EbayReviseFixedPriceVariation(
+            original_variation=self.variation.ebay_object,
+            new_quantity=self.quantity,
+            new_start_price=self.gross_price,
+            is_deleted=self.is_deleted
+        )
 
 
 class EbayItemSpecificModel(BaseModel):

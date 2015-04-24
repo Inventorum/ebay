@@ -370,14 +370,21 @@ class UpdateService(object):
         """ Updates the item model after the update has been acked by ebay """
         ebay_item = self.item_update.item
 
-        if self.item_update.has_updated_quantity:
-            ebay_item.quantity = self.item_update.quantity
+        if not self.item_update.has_variations:
+            self._update_ebay_update_model(self.item_update, ebay_item)
+        else:
+            for update_variation in self.item_update.variations.all():
+                variation = update_variation.variation
+                self._update_ebay_update_model(update_variation, variation)
 
-        if self.item_update.has_updated_gross_price:
-            ebay_item.gross_price = self.item_update.gross_price
+    def _update_ebay_update_model(self, update_model, model):
+        if update_model.has_updated_quantity:
+            model.quantity = update_model.quantity
 
-        ebay_item.save()
+        if update_model.has_updated_gross_price:
+            model.gross_price = update_model.gross_price
 
+        model.save()
 
 class ProductDeletionService(object):
     def __init__(self, product, user):

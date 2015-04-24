@@ -249,23 +249,60 @@ class EbayEndItemResponseDeserializer(POPOSerializer):
         model = EbayEndItemResponse
 
 
+class EbayReviseFixedPriceVariation(object):
+    def __init__(self, original_variation, new_quantity=None, new_start_price=None, is_deleted=False):
+        """
+        :type original_variation: EbayVariation
+        :type new_quantity: int
+        :type new_start_price: decimal.Decimal
+        :type is_deleted: bool
+        """
+        self.original_variation = original_variation
+        self.new_quantity = new_quantity
+        self.new_start_price = new_start_price
+        self.is_deleted = is_deleted
+
+    def dict(self):
+        original_data = self.original_variation.dict()
+        if self.new_quantity:
+            original_data['Quantity'] = self.new_quantity
+        if self.new_start_price:
+            original_data['StartPrice'] = self.new_start_price
+
+        if self.is_deleted:
+            #  If a variation has any purchases (i.e., an order line item was created and QuantitySold is greather
+            # than 0), you can't delete the variation, but you can set its quantity to zero. If a variation has no
+            # purchases, you can delete it.
+            original_data['Quantity'] = 0
+
+        return original_data
+
 class EbayReviseFixedPriceItem(object):
 
-    def __init__(self, item_id, quantity=None, start_price=None):
+    def __init__(self, item_id, quantity=None, start_price=None, variations=None):
+        """
+        :type variations: list[EbayReviseFixedPriceVariation]
+        """
         self.item_id = item_id
         self.quantity = int_or_none(quantity)
         self.start_price = start_price
+        self.variations = variations or []
 
     def dict(self):
         data = {
             'ItemID': self.item_id
         }
 
-        if self.quantity is not None:
-            data['Quantity'] = self.quantity
+        if not self.variations:
+            if self.quantity is not None:
+                data['Quantity'] = self.quantity
 
-        if self.start_price is not None:
-            data['StartPrice'] = self.start_price
+            if self.start_price is not None:
+                data['StartPrice'] = self.start_price
+        else:
+            data['Variations'] = {
+                'Variation': [v.dict() for v in self.variations]
+            }
 
         return {'Item': data}
 

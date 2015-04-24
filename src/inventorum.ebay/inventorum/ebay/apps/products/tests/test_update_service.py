@@ -131,11 +131,32 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
 
             request = EbayResponse(ResponseDataObject({'content': attempt.request.body.encode('utf-8')}, []))
             data = request.dict()
-            variation = data['ReviseFixedPriceItemRequest']['Variations']['Variation']
+            variation = data['ReviseFixedPriceItemRequest']['Item']['Variations']['Variation']
 
             self.assertEqual(len(variation), 2)
 
+            first_variation = variation[0]
+            self.assertEqual(first_variation, {
+                'Quantity': '0',
+                'StartPrice': '1.9900000000',
+                'VariationSpecifics': None
+            })
+
+            second_variation = variation[1]
+            self.assertEqual(second_variation, {
+                'Quantity': '22',
+                'StartPrice': '123.4500000000',
+                'VariationSpecifics': None
+            })
+
             # ebay item model should have been updated
             self.published_item = self.published_item.reload()
-            self.assertEqual(self.published_item.gross_price, D("4.20"))
-            self.assertEqual(self.published_item.quantity, 23)
+            self.assertEqual(self.published_item.gross_price, D("1.99"))
+            self.assertEqual(self.published_item.quantity, 10)
+
+            variation_obj_first = self.published_item.variations.first()
+            self.assertEqual(variation_obj_first.gross_price, D("123.4500000000"))
+            self.assertEqual(variation_obj_first.quantity, 22)
+
+            variation_obj_last = self.published_item.variations.last()
+            self.assertEqual(variation_obj_last.quantity, 0)
