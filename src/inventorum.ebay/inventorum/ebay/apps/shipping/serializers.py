@@ -1,12 +1,19 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel, ShippingServiceModel
 
 from rest_framework import serializers
 
 
 log = logging.getLogger(__name__)
+
+
+class ShippingServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ShippingServiceModel
+        fields = ('id', 'external_id', 'description', 'shipping_time_min', 'shipping_time_max', 'is_international')
 
 
 class ShippingServiceConfigurationSerializer(serializers.ModelSerializer):
