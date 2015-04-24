@@ -346,7 +346,8 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         )
         delta_variation_b = CoreProductDeltaFactory(id=variation_b.inv_id,
                                                     gross_price=D("125.00"),
-                                                    quantity=3)
+                                                    quantity=3,
+                                                    parent=product_a.inv_id)
 
         # variation c with updated gross price and quantity
         variation_c = EbayItemVariationModel.create(
@@ -358,7 +359,8 @@ class UnitTestCoreAPISyncService(UnitTestCase):
 
         delta_variation_c = CoreProductDeltaFactory(id=variation_c.inv_id,
                                                     gross_price=D("111.11"),
-                                                    quantity=22)
+                                                    quantity=22,
+                                                    parent=product_a.inv_id)
 
         # variation d and e deleted
         variation_d = EbayItemVariationModel.create(
@@ -383,7 +385,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
 
         subject.run()
 
-        self.assertEqual(item_a.updates.count(), 0)
+        self.assertEqual(item_a.updates.count(), 1)
         self.assertEqual(variation_a.updates.count(), 1)
 
         variation_a_update = variation_a.updates.last()
@@ -401,7 +403,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertEqual(variation_c_update.quantity, 22)
 
 
-        self.assertEqual(self.schedule_ebay_item_update_mock.call_count, 0)
+        self.assertEqual(self.schedule_ebay_item_update_mock.call_count, 1)
         # assert deletions
         self.assertEqual(self.schedule_ebay_product_deletion_mock.call_count, 0)
 

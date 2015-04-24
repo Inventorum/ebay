@@ -189,6 +189,10 @@ class EbayItemModel(BaseModel):
         if save:
             self.save()
 
+    @property
+    def has_variations(self):
+        return self.variations.exists()
+
 
 class EbayItemVariationModel(MappedInventorumModel):
     quantity = models.IntegerField(default=0)
@@ -266,6 +270,7 @@ class EbayItemUpdateModel(EbayUpdateModel):
 
 class EbayItemVariationUpdateModel(EbayUpdateModel):
     variation = models.ForeignKey("products.EbayItemVariationModel", related_name="updates")
+    update_item = models.ForeignKey(EbayItemUpdateModel, related_name="variations")
 
     @property
     def ebay_object(self):

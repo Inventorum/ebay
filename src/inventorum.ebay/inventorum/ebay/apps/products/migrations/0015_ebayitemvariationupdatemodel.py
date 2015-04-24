@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
                 ('gross_price', models.DecimalField(null=True, max_digits=20, decimal_places=10, blank=True)),
                 ('status', models.CharField(default='draft', max_length=255, choices=[('draft', 'DRAFT'), ('in_progress', 'IN_PROGRESS'), ('succeeded', 'SUCCEEDED'), ('failed', 'FAILED')])),
                 ('status_details', django_extensions.db.fields.json.JSONField()),
+                ('update_item', models.ForeignKey(related_name='variations', to='products.EbayItemUpdateModel')),
                 ('variation', models.ForeignKey(related_name='updates', to='products.EbayItemVariationModel')),
             ],
             options={
