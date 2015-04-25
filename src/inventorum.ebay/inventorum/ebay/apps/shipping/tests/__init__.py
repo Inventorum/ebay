@@ -18,21 +18,21 @@ class ShippingServiceTestMixin(object):
         :returns: Shipping service "DE_DHL_Express" (get_or_create)
         :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
         """
-        return ShippingServiceFactory.create(external_id="DE_DHL_Express")
+        return ShippingServiceFactory.create(external_id="DE_DHLPaket")
 
     def get_shipping_service_hermes(self):
         """
         :returns: Shipping service "DE_Hermes_Package" (get_or_create)
         :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
         """
-        return ShippingServiceFactory.create(external_id="DE_Hermes_Package")
+        return ShippingServiceFactory.create(external_id="DE_HermesPaket")
 
     def get_shipping_service_ups(self):
         """
         :returns: Shipping service "DE_UPS_International" (get_or_create)
         :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
         """
-        return ShippingServiceFactory.create(external_id="DE_UPS_International", is_international=True)
+        return ShippingServiceFactory.create(external_id="DE_UPSExpress", is_international=True)
 
     def get_shipping_services(self):
         """

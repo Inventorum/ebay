@@ -38,7 +38,7 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         self.assertEqual(subject.data, {
             "shipping_services": [{
                 "service": shipping_service.service_id,
-                "external_id": "DE_DHL_Express",
+                "external_id": "DE_DHLPaket",
                 "cost": "3.49",
                 "additional_cost": "0.00"
             }]
