@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from inventorum.ebay.apps.shipping.serializers import ShippingServiceSerializer
+from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceFactory
 from inventorum.ebay.tests import Countries
 from rest_framework import status
@@ -12,7 +13,7 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 log = logging.getLogger(__name__)
 
 
-class TestShippingServiceList(EbayAuthenticatedAPITestCase):
+class TestShippingServiceList(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin):
 
     def setUp(self):
         super(TestShippingServiceList, self).setUp()
@@ -21,8 +22,8 @@ class TestShippingServiceList(EbayAuthenticatedAPITestCase):
         assert self.account.country == ShippingServiceFactory.country
 
     def test_list(self):
-        dhl = ShippingServiceFactory.create(external_id="DE_DHL_Express")
-        hermes = ShippingServiceFactory.create(external_id="DE_DHL_Express")
+        dhl = self.get_shipping_service_dhl()
+        hermes = self.get_shipping_service_hermes()
 
         response = self.get_shipping_services()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -56,5 +57,5 @@ class TestShippingServiceList(EbayAuthenticatedAPITestCase):
         :type expected_shipping_services: list[inventorum.ebay.apps.shipping.models.ShippingServiceModel]
         """
         expected_shipping_service_data = ShippingServiceSerializer(expected_shipping_services, many=True).data
-        actual_shipping_service_data = response.data["data"]
+        actual_shipping_service_data = response.data
         self.assertItemsEqual(actual_shipping_service_data, expected_shipping_service_data)
