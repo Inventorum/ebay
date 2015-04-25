@@ -20,9 +20,9 @@ class ShippingServiceConfigurationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShippingServiceConfigurationModel
-        fields = ('service', 'cost', 'additional_cost')
+        fields = ('service', 'external_id', 'cost', 'additional_cost')
 
-    # service = serializers.PrimaryKeyRelatedField(queryset=ShippingServiceModel.objects.all())
+    external_id = serializers.CharField(source="service.external_id", read_only=True)
     cost = serializers.DecimalField(max_digits=10, decimal_places=2)
     additional_cost = serializers.DecimalField(max_digits=10, decimal_places=2)
 
