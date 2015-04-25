@@ -15,9 +15,9 @@ from inventorum.ebay.apps.products.scripts import core_api_sync
 from inventorum.ebay.apps.core_api.tests import CoreApiTestHelpers, ApiTest
 from inventorum.ebay.apps.core_api.tests.factories import CoreProductDeltaFactory
 from inventorum.ebay.apps.products.core_api_sync import CoreAPISyncService
-from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemUpdateModel
-from inventorum.ebay.apps.products.services import PublishingService
+from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
+from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
 from inventorum.ebay.tests.utils import PatchMixin
@@ -28,12 +28,13 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin):
+class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin,
+                                 ShippingServiceTestMixin):
 
     @celery_test_case()
     def test_integration(self):
         with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date'],
-                                  record_mode="new_episodes") as cassette:
+                                  record_mode="never") as cassette:
 
             # create some core products to play with
             product_1_inv_id = self.create_core_api_product(name="Test product 1",
@@ -64,7 +65,8 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
             ebay_product_2.category = category
             ebay_product_2.save()
 
-            # Map core products into ebay service
+            self.account.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("5.00"))
+
             response = self.client.post("/products/%s/publish" % product_1_inv_id)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 

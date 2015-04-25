@@ -44,7 +44,7 @@ class CoreProductMetaOverrideMixin(object):
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
-    def __init__(self, id, name, description, gross_price, quantity, images, variation_count, shipping_services):
+    def __init__(self, id, name, description, gross_price, quantity, images, variation_count):
         """
         :type id: int
         :type name: unicode
@@ -53,7 +53,6 @@ class CoreProduct(object):
         :type quantity: decimal.Decimal
         :type images: list of CoreProductImage
         :type variation_count: int
-        :type shipping_services: list of CoreShippingService
         """
         self.id = id
         self.name = name
@@ -62,7 +61,6 @@ class CoreProduct(object):
         self.quantity = quantity
         self.images = images
         self.variation_count = variation_count
-        self.shipping_services = [s for s in shipping_services if s.enabled]
 
     @property
     def is_parent(self):
@@ -89,40 +87,6 @@ class CoreProductImageDeserializer(POPOSerializer):
     ipad_retina = serializers.CharField(source="url")
 
 
-class CoreShippingService(object):
-    """ Represents a shipping service model """
-
-    def __init__(self, id, description, time_min, time_max, additional_cost, cost, enabled):
-        """
-        :type id: unicode
-        :type description: unicode
-        :type time_min: int
-        :type time_max: int
-        :type additional_cost: decimal.Decimal
-        :type cost: decimal.Decimal
-        """
-        self.id = id
-        self.description = description
-        self.time_min = time_min
-        self.time_max = time_max
-        self.additional_cost = additional_cost
-        self.cost = cost
-        self.enabled = enabled
-
-
-class CoreShippingServiceDeserializer(POPOSerializer):
-    class Meta:
-        model = CoreShippingService
-
-    id = serializers.CharField()
-    description = serializers.CharField()
-    time_min = serializers.IntegerField()
-    time_max = serializers.IntegerField()
-    enabled = serializers.BooleanField()
-    additional_cost = serializers.DecimalField(max_digits=20, decimal_places=10, allow_null=True)
-    cost = serializers.DecimalField(max_digits=20, decimal_places=10)
-
-
 class CoreProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin):
 
     class MetaDeserializer(serializers.Serializer):
@@ -144,7 +108,6 @@ class CoreProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin):
     variation_count = serializers.IntegerField()
 
     images = CoreProductImageDeserializer(many=True)
-    shipping_services = CoreShippingServiceDeserializer(many=True)
 
     # meta will be removed after meta overwrites
     meta = serializers.DictField(child=MetaDeserializer())
@@ -201,17 +164,12 @@ class CoreAccountSettings(object):
         1: 'PayPal',
         2: 'MoneyXferAccepted'
     }
-    def __init__(self, shipping_services, ebay_paypal_email, ebay_payment_methods):
-        """
-        :type shipping_services: list of CoreShippingService
-        """
-        self.shipping_services = [s for s in shipping_services if s.enabled]
+    def __init__(self, ebay_paypal_email, ebay_payment_methods):
         self.ebay_paypal_email = ebay_paypal_email
         self.ebay_payment_methods = [self.EBAY_PAYMENTS_MAPPING[m] for m in ebay_payment_methods]
 
 
 class CoreAccountSettingsDeserializer(POPOSerializer):
-    shipping_services = CoreShippingServiceDeserializer(many=True)
     ebay_paypal_email = serializers.CharField(allow_null=True)
     ebay_payment_methods = serializers.ListField(child=serializers.IntegerField(), allow_null=True)
 

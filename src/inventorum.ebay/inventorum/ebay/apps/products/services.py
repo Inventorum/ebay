@@ -55,8 +55,9 @@ class PublishingPreparationService(object):
         :type product: EbayProductModel
         :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
         """
-        self.user = user
         self.product = product
+        self.account = user.account
+        self.user = user
 
     @cached_property
     def core_product(self):
@@ -90,8 +91,8 @@ class PublishingPreparationService(object):
         if self.core_product.is_parent:
             raise PublishingValidationException(ugettext('Cannot publish products with variations'))
 
-        if not (self.core_product.shipping_services or self.core_account.settings.shipping_services):
-            raise PublishingValidationException(ugettext('Product has not shipping services selected'))
+        if not (self.product.shipping_services.exists() or self.account.shipping_services.exists()):
+            raise PublishingValidationException(ugettext('Neither product or account have configured shipping services'))
 
         if self.core_product.gross_price < Decimal("1"):
             raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
@@ -134,12 +135,15 @@ class PublishingPreparationService(object):
                 url=image.url,
                 item=item
             )
-        shipping_services = self.core_product.shipping_services or self.core_account.settings.shipping_services
-        for service in shipping_services:
+
+        shipping_services = self.product.shipping_services.all() if self.product.shipping_services.exists() \
+            else self.account.shipping_services.all()
+
+        for service_config in shipping_services:
             EbayItemShippingDetails.objects.create(
-                additional_cost=service.additional_cost,
-                cost=service.cost,
-                external_id=service.id,
+                additional_cost=service_config.additional_cost,
+                cost=service_config.cost,
+                external_id=service_config.service.external_id,
                 item=item
             )
 
