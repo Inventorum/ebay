@@ -91,7 +91,7 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
             "specific_values": [],
             "shipping_services": [{
                 "service": shipping_service.service.id,
-                "external_id": "DE_DHL_Express",
+                "external_id": "DE_DHLPaket",
                 "cost": "5.00",
                 "additional_cost": "0.49"
             }]
