@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from collections import defaultdict
 import logging
 
 from django.core.exceptions import ValidationError

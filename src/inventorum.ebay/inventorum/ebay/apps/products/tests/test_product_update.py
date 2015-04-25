@@ -6,6 +6,7 @@ from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
+from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from rest_framework import status
@@ -14,7 +15,7 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class TestProductUpdate(EbayAuthenticatedAPITestCase):
+class TestProductUpdate(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin):
 
     def request_update(self, product, data):
         return self.client.put("/products/{inv_id}".format(inv_id=product.inv_id), data=data)
@@ -70,8 +71,8 @@ class TestProductUpdate(EbayAuthenticatedAPITestCase):
     def test_shipping_service_updates(self):
         assert self.product.shipping_services.count() == 0
 
-        dhl = ShippingServiceFactory.create(external_id="DE_DHL_Express")
-        hermes = ShippingServiceFactory.create(external_id="DE_DHL_Express")
+        dhl = self.get_shipping_service_dhl()
+        hermes = self.get_shipping_service_hermes()
 
         data = self.get_valid_data_for(self.product)
         data["shipping_services"] = [{"service": dhl.pk,

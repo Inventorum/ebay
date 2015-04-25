@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from django.utils.functional import cached_property
+from decimal import Decimal as D
 from inventorum.ebay.apps.categories.models import CategoryModel
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
@@ -58,17 +58,23 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
 
     # / Required interface for ShippingServiceConfigurableSerializerTest
 
-    @cached_property
-    def some_category_with_parent(self):
+    def get_default_category(self):
         some_parent = CategoryFactory.create(name="Some parent")
         return CategoryFactory.create(name="Some category", parent=some_parent)
 
+    def get_default_product(self):
+        product = EbayProductFactory.create(category=self.get_default_category())
+        product.shipping_services.create(service=self.get_shipping_service_dhl(),
+                                         cost=D("5.00"),
+                                         additional_cost=D("0.49"))
+        return product
+
     def test_serialize(self):
-        category = self.some_category_with_parent
-        product = EbayProductFactory.create(category=category)
+        product = self.get_default_product()
+        category = product.category
+        shipping_service = product.shipping_services.first()
 
         subject = EbayProductSerializer(product)
-
         self.assertEqual(subject.data, {
             "id": product.id,
             "listing_url": None,
@@ -83,13 +89,16 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
                 "specifics": []
             },
             "specific_values": [],
-            "shipping_services": []
+            "shipping_services": [{
+                "service": shipping_service.service.id,
+                "external_id": "DE_DHL_Express",
+                "cost": "5.00",
+                "additional_cost": "0.49"
+            }]
         })
 
     def test_deserialize_serialized(self):
-        category = self.some_category_with_parent
-        product = EbayProductFactory(category=category)
-
+        product = self.get_default_product()
         serialized = EbayProductSerializer(product).data
 
         subject = EbayProductSerializer(product, data=serialized)
