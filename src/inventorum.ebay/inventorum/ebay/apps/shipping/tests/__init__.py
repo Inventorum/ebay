@@ -11,7 +11,38 @@ from rest_framework.exceptions import ValidationError
 log = logging.getLogger(__name__)
 
 
-class ShippingServiceConfigurableSerializerTest(object):
+class ShippingServiceTestMixin(object):
+
+    def get_shipping_service_dhl(self):
+        """
+        :returns: Shipping service "DE_DHL_Express" (get_or_create)
+        :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
+        """
+        return ShippingServiceFactory.create(external_id="DE_DHL_Express")
+
+    def get_shipping_service_hermes(self):
+        """
+        :returns: Shipping service "DE_Hermes_Package" (get_or_create)
+        :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
+        """
+        return ShippingServiceFactory.create(external_id="DE_Hermes_Package")
+
+    def get_shipping_service_ups(self):
+        """
+        :returns: Shipping service "DE_UPS_International" (get_or_create)
+        :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
+        """
+        return ShippingServiceFactory.create(external_id="DE_UPS_International", is_international=True)
+
+    def get_shipping_services(self):
+        """
+        :returns: List of shipping services "DE_DHL_Express", "DE_Hermes_Package", "DE_UPS_International"
+        :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
+        """
+        return [self.get_shipping_service_dhl(), self.get_shipping_service_hermes(), self.get_shipping_service_ups()]
+
+
+class ShippingServiceConfigurableSerializerTest(ShippingServiceTestMixin):
 
     # Required interface for implementing test classes -----------------------
 
@@ -27,9 +58,9 @@ class ShippingServiceConfigurableSerializerTest(object):
         entity = self.get_entity()
         assert entity.shipping_services.count() == 0
 
-        dhl = ShippingServiceFactory.create(external_id="DE_DHL_Express")
-        hermes = ShippingServiceFactory.create(external_id="DE_Hermes_Package")
-        ups = ShippingServiceFactory.create(external_id="DE_UPS_International")
+        dhl = self.get_shipping_service_dhl()
+        hermes = self.get_shipping_service_hermes()
+        ups = self.get_shipping_service_ups()
 
         # assign to shipping services
         dhl_data = {"service": dhl.pk,
@@ -96,8 +127,11 @@ class ShippingServiceConfigurableSerializerTest(object):
         # try to assign shipping service of different county
         assert self._get_country_from_entity(entity) == Countries.DE
 
-        service_from_different_country = ShippingServiceFactory.create(country=Countries.AT)
-        invalid_data = {"shipping_services": [{"service": service_from_different_country.id,
+        dhl_AT = self.get_shipping_service_dhl()
+        dhl_AT.country = Countries.AT
+        dhl_AT.save()
+
+        invalid_data = {"shipping_services": [{"service": dhl_AT.id,
                                                "cost": "1.99",
                                                "additional_cost": "2.99"}]}
 
