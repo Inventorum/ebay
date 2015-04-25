@@ -9,7 +9,6 @@ from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
 
-from inventorum.ebay.apps.categories.models import CategorySpecificModel
 from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
@@ -41,7 +40,8 @@ class EbayProductModel(MappedInventorumModel):
     """ Represents an inventorum product in the ebay context """
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="products",
                                 verbose_name="Inventorum ebay account")
-    category = models.ForeignKey("categories.CategoryModel", related_name="products", null=True, blank=True)
+    category = models.ForeignKey("categories.CategoryModel", related_name="products", null=True, blank=True,
+                                 on_delete=models.SET_NULL)
     external_item_id = models.CharField(max_length=255, null=True, blank=True)
 
     deleted_in_core_api = models.BooleanField(default=False)
@@ -231,7 +231,7 @@ class EbayItemUpdateModel(BaseModel):
 
 class EbayItemSpecificModel(BaseModel):
     item = models.ForeignKey(EbayItemModel, related_name="specific_values")
-    specific = models.ForeignKey(CategorySpecificModel, related_name="+")
+    specific = models.ForeignKey("categories.CategorySpecificModel", related_name="+")
     value = models.CharField(max_length=255)
 
     @property
@@ -241,7 +241,7 @@ class EbayItemSpecificModel(BaseModel):
 
 class EbayProductSpecificModel(BaseModel):
     product = models.ForeignKey(EbayProductModel, related_name="specific_values")
-    specific = models.ForeignKey(CategorySpecificModel, related_name="+")
+    specific = models.ForeignKey("categories.CategorySpecificModel", related_name="+")
     value = models.CharField(max_length=255)
 
 
