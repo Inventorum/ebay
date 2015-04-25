@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
+from decimal import Decimal as D
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -65,7 +66,7 @@ class ShippingServiceModel(BaseModel):
 class ShippingServiceConfigurationModel(BaseModel):
     service = models.ForeignKey("shipping.ShippingServiceModel")
     cost = models.DecimalField(max_digits=10, decimal_places=2)
-    additional_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    additional_cost = models.DecimalField(max_digits=10, decimal_places=2, default=D("0.00"))
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
