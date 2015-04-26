@@ -128,7 +128,7 @@ class EbayNotification(object):
             raise self.SignatureValidationError("Hash mismatch")
 
     @classmethod
-    def compute_signature(self, timestamp, ebay_dev_id, ebay_app_id, ebay_cert_id):
+    def compute_signature(cls, timestamp, ebay_dev_id, ebay_app_id, ebay_cert_id):
         """
         Computes the notification signature hash according to
         http://developer.ebay.com/Devzone/guides/ebayfeatures/Notifications/Notifications.html#SOAPMessageHeaderNotificationSignature
