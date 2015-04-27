@@ -3,6 +3,9 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.conf import settings
+from inventorum.ebay.apps.notifications.handlers import EbayNotificationHandlerException
+from inventorum.ebay.apps.notifications.models import EbayNotificationModel
+from inventorum.ebay.apps.notifications.services import EbayPlatformNotificationService, UnhandledEbayNotificationError
 from inventorum.ebay.lib.rest.resources import PublicAPIResource
 from inventorum.ebay.lib.ebay.notifications import EbayNotification
 from rest_framework import status
@@ -33,6 +36,9 @@ class EbayPlatformNotificationsResource(PublicAPIResource):
         except EbayNotification.SignatureValidationError as e:
             log.error("Invalid signature of ebay notification: %s", e.message)
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        model = EbayNotificationModel.create_from_ebay_notification(notification)
+        EbayPlatformNotificationService.handle(model)
 
         # always return 200, otherwise ebay will consider the response as failure and might block us
         return Response(status=status.HTTP_200_OK)

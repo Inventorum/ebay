@@ -6,7 +6,8 @@ import datetime
 from datetime import timedelta
 from inventorum.ebay.apps.notifications.tests import templates
 from inventorum.ebay.apps.notifications.tests.templates import compile_notification_template
-from inventorum.ebay.lib.ebay.notifications import EbayNotificationEventType, EbayNotification
+
+from inventorum.ebay.apps.notifications import EbayNotificationEventType
 
 from rest_framework import status
 from rest_framework.test import APITestCase
