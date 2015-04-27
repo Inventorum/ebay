@@ -18,7 +18,10 @@ log = logging.getLogger(__name__)
 class TestNotificationsResource(APITestCase):
 
     TEMPLATES = {
-        EbayNotificationEventType.FixedPriceTransaction: templates.FIXED_PRICE_TRANSACTION_NOTIFICATION
+        EbayNotificationEventType.FixedPriceTransaction: templates.fixed_price_transaction_notification_template,
+        EbayNotificationEventType.ItemSold: templates.item_sold_notification_template,
+        EbayNotificationEventType.ItemClosed: templates.item_closed_notification_template,
+        EbayNotificationEventType.ItemSuspended: templates.item_suspended_notification_template
     }
 
     def post_notification(self, event_type, timestamp=None, signature=None, **kwargs):
@@ -28,9 +31,10 @@ class TestNotificationsResource(APITestCase):
         return self.client.post("/notifications/", content_type='text/xml; charset="utf-8"',
                                 SOAPACTION=event_type, data=data)
 
-    def test_valid_signature(self):
-        response = self.post_notification(event_type=EbayNotificationEventType.FixedPriceTransaction)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_valid_signature_and_payload(self):
+        for event_type in self.TEMPLATES.keys():
+            response = self.post_notification(event_type=event_type)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_signature(self):
         expired_timestamp = datetime.datetime.utcnow() - timedelta(minutes=15)
