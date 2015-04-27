@@ -85,26 +85,29 @@ class EbayNotification(object):
 
     def _parse_request_body(self):
         # We can re-use ebaysdk's response parsing here, as notification bodies are valid ebay responses
-        parser = Response(ResponseDataObject({'content': self.request_body}, []))
-        envelop = parser.dict()["Envelope"]
+        try:
+            parser = Response(ResponseDataObject({'content': self.request_body}, []))
+            envelop = parser.dict()["Envelope"]
 
-        message_header, message_body = envelop["Header"], envelop["Body"]
+            message_header, message_body = envelop["Header"], envelop["Body"]
 
-        # The message body contains a top-level element that is named after the call used to generate the data with
-        # the word Response at the end, e.g. the payload element name for the ItemSold event is GetItemResponse
-        payload_type, payload = None, None
-        for key, value in message_body.iteritems():
-            if key.endswith("Response"):
-                # Remove trailing Response
-                payload_type = re.sub('Response$', '', key)
-                payload = value
+            # The message body contains a top-level element that is named after the call used to generate the data with
+            # the word Response at the end, e.g. the payload element name for the ItemSold event is GetItemResponse
+            payload_type, payload = None, None
+            for key, value in message_body.iteritems():
+                if key.endswith("Response"):
+                    # Remove trailing Response
+                    payload_type = re.sub('Response$', '', key)
+                    payload = value
 
-        if (payload_type or payload) is None:
-            raise self.ParseError("No response body not found")
+            if (payload_type or payload) is None:
+                raise self.ParseError("No response body not found")
 
-        self.payload = payload
-        self.signature = message_header['RequesterCredentials']['NotificationSignature']
-        self.timestamp = payload['Timestamp']
+            self.payload = payload
+            self.signature = message_header['RequesterCredentials']['NotificationSignature']
+            self.timestamp = payload['Timestamp']
+        except (KeyError, AttributeError) as e:
+            raise self.ParseError(e.message)
 
     def validate_signature(self, ebay_dev_id, ebay_app_id, ebay_cert_id):
         """
