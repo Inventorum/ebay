@@ -4,6 +4,7 @@ import logging
 from inventorum.ebay.lib.ebay.data.notifications import EbayGetItemTransactionsResponseDeserializer, \
     EbayGetItemResponseDeserializer
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
+from rest_framework.exceptions import ValidationError
 
 
 log = logging.getLogger(__name__)
@@ -31,7 +32,10 @@ class EbayNotificationHandler(object):
         if not issubclass(payload_deserializer_class, POPOSerializer):
             raise Exception("`payload_serializer_class` must be instance of %s" % POPOSerializer.__name__)
 
-        return payload_deserializer_class(data=payload).build()
+        try:
+            return payload_deserializer_class(data=payload).build()
+        except ValidationError as e:
+            raise EbayNotificationHandlerException("Cannot deserialize payload: %s" % e.detail)
 
     def handle(self, payload):
         """
@@ -57,7 +61,7 @@ class ItemSoldNotificationHandler(EbayNotificationHandler):
 
     def handle(self, payload):
         """
-        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemTransactionsResponse
+        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemResponse
         """
         pass
 
@@ -67,7 +71,7 @@ class ItemClosedNotificationHandler(EbayNotificationHandler):
 
     def handle(self, payload):
         """
-        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemTransactionsResponse
+        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemResponse
         """
         pass
 
@@ -77,6 +81,6 @@ class ItemSuspendedNotificationHandler(EbayNotificationHandler):
 
     def handle(self, payload):
         """
-        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemTransactionsResponse
+        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemResponse
         """
         pass

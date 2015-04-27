@@ -34,6 +34,8 @@ class EbayPlatformNotificationService(object):
         try:
             handler(notification)
         except EbayNotificationHandlerException as e:
+            log.error("Error while handling %s notification with pk %s: %s",
+                      notification.event_type, notification.pk, e.message)
             notification.set_status(EbayNotificationStatus.FAILED, details=e.message)
         else:
             notification.set_status(EbayNotificationStatus.HANDLED)
