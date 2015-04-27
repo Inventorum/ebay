@@ -3,9 +3,8 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.conf import settings
-from inventorum.ebay.apps.notifications.handlers import EbayNotificationHandlerException
 from inventorum.ebay.apps.notifications.models import EbayNotificationModel
-from inventorum.ebay.apps.notifications.services import EbayPlatformNotificationService, UnhandledEbayNotificationError
+from inventorum.ebay.apps.notifications.services import EbayPlatformNotificationService
 from inventorum.ebay.lib.rest.resources import PublicAPIResource
 from inventorum.ebay.lib.ebay.notifications import EbayNotification
 from rest_framework import status

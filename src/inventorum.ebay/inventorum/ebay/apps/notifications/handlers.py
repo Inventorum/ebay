@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.lib.ebay.notifications import EbayGetItemResponseDeserializer
+from inventorum.ebay.lib.ebay.data.notifications import EbayGetItemTransactionsResponseDeserializer, \
+    EbayGetItemResponseDeserializer
+from inventorum.ebay.lib.rest.serializers import POPOSerializer
 
 
 log = logging.getLogger(__name__)
@@ -13,70 +15,68 @@ class EbayNotificationHandlerException(Exception):
 
 class EbayNotificationHandler(object):
     """ Interface for ebay platform notification handlers """
+    payload_deserializer_class = None
 
-    def handle(self, notification):
+    def __call__(self, notification):
+        self.notification = notification
+        payload = self._deserialize_payload(notification.payload)
+        self.handle(payload)
+
+    def _deserialize_payload(self, payload):
+        payload_deserializer_class = self.payload_deserializer_class
+
+        if payload_deserializer_class is None:
+            raise Exception("`payload_serializer_class` must be defined for %s" % self.__class__.__name__)
+
+        if not issubclass(payload_deserializer_class, POPOSerializer):
+            raise Exception("`payload_serializer_class` must be instance of %s" % POPOSerializer.__name__)
+
+        return payload_deserializer_class(data=payload).build()
+
+    def handle(self, payload):
         """
         Handlers gonna handle!
 
-        :type notification: inventorum.ebay.lib.ebay.notifications.EbayNotification
+        :param payload: The deserialized notification payload
         """
         raise NotImplementedError
-
-    def parse_payload(self, payload):
-        """
-        :type payload: dict
-        """
-        raise NotImplementedError
-
-
-class ItemNotificationHandler(EbayNotificationHandler):
-    """ Abstract base class for notifications with the GetItemResponse as payload """
-
-    def parse_payload(self, payload):
-        """
-        :type payload: dict
-        :rtype
-        """
-        pass
 
 
 class FixedPriceTransactionNotificationHandler(EbayNotificationHandler):
+    payload_deserializer_class = EbayGetItemTransactionsResponseDeserializer
 
-    def handle(self, notification):
+    def handle(self, payload):
         """
-        :type notification: inventorum.ebay.lib.ebay.notifications.EbayNotification
-        """
-        pass
-
-    def parse_payload(self, payload):
-        """
-        :type payload: dict
+        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemTransactionsResponse
         """
         pass
 
 
-class ItemSoldNotificationHandler(ItemNotificationHandler):
+class ItemSoldNotificationHandler(EbayNotificationHandler):
+    payload_deserializer_class = EbayGetItemResponseDeserializer
 
-    def handle(self, notification):
+    def handle(self, payload):
         """
-        :type notification: inventorum.ebay.lib.ebay.notifications.EbayNotification
-        """
-        pass
-
-
-class ItemClosedNotificationHandler(ItemNotificationHandler):
-
-    def handle(self, notification):
-        """
-        :type notification: inventorum.ebay.lib.ebay.notifications.EbayNotification
+        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemTransactionsResponse
         """
         pass
 
 
-class ItemSuspendedNotificationHandler(ItemNotificationHandler):
+class ItemClosedNotificationHandler(EbayNotificationHandler):
+    payload_deserializer_class = EbayGetItemResponseDeserializer
 
-    def handle(self, notification):
+    def handle(self, payload):
         """
-        :type notification: inventorum.ebay.lib.ebay.notifications.EbayNotification
+        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemTransactionsResponse
+        """
+        pass
+
+
+class ItemSuspendedNotificationHandler(EbayNotificationHandler):
+    payload_deserializer_class = EbayGetItemResponseDeserializer
+
+    def handle(self, payload):
+        """
+        :type payload: inventorum.ebay.lib.ebay.data.notifications.EbayGetItemTransactionsResponse
         """
         pass

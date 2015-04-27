@@ -7,7 +7,6 @@ import re
 import datetime
 
 from ebaysdk.response import ResponseDataObject, Response
-from inventorum.ebay.lib.rest.serializers import POPOSerializer
 
 
 log = logging.getLogger(__name__)
