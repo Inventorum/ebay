@@ -3,10 +3,10 @@ from __future__ import absolute_import, unicode_literals
 import logging
 import base64
 import hashlib
-import re
 import datetime
 
 from ebaysdk.response import ResponseDataObject, Response
+from inventorum.ebay.lib.ebay.data import EbayParser
 
 
 log = logging.getLogger(__name__)
@@ -59,26 +59,26 @@ class EbayNotification(object):
     def _parse_request_body(self):
         # We can re-use ebaysdk's response parsing here, as notification bodies are valid ebay responses
         try:
-            parser = Response(ResponseDataObject({'content': self.request_body}, []))
+            data_object = ResponseDataObject({'content': self.request_body}, [])
+            parser = Response(data_object)
             envelop = parser.dict()["Envelope"]
 
             message_header, message_body = envelop["Header"], envelop["Body"]
 
             # The message body contains a top-level element that is named after the call used to generate the data with
             # the word Response at the end, e.g. the payload element name for the ItemSold event is GetItemResponse
-            payload_type, payload = None, None
+            payload = None
             for key, value in message_body.iteritems():
                 if key.endswith("Response"):
                     # Remove trailing Response
-                    payload_type = re.sub('Response$', '', key)
                     payload = value
 
-            if (payload_type or payload) is None:
-                raise self.ParseError("No response body not found")
+            if payload is None:
+                raise self.ParseError("No response body found")
 
             self.payload = payload
             self.signature = message_header['RequesterCredentials']['NotificationSignature']
-            self.timestamp = payload['Timestamp']
+            self.timestamp = self.payload['Timestamp']
         except (KeyError, AttributeError) as e:
             raise self.ParseError(e.message)
 
@@ -92,7 +92,7 @@ class EbayNotification(object):
         :type ebay_cert_id: str
         """
         # First, we validate whether the timestamp is within 10 minutes of the actual time in GMT
-        sent_at = datetime.datetime.strptime(self.timestamp, self.TIMESTAMP_FORMAT)
+        sent_at = EbayParser.parse_date(self.timestamp)
         utc_now = datetime.datetime.utcnow()
 
         if utc_now - sent_at > datetime.timedelta(minutes=10):

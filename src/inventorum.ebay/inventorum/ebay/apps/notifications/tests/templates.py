@@ -4,6 +4,7 @@ import logging
 
 import datetime
 from django.conf import settings
+from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.notifications import EbayNotification
 
 
@@ -14,7 +15,7 @@ def compile_notification_template(template, timestamp=None, signature=None, **kw
     if timestamp is None:
         timestamp = datetime.datetime.utcnow()
 
-    timestamp = timestamp.strftime(EbayNotification.TIMESTAMP_FORMAT)
+    timestamp = timestamp.strftime(EbayParser.DATE_FORMAT)
 
     if signature is None:
         signature = EbayNotification.compute_signature(timestamp, settings.EBAY_DEVID,
