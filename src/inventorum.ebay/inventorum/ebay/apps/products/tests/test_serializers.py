@@ -38,6 +38,7 @@ class TestEbayCategorySerializer(UnitTestCase):
             "country": "DE",
             "parent_id": level_2_category.id,
             "is_leaf": True,
+            "variations_enabled": False,
             "breadcrumb": [
                 {"id": root_category.id, "name": "Root category"},
                 {"id": level_2_category.id, "name": "Level 2 category"}
@@ -69,6 +70,7 @@ class TestEbayProductSerializer(UnitTestCase):
                 "country": "DE",
                 "parent_id": category.parent_id,
                 "is_leaf": True,
+                "variations_enabled": False,
                 "breadcrumb": [{"id": category.parent_id, "name": "Some parent"}],
                 "specifics": []
             },

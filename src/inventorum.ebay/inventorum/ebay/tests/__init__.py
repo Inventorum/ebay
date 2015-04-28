@@ -32,3 +32,7 @@ class StagingTestAccount:
 
 
         IPAD_STAND = 665753
+
+        #variations
+        WITH_VARIATIONS_VALID_ATTRS = 666032
+        WITH_VARIATIONS_INVALID_ATTRS = 666407

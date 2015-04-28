@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 import logging
 
-import jsonfield
 from django.db import models
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
@@ -12,8 +11,9 @@ from inventorum.ebay import settings
 from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
-from inventorum.ebay.lib.ebay.data.items import EbayItemShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific, \
-    EbayReviseFixedPriceItem
+
+from inventorum.ebay.lib.ebay.data.items import EbayItemShippingService, EbayFixedPriceItem, EbayPicture,\
+    EbayItemSpecific, EbayVariation, EbayReviseFixedPriceItem, EbayReviseFixedPriceVariation
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -85,7 +85,8 @@ class EbayProductModel(MappedInventorumModel):
 # Models for data just before publishing
 
 class EbayItemImageModel(MappedInventorumModel):
-    item = models.ForeignKey("products.EbayItemModel", related_name="images")
+    item = models.ForeignKey("products.EbayItemModel", related_name="images", null=True, blank=True)
+    variation = models.ForeignKey("products.EbayItemVariationModel", related_name="images", null=True, blank=True)
     url = models.TextField()
 
     @property
@@ -132,8 +133,8 @@ class EbayItemModel(BaseModel):
     listing_duration = models.CharField(max_length=255)
     description = models.TextField()
     postal_code = models.CharField(max_length=255, null=True, blank=True)
-    quantity = models.IntegerField(default=0)
-    gross_price = models.DecimalField(decimal_places=10, max_digits=20)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
+    gross_price = models.DecimalField(decimal_places=10, max_digits=20, null=True, blank=True)
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
     external_id = models.CharField(max_length=255, null=True, blank=True)
@@ -142,7 +143,7 @@ class EbayItemModel(BaseModel):
 
     publishing_status = models.CharField(max_length=255, choices=EbayItemPublishingStatus.CHOICES,
                                          default=EbayItemPublishingStatus.DRAFT)
-    publishing_status_details = jsonfield.JSONField(null=True, blank=True)
+    publishing_status_details = JSONField(null=True, blank=True)
 
     published_at = models.DateTimeField(null=True, blank=True)
     unpublished_at = models.DateTimeField(null=True, blank=True)
@@ -166,6 +167,7 @@ class EbayItemModel(BaseModel):
             shipping_services=[s.ebay_object for s in self.shipping.all()],
             pictures=[i.ebay_object for i in self.images.all()],
             item_specifics=self._build_item_specifics(),
+            variations=[v.ebay_object for v in self.variations.all()]
         )
 
     def _build_item_specifics(self):
@@ -188,9 +190,56 @@ class EbayItemModel(BaseModel):
         if save:
             self.save()
 
+    @property
+    def has_variations(self):
+        return self.variations.exists()
 
-class EbayItemUpdateModel(BaseModel):
-    item = models.ForeignKey("products.EbayItemModel", related_name="updates")
+
+class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):
+    def by_sku(self, sku):
+        inv_id = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
+        return self.filter(inv_id=inv_id)
+
+
+class EbayItemVariationModel(MappedInventorumModel):
+    quantity = models.IntegerField(default=0)
+    gross_price = models.DecimalField(decimal_places=10, max_digits=20)
+    item = models.ForeignKey(EbayItemModel, related_name="variations")
+
+    objects = PassThroughManager.for_queryset_class(EbayItemVariationModelQuerySet)()
+
+    @property
+    def ebay_object(self):
+        return EbayVariation(
+            sku=self.sku,
+            gross_price=self.gross_price,
+            quantity=self.quantity,
+            specifics=[s.ebay_object for s in self.specifics.all()],
+            images=[i.ebay_object for i in self.images.all()]
+        )
+
+    @property
+    def sku(self):
+        return settings.EBAY_SKU_FORMAT.format(self.inv_id)
+
+
+class EbayItemVariationSpecificModel(BaseModel):
+    name = models.CharField(max_length=255)
+    variation = models.ForeignKey(EbayItemVariationModel, related_name="specifics")
+
+    @property
+    def ebay_object(self):
+        return EbayItemSpecific(self.name, list(self.values.all().values_list('value', flat=True)))
+
+
+class EbayItemVariationSpecificValueModel(BaseModel):
+    value = models.CharField(max_length=255)
+    specific = models.ForeignKey(EbayItemVariationSpecificModel, related_name="values")
+
+
+class EbayUpdateModel(BaseModel):
+    class Meta:
+        abstract = True
 
     quantity = models.IntegerField(null=True, blank=True)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20,
@@ -199,14 +248,6 @@ class EbayItemUpdateModel(BaseModel):
     status = models.CharField(max_length=255, choices=EbayItemUpdateStatus.CHOICES,
                               default=EbayItemUpdateStatus.DRAFT)
     status_details = JSONField()
-
-    @property
-    def ebay_object(self):
-        return EbayReviseFixedPriceItem(
-            item_id=self.item.external_id,
-            quantity=self.quantity,
-            start_price=self.gross_price
-        )
 
     @property
     def has_updated_quantity(self):
@@ -227,6 +268,45 @@ class EbayItemUpdateModel(BaseModel):
 
         if save:
             self.save()
+
+
+class EbayItemUpdateModel(EbayUpdateModel):
+    item = models.ForeignKey("products.EbayItemModel", related_name="updates")
+
+    @property
+    def has_variation_updates(self):
+        return self.variations.exists()
+
+    @property
+    def ebay_object(self):
+        return EbayReviseFixedPriceItem(
+            item_id=self.item.external_id,
+            quantity=self.quantity,
+            start_price=self.gross_price,
+            variations=[v.ebay_object for v in self.variations.all()]
+        )
+
+
+class EbayItemVariationUpdateModel(EbayUpdateModel):
+    variation = models.ForeignKey("products.EbayItemVariationModel", related_name="updates")
+    update_item = models.ForeignKey(EbayItemUpdateModel, related_name="variations")
+    is_deleted = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.is_deleted:
+            # If a variation has any purchases (i.e., an order line item was created and QuantitySold is greater
+            # than 0), you can't delete the variation, but you can set its quantity to zero. If a variation has no
+            # purchases, you can delete it.
+            self.quantity = 0
+        super(EbayItemVariationUpdateModel, self).save(*args, **kwargs)
+    @property
+    def ebay_object(self):
+        return EbayReviseFixedPriceVariation(
+            original_variation=self.variation.ebay_object,
+            new_quantity=self.quantity,
+            new_start_price=self.gross_price,
+            is_deleted=self.is_deleted
+        )
 
 
 class EbayItemSpecificModel(BaseModel):

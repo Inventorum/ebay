@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from decimal import Decimal
 
 import re
 
@@ -25,6 +26,14 @@ class EbayParser(object):
         return datetime.strptime(str_date, cls.DATE_FORMAT)
 
     @classmethod
+    def encode_price(cls, price):
+        """
+        Force it to be Decimal, then quantize to 2 and make it unicode
+        :rtype: unicode
+        """
+        return unicode(Decimal(price).quantize(Decimal('0.01')))
+
+    @classmethod
     def make_body_secure(cls, body):
         """
         Clears all credentials from body.
@@ -34,10 +43,9 @@ class EbayParser(object):
         return cls.RE_SECURE_BODY.sub("<RequesterCredentials>***</RequesterCredentials>", body)
 
 
-
 class EbayBooleanField(BooleanField):
     TRUE_VALUES = frozenset(BooleanField.TRUE_VALUES | {'Enabled'})
-    FALSE_VALUES = frozenset(BooleanField.TRUE_VALUES | {'Disabled'})
+    FALSE_VALUES = frozenset(BooleanField.FALSE_VALUES | {'Disabled'})
 
 
 class EbayListSerializer(ListSerializer):

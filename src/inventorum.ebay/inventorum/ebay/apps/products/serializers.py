@@ -10,6 +10,7 @@ from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer, \
     CategorySpecificsSerializer
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayProductSpecificModel
+from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
 from inventorum.ebay.lib.rest.fields import RelatedModelByIdField
 from rest_framework import serializers
 
@@ -77,60 +78,12 @@ class EbayProductSerializer(serializers.ModelSerializer):
         specific_values = attrs.get('specific_values', None)
         category = attrs.get('category', None)
         if specific_values and category:
-            self._validate_specific_values_categories_are_correct(specific_values, category)
-            self._validate_specific_values_if_min_values_are_ok(specific_values, category)
-            self._validate_specific_values_if_max_values_are_ok(specific_values, category)
+            specifics = [sv['specific'] for sv in specific_values]
+            validator = CategorySpecificsValidator(category=category, specifics=specifics)
+            validator.validate(raise_exception=True)
         return attrs
 
     # METHODS FOR SPECIFIC_VALUES
-
-    def _validate_specific_values_if_min_values_are_ok(self, specific_values, category):
-        specific_values_ids_count = defaultdict(lambda: 0)
-        for sv in specific_values:
-            specific_values_ids_count[sv['specific'].pk] += 1
-
-        required_ones = dict(category.specifics.required().values_list('id', 'min_values'))
-
-        missing_ids = []
-        for specific_id, min_value in required_ones.iteritems():
-            send_value = specific_values_ids_count.get(specific_id, None)
-            if not send_value or send_value < min_value:
-                missing_ids.append(specific_id)
-
-        if missing_ids:
-            raise ValidationError(ugettext('You need to pass all required specifics (missing: %(missing_ids)s)!')
-                                  % {'missing_ids': list(missing_ids)})
-
-        return specific_values
-
-    def _validate_specific_values_if_max_values_are_ok(self, specific_values, category):
-        specific_values_ids_count = defaultdict(lambda: 0)
-        for sv in specific_values:
-            specific_values_ids_count[sv['specific'].pk] += 1
-
-        max_values = dict(category.specifics.required().values_list('id', 'max_values'))
-
-        too_many_values_ids = []
-        for specific_id, max_value in max_values.iteritems():
-            send_value = specific_values_ids_count.get(specific_id, None)
-            if send_value and send_value > max_value:
-                too_many_values_ids.append(specific_id)
-
-        if too_many_values_ids:
-            raise ValidationError(ugettext('You send too many values for one specific '
-                                           '(specific_ids: %(too_many_values_ids)s)!')
-                                  % {'too_many_values_ids': list(too_many_values_ids)})
-
-        return specific_values
-
-    def _validate_specific_values_categories_are_correct(self, specific_values, category):
-        wrong_ids = [sv['specific'].id for sv in specific_values
-                     if sv['specific'].category_id != category.id]
-
-        if wrong_ids:
-            raise ValidationError(ugettext('Some specifics are assigned to different category than product! '
-                                           '(wrong specific ids: %(wrong_ids)s)') % {'wrong_ids': wrong_ids})
-
     def _update_specific_values(self, instance, validated_data):
         specific_values = validated_data.pop('specific_values', None)
         if not specific_values:
