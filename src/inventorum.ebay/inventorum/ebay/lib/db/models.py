@@ -48,7 +48,7 @@ class MappedInventorumModel(BaseModel):
     objects = PassThroughManager.for_queryset_class(MappedInventorumModelQuerySet)()
 
     def __unicode__(self):
-        return "[{} (inv-id: {})] {}".format(self.pk, self.inv_id, self.__class__.__name__)
+        return "[{} (inv_id: {})] {}".format(self.pk, self.inv_id, self.__class__.__name__)
 
 
 class MappedInventorumModelFactory(factory.DjangoModelFactory):
