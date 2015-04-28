@@ -28,7 +28,7 @@ class OrderLineItem(BaseModel):
     # Generic reference to an orderable item (either `EbayItemModel` or `EbayItemVariationModel`)
     orderable_item_type = models.ForeignKey(ContentType)
     orderable_item_id = models.PositiveIntegerField()
-    orderable_item_object = GenericForeignKey('orderable_item_type', 'orderable_item_id')
+    orderable_item = GenericForeignKey('orderable_item_type', 'orderable_item_id')
 
     quantity = models.PositiveIntegerField(verbose_name="Quantity")
     unit_price = MoneyField(verbose_name="Unit price")
@@ -42,17 +42,22 @@ class OrderModel(BaseModel):
     inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
     ebay_id = models.CharField(max_length=255, verbose_name="Ebay id")
 
+    # total price as computed by ebay
     total_price = MoneyField(verbose_name="Total price incl. shipping")
 
     shipping_service = models.OneToOneField("shipping.ShippingServiceConfigurationModel", null=True, blank=True,
                                             related_name="order")
 
+    # Generic reference that allows us to track from what/where this order has been created
+    # For instance, ``created_from`` could refer to an FixedPriceTransaction notification
+    created_from_type = models.ForeignKey(ContentType)
+    created_from_id = models.PositiveIntegerField()
+    created_from = GenericForeignKey('created_from_type', 'created_from_id')
+
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()
 
     def __unicode__(self):
         return "{} (inv_id: {}, ebay_id: {})".format(self.pk, self.inv_id, self.ebay_id)
-
-
 
 
 class OrderableItemModel(models.Model):

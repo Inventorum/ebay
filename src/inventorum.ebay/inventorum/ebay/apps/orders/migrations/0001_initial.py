@@ -12,8 +12,8 @@ import inventorum.util.django.db.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shipping', '0003_auto_20150425_1216'),
         ('contenttypes', '0001_initial'),
+        ('shipping', '0004_auto_20150429_0036'),
     ]
 
     operations = [
@@ -45,7 +45,9 @@ class Migration(migrations.Migration):
                 ('inv_id', models.IntegerField(unique=True, null=True, verbose_name='Universal inventorum id', blank=True)),
                 ('ebay_id', models.CharField(max_length=255, verbose_name='Ebay id')),
                 ('total_price', inventorum.ebay.lib.db.fields.MoneyField(verbose_name='Total price incl. shipping', max_digits=10, decimal_places=2)),
-                ('shipping_service', models.OneToOneField(null=True, blank=True, to='shipping.ShippingServiceConfigurationModel')),
+                ('created_from_id', models.PositiveIntegerField()),
+                ('created_from_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('shipping_service', models.OneToOneField(related_name='order', null=True, blank=True, to='shipping.ShippingServiceConfigurationModel')),
             ],
             options={
                 'abstract': False,
