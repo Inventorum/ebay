@@ -1,19 +1,22 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
+from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.ebay.lib.utils import int_or_none
 from rest_framework import fields
 
 
 class EbayVariation(object):
-    def __init__(self, gross_price, quantity, specifics, images):
+    def __init__(self, sku, gross_price, quantity, specifics, images):
         """
+        :type sku: unicode
         :type gross_price: decimal.Decimal
         :type quantity: int
         :type specifics: list[EbayItemSpecific]
         :type images: list[EbayPicture]
         """
+        self.sku = sku
         self.gross_price = gross_price
         self.quantity = quantity
         self.specifics = specifics
@@ -27,8 +30,9 @@ class EbayVariation(object):
 
     def dict(self):
         return {
+            'SKU': self.sku,
             'Quantity': self.quantity,
-            'StartPrice': self.gross_price,
+            'StartPrice': EbayParser.encode_price(self.gross_price),
             'VariationSpecifics': {
                 'NameValueList': [s.dict() for s in self.specifics]
             }
@@ -73,8 +77,8 @@ class EbayShippingService(object):
         return {
             'ShippingServiceOptions': {
                 'ShippingServicePriority': 1,
-                'ShippingServiceAdditionalCost': self.additional_cost or 0,
-                'ShippingServiceCost': self.cost,
+                'ShippingServiceAdditionalCost': EbayParser.encode_price(self.additional_cost or 0),
+                'ShippingServiceCost':  EbayParser.encode_price(self.cost),
                 'ShippingService': self.id,
             }
         }
@@ -154,7 +158,7 @@ class EbayFixedPriceItem(object):
             }
         else:
             data['Quantity'] = self.quantity
-            data['StartPrice'] = self.start_price
+            data['StartPrice'] = EbayParser.encode_price(self.start_price)
 
         # Static data
         data.update(**self._static_data)
@@ -267,7 +271,7 @@ class EbayReviseFixedPriceVariation(object):
         if self.new_quantity:
             original_data['Quantity'] = self.new_quantity
         if self.new_start_price:
-            original_data['StartPrice'] = self.new_start_price
+            original_data['StartPrice'] = EbayParser.encode_price(self.new_start_price)
 
         if self.is_deleted:
             #  If a variation has any purchases (i.e., an order line item was created and QuantitySold is greather
@@ -298,7 +302,7 @@ class EbayReviseFixedPriceItem(object):
                 data['Quantity'] = self.quantity
 
             if self.start_price is not None:
-                data['StartPrice'] = self.start_price
+                data['StartPrice'] = EbayParser.encode_price(self.start_price)
         else:
             data['Variations'] = {
                 'Variation': [v.dict() for v in self.variations]

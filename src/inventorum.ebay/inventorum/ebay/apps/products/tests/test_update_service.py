@@ -94,46 +94,46 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             item_update = EbayItemUpdateFactory.create(item=self.published_item,
                                                        gross_price=None,
                                                        quantity=None)
-            variation = EbayItemVariationFactory.create(
+            variation_obj = EbayItemVariationFactory.create(
                 item=self.published_item,
                 gross_price=D("4.45"),
                 quantity=1
             )
 
             EbayItemVariationSpecificFactory.create(
-                variation=variation,
+                variation=variation_obj,
                 name='Specific 1'
             )
 
             EbayItemVariationSpecificFactory.create(
-                variation=variation,
+                variation=variation_obj,
                 name='Specific 2'
             )
 
-            second_variation = EbayItemVariationFactory.create(
+            second_variation_obj = EbayItemVariationFactory.create(
                 item=self.published_item
             )
 
             EbayItemVariationSpecificFactory.create(
-                variation=second_variation,
+                variation=second_variation_obj,
                 name='Specific 1'
             )
 
             EbayItemVariationSpecificFactory.create(
-                variation=second_variation,
+                variation=second_variation_obj,
                 name='Specific 2'
             )
 
             EbayItemVariationUpdateFactory.create(
                 update_item=item_update,
-                variation=variation,
+                variation=variation_obj,
                 gross_price=D("123.45"),
                 quantity=22
             )
 
             EbayItemVariationUpdateFactory.create(
                 update_item=item_update,
-                variation=second_variation,
+                variation=second_variation_obj,
                 is_deleted=True
             )
 
@@ -159,6 +159,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(first_variation, {
                 'Quantity': '0',
                 'StartPrice': '1.9900000000',
+                'SKU': 'invdev_{0}'.format(second_variation_obj.inv_id),
                 'VariationSpecifics': {
                     'NameValueList': [
                         {
@@ -176,6 +177,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(second_variation, {
                 'Quantity': '22',
                 'StartPrice': '123.4500000000',
+                'SKU': 'invdev_{0}'.format(variation_obj.inv_id),
                 'VariationSpecifics': {
                     'NameValueList': [
                         {
@@ -195,7 +197,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(self.published_item.quantity, 10)
 
             variation_obj_first = self.published_item.variations.first()
-            self.assertEqual(variation_obj_first.gross_price, D("123.4500000000"))
+            self.assertEqual(variation_obj_first.gross_price, D("123.45"))
             self.assertEqual(variation_obj_first.quantity, 22)
 
             variation_obj_last = self.published_item.variations.last()

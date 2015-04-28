@@ -194,19 +194,32 @@ class EbayItemModel(BaseModel):
         return self.variations.exists()
 
 
+class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):
+    def by_sku(self, sku):
+        without_sku = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
+        return self.filter(inv_id=without_sku)
+
+
 class EbayItemVariationModel(MappedInventorumModel):
     quantity = models.IntegerField(default=0)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20)
     item = models.ForeignKey(EbayItemModel, related_name="variations")
 
+    objects = PassThroughManager.for_queryset_class(EbayItemVariationModelQuerySet)()
+
     @property
     def ebay_object(self):
         return EbayVariation(
+            sku=self.sku,
             gross_price=self.gross_price,
             quantity=self.quantity,
             specifics=[s.ebay_object for s in self.specifics.all()],
             images=[i.ebay_object for i in self.images.all()]
         )
+
+    @property
+    def sku(self):
+        return settings.EBAY_SKU_FORMAT.format(self.inv_id)
 
 
 class EbayItemVariationSpecificModel(BaseModel):

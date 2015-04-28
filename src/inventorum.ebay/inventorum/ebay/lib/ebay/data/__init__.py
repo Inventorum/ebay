@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from decimal import Decimal
 
 import re
 
@@ -23,6 +24,14 @@ class EbayParser(object):
         :rtype: datetime
         """
         return datetime.strptime(str_date, cls.DATE_FORMAT)
+
+    @classmethod
+    def encode_price(cls, price):
+        """
+        Force it to be Decimal, then normalize and make it unicode
+        :rtype: unicode
+        """
+        return unicode(Decimal(price))
 
     @classmethod
     def make_body_secure(cls, body):
