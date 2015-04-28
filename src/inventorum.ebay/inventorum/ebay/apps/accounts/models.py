@@ -1,6 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+
+from django.conf import settings
 from django.db.models.fields import CharField, EmailField, BooleanField, DateTimeField
 from django.db.models.fields.related import ForeignKey
 from django_countries.fields import CountryField
@@ -67,10 +69,15 @@ class EbayAccountModel(MappedInventorumModel):
     user_id = CharField(max_length=255, null=True, blank=True)
     country = CountryField(null=True, blank=True)
     registration_date = DateTimeField(null=True, blank=True)
+    ebay_location_uuid = CharField(max_length=36)
 
     last_core_api_sync = DateTimeField(null=True, blank=True)
 
     objects = PassThroughManager.for_queryset_class(EbayAccountModelQuerySet)()
+
+    @property
+    def ebay_location_id(self):
+        return settings.EBAY_LOCATION_ID_FORMAT.format(self.inv_id)
 
     @property
     def default_user(self):

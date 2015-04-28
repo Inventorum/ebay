@@ -158,7 +158,8 @@ class PublishingPreparationService(object):
             country=self.core_account.country,
             quantity=self.core_product.quantity,
             paypal_email_address=self.core_account.settings.ebay_paypal_email,
-            postal_code=self.core_account.billing_address.zipcode
+            postal_code=self.core_account.billing_address.zipcode,
+            is_click_and_collect=self.product.is_click_and_collect
         )
 
         for image in self.core_product.images:

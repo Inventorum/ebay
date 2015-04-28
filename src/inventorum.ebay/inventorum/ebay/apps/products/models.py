@@ -141,6 +141,7 @@ class EbayItemModel(BaseModel):
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
     external_id = models.CharField(max_length=255, null=True, blank=True)
+    is_click_and_collect = models.BooleanField(default=False)
 
     country = CountryField()
 
@@ -171,7 +172,8 @@ class EbayItemModel(BaseModel):
             shipping_services=[s.ebay_object for s in self.shipping.all()],
             pictures=[i.ebay_object for i in self.images.all()],
             item_specifics=self._build_item_specifics(),
-            variations=[v.ebay_object for v in self.variations.all()]
+            variations=[v.ebay_object for v in self.variations.all()],
+            is_click_and_collect=self.is_click_and_collect
         )
 
     def _build_item_specifics(self):

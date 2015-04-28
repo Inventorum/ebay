@@ -421,3 +421,31 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
                 preparation_service.validate()
 
             self.assertEqual(exc.exception.message, "All variations needs to have exactly the same number of attributes")
+
+
+    @ApiTest.use_cassette("get_product_for_click_and_collect.yaml")
+    def test_builder_for_click_and_collect(self):
+        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
+        product.is_click_and_collect = True
+        product.save()
+
+        service = PublishingPreparationService(product, self.user)
+
+        self._assign_category(product)
+        self._add_specific_to_product(product)
+        service.create_ebay_item()
+
+        last_item = product.items.last()
+        self.assertEqual(last_item.is_click_and_collect, True)
+
+        # Check data builder
+        ebay_item = last_item.ebay_object
+
+        data = ebay_item.dict()
+        item_data = data['Item']
+        self.assertIn('PickupInStoreDetails', item_data)
+        self.assertIn('AutoPay', item_data)
+        self.assertEqual(item_data['AutoPay'], True)
+
+        self.assertIn('EligibleForPickupInStore', item_data['PickupInStoreDetails'])
+        self.assertEqual(item_data['PickupInStoreDetails']['EligibleForPickupInStore'], True)

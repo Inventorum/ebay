@@ -87,7 +87,7 @@ class EbayShippingService(object):
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price, sku,
                  paypal_email_address, payment_methods, category_id, shipping_services, pictures=None,
-                 item_specifics=None, variations=None):
+                 item_specifics=None, variations=None, is_click_and_collect=False):
         """
         :type title: unicode
         :type description: unicode
@@ -104,6 +104,7 @@ class EbayFixedPriceItem(object):
         :type pictures: list[EbayPicture]
         :type item_specifics: list[EbayItemSpecific]
         :type variations: list[EbayVariation]
+        :type is_click_and_collect: bool
         """
 
         if not all([isinstance(s, EbayShippingService) for s in shipping_services]):
@@ -130,6 +131,7 @@ class EbayFixedPriceItem(object):
         self.item_specifics = item_specifics or []
         self.variations = variations or []
         self.sku = sku
+        self.is_click_and_collect = is_click_and_collect
 
     def dict(self):
         data = {
@@ -162,6 +164,12 @@ class EbayFixedPriceItem(object):
         else:
             data['Quantity'] = self.quantity
             data['StartPrice'] = EbayParser.encode_price(self.start_price)
+
+        if self.is_click_and_collect:
+            data['PickupInStoreDetails'] = {
+                'EligibleForPickupInStore': True
+            }
+            data['AutoPay'] = True
 
         # Static data
         data.update(**self._static_data)
