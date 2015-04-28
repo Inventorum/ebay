@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 class IntegrationTestShippingScraper(EbayAuthenticatedAPITestCase):
 
-    @EbayTest.use_cassette("ebay_get_shipping_details.yaml", match_on=["body"], record_mode="new_episodes")
+    @EbayTest.use_cassette("ebay_get_shipping_details.yaml", match_on=["body"], record_mode="never")
     def test_shipping_scraper(self):
         subject = EbayShippingScraper(self.ebay_token)
         subject.scrape()

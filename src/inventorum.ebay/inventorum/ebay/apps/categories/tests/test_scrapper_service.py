@@ -98,6 +98,7 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
 
         last_feature = leaf_categories.last().features
         self.assertEqual(last_feature.item_specifics_enabled, True)
+        self.assertEqual(last_feature.variations_enabled, False)
 
         # Models should not be duplicated!
         self.assertEqual(PaymentMethodModel.objects.count(), 10)

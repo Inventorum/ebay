@@ -1,16 +1,19 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from collections import defaultdict
 
 import logging
 from decimal import Decimal
 
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
+from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
 from requests.exceptions import HTTPError
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
-    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt
+    EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt, EbayItemVariationModel, \
+    EbayItemVariationSpecificModel, EbayItemVariationSpecificValueModel
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.items import EbayItems
 
@@ -49,7 +52,6 @@ class PublishingCouldNotGetDataFromCoreAPI(EbayServiceException):
 
 
 class PublishingPreparationService(object):
-
     def __init__(self, product, user):
         """
         :type product: EbayProductModel
@@ -82,20 +84,19 @@ class PublishingPreparationService(object):
         Validates account and product before publishing to ebay
         :raises: PublishingValidationException
         """
+        self._validate_product_existence_in_core_api()
+
         if self.product.is_published:
             raise PublishingValidationException(ugettext('Product was already published'))
 
         if not self.core_account.billing_address:
             raise PublishingValidationException(ugettext('To publish product we need your billing address'))
 
-        if self.core_product.is_parent:
-            raise PublishingValidationException(ugettext('Cannot publish products with variations'))
-
         if not (self.product.shipping_services.exists() or self.account.shipping_services.exists()):
             raise PublishingValidationException(ugettext('Neither product or account have configured shipping services'))
 
-        if self.core_product.gross_price < Decimal("1"):
-            raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
+        self._validate_prices()
+        self._validate_attributes_in_variations()
 
         if not self.product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
@@ -108,6 +109,38 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(
                 ugettext('You need to pass all required specifics (missing: %(missing_ids)s)!')
                 % {'missing_ids': list(missing_ids)})
+
+        validator = CategorySpecificsValidator(category=self.product.category,
+                                               specifics=[sv.specific for sv in self.product.specific_values.all()])
+        validator.validate(raise_exception=False)
+        if validator.errors:
+            raise PublishingValidationException("\n".join(validator.errors))
+
+    def _validate_product_existence_in_core_api(self):
+        return self.core_product
+
+    def _validate_prices(self):
+        if not self.core_product.is_parent and self.core_product.gross_price < Decimal("1"):
+            raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
+
+        if self.core_product.is_parent and any([v.gross_price < Decimal("1") for v in self.core_product.variations]):
+            raise PublishingValidationException(ugettext('Prices needs to be greater or equal than 1'))
+
+    def _validate_attributes_in_variations(self):
+        variations = self.core_product.variations
+        if not variations:
+            return
+
+        specifics_in_variations = defaultdict(int)
+        for variation in variations:
+            for attribute in variation.attributes:
+                specifics_in_variations[attribute.key] += len(attribute.values)
+
+        max_attrs = max(specifics_in_variations.values())
+        all_variations_has_the_same_attributes = all([a == max_attrs for a in specifics_in_variations.values()])
+        if not all_variations_has_the_same_attributes:
+            raise PublishingValidationException(ugettext("All variations needs to have exactly the same number of "
+                                                         "attributes"))
 
     def create_ebay_item(self):
         """
@@ -160,11 +193,34 @@ class PublishingPreparationService(object):
                 item=item
             )
 
+        for product in self.core_product.variations:
+            variation_obj = EbayItemVariationModel.objects.create(
+                quantity=product.quantity,
+                gross_price=product.gross_price,
+                item=item,
+                inv_id=product.id
+            )
+            for image in product.images:
+                EbayItemImageModel.objects.create(
+                    inv_id=image.id,
+                    url=image.url,
+                    variation=variation_obj
+                )
+            for attribute in product.attributes:
+                specific_obj = EbayItemVariationSpecificModel.objects.create(
+                    name=attribute.key,
+                    variation=variation_obj
+                )
+                for value in attribute.values:
+                    EbayItemVariationSpecificValueModel.objects.create(
+                        specific=specific_obj,
+                        value=value
+                    )
+
         return item
 
 
 class PublishingUnpublishingService(object):
-
     def __init__(self, item, user):
         """
         Abstract base service for publishing/unpublishing products to ebay
@@ -196,7 +252,6 @@ class PublishingUnpublishingService(object):
 
 
 class PublishingService(PublishingUnpublishingService):
-
     def initialize_publish_attempt(self):
         """
         :raises PublishingSendStateFailedException
@@ -244,7 +299,6 @@ class PublishingService(PublishingUnpublishingService):
 
 
 class UnpublishingService(PublishingUnpublishingService):
-
     def initialize_unpublish_attempt(self):
         """
         :raises PublishingSendStateFailedException
@@ -294,7 +348,6 @@ class UpdateFailedException(EbayServiceException):
 
 
 class UpdateService(object):
-
     def __init__(self, item_update, user):
         """
         :type item_update: inventorum.ebay.apps.products.models.EbayItemUpdateModel
@@ -325,17 +378,23 @@ class UpdateService(object):
         """ Updates the item model after the update has been acked by ebay """
         ebay_item = self.item_update.item
 
-        if self.item_update.has_updated_quantity:
-            ebay_item.quantity = self.item_update.quantity
+        if not self.item_update.has_variation_updates:
+            self._update_ebay_item_from_update_model(self.item_update, ebay_item)
+        else:
+            for update_variation in self.item_update.variations.all():
+                variation = update_variation.variation
+                self._update_ebay_item_from_update_model(update_variation, variation)
 
-        if self.item_update.has_updated_gross_price:
-            ebay_item.gross_price = self.item_update.gross_price
+    def _update_ebay_item_from_update_model(self, update_model, model):
+        if update_model.has_updated_quantity:
+            model.quantity = update_model.quantity
 
-        ebay_item.save()
+        if update_model.has_updated_gross_price:
+            model.gross_price = update_model.gross_price
 
+        model.save()
 
 class ProductDeletionService(object):
-
     def __init__(self, product, user):
         """
         :type product: EbayProductModel
@@ -350,7 +409,6 @@ class ProductDeletionService(object):
         :rtype: bool
         """
         if self.product.is_published:
-
             ebay_item = self.product.published_item
 
             service = UnpublishingService(ebay_item, self.user)

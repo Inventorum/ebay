@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from decimal import Decimal as D, Decimal
+from decimal import Decimal as D
 
 from django.conf import settings
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
@@ -11,7 +11,6 @@ from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.tests.testcases import APITestCase
 
 from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient, CoreAPIClient
-from mock import patch
 
 
 log = logging.getLogger(__name__)
@@ -101,3 +100,51 @@ class TestUserScopedCoreAPIClient(APITestCase):
         account_settings = core_account.account.settings
         self.assertEqual(account_settings.ebay_paypal_email, 'bartosz@hernas.pl')
         self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
+
+    @CoreApiTest.use_cassette("get_product_with_variations.yaml")
+    def test_product_with_variations(self):
+        product = self.subject.get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS)
+
+        self.assertEqual(product.name, "Jeans Valid Attrs")
+        self.assertEqual(product.description, "Photo of jeans for sell.")
+        self.assertEqual(product.gross_price, D("0.00"))
+        self.assertEqual(product.quantity, D("80"))
+
+        self.assertEqual(product.variation_count, 2)
+        self.assertEqual(len(product.variations), 2)
+
+        first_variation = product.variations[0]
+        self.assertEqual(first_variation.name, "Red, 22")
+        self.assertEqual(first_variation.gross_price, D("150"))
+        self.assertEqual(first_variation.quantity, D("30"))
+
+        self.assertEqual(len(first_variation.attributes), 3)
+        self.assertEqual(first_variation.attributes[0].key, "color")
+        self.assertEqual(first_variation.attributes[0].values, ['Red'])
+
+        self.assertEqual(first_variation.attributes[1].key, "material")
+        self.assertEqual(first_variation.attributes[1].values, ['Denim'])
+
+        self.assertEqual(first_variation.attributes[2].key, "size")
+        self.assertEqual(first_variation.attributes[2].values, ['22'])
+
+        self.assertEqual(len(first_variation.images), 1)
+        self.assertTrue(first_variation.images[0].url.startswith("https://app.inventorum.net/uploads/"))
+
+        second_variation = product.variations[1]
+        self.assertEqual(second_variation.name, "Blue, 50")
+        self.assertEqual(second_variation.gross_price, D("130"))
+        self.assertEqual(second_variation.quantity, D("50"))
+
+        self.assertEqual(len(second_variation.attributes), 3)
+        self.assertEqual(second_variation.attributes[0].key, "color")
+        self.assertEqual(second_variation.attributes[0].values, ['Blue'])
+
+        self.assertEqual(second_variation.attributes[1].key, "material")
+        self.assertEqual(second_variation.attributes[1].values, ['Leather'])
+
+        self.assertEqual(second_variation.attributes[2].key, "size")
+        self.assertEqual(second_variation.attributes[2].values, ['50'])
+
+        self.assertEqual(len(second_variation.images), 1)
+        self.assertTrue(second_variation.images[0].url.startswith("https://app.inventorum.net/uploads/"))

@@ -11,10 +11,11 @@ log = logging.getLogger(__name__)
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    variations_enabled = serializers.BooleanField(source="features.variations_enabled")
 
     class Meta:
         model = models.CategoryModel
-        fields = ("id", "name", "country", "parent_id", "is_leaf")
+        fields = ("id", "name", "country", "parent_id", "is_leaf", "variations_enabled")
 
     # Must be added explicitly as rest framework validates fields and does not recognize fields contributed by mptt
     parent_id = serializers.IntegerField()

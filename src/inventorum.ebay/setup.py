@@ -33,7 +33,6 @@ required_eggs = [
 
     'inventorum.util==9.3.7-dev',
 
-    'jsonfield>=1.0.3',
     'mock>=1.0.1',
     'plac>=0.9.1',
     'python-keyczar>=0.715',

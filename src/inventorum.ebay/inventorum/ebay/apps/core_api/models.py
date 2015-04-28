@@ -11,7 +11,6 @@ log = logging.getLogger(__name__)
 
 
 class CoreProductMetaOverrideMixin(object):
-
     def overwrite_attrs_from_meta(self, validated_data, remove_meta=True):
         """
         Overwrites channeled core product attributes from ebay meta in the given validated data
@@ -44,27 +43,32 @@ class CoreProductMetaOverrideMixin(object):
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
-    def __init__(self, id, name, description, gross_price, quantity, images, variation_count):
+    def __init__(self, id, name, gross_price, quantity, images, variation_count=0, variations=None,
+                 attributes=None, description=None):
         """
         :type id: int
         :type name: unicode
-        :type description: unicode
         :type gross_price: decimal.Decimal
         :type quantity: decimal.Decimal
         :type images: list of CoreProductImage
         :type variation_count: int
+        :type variations: list[CoreProduct] | None
+        :type attributes: list[CoreProductAttribute] | None
+        :type description: unicode | None
         """
         self.id = id
         self.name = name
-        self.description = description
         self.gross_price = gross_price
         self.quantity = quantity
         self.images = images
         self.variation_count = variation_count
+        self.variations = variations or []
+        self.attributes = attributes
+        self.description = description
 
     @property
     def is_parent(self):
-        return self.variation_count > 0
+        return len(self.variations) > 0
 
 
 class CoreProductImage(object):
@@ -87,7 +91,36 @@ class CoreProductImageDeserializer(POPOSerializer):
     ipad_retina = serializers.CharField(source="url")
 
 
-class CoreProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin):
+class CoreProductAttribute(object):
+    def __init__(self, key, values):
+        self.key = key
+        self.values = values
+
+
+class CoreProductAttributeListSerializer(serializers.ListSerializer):
+    def to_internal_value(self, data):
+        new_data = []
+        if isinstance(data, dict):
+            for key, value in data.iteritems():
+                new_data.append({
+                    'key': key,
+                    'values': value
+                })
+        else:
+            raise serializers.ValidationError('In `attributes` got something that is not dict: %s' % data)
+        return super(CoreProductAttributeListSerializer, self).to_internal_value(new_data)
+
+
+class CoreProductAttributeSerializer(POPOSerializer):
+    key = serializers.CharField()
+    values = serializers.ListField(child=serializers.CharField())
+
+    class Meta:
+        model = CoreProductAttribute
+        list_serializer_class = CoreProductAttributeListSerializer
+
+
+class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin):
 
     class MetaDeserializer(serializers.Serializer):
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
@@ -102,19 +135,24 @@ class CoreProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin):
 
     id = serializers.IntegerField()
     name = serializers.CharField()
-    description = serializers.CharField(allow_blank=True)
     gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
-    variation_count = serializers.IntegerField()
 
     images = CoreProductImageDeserializer(many=True)
+    attributes = CoreProductAttributeSerializer(many=True)
 
     # meta will be removed after meta overwrites
     meta = serializers.DictField(child=MetaDeserializer())
 
     def create(self, validated_data):
         self.overwrite_attrs_from_meta(validated_data, remove_meta=True)
-        return super(CoreProductDeserializer, self).create(validated_data)
+        return super(CoreBasicProductDeserializer, self).create(validated_data)
+
+
+class CoreProductDeserializer(CoreBasicProductDeserializer):
+    variations = CoreBasicProductDeserializer(many=True, required=False)
+    variation_count = serializers.IntegerField()
+    description = serializers.CharField(allow_blank=True)
 
 
 class CoreAddress(object):
@@ -164,7 +202,11 @@ class CoreAccountSettings(object):
         1: 'PayPal',
         2: 'MoneyXferAccepted'
     }
+
     def __init__(self, ebay_paypal_email, ebay_payment_methods):
+        """
+        :type shipping_services: list of CoreShippingService
+        """
         self.ebay_paypal_email = ebay_paypal_email
         self.ebay_payment_methods = [self.EBAY_PAYMENTS_MAPPING[m] for m in ebay_payment_methods]
 
@@ -213,8 +255,7 @@ class CoreInfoDeserializer(POPOSerializer):
 
 
 class CoreProductDelta(object):
-
-    def __init__(self, id, name, state, gross_price, quantity):
+    def __init__(self, id, name, state, gross_price, quantity, parent=None):
         """
         :type id: int
         :type id: unicode
@@ -227,6 +268,7 @@ class CoreProductDelta(object):
         self.state = state
         self.gross_price = gross_price
         self.quantity = quantity
+        self.parent = parent
 
 
 class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin):
@@ -239,6 +281,7 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         model = CoreProductDelta
 
     id = serializers.IntegerField()
+    parent = serializers.IntegerField(allow_null=True, required=False)
     name = serializers.CharField()
     state = serializers.CharField()
     gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)

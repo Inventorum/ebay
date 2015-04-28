@@ -9,8 +9,8 @@ from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, Cat
 from inventorum.ebay.apps.core_api.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, UnpublishingService, \
-    PublishingPreparationService
+from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
+    UnpublishingService, PublishingPreparationService
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
@@ -25,9 +25,9 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
         return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
 
     def _assign_shipping_services(self, product):
-        product.shipping_services.create(service=self.get_shipping_service_hermes(), cost="10.00",
+        product.shipping_services.create(service=self.get_shipping_service_hermes(), cost="4.50",
                                          additional_cost=D("1.00"))
-        product.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("20.00"),
+        product.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("5.00"),
                                          additional_cost=D("3.00"))
 
     def _assign_category(self, product):
@@ -35,17 +35,6 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
 
         self.specific = CategorySpecificFactory.create(category=leaf_category)
         self.required_specific = CategorySpecificFactory.create_required(category=leaf_category, max_values=2)
-
-        features = CategoryFeaturesModel.objects.create(
-            category=leaf_category
-        )
-        durations = ['Days_5', 'Days_120']
-
-        for d in durations:
-            duration = DurationModel.objects.create(
-                value=d
-            )
-            features.durations.add(duration)
 
         product.category = leaf_category
         product.save()
@@ -156,18 +145,18 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
         self.assertEqual(shipping_services.count(), 2)
 
         self.assertEqual(shipping_services[0].external_id, 'DE_DHLPaket')
-        self.assertEqual(shipping_services[0].cost, D('20.00'))
+        self.assertEqual(shipping_services[0].cost, D('5.00'))
         self.assertEqual(shipping_services[0].additional_cost, D('3.00'))
 
         self.assertEqual(shipping_services[1].external_id, 'DE_HermesPaket')
-        self.assertEqual(shipping_services[1].cost, D('10.00'))
+        self.assertEqual(shipping_services[1].cost, D('4.50'))
         self.assertEqual(shipping_services[1].additional_cost, D('1.00'))
 
     def test_account_shipping_fallback(self):
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
 
         self.account.shipping_services.create(service=self.get_shipping_service_hermes(),
-                                              cost=D("5.00"), additional_cost=D("0.00"))
+                                              cost=D("3.00"), additional_cost=D("0.00"))
 
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingPreparationService(product, self.user)
@@ -180,7 +169,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
 
         self.assertEqual(shipping_services.count(), 1)
         self.assertEqual(shipping_services[0].external_id, "DE_HermesPaket")
-        self.assertEqual(shipping_services[0].cost, D("5.00"))
+        self.assertEqual(shipping_services[0].cost, D("3.00"))
         self.assertEqual(shipping_services[0].additional_cost, D("0.00"))
 
     def test_builder(self):
@@ -215,7 +204,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
             },
             'ItemSpecifics': {'NameValueList': [{'Name': self.required_specific.name,
                                                  'Value': ['Test', 'Test 2']}]},
-            'StartPrice': D('599.9900000000'),
+            'StartPrice': '599.99',
             'Title': 'SlowRoad Shipping Details',
             'ListingDuration': 'Days_120',
             'PayPalEmailAddress': 'bartosz@hernas.pl',
@@ -226,22 +215,22 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
                 {
                     'ShippingServiceOptions': {
                         'ShippingService': 'DE_DHLPaket',
-                        'ShippingServiceAdditionalCost': D('3.00'),
-                        'ShippingServiceCost': D('20.00'),
+                        'ShippingServiceAdditionalCost': '3.00',
+                        'ShippingServiceCost': '5.00',
                         'ShippingServicePriority': 1
                     }
                 },
                 {
                     'ShippingServiceOptions': {
                         'ShippingService': 'DE_HermesPaket',
-                        'ShippingServiceAdditionalCost': D('1.00'),
-                        'ShippingServiceCost': D('10.00'),
+                        'ShippingServiceAdditionalCost': '1.00',
+                        'ShippingServiceCost': '4.50',
                         'ShippingServicePriority': 1
                     }
                 }],
         }})
 
-    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml", record_mode="never")
+    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml", match_on=['body'])
     def test_publishing(self):
         product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
 
@@ -291,3 +280,139 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
         self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
         self.assertIsNotNone(last_item.published_at)
         self.assertIsNotNone(last_item.unpublished_at)
+
+    def test_builder_with_variations(self):
+        product = self._get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS, self.account)
+        with ApiTest.use_cassette("get_product_with_variations_for_testing_builder.yaml"):
+            self._assign_category(product)
+            self._add_specific_to_product(product)
+            self._assign_shipping_services(product)
+
+            # Try to publish
+            preparation_service = PublishingPreparationService(product, self.user)
+            preparation_service.validate()
+            last_item = preparation_service.create_ebay_item()
+
+        self.assertEqual(last_item.variations.count(), 2)
+
+        first_variation_obj = last_item.variations.first()
+        self.assertEqual(first_variation_obj.quantity, 30)
+        self.assertEqual(first_variation_obj.gross_price, D("150"))
+        self.assertEqual(first_variation_obj.specifics.count(), 3)
+        self.assertEqual(first_variation_obj.images.count(), 1)
+
+        specifics = first_variation_obj.specifics.all()
+
+        for specific in specifics:
+            self.assertEqual(specific.values.count(), 1)
+
+        self.assertEqual(specifics[0].name, "size")
+        self.assertEqual(specifics[0].values.first().value, "22")
+
+        self.assertEqual(specifics[1].name, "material")
+        self.assertEqual(specifics[1].values.first().value, "Denim")
+
+        self.assertEqual(specifics[2].name, "color")
+        self.assertEqual(specifics[2].values.first().value, "Red")
+
+        # Check data builder
+        ebay_item = last_item.ebay_object
+
+        data = ebay_item.dict()['Item']
+
+        variations_data = data['Variations']['Variation']
+        self.assertEqual(len(variations_data), 2)
+
+        first_variation = variations_data[0]
+
+        self.assertEqual(first_variation, {
+            'Quantity': 30,
+            'StartPrice': '150.00',
+            'SKU': 'invdev_666030',
+            'VariationSpecifics': {
+                'NameValueList': [
+                    {
+                        'Name': 'size',
+                        'Value': '22'
+                    },
+                    {
+                        'Name': 'material',
+                        'Value': 'Denim'
+                    },
+                    {
+                        'Name': 'color',
+                        'Value': 'Red'
+                    },
+                ]
+            }
+        })
+
+        second_variation = variations_data[1]
+
+        self.assertEqual(second_variation, {
+            'Quantity': 50,
+            'StartPrice': '130.00',
+            'SKU': 'invdev_666031',
+            'VariationSpecifics': {
+                'NameValueList': [
+                    {
+                        'Name': 'size',
+                        'Value': '50'
+                    },
+                    {
+                        'Name': 'material',
+                        'Value': 'Leather'
+                    },
+                    {
+                        'Name': 'color',
+                        'Value': 'Blue'
+                    },
+                ]
+            }
+        })
+
+        self.assertEqual(data['Variations']['VariationSpecificsSet'], {
+            'NameValueList': [
+                {
+                    'Name': 'color',
+                    'Value': ['Red', 'Blue']
+                },
+                {
+                    'Name': 'material',
+                    'Value': ['Denim', 'Leather']
+                },
+                {
+                    'Name': 'size',
+                    'Value': ['22', '50']
+                }
+            ]
+        })
+
+        pictures_set = data['Variations']['Pictures']
+        self.assertEqual(pictures_set,
+                         {
+                             'VariationSpecificName': 'size',
+                             'VariationSpecificPictureSet': [
+                                 {
+                                     'PictureURL': ['http://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad_retina.JPEG'],
+                                     'VariationSpecificValue': '22'
+                                 },
+                                 {
+                                     'PictureURL': ['http://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad_retina.JPEG'],
+                                     'VariationSpecificValue': '50'
+                                 }
+                             ]
+                         })
+
+    def test_product_with_invalid_attributes_for_ebay(self):
+        product = self._get_product(StagingTestAccount.Products.WITH_VARIATIONS_INVALID_ATTRS, self.account)
+        with ApiTest.use_cassette("get_product_with_variations_invalid_attrs_for_testing_builder.yaml"):
+            self._assign_category(product)
+            self._assign_shipping_services(product)
+            self._add_specific_to_product(product)
+
+            preparation_service = PublishingPreparationService(product, self.user)
+            with self.assertRaises(PublishingValidationException) as exc:
+                preparation_service.validate()
+
+            self.assertEqual(exc.exception.message, "All variations needs to have exactly the same number of attributes")

@@ -9,6 +9,34 @@ from inventorum.ebay.tests import StagingTestAccount
 
 log = logging.getLogger(__name__)
 
+class DurationFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = models.DurationModel
+
+    value = factory.Sequence(lambda n: "Days_{0}".format(n))
+
+class CategoryFeaturesFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = models.CategoryFeaturesModel
+
+
+    @factory.post_generation
+    def durations(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for value in extracted:
+                self.values.add(value)
+        else:
+            for duration in ['Days_5', 'Days_120']:
+                self.durations.add(DurationFactory.create(value=duration))
+
 
 class CategoryFactory(factory.DjangoModelFactory):
 
@@ -20,7 +48,8 @@ class CategoryFactory(factory.DjangoModelFactory):
     country = StagingTestAccount.COUNTRY
     parent = None
 
-    external_id = factory.Sequence(lambda n: "{0}")
+    external_id = factory.Sequence(lambda n: "{0}".format(n))
+    features = factory.RelatedFactory(CategoryFeaturesFactory, "category")
 
     @factory.lazy_attribute_sequence
     def external_parent_id(self, n):

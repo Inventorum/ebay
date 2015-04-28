@@ -27,7 +27,8 @@ class TestCategorySerializers(UnitTestCase):
             "name": "Some root category",
             "country": "DE",
             "parent_id": None,
-            "is_leaf": False
+            "is_leaf": False,
+            "variations_enabled": False,
         })
 
     def test_serialization_of_leaf(self):
@@ -43,7 +44,8 @@ class TestCategorySerializers(UnitTestCase):
             "name": "Some leaf category",
             "country": "AT",
             "parent_id": parent.id,
-            "is_leaf": True
+            "is_leaf": True,
+            "variations_enabled": False,
         })
 
 

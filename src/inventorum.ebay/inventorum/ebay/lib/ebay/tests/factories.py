@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 import factory
 from inventorum.ebay.lib.ebay.data.authorization import EbayToken
-from inventorum.ebay.lib.ebay.details import EbayShippingService
+from inventorum.ebay.lib.ebay.data.shipping import EbayShippingService
 
 
 log = logging.getLogger(__name__)

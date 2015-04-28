@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import jsonfield.fields
 
 
 class Migration(migrations.Migration):
@@ -15,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='ebayitemmodel',
             name='publishing_status_details',
-            field=jsonfield.fields.JSONField(null=True, blank=True),
+            field=models.TextField(null=True, blank=True),
             preserve_default=True,
         ),
         migrations.AlterField(

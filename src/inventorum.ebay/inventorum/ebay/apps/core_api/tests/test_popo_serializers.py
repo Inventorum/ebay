@@ -31,6 +31,7 @@ class TestCoreProductDeserializer(UnitTestCase):
             "name": "Felt Brougham",
             "variation_count": 0,
             "shipping_services": [],
+            "attributes": {},
             "description": "Marvellous bike"
         }
 

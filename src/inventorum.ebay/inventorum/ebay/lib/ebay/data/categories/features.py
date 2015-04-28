@@ -28,12 +28,15 @@ class EbayFeatureDetails(object):
     durations = None
     category_id = None
     payment_methods = None
+    variations_enabled = None
 
-    def __init__(self, item_specifics_enabled, durations=None, category_id=None, payment_methods=None):
+    def __init__(self, item_specifics_enabled, variations_enabled=False, durations=None, category_id=None,
+                 payment_methods=None):
         self.item_specifics_enabled = item_specifics_enabled
         self.durations = durations
         self.category_id = category_id
         self.payment_methods = payment_methods
+        self.variations_enabled = variations_enabled
 
     @property
     def durations_dict(self):
@@ -59,6 +62,7 @@ class EbayFeatureDetailsSerializer(POPOSerializer):
     ListingDuration = EbayListingDurationSerializer(many=True, source="durations", required=False)
     PaymentMethod = ListField(child=CharField(), source="payment_methods", required=False)
     ItemSpecificsEnabled = EbayBooleanField(source='item_specifics_enabled')
+    VariationsEnabled = EbayBooleanField(source='variations_enabled')
 
     class Meta:
         model = EbayFeatureDetails
