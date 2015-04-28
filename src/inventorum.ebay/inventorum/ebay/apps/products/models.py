@@ -42,7 +42,7 @@ class EbayProductModel(MappedInventorumModel):
     category = models.ForeignKey("categories.CategoryModel", related_name="products", null=True, blank=True,
                                  on_delete=models.SET_NULL)
     external_item_id = models.CharField(max_length=255, null=True, blank=True)
-
+    is_click_and_collect = models.BooleanField(default=False)
     deleted_in_core_api = models.BooleanField(default=False)
 
     objects = PassThroughManager.for_queryset_class(EbayProductModelQuerySet)()
@@ -117,9 +117,13 @@ class EbayItemModelQuerySet(BaseQuerySet):
 
     def get_for_publishing(self, **kwargs):
         """
-        :rtype EbayItemModelQuerySet
+        :rtype: EbayItemModelQuerySet
         """
         return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
+
+    def by_sku(self, sku):
+        inv_id = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
+        return self.filter(product__inv_id=inv_id)
 
 
 class EbayItemModel(BaseModel):
@@ -137,6 +141,7 @@ class EbayItemModel(BaseModel):
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
     external_id = models.CharField(max_length=255, null=True, blank=True)
+    is_click_and_collect = models.BooleanField(default=False)
 
     country = CountryField()
 
@@ -154,6 +159,7 @@ class EbayItemModel(BaseModel):
         payment_methods = list(self.payment_methods.all().values_list('external_id', flat=True))
         return EbayFixedPriceItem(
             title=self.name,
+            sku=self.sku,
             description=self.description,
             listing_duration=self.listing_duration,
             country=unicode(self.country),
@@ -166,7 +172,8 @@ class EbayItemModel(BaseModel):
             shipping_services=[s.ebay_object for s in self.shipping.all()],
             pictures=[i.ebay_object for i in self.images.all()],
             item_specifics=self._build_item_specifics(),
-            variations=[v.ebay_object for v in self.variations.all()]
+            variations=[v.ebay_object for v in self.variations.all()],
+            is_click_and_collect=self.is_click_and_collect
         )
 
     def _build_item_specifics(self):
@@ -192,6 +199,10 @@ class EbayItemModel(BaseModel):
     @property
     def has_variations(self):
         return self.variations.exists()
+
+    @property
+    def sku(self):
+        return settings.EBAY_SKU_FORMAT.format(self.product.inv_id)
 
 
 class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):

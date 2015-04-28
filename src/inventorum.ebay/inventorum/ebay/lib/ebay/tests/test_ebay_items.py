@@ -25,6 +25,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
             cost="10"
         )
         return EbayFixedPriceItem(
+            sku="test_321",
             title="Inventorum iPad Stand",
             description="Stand for iPad from Inventorum for your POS Shop",
             listing_duration="Days_120",
@@ -48,6 +49,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
             cost="5"
         )
         return EbayFixedPriceItem(
+            sku="test_124",
             title="Inventorum iPad Stand",
             description="Der stylische iPad-Stand von INVENTORUM aus edlem Holz rundet das Erscheinungsbild Ihrer neuen"
                         " iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel ist dieser ideal, um einfach un"

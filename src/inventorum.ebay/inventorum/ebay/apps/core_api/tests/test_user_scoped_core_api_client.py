@@ -118,10 +118,11 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(len(account_settings.shipping_services), 1)
         self.assertEqual(account_settings.ebay_paypal_email, 'bartosz@hernas.pl')
         self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
+        self.assertTrue(account_settings.ebay_click_and_collect)
 
         shipping_service = account_settings.shipping_services[0]
-        self.assertEqual(shipping_service.id, 'DE_DHL2KGPaket')
-        self.assertEqual(shipping_service.description, 'DHL 2kg Paket (nur f\xfcr kurze Zeit)')
+        self.assertEqual(shipping_service.id, 'DE_DHLPaket')
+        self.assertEqual(shipping_service.description, 'DHL Paket')
         self.assertEqual(shipping_service.additional_cost, Decimal('2'))
         self.assertEqual(shipping_service.cost, Decimal('5'))
 
