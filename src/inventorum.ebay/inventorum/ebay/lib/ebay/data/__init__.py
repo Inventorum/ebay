@@ -28,10 +28,10 @@ class EbayParser(object):
     @classmethod
     def encode_price(cls, price):
         """
-        Force it to be Decimal, then normalize and make it unicode
+        Force it to be Decimal, then quantize to 2 and make it unicode
         :rtype: unicode
         """
-        return unicode(Decimal(price))
+        return unicode(Decimal(price).quantize(Decimal('0.01')))
 
     @classmethod
     def make_body_secure(cls, body):

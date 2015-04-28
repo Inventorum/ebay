@@ -196,8 +196,8 @@ class EbayItemModel(BaseModel):
 
 class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):
     def by_sku(self, sku):
-        without_sku = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
-        return self.filter(inv_id=without_sku)
+        inv_id = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
+        return self.filter(inv_id=inv_id)
 
 
 class EbayItemVariationModel(MappedInventorumModel):

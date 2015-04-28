@@ -371,13 +371,13 @@ class UpdateService(object):
         ebay_item = self.item_update.item
 
         if not self.item_update.has_variation_updates:
-            self._update_ebay_update_model(self.item_update, ebay_item)
+            self._update_ebay_item_from_update_model(self.item_update, ebay_item)
         else:
             for update_variation in self.item_update.variations.all():
                 variation = update_variation.variation
-                self._update_ebay_update_model(update_variation, variation)
+                self._update_ebay_item_from_update_model(update_variation, variation)
 
-    def _update_ebay_update_model(self, update_model, model):
+    def _update_ebay_item_from_update_model(self, update_model, model):
         if update_model.has_updated_quantity:
             model.quantity = update_model.quantity
 

@@ -188,7 +188,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
             },
             'ItemSpecifics': {'NameValueList': [{'Name': self.required_specific.name,
                                                  'Value': ['Test', 'Test 2']}]},
-            'StartPrice': '599.9900000000',
+            'StartPrice': '599.99',
             'Title': 'SlowRoad Shipping Details',
             'ListingDuration': 'Days_120',
             'PayPalEmailAddress': 'bartosz@hernas.pl',
@@ -199,16 +199,16 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
                 {
                     'ShippingServiceOptions': {
                         'ShippingService': 'DE_DHLPaket',
-                        'ShippingServiceAdditionalCost': '3.0000000000',
-                        'ShippingServiceCost': '20.0000000000',
+                        'ShippingServiceAdditionalCost': '3.00',
+                        'ShippingServiceCost': '20.00',
                         'ShippingServicePriority': 1
                     }
                 },
                 {
                     'ShippingServiceOptions': {
                         'ShippingService': 'DE_HermesPaket',
-                        'ShippingServiceAdditionalCost': '1.0000000000',
-                        'ShippingServiceCost': '10.0000000000',
+                        'ShippingServiceAdditionalCost': '1.00',
+                        'ShippingServiceCost': '10.00',
                         'ShippingServicePriority': 1
                     }
                 }],
@@ -307,7 +307,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(first_variation, {
             'Quantity': 30,
-            'StartPrice': '150.0000000000',
+            'StartPrice': '150.00',
             'SKU': 'invdev_666030',
             'VariationSpecifics': {
                 'NameValueList': [
@@ -331,7 +331,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(second_variation, {
             'Quantity': 50,
-            'StartPrice': '130.0000000000',
+            'StartPrice': '130.00',
             'SKU': 'invdev_666031',
             'VariationSpecifics': {
                 'NameValueList': [
