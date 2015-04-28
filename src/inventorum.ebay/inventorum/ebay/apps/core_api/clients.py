@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
-from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer,\
+from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
     CoreProductDeltaDeserializer
 from inventorum.ebay.apps.core_api.pager import Pager
 import requests
@@ -215,7 +215,6 @@ class CoreAPIClient(object):
 
 
 class UserScopedCoreAPIClient(CoreAPIClient):
-
     def __init__(self, user_id, account_id):
         """
         :param user_id: The global inventorum user id that is used for the api scope
