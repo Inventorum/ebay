@@ -33,14 +33,16 @@ USE_NGINX_X_ACCEL_REDIRECT = True
 # alphabetically ordered
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
+    'django.contrib.contenttypes',
     'django_extensions',
     'django_nose',
 
     'inventorum.ebay.apps.accounts',
     'inventorum.ebay.apps.auth',
     'inventorum.ebay.apps.categories',
-    'inventorum.ebay.apps.products',
     'inventorum.ebay.apps.notifications',
+    'inventorum.ebay.apps.orders',
+    'inventorum.ebay.apps.products',
 
     'raven.contrib.django.raven_compat',
     'rest_framework',
