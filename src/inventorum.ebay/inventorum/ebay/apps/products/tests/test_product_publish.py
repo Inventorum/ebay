@@ -249,6 +249,10 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             category = CategoryFactory.create(external_id="53159")
+
+            category.features.durations.clear()
+            category.features.durations.add(DurationFactory.create(value='Days_30'))
+
             size_specific = CategorySpecificFactory.create_required(category=category, name="Größe")
             brand_specific = CategorySpecificFactory.create_required(category=category, name="Marke")
             self._assign_category(product, category=category)
