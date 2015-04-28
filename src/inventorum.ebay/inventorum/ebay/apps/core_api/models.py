@@ -239,12 +239,13 @@ class CoreAccountSettings(object):
         2: 'MoneyXferAccepted'
     }
 
-    def __init__(self, shipping_services, ebay_paypal_email, ebay_payment_methods):
+    def __init__(self, shipping_services, ebay_paypal_email, ebay_payment_methods, ebay_click_and_collect=False):
         """
         :type shipping_services: list of CoreShippingService
         """
         self.shipping_services = [s for s in shipping_services if s.enabled]
         self.ebay_paypal_email = ebay_paypal_email
+        self.ebay_click_and_collect = ebay_click_and_collect
         self.ebay_payment_methods = [self.EBAY_PAYMENTS_MAPPING[m] for m in ebay_payment_methods]
 
 
@@ -252,6 +253,7 @@ class CoreAccountSettingsDeserializer(POPOSerializer):
     shipping_services = CoreShippingServiceDeserializer(many=True)
     ebay_paypal_email = serializers.CharField(allow_null=True)
     ebay_payment_methods = serializers.ListField(child=serializers.IntegerField(), allow_null=True)
+    ebay_click_and_collect = serializers.BooleanField(default=False, required=False)
 
     class Meta:
         model = CoreAccountSettings

@@ -29,15 +29,15 @@ interactions:
         "", "tax_number": "", "vat_number": "", "payment_method_note": "", "thanks_note":
         "", "invoice_prefix": "", "invoice_counter": 0, "bank_name": "", "bank_account_number":
         "", "bank_code": "", "bank_iban": "", "bank_bic_swift": "", "settings": {"shipping_services":
-        [{"id": "DE_DHL2KGPaket", "description": "DHL 2kg Paket (nur f\u00fcr kurze
-        Zeit)", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat": "", "carrier":
-        "DHL", "category": "[STANDARD]", "service": "DE_DHL2KGPaket", "cost": "5.0000000000",
+        [{"id": "DE_DHLPaket", "description": "DHL Paket", "type": "", "time_max":
+        2, "time_min": 1, "cost_group_flat": "Group3MaxFlatShippingCost", "carrier":
+        "DHL", "category": "[STANDARD]", "service": "DE_DHLPaket", "cost": "5.0000000000",
         "additional_cost": "2.0000000000", "enabled": true, "free_above_price": null}],
         "ebay_payment_methods": [1], "izettle": true, "meta_prices_enabled": true,
-        "paypal": false, "ebay": true, "shop": false, "zreports": true, "roundup":
-        false, "pdf": 1, "ebay_paypal_email": "bartosz@hernas.pl", "receipt_header":
-        "", "receipt_footer": "", "first_change_added": false}, "image_width": 0,
-        "image_height": 0, "permissions": ["accounts.can_use_acc_photo_on_receipt",
+        "paypal": false, "ebay": true, "ebay_click_and_collect": true, "shop": false,
+        "zreports": true, "roundup": false, "pdf": 1, "ebay_paypal_email": "bartosz@hernas.pl",
+        "receipt_header": "", "receipt_footer": "", "first_change_added": false},
+        "image_width": 0, "image_height": 0, "permissions": ["accounts.can_use_acc_photo_on_receipt",
         "accounts.change_account", "accounts.change_accountsettings", "accounts.change_user",
         "accounts.change_users", "products.can_adjust_inventory", "products.can_create_category",
         "products.can_delete_product", "products.can_edit_product", "products.can_see_margin",
@@ -70,14 +70,14 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 17 Apr 2015 14:57:27 GMT']
+      date: ['Tue, 28 Apr 2015 15:32:57 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yj7hv:Yxrz5E_dTB_Q1FUT94qtcurpbGA"; Domain=app.intern.inventorum.net;
-          expires=Fri, 17-Apr-2015 16:57:27 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Yn7VJ:s1Lw98hAZ88KKKjGvf_MQFjS1f8"; Domain=app.intern.inventorum.net;
+          expires=Tue, 28-Apr-2015 17:32:57 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1979192716008416756']
+      x-rid: ['2300637139411985908']
     status: {code: 200, message: OK}
 version: 1
