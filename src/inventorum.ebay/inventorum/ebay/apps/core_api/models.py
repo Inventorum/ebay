@@ -242,6 +242,9 @@ class CoreAccountSettings(object):
     def __init__(self, shipping_services, ebay_paypal_email, ebay_payment_methods, ebay_click_and_collect=False):
         """
         :type shipping_services: list of CoreShippingService
+        :type ebay_paypal_email: unicode
+        :type ebay_click_and_collect: boolean
+        :type ebay_payment_methods: list[unicode]
         """
         self.shipping_services = [s for s in shipping_services if s.enabled]
         self.ebay_paypal_email = ebay_paypal_email

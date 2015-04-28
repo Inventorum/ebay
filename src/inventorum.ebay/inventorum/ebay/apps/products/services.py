@@ -113,6 +113,10 @@ class PublishingPreparationService(object):
         if validator.errors:
             raise PublishingValidationException("\n".join(validator.errors))
 
+        if self.product.is_click_and_collect and not self.core_account.settings.ebay_click_and_collect:
+            raise PublishingValidationException(ugettext("You cannot publish product with Click & Collect, because you "
+                                                         "don't have it enabled for your account!"))
+
     def _validate_prices(self):
         if not self.core_product.is_parent and self.core_product.gross_price < Decimal("1"):
             raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))

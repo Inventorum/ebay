@@ -90,6 +90,31 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
                              'You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk)
 
             self._add_specific_to_product(product)
+
+        # Add click & collect to check validation of it!
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
+            # Mark product as click and collect product
+            product.is_click_and_collect = True
+            product.save()
+
+            service = PublishingPreparationService(product, self.user)
+
+            # Disable click and collect
+            service.core_account.settings.ebay_click_and_collect = False
+
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
+
+            self.assertEqual(e.exception.message,
+                             "You cannot publish product with Click & Collect, because you don't have it enabled for "
+                             "your account!")
+
+        product.is_click_and_collect = False
+        product.save()
+
+        product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
+            service = PublishingPreparationService(product, self.user)
             # Should not raise anything finally!
             service.validate()
 
