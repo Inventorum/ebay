@@ -173,6 +173,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase):
 
         data = ebay_item.dict()
         self.assertEqual(data, {'Item': {
+            'SKU': 'invdev_{0}'.format(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES),
             'ConditionID': 1000,
             'Country': 'DE',
             'Currency': 'EUR',

@@ -85,7 +85,7 @@ class EbayShippingService(object):
 
 
 class EbayFixedPriceItem(object):
-    def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
+    def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price, sku,
                  paypal_email_address, payment_methods, category_id, shipping_services, pictures=None,
                  item_specifics=None, variations=None):
         """
@@ -96,6 +96,7 @@ class EbayFixedPriceItem(object):
         :type postal_code: unicode
         :type quantity: int
         :type start_price: decimal.Decimal
+        :type sku: unicode
         :type paypal_email_address: unicode
         :type payment_methods: list[unicode]
         :type category_id: unicode
@@ -128,10 +129,12 @@ class EbayFixedPriceItem(object):
         self.pictures = pictures or []
         self.item_specifics = item_specifics or []
         self.variations = variations or []
+        self.sku = sku
 
     def dict(self):
         data = {
             'Title': self.title,
+            'SKU': self.sku,
             'Description': self.description,
             'ListingDuration': self.listing_duration,
             'Country': self.country,

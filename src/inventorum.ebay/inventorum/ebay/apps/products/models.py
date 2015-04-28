@@ -117,9 +117,13 @@ class EbayItemModelQuerySet(BaseQuerySet):
 
     def get_for_publishing(self, **kwargs):
         """
-        :rtype EbayItemModelQuerySet
+        :rtype: EbayItemModelQuerySet
         """
         return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
+
+    def by_sku(self, sku):
+        inv_id = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
+        return self.filter(product__inv_id=inv_id)
 
 
 class EbayItemModel(BaseModel):
@@ -154,6 +158,7 @@ class EbayItemModel(BaseModel):
         payment_methods = list(self.payment_methods.all().values_list('external_id', flat=True))
         return EbayFixedPriceItem(
             title=self.name,
+            sku=self.sku,
             description=self.description,
             listing_duration=self.listing_duration,
             country=unicode(self.country),
@@ -192,6 +197,10 @@ class EbayItemModel(BaseModel):
     @property
     def has_variations(self):
         return self.variations.exists()
+
+    @property
+    def sku(self):
+        return settings.EBAY_SKU_FORMAT.format(self.product.inv_id)
 
 
 class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):
