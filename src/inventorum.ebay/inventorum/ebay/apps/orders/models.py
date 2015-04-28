@@ -42,6 +42,8 @@ class OrderModel(BaseModel):
     inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
     ebay_id = models.CharField(max_length=255, verbose_name="Ebay id")
 
+    total_price = MoneyField(verbose_name="Total price incl. shipping")
+
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()
 
     def __unicode__(self):
