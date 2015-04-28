@@ -67,7 +67,7 @@ class EbayPicture(object):
         }
 
 
-class EbayShippingService(object):
+class EbayItemShippingService(object):
     def __init__(self, id, cost, additional_cost=None):
         self.id = id
         self.cost = cost
@@ -105,11 +105,11 @@ class EbayFixedPriceItem(object):
         :type variations: list[EbayVariation]
         """
 
-        if not all([isinstance(s, EbayShippingService) for s in shipping_services]):
-            raise TypeError("shipping_services must be list of EbayShippingService instances")
+        if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
+            raise TypeError("shipping_services must be list of EbayItemShippingService instances")
 
         if item_specifics and not all([isinstance(s, EbayItemSpecific) for s in item_specifics]):
-            raise TypeError("item_specifics must be list of EbayShippingService instances")
+            raise TypeError("item_specifics must be list of EbayItemSpecific instances")
 
         if variations and not all([isinstance(v, EbayVariation) for v in variations]):
             raise TypeError("variations must be list of EbayVariation instances")

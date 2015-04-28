@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
+
 from django.utils.translation import gettext
-from inventorum.ebay.apps.categories.models import CategoryModel, CategorySpecificModel
-from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer, \
-    CategoryListResponseSerializer, CategorySpecificsSerializer
+from inventorum.ebay.apps.categories.models import CategoryModel
+from inventorum.ebay.apps.categories.serializers import CategoryListResponseSerializer, CategorySpecificsSerializer
 
 from inventorum.ebay.lib.rest.exceptions import NotFound
 from inventorum.ebay.lib.rest.resources import APIResource

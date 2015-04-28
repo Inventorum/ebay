@@ -6,6 +6,8 @@ from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
+from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
+from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from rest_framework import status
 
@@ -13,7 +15,7 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class TestProductUpdate(EbayAuthenticatedAPITestCase):
+class TestProductUpdate(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin):
 
     def request_update(self, product, data):
         return self.client.put("/products/{inv_id}".format(inv_id=product.inv_id), data=data)
@@ -38,7 +40,7 @@ class TestProductUpdate(EbayAuthenticatedAPITestCase):
         expected_data = EbayProductSerializer(self.product).data
         self.assertEqual(response.data, expected_data)
 
-    def test_category_assignment_and_removal(self):
+    def test_category_updates(self):
         assert self.product.category is None
 
         # assign category
@@ -65,3 +67,24 @@ class TestProductUpdate(EbayAuthenticatedAPITestCase):
 
         get_product = self.client.get("/products/{inv_id}".format(inv_id=self.product.inv_id))
         self.assertEqual(get_product.data, self.get_valid_data_for(self.product))
+
+    def test_shipping_service_updates(self):
+        assert self.product.shipping_services.count() == 0
+
+        dhl = self.get_shipping_service_dhl()
+        hermes = self.get_shipping_service_hermes()
+
+        data = self.get_valid_data_for(self.product)
+        data["shipping_services"] = [{"service": dhl.pk,
+                                      "cost": "5.90",
+                                      "additional_cost": "0.30"},
+                                     {"service": hermes.pk,
+                                      "cost": "3.49",
+                                      "additional_cost": "0.00"}]
+
+        response = self.request_update(self.product, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.product.shipping_services.count(), 2)
+
+        configured_service_ids = self.product.shipping_services.values_list("service_id", flat=True)
+        self.assertItemsEqual(configured_service_ids, [dhl.pk, hermes.pk])

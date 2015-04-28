@@ -42,6 +42,7 @@ class CategoryFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = models.CategoryModel
+        django_get_or_create = ("name", "country")
 
     name = factory.Sequence(lambda n: "Category {0}".format(n))
     country = StagingTestAccount.COUNTRY
