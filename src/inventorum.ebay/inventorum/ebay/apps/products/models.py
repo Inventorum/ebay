@@ -260,7 +260,7 @@ class EbayItemUpdateModel(EbayUpdateModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="updates")
 
     @property
-    def has_variations(self):
+    def has_variation_updates(self):
         return self.variations.exists()
 
     @property

@@ -153,15 +153,13 @@ class CoreAPISyncService(object):
 
                 yield published_item, core_product_delta
 
-    @cached_property
-    def is_published(self):
+    def _get_item_or_variation(self, core_product_delta):
         published_core_product_ids = EbayProductModel.objects.published().by_account(self.account)\
             .values_list("inv_id", flat=True)
-        return lambda core_product_id: core_product_id in published_core_product_ids
+        is_published = lambda core_product_id: core_product_id in published_core_product_ids
 
-    def _get_item_or_variation(self, core_product_delta):
         main_product_id = core_product_delta.parent or core_product_delta.id
-        if not self.is_published(main_product_id):
+        if not is_published(main_product_id):
             return None
 
         published_item = EbayItemModel.objects.get(publishing_status=EbayItemPublishingStatus.PUBLISHED,

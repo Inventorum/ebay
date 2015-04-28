@@ -370,7 +370,7 @@ class UpdateService(object):
         """ Updates the item model after the update has been acked by ebay """
         ebay_item = self.item_update.item
 
-        if not self.item_update.has_variations:
+        if not self.item_update.has_variation_updates:
             self._update_ebay_update_model(self.item_update, ebay_item)
         else:
             for update_variation in self.item_update.variations.all():
