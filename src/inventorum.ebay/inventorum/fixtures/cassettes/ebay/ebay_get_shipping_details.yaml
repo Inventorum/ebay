@@ -8,12 +8,12 @@ interactions:
       X-EBAY-API-CALL-NAME: [!!python/unicode 'GeteBayDetails']
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [601392e2-788e-48f9-b0d1-a2ba5688dadc]
+      X-EBAY-SDK-REQUEST-ID: [85449cc9-17a4-4be1-af07-2138197d05e2]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GeteBayDetailsResponse\
-        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-25T10:45:01.611Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><ShippingServiceDetails><Description>Unversicherter\
+        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-28T19:47:13.854Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><ShippingServiceDetails><Description>Unversicherter\
         \ Versand</Description><InternationalService>true</InternationalService><ShippingService>DE_UnversicherterVersandInternational</ShippingService><ShippingServiceID>57702</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>false</ValidForSellingFlow><DeprecationDetails><AnnouncementStartTime>2008-07-01T07:00:00.000Z</AnnouncementStartTime><EventTime>2008-08-01T07:00:00.000Z</EventTime><MessageType>DeprecationAndMapping</MessageType></DeprecationDetails><MappedToShippingServiceID>57710</MappedToShippingServiceID><ShippingServicePackageDetails/><DetailVersion>162</DetailVersion><UpdateTime>2015-04-23T00:36:13.000Z</UpdateTime><ShippingCategory>NONE</ShippingCategory></ShippingServiceDetails><ShippingServiceDetails><Description>Unversicherter\
         \ Versand</Description><ShippingService>DE_StandardDispatch</ShippingService><ShippingServiceID>7701</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>false</ValidForSellingFlow><DeprecationDetails><AnnouncementStartTime>2008-07-01T07:00:00.000Z</AnnouncementStartTime><EventTime>2008-08-01T07:00:00.000Z</EventTime><MessageType>DeprecationAndMapping</MessageType></DeprecationDetails><MappedToShippingServiceID>7710</MappedToShippingServiceID><ShippingServicePackageDetails/><DetailVersion>162</DetailVersion><UpdateTime>2015-04-23T00:36:13.000Z</UpdateTime><ShippingCategory>NONE</ShippingCategory></ShippingServiceDetails><ShippingServiceDetails><Description>Selbstabholung</Description><ShippingService>DE_Pickup</ShippingService><ShippingServiceID>7750</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>true</ValidForSellingFlow><DetailVersion>162</DetailVersion><UpdateTime>2015-04-23T00:36:13.000Z</UpdateTime><ShippingCategory>PICKUP</ShippingCategory></ShippingServiceDetails><ShippingServiceDetails><Description>Versicherter\
         \ Versand</Description><ShippingService>DE_InsuredDispatch</ShippingService><ShippingServiceID>7702</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>false</ValidForSellingFlow><DeprecationDetails><AnnouncementStartTime>2008-07-01T07:00:00.000Z</AnnouncementStartTime><EventTime>2008-08-01T07:00:00.000Z</EventTime><MessageType>DeprecationAndMapping</MessageType></DeprecationDetails><MappedToShippingServiceID>7721</MappedToShippingServiceID><ShippingServicePackageDetails/><DetailVersion>162</DetailVersion><UpdateTime>2015-04-23T00:36:13.000Z</UpdateTime><ShippingCategory>NONE</ShippingCategory></ShippingServiceDetails><ShippingServiceDetails><Description>Versicherter\
@@ -110,16 +110,16 @@ interactions:
     headers:
       content-length: ['58048']
       content-type: [text/xml]
-      date: ['Sat, 25 Apr 2015 10:45:00 GMT']
-      guid: [14cf02e2-f8d0-a621-d877-1c67a6e56973]
+      date: ['Tue, 28 Apr 2015 19:47:13 GMT']
+      guid: [14d0191a-a610-a620-8a67-eac7a31ceac8]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8xamtyaw==]
-      x-ebay-api-server-name: [___ZW9nNGQ3MWYrNDc3YygyNSg+Oys/MS09Nz07NT42]
+      x-ebay-api-server-name: [___ZW9nNGQ3MmYrMGdhNigyNSg+NSs3NjErMzY5PTY/Mg==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [GeteBayDetails]
-      x-ebay-esb-guid: ['urn:uuid:476ba537-8930-43a4-88a5-8b3d18353841']
+      x-ebay-esb-guid: ['urn:uuid:7dce07f1-dd34-4b25-b3c3-81fbfc85afd5']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cf02e2-f8d0-a621-d877-1c67a6e56973!ws.api.dll!10.98.29.135!esbtrading[]']
+      x-ebay-request-id: ['14d0191a-a610-a620-8a67-eac7a31ceac8!ws.api.dll!10.98.8.166!esbtrading[]']
     status: {code: 200, message: OK}
 - request:
     body: <?xml version='1.0' encoding='utf-8'?><GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**VPo4VQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkYKnDpiFoQ6dj6x9nY+seQ**qeUBAA**AAMAAA**hm7IZ6+9b1WTNSGOMQEdijzrGPgniZfog17a2QN3WsUAcoZk67KsJGj55R+Q9vyfPQjVOgcfH7CcK587xCEu9EzWIKFgBfBvZ5q0Ykk9UUOLxiHfaZJcdWNnQ3RG1EkXgYPt95COGQjZx0rSLACHhhI5c2kc5QuI+8AsG4pPH/px7HQmjM8RDFD9/6wmor5PgKYMWlF3iCTDUEVS1m36+AOthGjyTvUApZ9JoXkwhHXeStvKyNwsbaU+VjSlzp/L+Rxk0H16MwFhFc6jx8yPDcccbVbKejcB30lxHQFyHOm5d3BVTxEnw2un1GXr0uE7qd9fynAdGnsNUk/zf8D/U/RNFHHDOEvaz/XuCy6HS7asJL0duLdG+RtjMuWy0lHmaY84yd47aTLL0t1q374O2ypvUDyvyuCEEKbV+PTHG83VJDQbivlPitI2o9wNg81xIiGW+qpGbwffWHU2B42MmreA3XcOL/cqQtHBK+gz1j3a9MuXl36LiXETYFC7F/t6OXHnIJFzbiKYU4ozWERb+2wDhVadw1JcKxJako9J74caQUmMJ1Shg/FvbO7QtnxbjzR63rp7661O64I6GFe6EgvFQVLGXcbEmsoPAE0mE4QkVEBKrvgfPCDjCZZcvpIy5yzibT6KNZMvBizlC5vx5+xPSvXRMjc5bWsT1kVZb7hiao9/uC4e7UZDanykuyUfYHsuj2aHWdtgqcb92WCaJQ28zlwudRlsmTsrSngI0yP7IG4ZwhXsKVRFTzZ9pWEh</eBayAuthToken></RequesterCredentials><DetailName>ShippingServiceDetails</DetailName><ErrorLanguage>de_AT</ErrorLanguage></GeteBayDetailsRequest>
@@ -130,12 +130,12 @@ interactions:
       X-EBAY-API-CALL-NAME: [!!python/unicode 'GeteBayDetails']
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [16]
-      X-EBAY-SDK-REQUEST-ID: [4912d1a7-34d9-4245-846e-ce2b42f3b8c8]
+      X-EBAY-SDK-REQUEST-ID: [6b7bd25f-b924-42bc-8a15-dbe12b6d4764]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GeteBayDetailsResponse\
-        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-25T10:45:03.186Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><ShippingServiceDetails><Description>Standardversand\
+        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-28T19:47:15.267Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><ShippingServiceDetails><Description>Standardversand\
         \ (unversichert)</Description><ShippingService>AT_StandardDispatch</ShippingService><ShippingServiceID>1601</ShippingServiceID><ShippingTimeMax>2</ShippingTimeMax><ShippingTimeMin>1</ShippingTimeMin><ServiceType>Flat</ServiceType><ValidForSellingFlow>true</ValidForSellingFlow><DetailVersion>20</DetailVersion><UpdateTime>2015-03-13T20:15:14.000Z</UpdateTime></ShippingServiceDetails><ShippingServiceDetails><Description>Unversicherter\
         \ Versand</Description><InternationalService>true</InternationalService><ShippingService>AT_UnversicherterVersandInternational</ShippingService><ShippingServiceID>51602</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>true</ValidForSellingFlow><DetailVersion>20</DetailVersion><UpdateTime>2015-03-13T20:15:14.000Z</UpdateTime></ShippingServiceDetails><ShippingServiceDetails><Description>Versicherter\
         \ Versand</Description><ShippingService>AT_InsuredDispatch</ShippingService><ShippingServiceID>1602</ShippingServiceID><ShippingTimeMax>2</ShippingTimeMax><ShippingTimeMin>1</ShippingTimeMin><ServiceType>Flat</ServiceType><ValidForSellingFlow>true</ValidForSellingFlow><DetailVersion>20</DetailVersion><UpdateTime>2015-03-13T20:15:14.000Z</UpdateTime></ShippingServiceDetails><ShippingServiceDetails><Description>Versicherter\
@@ -169,16 +169,16 @@ interactions:
     headers:
       content-length: ['13746']
       content-type: [text/xml]
-      date: ['Sat, 25 Apr 2015 10:45:02 GMT']
-      guid: [14cf02e3-7870-a626-0146-ff96a7f75589]
+      date: ['Tue, 28 Apr 2015 19:47:15 GMT']
+      guid: [14d0191b-1e40-a626-78d7-0b17f3c7d1be]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8xamtyaw==]
-      x-ebay-api-server-name: [___ZW9nNGQ3MGYrMDc8MygyNSg2MDMoNy00MzE5PTY/Mg==]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrPjEzZCgyNSg+Oys3NzMrNzY1Pz43OzQ=]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [GeteBayDetails]
-      x-ebay-esb-guid: ['urn:uuid:f011d0f8-5266-477b-8915-0b5d1bbe4769']
+      x-ebay-esb-guid: ['urn:uuid:feff7cf2-935f-49b9-be0e-3b5690d04718']
       x-ebay-esb-siteid: ['16']
-      x-ebay-request-id: ['14cf02e3-7870-a626-0146-ff96a7f75589!ws.api.dll!10.98.96.20!esbtrading[]']
+      x-ebay-request-id: ['14d0191b-1e40-a626-78d7-0b17f3c7d1be!ws.api.dll!10.98.103.141!esbtrading[]']
     status: {code: 200, message: OK}
 - request:
     body: <?xml version='1.0' encoding='utf-8'?><GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**VPo4VQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkYKnDpiFoQ6dj6x9nY+seQ**qeUBAA**AAMAAA**hm7IZ6+9b1WTNSGOMQEdijzrGPgniZfog17a2QN3WsUAcoZk67KsJGj55R+Q9vyfPQjVOgcfH7CcK587xCEu9EzWIKFgBfBvZ5q0Ykk9UUOLxiHfaZJcdWNnQ3RG1EkXgYPt95COGQjZx0rSLACHhhI5c2kc5QuI+8AsG4pPH/px7HQmjM8RDFD9/6wmor5PgKYMWlF3iCTDUEVS1m36+AOthGjyTvUApZ9JoXkwhHXeStvKyNwsbaU+VjSlzp/L+Rxk0H16MwFhFc6jx8yPDcccbVbKejcB30lxHQFyHOm5d3BVTxEnw2un1GXr0uE7qd9fynAdGnsNUk/zf8D/U/RNFHHDOEvaz/XuCy6HS7asJL0duLdG+RtjMuWy0lHmaY84yd47aTLL0t1q374O2ypvUDyvyuCEEKbV+PTHG83VJDQbivlPitI2o9wNg81xIiGW+qpGbwffWHU2B42MmreA3XcOL/cqQtHBK+gz1j3a9MuXl36LiXETYFC7F/t6OXHnIJFzbiKYU4ozWERb+2wDhVadw1JcKxJako9J74caQUmMJ1Shg/FvbO7QtnxbjzR63rp7661O64I6GFe6EgvFQVLGXcbEmsoPAE0mE4QkVEBKrvgfPCDjCZZcvpIy5yzibT6KNZMvBizlC5vx5+xPSvXRMjc5bWsT1kVZb7hiao9/uC4e7UZDanykuyUfYHsuj2aHWdtgqcb92WCaJQ28zlwudRlsmTsrSngI0yP7IG4ZwhXsKVRFTzZ9pWEh</eBayAuthToken></RequesterCredentials><DetailName>ShippingServiceDetails</DetailName><ErrorLanguage>de_DE</ErrorLanguage></GeteBayDetailsRequest>
@@ -189,12 +189,12 @@ interactions:
       X-EBAY-API-CALL-NAME: [!!python/unicode 'GeteBayDetails']
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [e902e96f-7207-4193-aecb-302e70729b5e]
+      X-EBAY-SDK-REQUEST-ID: [831735fa-64e6-4baf-b58d-1ab5e2797e2a]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GeteBayDetailsResponse\
-        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-25T10:45:04.758Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><ShippingServiceDetails><Description>Unversicherter\
+        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-28T19:47:16.962Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><ShippingServiceDetails><Description>Unversicherter\
         \ Versand</Description><InternationalService>true</InternationalService><ShippingService>DE_UnversicherterVersandInternational</ShippingService><ShippingServiceID>57702</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>false</ValidForSellingFlow><DeprecationDetails><AnnouncementStartTime>2008-07-01T07:00:00.000Z</AnnouncementStartTime><EventTime>2008-08-01T07:00:00.000Z</EventTime><MessageType>DeprecationAndMapping</MessageType></DeprecationDetails><MappedToShippingServiceID>57710</MappedToShippingServiceID><ShippingServicePackageDetails/><DetailVersion>162</DetailVersion><UpdateTime>2015-04-23T00:36:13.000Z</UpdateTime><ShippingCategory>NONE</ShippingCategory></ShippingServiceDetails><ShippingServiceDetails><Description>Unversicherter\
         \ Versand</Description><ShippingService>DE_StandardDispatch</ShippingService><ShippingServiceID>7701</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>false</ValidForSellingFlow><DeprecationDetails><AnnouncementStartTime>2008-07-01T07:00:00.000Z</AnnouncementStartTime><EventTime>2008-08-01T07:00:00.000Z</EventTime><MessageType>DeprecationAndMapping</MessageType></DeprecationDetails><MappedToShippingServiceID>7710</MappedToShippingServiceID><ShippingServicePackageDetails/><DetailVersion>162</DetailVersion><UpdateTime>2015-04-23T00:36:13.000Z</UpdateTime><ShippingCategory>NONE</ShippingCategory></ShippingServiceDetails><ShippingServiceDetails><Description>Selbstabholung</Description><ShippingService>DE_Pickup</ShippingService><ShippingServiceID>7750</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>true</ValidForSellingFlow><DetailVersion>162</DetailVersion><UpdateTime>2015-04-23T00:36:13.000Z</UpdateTime><ShippingCategory>PICKUP</ShippingCategory></ShippingServiceDetails><ShippingServiceDetails><Description>Versicherter\
         \ Versand</Description><ShippingService>DE_InsuredDispatch</ShippingService><ShippingServiceID>7702</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>false</ValidForSellingFlow><DeprecationDetails><AnnouncementStartTime>2008-07-01T07:00:00.000Z</AnnouncementStartTime><EventTime>2008-08-01T07:00:00.000Z</EventTime><MessageType>DeprecationAndMapping</MessageType></DeprecationDetails><MappedToShippingServiceID>7721</MappedToShippingServiceID><ShippingServicePackageDetails/><DetailVersion>162</DetailVersion><UpdateTime>2015-04-23T00:36:13.000Z</UpdateTime><ShippingCategory>NONE</ShippingCategory></ShippingServiceDetails><ShippingServiceDetails><Description>Versicherter\
@@ -291,17 +291,16 @@ interactions:
     headers:
       content-length: ['58048']
       content-type: [text/xml]
-      date: ['Sat, 25 Apr 2015 10:45:03 GMT']
-      guid: [14cf02e3-ba10-a624-c471-afd1cf1d4291]
+      date: ['Tue, 28 Apr 2015 19:47:16 GMT']
+      guid: [14d0191b-6850-a794-f2b4-f214e65cae2d]
       server: [Apache-Coyote/1.1]
-      x-cnection: [close]
       x-ebay-api-pool-name: [___cDRidW8xamtyaw==]
-      x-ebay-api-server-name: [___dm97MmQ3MWYrNDMxMigyNSg/NSs3MTErNz87Pz43OzQ=]
+      x-ebay-api-server-name: [___dWtgMGQ3MWYrMmE9MigyNSg2MTMoMjUrNTY5PTY/Mg==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [GeteBayDetails]
-      x-ebay-esb-guid: ['urn:uuid:1344b70b-19ee-45d5-8124-904837fe9cdc']
+      x-ebay-esb-guid: ['urn:uuid:7b2f5065-f0ab-477c-8425-46ce8236027b']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cf02e3-ba10-a624-c471-afd1cf1d4291!ws.api.dll!10.98.76.71!esbtrading[]']
+      x-ebay-request-id: ['14d0191b-6850-a794-f2b4-f214e65cae2d!ws.api.dll!10.121.79.43!esbtrading[]']
     status: {code: 200, message: OK}
 - request:
     body: <?xml version='1.0' encoding='utf-8'?><GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**VPo4VQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkYKnDpiFoQ6dj6x9nY+seQ**qeUBAA**AAMAAA**hm7IZ6+9b1WTNSGOMQEdijzrGPgniZfog17a2QN3WsUAcoZk67KsJGj55R+Q9vyfPQjVOgcfH7CcK587xCEu9EzWIKFgBfBvZ5q0Ykk9UUOLxiHfaZJcdWNnQ3RG1EkXgYPt95COGQjZx0rSLACHhhI5c2kc5QuI+8AsG4pPH/px7HQmjM8RDFD9/6wmor5PgKYMWlF3iCTDUEVS1m36+AOthGjyTvUApZ9JoXkwhHXeStvKyNwsbaU+VjSlzp/L+Rxk0H16MwFhFc6jx8yPDcccbVbKejcB30lxHQFyHOm5d3BVTxEnw2un1GXr0uE7qd9fynAdGnsNUk/zf8D/U/RNFHHDOEvaz/XuCy6HS7asJL0duLdG+RtjMuWy0lHmaY84yd47aTLL0t1q374O2ypvUDyvyuCEEKbV+PTHG83VJDQbivlPitI2o9wNg81xIiGW+qpGbwffWHU2B42MmreA3XcOL/cqQtHBK+gz1j3a9MuXl36LiXETYFC7F/t6OXHnIJFzbiKYU4ozWERb+2wDhVadw1JcKxJako9J74caQUmMJ1Shg/FvbO7QtnxbjzR63rp7661O64I6GFe6EgvFQVLGXcbEmsoPAE0mE4QkVEBKrvgfPCDjCZZcvpIy5yzibT6KNZMvBizlC5vx5+xPSvXRMjc5bWsT1kVZb7hiao9/uC4e7UZDanykuyUfYHsuj2aHWdtgqcb92WCaJQ28zlwudRlsmTsrSngI0yP7IG4ZwhXsKVRFTzZ9pWEh</eBayAuthToken></RequesterCredentials><DetailName>ShippingServiceDetails</DetailName><ErrorLanguage>de_AT</ErrorLanguage></GeteBayDetailsRequest>
@@ -312,12 +311,12 @@ interactions:
       X-EBAY-API-CALL-NAME: [!!python/unicode 'GeteBayDetails']
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [16]
-      X-EBAY-SDK-REQUEST-ID: [a2b16b9a-715f-4847-b44b-9cca4c95b343]
+      X-EBAY-SDK-REQUEST-ID: [14132572-cc0c-4e2c-9585-66c762f12bde]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GeteBayDetailsResponse\
-        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-25T10:45:06.279Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><ShippingServiceDetails><Description>Standardversand\
+        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-28T19:47:18.526Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><ShippingServiceDetails><Description>Standardversand\
         \ (unversichert)</Description><ShippingService>AT_StandardDispatch</ShippingService><ShippingServiceID>1601</ShippingServiceID><ShippingTimeMax>2</ShippingTimeMax><ShippingTimeMin>1</ShippingTimeMin><ServiceType>Flat</ServiceType><ValidForSellingFlow>true</ValidForSellingFlow><DetailVersion>20</DetailVersion><UpdateTime>2015-03-13T20:15:14.000Z</UpdateTime></ShippingServiceDetails><ShippingServiceDetails><Description>Unversicherter\
         \ Versand</Description><InternationalService>true</InternationalService><ShippingService>AT_UnversicherterVersandInternational</ShippingService><ShippingServiceID>51602</ShippingServiceID><ServiceType>Flat</ServiceType><ValidForSellingFlow>true</ValidForSellingFlow><DetailVersion>20</DetailVersion><UpdateTime>2015-03-13T20:15:14.000Z</UpdateTime></ShippingServiceDetails><ShippingServiceDetails><Description>Versicherter\
         \ Versand</Description><ShippingService>AT_InsuredDispatch</ShippingService><ShippingServiceID>1602</ShippingServiceID><ShippingTimeMax>2</ShippingTimeMax><ShippingTimeMin>1</ShippingTimeMin><ServiceType>Flat</ServiceType><ValidForSellingFlow>true</ValidForSellingFlow><DetailVersion>20</DetailVersion><UpdateTime>2015-03-13T20:15:14.000Z</UpdateTime></ShippingServiceDetails><ShippingServiceDetails><Description>Versicherter\
@@ -351,15 +350,15 @@ interactions:
     headers:
       content-length: ['13746']
       content-type: [text/xml]
-      date: ['Sat, 25 Apr 2015 10:45:05 GMT']
-      guid: [14cf02e4-3630-a625-4b57-49e7a70fca00]
+      date: ['Tue, 28 Apr 2015 19:47:17 GMT']
+      guid: [14d0191b-e980-a626-0140-f3d0fdcbf3b1]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8xamtyaw==]
-      x-ebay-api-server-name: [___ZW9nNGQ3MWYrNzE8MygyNSg+Oys3MjYrMD45PTY/Mg==]
+      x-ebay-api-server-name: [___ZW9nNGQ3MmYrMGdhNigyNSg+NSs3NjErMzY5PTY/Mg==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [GeteBayDetails]
-      x-ebay-esb-guid: ['urn:uuid:b602ee59-b09d-4eba-884e-dae76f5fb8ba']
+      x-ebay-esb-guid: ['urn:uuid:5d9f361a-c080-4db3-b8a4-1ddb4ed4e63e']
       x-ebay-esb-siteid: ['16']
-      x-ebay-request-id: ['14cf02e4-3630-a625-4b57-49e7a70fca00!ws.api.dll!10.98.84.181!esbtrading[]']
+      x-ebay-request-id: ['14d0191b-e980-a626-0140-f3d0fdcbf3b1!ws.api.dll!10.98.96.20!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

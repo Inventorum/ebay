@@ -2,13 +2,14 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from django.utils.functional import cached_property
+from decimal import Decimal as D
 from inventorum.ebay.apps.categories.models import CategoryModel
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 from inventorum.ebay.apps.products.serializers import EbayProductCategorySerializer, EbayProductSerializer
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.tests import Countries
+from inventorum.ebay.apps.shipping.tests import ShippingServiceConfigurableSerializerTest
 from inventorum.ebay.tests.testcases import UnitTestCase
 
 
@@ -22,8 +23,8 @@ class TestEbayCategorySerializer(UnitTestCase):
         level_2_category = CategoryFactory.create(name="Level 2 category", parent=root_category)
         leaf_category = CategoryFactory.create(name="Leaf category", parent=level_2_category)
 
-        specific = CategorySpecificFactory.create(category=leaf_category)
-        required_specific = CategorySpecificFactory.create_required(category=leaf_category)
+        CategorySpecificFactory.create(category=leaf_category)
+        CategorySpecificFactory.create_required(category=leaf_category)
 
         self.assertEqual(leaf_category.specifics.count(), 2)
         subject = EbayProductCategorySerializer(leaf_category)
@@ -46,20 +47,35 @@ class TestEbayCategorySerializer(UnitTestCase):
         })
 
 
-# TODO: Test for published product (create factory for items)
-class TestEbayProductSerializer(UnitTestCase):
+class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSerializerTest):
 
-    @cached_property
-    def some_category_with_parent(self):
+    # Required interface for ShippingServiceConfigurableSerializerTest
+
+    def get_serializer_class(self):
+        return EbayProductSerializer
+
+    def get_entity(self):
+        return EbayProductFactory.create()
+
+    # / Required interface for ShippingServiceConfigurableSerializerTest
+
+    def get_default_category(self):
         some_parent = CategoryFactory.create(name="Some parent")
         return CategoryFactory.create(name="Some category", parent=some_parent)
 
+    def get_default_product(self):
+        product = EbayProductFactory.create(category=self.get_default_category())
+        product.shipping_services.create(service=self.get_shipping_service_dhl(),
+                                         cost=D("5.00"),
+                                         additional_cost=D("0.49"))
+        return product
+
     def test_serialize(self):
-        category = self.some_category_with_parent
-        product = EbayProductFactory.create(category=category)
+        product = self.get_default_product()
+        category = product.category
+        shipping_service = product.shipping_services.first()
 
         subject = EbayProductSerializer(product)
-
         self.assertEqual(subject.data, {
             "id": product.id,
             "listing_url": None,
@@ -74,13 +90,17 @@ class TestEbayProductSerializer(UnitTestCase):
                 "breadcrumb": [{"id": category.parent_id, "name": "Some parent"}],
                 "specifics": []
             },
-            "specific_values": []
+            "specific_values": [],
+            "shipping_services": [{
+                "service": shipping_service.service.id,
+                "external_id": "DE_DHLPaket",
+                "cost": "5.00",
+                "additional_cost": "0.49"
+            }]
         })
 
     def test_deserialize_serialized(self):
-        category = self.some_category_with_parent
-        product = EbayProductFactory(category=category)
-
+        product = self.get_default_product()
         serialized = EbayProductSerializer(product).data
 
         subject = EbayProductSerializer(product, data=serialized)

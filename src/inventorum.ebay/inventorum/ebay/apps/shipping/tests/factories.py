@@ -14,6 +14,7 @@ class ShippingServiceFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = ShippingServiceModel
+        django_get_or_create = ('external_id', 'country')
 
     country = Countries.DE
     external_id = factory.Sequence(lambda i: "EbayShippingService_%s" % i)

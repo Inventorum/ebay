@@ -8,6 +8,7 @@ from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
 
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
@@ -36,7 +37,7 @@ class EbayProductModelQuerySet(MappedInventorumModelQuerySet):
         return self.filter(account=account)
 
 
-class EbayProductModel(MappedInventorumModel):
+class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
     """ Represents an inventorum product in the ebay context """
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="products",
                                 verbose_name="Inventorum ebay account")

@@ -1,10 +1,14 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+
+from decimal import Decimal as D
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from django_countries.fields import CountryField
 from inventorum.ebay.lib.db.models import BaseModel, BaseQuerySet
 
-from django.db.models import fields
 from inventorum.util.django.model_utils import PassThroughManager
 
 log = logging.getLogger(__name__)
@@ -19,13 +23,13 @@ class ShippingServiceQuerySet(BaseQuerySet):
 class ShippingServiceModel(BaseModel):
     country = CountryField()
 
-    external_id = fields.CharField(max_length=255)
-    description = fields.CharField(max_length=512)
+    external_id = models.CharField(max_length=255)
+    description = models.CharField(max_length=512)
 
-    shipping_time_min = fields.IntegerField(null=True, blank=True)
-    shipping_time_max = fields.IntegerField(null=True, blank=True)
+    shipping_time_min = models.IntegerField(null=True, blank=True)
+    shipping_time_max = models.IntegerField(null=True, blank=True)
 
-    is_international = fields.BooleanField(default=False)
+    is_international = models.BooleanField(default=False)
 
     objects = PassThroughManager.for_queryset_class(ShippingServiceQuerySet)()
 
@@ -57,3 +61,29 @@ class ShippingServiceModel(BaseModel):
             shipping_service.save()
 
         return shipping_service
+
+
+class ShippingServiceConfigurationModel(BaseModel):
+    service = models.ForeignKey("shipping.ShippingServiceModel")
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    additional_cost = models.DecimalField(max_digits=10, decimal_places=2, default=D("0.00"))
+
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    def is_free_shipping(self):
+        return self.cost + self.additional_cost == 0
+
+
+class ShippingServiceConfigurable(models.Model):
+    """
+    Mixin for models that can be configured with shipping services
+
+    Note jm: We've to inherit here form models, otherwise django won't pick up the generic field.
+    See: http://stackoverflow.com/questions/28115239/django-genericrelation-in-model-mixin
+    """
+    class Meta:
+        abstract = True
+
+    shipping_services = GenericRelation("shipping.ShippingServiceConfigurationModel")
