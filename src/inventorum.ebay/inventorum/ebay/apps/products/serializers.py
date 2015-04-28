@@ -81,7 +81,7 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
         product = self.instance
         for config in shipping_services:
             if config["service"].country != product.account.country:
-                raise ValidationError(ugettext("Invalid category"))
+                raise ValidationError(ugettext("Invalid shipping service"))
         return shipping_services
 
     def validate(self, attrs):
