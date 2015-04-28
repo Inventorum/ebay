@@ -44,10 +44,15 @@ class OrderModel(BaseModel):
 
     total_price = MoneyField(verbose_name="Total price incl. shipping")
 
+    shipping_service = models.OneToOneField("shipping.ShippingServiceConfigurationModel", null=True, blank=True,
+                                            related_name="order")
+
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()
 
     def __unicode__(self):
-        return "[{} (inv_id: {}, ebay_id: {})] {}".format(self.pk, self.inv_id, self.ebay_id, self.__class__.__name__)
+        return "{} (inv_id: {}, ebay_id: {})".format(self.pk, self.inv_id, self.ebay_id)
+
+
 
 
 class OrderableItemModel(models.Model):
