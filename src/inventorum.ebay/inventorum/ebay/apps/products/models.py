@@ -42,7 +42,7 @@ class EbayProductModel(MappedInventorumModel):
     category = models.ForeignKey("categories.CategoryModel", related_name="products", null=True, blank=True,
                                  on_delete=models.SET_NULL)
     external_item_id = models.CharField(max_length=255, null=True, blank=True)
-
+    is_click_and_collect = models.BooleanField(default=False)
     deleted_in_core_api = models.BooleanField(default=False)
 
     objects = PassThroughManager.for_queryset_class(EbayProductModelQuerySet)()

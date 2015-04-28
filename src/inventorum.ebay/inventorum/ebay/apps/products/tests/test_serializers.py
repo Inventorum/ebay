@@ -64,6 +64,7 @@ class TestEbayProductSerializer(UnitTestCase):
             "id": product.id,
             "listing_url": None,
             "is_published": False,
+            "is_click_and_collect": False,
             "category": {
                 "id": category.id,
                 "name": "Some category",
