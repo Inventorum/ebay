@@ -1,20 +1,21 @@
 interactions:
 - request:
-    body: <?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Stand
+    body: <?xml version='1.0' encoding='utf-8'?><AddFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**VPo4VQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkYKnDpiFoQ6dj6x9nY+seQ**qeUBAA**AAMAAA**hm7IZ6+9b1WTNSGOMQEdijzrGPgniZfog17a2QN3WsUAcoZk67KsJGj55R+Q9vyfPQjVOgcfH7CcK587xCEu9EzWIKFgBfBvZ5q0Ykk9UUOLxiHfaZJcdWNnQ3RG1EkXgYPt95COGQjZx0rSLACHhhI5c2kc5QuI+8AsG4pPH/px7HQmjM8RDFD9/6wmor5PgKYMWlF3iCTDUEVS1m36+AOthGjyTvUApZ9JoXkwhHXeStvKyNwsbaU+VjSlzp/L+Rxk0H16MwFhFc6jx8yPDcccbVbKejcB30lxHQFyHOm5d3BVTxEnw2un1GXr0uE7qd9fynAdGnsNUk/zf8D/U/RNFHHDOEvaz/XuCy6HS7asJL0duLdG+RtjMuWy0lHmaY84yd47aTLL0t1q374O2ypvUDyvyuCEEKbV+PTHG83VJDQbivlPitI2o9wNg81xIiGW+qpGbwffWHU2B42MmreA3XcOL/cqQtHBK+gz1j3a9MuXl36LiXETYFC7F/t6OXHnIJFzbiKYU4ozWERb+2wDhVadw1JcKxJako9J74caQUmMJ1Shg/FvbO7QtnxbjzR63rp7661O64I6GFe6EgvFQVLGXcbEmsoPAE0mE4QkVEBKrvgfPCDjCZZcvpIy5yzibT6KNZMvBizlC5vx5+xPSvXRMjc5bWsT1kVZb7hiao9/uC4e7UZDanykuyUfYHsuj2aHWdtgqcb92WCaJQ28zlwudRlsmTsrSngI0yP7IG4ZwhXsKVRFTzZ9pWEh</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Stand
       for iPad from Inventorum for your POS Shop</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_120</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>64540</CategoryID></PrimaryCategory><Quantity>1</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>0</ShippingServiceAdditionalCost><ShippingServiceCost>10</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>599.99</StartPrice><Title>Inventorum
-      iPad Stand</Title></Item></AddItemRequest>
+      iPad Stand</Title></Item></AddFixedPriceItemRequest>
     headers:
-      Content-Length: ['2069']
+      Content-Length: ['2089']
       Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
-      X-EBAY-API-CALL-NAME: [!!python/unicode AddItem]
+      User-Agent: [eBaySDK/2.1.1-dev2 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode AddFixedPriceItem]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [d3f94f1b-3649-401e-8df1-425357da85f8]
+      X-EBAY-SDK-REQUEST-ID: [583e62a8-3811-4e5f-8d5e-3dc3e7b2b225]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddItemResponse xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-17T15:11:22.743Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikelzustand
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddFixedPriceItemResponse
+        xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-04-23T15:20:41.138Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Artikelzustand
         kann nicht verwendet werden.</ShortMessage><LongMessage>F\xFCr diese Kategorie
         ist kein Artikelzustand verf\xFCgbar. Der eingegebene Artikelzustand wurde
         entfernt.</LongMessage><ErrorCode>21917121</ErrorCode><SeverityCode>Warning</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Errors><ShortMessage>Erforderliche
@@ -38,19 +39,20 @@ interactions:
         Dauer.</ShortMessage><LongMessage>Die Dauer &quot;120&quot; (in Tagen) ist
         f\xFCr dieses Angebotsformat nicht verf\xFCgbar, bzw. ung\xFCltig f\xFCr die
         Kategorie &quot;64540&quot;.</LongMessage><ErrorCode>83</ErrorCode><SeverityCode>Error</SeverityCode><ErrorParameters
-        ParamID=\"0\"><Value>120</Value></ErrorParameters><ErrorParameters ParamID=\"1\"><Value>64540</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddItemResponse>"}
+        ParamID=\"0\"><Value>120</Value></ErrorParameters><ErrorParameters ParamID=\"1\"><Value>64540</Value></ErrorParameters><ErrorClassification>RequestError</ErrorClassification></Errors><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build></AddFixedPriceItemResponse>"}
     headers:
-      content-length: ['2646']
+      connection: [Keep-Alive]
+      content-length: ['2666']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 15:11:22 GMT']
-      guid: [14cc7ef2-8a10-a794-4441-3981f5e51ef9]
+      date: ['Thu, 23 Apr 2015 15:20:41 GMT']
+      guid: [14ce6ddd-7c70-a620-9824-a914b2ecc032]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMWQ3MmYrMDE0MSgyNSg+Nys3MzcrMj85PTY/Mw==]
+      x-ebay-api-server-name: [___dm97PWQ3MGYrNWBhNCgyNSgzMSs0MjIrNzYwPz43OzU=]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
-      x-ebay-esb-call-name: [AddItem]
-      x-ebay-esb-guid: ['urn:uuid:1fa939c9-3a9b-4f78-8ece-3732efe02fa2']
+      x-ebay-esb-call-name: [AddFixedPriceItem]
+      x-ebay-esb-guid: ['urn:uuid:4b98b109-e0d8-43da-965c-432bc0a6b79f']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cc7ef2-8a10-a794-4441-3981f5e51ef9!ws.api.dll!10.121.68.68!esbtrading[]']
+      x-ebay-request-id: ['14ce6ddd-7c70-a620-9824-a914b2ecc032!ws.api.dll!10.98.9.130!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

@@ -1,83 +1,83 @@
 interactions:
 - request:
-    body: <?xml version='1.0' encoding='utf-8'?><AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**+SoxVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHloamDZGGpwmdj6x9nY+seQ**qeUBAA**AAMAAA**C3hLSGxBbPWdVJyUL0CWP/+WBVv+WH+m27U0atsiRZd0O6YeiXxXIeDv0FlwDBPtiDGXqP9GXaRgrn0GPTeumA7qhjocNfuHZyuwr80/bh9IqSXKA1EcNCmMbyI/696cKoaxPm7R6nczyIZV0ssT7t5vCwANcJEMsfXSJGVsJEX0Y54YV+Z70Bk6E2RyxJ1B9XN4rKG3yGvnyT+dOXMZN7W7S9gQqyeMPJ7B6Ebk9TyekHaFHEBwnArRQjVWuiMxX53GuRsBGFB07ekJhe+4UgBDN0v4/5LyHzAolM+UkE7/is2nZz74JQ7kHRXiLzHRstmU1aifkeBj1NsdwHV6QScA7ubNITHgFWkO4z2wmpkWfIdevnw42UHhsCdKRXp2p/AYuZ1O9bwVt7uLm0gJi3EvmDRmEevMk4j/VfLRwhC15qbFAMzL+g+zNK9qIJ/gy6TwO04Pr3H4001ASE+SBpKgr1CgoydwRGa3/w6IrnsQbjwgBR+tRyuad6r3251U0e7wNyXqqCGOMkk4y/8W91g6tIeuS0Iv73cw9h1fpoFz9vUf8qsy640UTQPkrUQqYYn3tyootvwBmskYNV7b1S7r9MTf9ygWkxgvndaV49nJji+xnshPtFfpr1qBX3bRU/3j7pdVLpMuQUw7sz9faDGkA19EKoXtefqkbzgP+f0mnOx0y6vwTADhVsfwo2sJowyqvPfNVxpYVuWJ+jBJuQDM91oukkS9uBxDrwWa8Rofe03JkTmHE/807wkzi+zg</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Der
+    body: <?xml version='1.0' encoding='utf-8'?><AddFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**VPo4VQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkYKnDpiFoQ6dj6x9nY+seQ**qeUBAA**AAMAAA**hm7IZ6+9b1WTNSGOMQEdijzrGPgniZfog17a2QN3WsUAcoZk67KsJGj55R+Q9vyfPQjVOgcfH7CcK587xCEu9EzWIKFgBfBvZ5q0Ykk9UUOLxiHfaZJcdWNnQ3RG1EkXgYPt95COGQjZx0rSLACHhhI5c2kc5QuI+8AsG4pPH/px7HQmjM8RDFD9/6wmor5PgKYMWlF3iCTDUEVS1m36+AOthGjyTvUApZ9JoXkwhHXeStvKyNwsbaU+VjSlzp/L+Rxk0H16MwFhFc6jx8yPDcccbVbKejcB30lxHQFyHOm5d3BVTxEnw2un1GXr0uE7qd9fynAdGnsNUk/zf8D/U/RNFHHDOEvaz/XuCy6HS7asJL0duLdG+RtjMuWy0lHmaY84yd47aTLL0t1q374O2ypvUDyvyuCEEKbV+PTHG83VJDQbivlPitI2o9wNg81xIiGW+qpGbwffWHU2B42MmreA3XcOL/cqQtHBK+gz1j3a9MuXl36LiXETYFC7F/t6OXHnIJFzbiKYU4ozWERb+2wDhVadw1JcKxJako9J74caQUmMJ1Shg/FvbO7QtnxbjzR63rp7661O64I6GFe6EgvFQVLGXcbEmsoPAE0mE4QkVEBKrvgfPCDjCZZcvpIy5yzibT6KNZMvBizlC5vx5+xPSvXRMjc5bWsT1kVZb7hiao9/uC4e7UZDanykuyUfYHsuj2aHWdtgqcb92WCaJQ28zlwudRlsmTsrSngI0yP7IG4ZwhXsKVRFTzZ9pWEh</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description>Der
       stylische iPad-Stand von INVENTORUM aus edlem Holz rundet das Erscheinungsbild
       Ihrer neuen iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel ist
       dieser ideal, um einfach und schnell Produkte mit der internen Kamera des iPads
       zu scannen.</Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PictureDetails><PictureURL>http://shop.inventorum.com/uploads/img-hash/a9fe/1db9/8c9e/564c/8877/d8a1/f1f8/a9fe1db98c9e564c8877d8a1f1f8fccf_ipad.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>176973</CategoryID></PrimaryCategory><Quantity>1</Quantity><ReturnPolicy><Description></Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption></ReturnPolicy><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>0</ShippingServiceAdditionalCost><ShippingServiceCost>5</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>45.99</StartPrice><Title>Inventorum
-      iPad Stand</Title></Item></AddItemRequest>
+      iPad Stand</Title></Item></AddFixedPriceItemRequest>
     headers:
-      Content-Length: ['2450']
+      Content-Length: ['2470']
       Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
-      X-EBAY-API-CALL-NAME: [!!python/unicode AddItem]
+      User-Agent: [eBaySDK/2.1.1-dev2 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode AddFixedPriceItem]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [ff645885-6ba7-41b2-b573-d2bd7770187a]
+      X-EBAY-SDK-REQUEST-ID: [bb5a4543-fb6e-4cb8-97d5-13a6de62a57e]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
 
-        <AddItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T16:13:31.016Z</Timestamp><Ack>Success</Ack><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build><ItemID>131489845121</ItemID><StartTime>2015-04-17T16:13:29.470Z</StartTime><EndTime>2015-05-17T16:13:29.470Z</EndTime><Fees><Fee><Name>AuctionLengthFee</Name><Fee
+        <AddFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-23T15:18:11.477Z</Timestamp><Ack>Success</Ack><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build><ItemID>281671106561</ItemID><StartTime>2015-04-23T15:18:09.899Z</StartTime><EndTime>2015-05-23T15:18:09.899Z</EndTime><Fees><Fee><Name>AuctionLengthFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>BoldFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>BuyItNowFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>CategoryFeaturedFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>FeaturedFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>GalleryPlusFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>FeaturedGalleryFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>FixedPriceDurationFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>GalleryFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>GiftIconFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>HighLightFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>InsertionFee</Name><Fee
-        currencyID="EUR">0.0</Fee><PromotionalDiscount currencyID="EUR">0.5</PromotionalDiscount></Fee><Fee><Name>InternationalInsertionFee</Name><Fee
+        currencyID="EUR">0.0</Fee><PromotionalDiscount currencyID="EUR">0.35</PromotionalDiscount></Fee><Fee><Name>InternationalInsertionFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>ListingDesignerFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ListingFee</Name><Fee
-        currencyID="EUR">0.0</Fee><PromotionalDiscount currencyID="EUR">0.5</PromotionalDiscount></Fee><Fee><Name>PhotoDisplayFee</Name><Fee
+        currencyID="EUR">0.0</Fee><PromotionalDiscount currencyID="EUR">0.35</PromotionalDiscount></Fee><Fee><Name>PhotoDisplayFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>PhotoFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ReserveFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>SchedulingFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>SubtitleFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>BorderFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ProPackBundleFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>BasicUpgradePackBundleFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>ValuePackBundleFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>PrivateListingFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>ProPackPlusBundleFee</Name><Fee
-        currencyID="EUR">0.0</Fee></Fee></Fees><DiscountReason>SpecialOffer</DiscountReason></AddItemResponse>'}
+        currencyID="EUR">0.0</Fee></Fee></Fees><DiscountReason>SpecialOffer</DiscountReason></AddFixedPriceItemResponse>'}
     headers:
-      content-length: ['2351']
+      content-length: ['2373']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 16:13:30 GMT']
-      guid: [14cc8280-6d50-a794-4441-3981f5d26918]
+      date: ['Thu, 23 Apr 2015 15:18:11 GMT']
+      guid: [14ce6db8-7650-a794-ca12-90228e9f4e01]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMWQ3MmYrMmVhNSgyNSg+Nys3MjArNzc2Pz43OzU=]
+      x-ebay-api-server-name: [___dWtgMWQ3MmYrZDdgZSgyNSg+Nis0KTI0Pz07NT43]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
-      x-ebay-esb-call-name: [AddItem]
-      x-ebay-esb-guid: ['urn:uuid:a4058e2d-bd6c-4ec2-90a8-01e363aeeebc']
+      x-ebay-esb-call-name: [AddFixedPriceItem]
+      x-ebay-esb-guid: ['urn:uuid:45cd63c4-817f-4a2d-aca9-098a3e36dc2b']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cc8280-6d50-a794-4441-3981f5d26918!ws.api.dll!10.121.68.68!esbtrading[]']
+      x-ebay-request-id: ['14ce6db8-7650-a794-ca12-90228e9f4e01!ws.api.dll!10.121.76.161!esbtrading[]']
     status: {code: 200, message: OK}
 - request:
-    body: <?xml version='1.0' encoding='utf-8'?><EndItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**+SoxVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHloamDZGGpwmdj6x9nY+seQ**qeUBAA**AAMAAA**C3hLSGxBbPWdVJyUL0CWP/+WBVv+WH+m27U0atsiRZd0O6YeiXxXIeDv0FlwDBPtiDGXqP9GXaRgrn0GPTeumA7qhjocNfuHZyuwr80/bh9IqSXKA1EcNCmMbyI/696cKoaxPm7R6nczyIZV0ssT7t5vCwANcJEMsfXSJGVsJEX0Y54YV+Z70Bk6E2RyxJ1B9XN4rKG3yGvnyT+dOXMZN7W7S9gQqyeMPJ7B6Ebk9TyekHaFHEBwnArRQjVWuiMxX53GuRsBGFB07ekJhe+4UgBDN0v4/5LyHzAolM+UkE7/is2nZz74JQ7kHRXiLzHRstmU1aifkeBj1NsdwHV6QScA7ubNITHgFWkO4z2wmpkWfIdevnw42UHhsCdKRXp2p/AYuZ1O9bwVt7uLm0gJi3EvmDRmEevMk4j/VfLRwhC15qbFAMzL+g+zNK9qIJ/gy6TwO04Pr3H4001ASE+SBpKgr1CgoydwRGa3/w6IrnsQbjwgBR+tRyuad6r3251U0e7wNyXqqCGOMkk4y/8W91g6tIeuS0Iv73cw9h1fpoFz9vUf8qsy640UTQPkrUQqYYn3tyootvwBmskYNV7b1S7r9MTf9ygWkxgvndaV49nJji+xnshPtFfpr1qBX3bRU/3j7pdVLpMuQUw7sz9faDGkA19EKoXtefqkbzgP+f0mnOx0y6vwTADhVsfwo2sJowyqvPfNVxpYVuWJ+jBJuQDM91oukkS9uBxDrwWa8Rofe03JkTmHE/807wkzi+zg</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>131489845121</ItemID></EndItemRequest>
+    body: <?xml version='1.0' encoding='utf-8'?><EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**VPo4VQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkYKnDpiFoQ6dj6x9nY+seQ**qeUBAA**AAMAAA**hm7IZ6+9b1WTNSGOMQEdijzrGPgniZfog17a2QN3WsUAcoZk67KsJGj55R+Q9vyfPQjVOgcfH7CcK587xCEu9EzWIKFgBfBvZ5q0Ykk9UUOLxiHfaZJcdWNnQ3RG1EkXgYPt95COGQjZx0rSLACHhhI5c2kc5QuI+8AsG4pPH/px7HQmjM8RDFD9/6wmor5PgKYMWlF3iCTDUEVS1m36+AOthGjyTvUApZ9JoXkwhHXeStvKyNwsbaU+VjSlzp/L+Rxk0H16MwFhFc6jx8yPDcccbVbKejcB30lxHQFyHOm5d3BVTxEnw2un1GXr0uE7qd9fynAdGnsNUk/zf8D/U/RNFHHDOEvaz/XuCy6HS7asJL0duLdG+RtjMuWy0lHmaY84yd47aTLL0t1q374O2ypvUDyvyuCEEKbV+PTHG83VJDQbivlPitI2o9wNg81xIiGW+qpGbwffWHU2B42MmreA3XcOL/cqQtHBK+gz1j3a9MuXl36LiXETYFC7F/t6OXHnIJFzbiKYU4ozWERb+2wDhVadw1JcKxJako9J74caQUmMJ1Shg/FvbO7QtnxbjzR63rp7661O64I6GFe6EgvFQVLGXcbEmsoPAE0mE4QkVEBKrvgfPCDjCZZcvpIy5yzibT6KNZMvBizlC5vx5+xPSvXRMjc5bWsT1kVZb7hiao9/uC4e7UZDanykuyUfYHsuj2aHWdtgqcb92WCaJQ28zlwudRlsmTsrSngI0yP7IG4ZwhXsKVRFTzZ9pWEh</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>281671106561</ItemID></EndFixedPriceItemRequest>
     headers:
-      Content-Length: ['1165']
+      Content-Length: ['1185']
       Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.0-dev1 Python/2.7.8 Darwin/14.1.0]
-      X-EBAY-API-CALL-NAME: [!!python/unicode EndItem]
+      User-Agent: [eBaySDK/2.1.1-dev2 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode EndFixedPriceItem]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [c39ab4e1-0bd3-4237-9f3f-913b25a9ba7c]
+      X-EBAY-SDK-REQUEST-ID: [b4fe11c4-8514-4e11-9759-e3939b3e6774]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
 
-        <EndItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-17T16:13:31.854Z</Timestamp><Ack>Success</Ack><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build><EndTime>2015-04-17T16:13:31.000Z</EndTime></EndItemResponse>'}
+        <EndFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-04-23T15:18:12.637Z</Timestamp><Ack>Success</Ack><Version>917</Version><Build>E917_UNI_API5_17456394_R1</Build><EndTime>2015-04-23T15:18:12.000Z</EndTime></EndFixedPriceItemResponse>'}
     headers:
-      content-length: ['284']
+      content-length: ['304']
       content-type: [text/xml]
-      date: ['Fri, 17 Apr 2015 16:13:30 GMT']
-      guid: [14cc8281-2e00-a788-49f3-cec3afff86a8]
+      date: ['Thu, 23 Apr 2015 15:18:12 GMT']
+      guid: [14ce6db9-4540-a5e4-2707-ac87bf358995]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dm97MmQ3MmYrNGc0ZygyNSg/Nys3PjsrMTU5PTY/Mw==]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrY2ZjMigyNSg+Oys3MjIrNDI5PTY/Mw==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
-      x-ebay-esb-call-name: [EndItem]
-      x-ebay-esb-guid: ['urn:uuid:7d1fd362-46ea-4484-b167-f6db32bc4baa']
+      x-ebay-esb-call-name: [EndFixedPriceItem]
+      x-ebay-esb-guid: ['urn:uuid:9cd644eb-0c6f-4d45-8b34-8f2eadd9a84f']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14cc8281-2e00-a788-49f3-cec3afff86a8!ws.api.dll!10.120.132.159!esbtrading[]']
+      x-ebay-request-id: ['14ce6db9-4540-a5e4-2707-ac87bf358995!ws.api.dll!10.94.66.112!esbtrading[]']
     status: {code: 200, message: OK}
 version: 1

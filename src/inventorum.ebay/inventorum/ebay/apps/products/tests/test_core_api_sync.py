@@ -15,7 +15,8 @@ from inventorum.ebay.apps.products.scripts import core_api_sync
 from inventorum.ebay.apps.core_api.tests import CoreApiTestHelpers, ApiTest
 from inventorum.ebay.apps.core_api.tests.factories import CoreProductDeltaFactory
 from inventorum.ebay.apps.products.core_api_sync import CoreAPISyncService
-from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemUpdateModel
+from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemUpdateModel, EbayItemVariationModel, \
+    EbayItemVariationUpdateModel
 from inventorum.ebay.apps.products.services import PublishingService
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
 from inventorum.ebay.lib.celery import celery_test_case
@@ -29,34 +30,23 @@ log = logging.getLogger(__name__)
 
 
 class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin):
-
     @celery_test_case()
     def test_integration(self):
-        with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date'],
-                                  record_mode="new_episodes") as cassette:
-
+        with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date']) \
+                as cassette:
             # create some core products to play with
             product_1_inv_id = self.create_core_api_product(name="Test product 1",
-                                                                 gross_price="1.99",
-                                                                 quantity=12)
+                                                            gross_price="1.99",
+                                                            quantity=12)
             ebay_product_1 = EbayProductModel.objects.create(inv_id=product_1_inv_id, account=self.account)
 
             product_2_inv_id = self.create_core_api_product(name="Test product 2",
-                                                                 gross_price="3.45",
-                                                                 quantity=5)
+                                                            gross_price="3.45",
+                                                            quantity=5)
             ebay_product_2 = EbayProductModel.objects.create(inv_id=product_2_inv_id, account=self.account)
 
             # Create and assign valid ebay category
             category = CategoryFactory.create(external_id="176973")
-            features = CategoryFeaturesModel.objects.create(
-                category=category
-            )
-            durations = ['Days_5', 'Days_30']
-            for d in durations:
-                duration = DurationModel.objects.create(
-                    value=d
-                )
-                features.durations.add(duration)
 
             ebay_product_1.category = category
             ebay_product_1.save()
@@ -135,10 +125,9 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
 
 
 class UnitTestCoreAPISyncService(UnitTestCase):
-
     def setUp(self):
         super(UnitTestCoreAPISyncService, self).setUp()
-        
+
         # account with default user
         self.user = EbayUserFactory.create()
         self.account = self.user.account
@@ -231,7 +220,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
 
         self.expect_modified(
             [CoreProductDeltaFactory.build(id=1001)],  # page 1
-            [CoreProductDeltaFactory.build(id=1002)]   # page 2
+            [CoreProductDeltaFactory.build(id=1002)]  # page 2
         )
 
         # deleted
@@ -323,3 +312,111 @@ class UnitTestCoreAPISyncService(UnitTestCase):
 
         calls = self.schedule_ebay_product_deletion_mock.call_args_list
         self.assertEqual([args[0] for args, kwargs in calls], [product_d.id, product_e.id])
+
+
+    def test_published_modified_and_deleted_variations(self):
+        subject = CoreAPISyncService(account=self.account)
+
+        # product a is our parent product
+        product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
+        item_a = PublishedEbayItemFactory.create(account=self.account,
+                                                 product=product_a,
+                                                 gross_price=None,
+                                                 quantity=None)
+
+        # variation a with just updated quantity
+        variation_a = EbayItemVariationModel.create(
+            item=item_a,
+            quantity=5,
+            gross_price=D("3.99"),
+            inv_id=1002
+        )
+
+        delta_variation_a = CoreProductDeltaFactory(id=variation_a.inv_id,
+                                                    gross_price=D("3.99"),
+                                                    quantity=78,
+                                                    parent=product_a.inv_id)
+
+        # variation b with updated gross price
+        variation_b = EbayItemVariationModel.create(
+            item=item_a,
+            quantity=3,
+            gross_price=D("100.0"),
+            inv_id=1003
+        )
+        delta_variation_b = CoreProductDeltaFactory(id=variation_b.inv_id,
+                                                    gross_price=D("125.00"),
+                                                    quantity=3,
+                                                    parent=product_a.inv_id)
+
+        # variation c with updated gross price and quantity
+        variation_c = EbayItemVariationModel.create(
+            item=item_a,
+            quantity=33,
+            gross_price=D("99.99"),
+            inv_id=1004
+        )
+
+        delta_variation_c = CoreProductDeltaFactory(id=variation_c.inv_id,
+                                                    gross_price=D("111.11"),
+                                                    quantity=22,
+                                                    parent=product_a.inv_id)
+
+        # variation d and e deleted
+        variation_d = EbayItemVariationModel.create(
+            item=item_a,
+            quantity=33,
+            gross_price=D("99.99"),
+            inv_id=1005
+        )
+
+        variation_e = EbayItemVariationModel.create(
+            item=item_a,
+            quantity=88,
+            gross_price=D("88.88"),
+            inv_id=1006
+        )
+
+        self.assertTrue(product_a.is_published)
+        self.assertEqual(product_a.published_item.variations.count(), 5)
+
+        self.expect_modified([delta_variation_a], [delta_variation_b], [delta_variation_c])
+        self.expect_deleted([variation_d.inv_id, variation_e.inv_id])
+
+        subject.run()
+
+        self.assertEqual(item_a.updates.count(), 1)
+        self.assertEqual(item_a.updates.last().variations.count(), 5)
+        self.assertEqual(variation_a.updates.count(), 1)
+
+        variation_a_update = variation_a.updates.last()
+        self.assertEqual(variation_a_update.gross_price, None)  # not updated
+        self.assertEqual(variation_a_update.quantity, 78)
+
+        self.assertEqual(variation_b.updates.count(), 1)
+        variation_b_update = variation_b.updates.last()
+        self.assertEqual(variation_b_update.gross_price, D("125.00"))
+        self.assertEqual(variation_b_update.quantity, None)  # not updates
+
+        self.assertEqual(variation_c.updates.count(), 1)
+        variation_c_update = variation_c.updates.last()
+        self.assertEqual(variation_c_update.gross_price, D("111.11"))
+        self.assertEqual(variation_c_update.quantity, 22)
+
+        self.assertEqual(variation_d.updates.count(), 1)
+        variation_d_update = variation_d.updates.last()
+        self.assertEqual(variation_d_update.gross_price, None)
+        self.assertEqual(variation_d_update.quantity, 0)
+        self.assertEqual(variation_d_update.is_deleted, True)
+
+        self.assertEqual(variation_e.updates.count(), 1)
+        variation_e_update = variation_e.updates.last()
+        self.assertEqual(variation_e_update.gross_price, None)
+        self.assertEqual(variation_e_update.quantity, 0)
+        self.assertEqual(variation_e_update.is_deleted, True)
+
+
+        self.assertEqual(self.schedule_ebay_item_update_mock.call_count, 1)
+        # assert deletions
+        self.assertEqual(self.schedule_ebay_product_deletion_mock.call_count, 0)
+

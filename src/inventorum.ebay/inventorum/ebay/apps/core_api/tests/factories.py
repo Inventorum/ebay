@@ -20,3 +20,4 @@ class CoreProductDeltaFactory(factory.Factory):
     state = "updated"
     gross_price = D("1.99")
     quantity = 100
+    parent = None

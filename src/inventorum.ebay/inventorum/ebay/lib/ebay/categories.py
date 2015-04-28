@@ -50,7 +50,7 @@ class EbayCategories(Ebay):
             CategoryID=category_id,
             LevelLimit=7,
             DetailLevel='ReturnAll',
-            FeatureID=['ListingDurations', 'PaymentMethods', 'ItemSpecificsEnabled']
+            FeatureID=['ListingDurations', 'PaymentMethods', 'ItemSpecificsEnabled', 'VariationsEnabled']
             # If you input specific category features with FeatureID fields and set DetailLevel to ReturnAll,
             # eBay returns just the requested feature settings for the specified category, regardless of the
             # site defaults.
