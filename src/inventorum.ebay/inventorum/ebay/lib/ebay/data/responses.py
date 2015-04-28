@@ -91,6 +91,24 @@ class ShippingServiceOption(object):
 ShippingServiceOption.Deserializer.Meta.model = ShippingServiceOption
 
 
+class TransactionStatusType(object):
+    """
+    Represents the ebay `TransactionStatusType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/TransactionStatusType.html
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        CompleteStatus = serializers.CharField(source="complete_status")
+
+    # / Deserialization ###############
+
+
 class TransactionType(object):
     """
     Represents the ebay `TransactionType`
@@ -121,6 +139,7 @@ class TransactionType(object):
         :type total_price: decimal.Decimal
         :type shipping_service_selected: ShippingServiceOption
         """
+
         self.transaction_id = transaction_id
         self.total_price = total_price
         self.quantity = quantity
@@ -151,7 +170,7 @@ class GetItemTransactionsResponse(object):
 
     def __init__(self, item, transactions):
         """
-        :type item: ResponseItem
+        :type item: ItemType
         :type transactions: list[TransactionType]
         """
         self.item = item
