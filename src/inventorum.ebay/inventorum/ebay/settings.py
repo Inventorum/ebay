@@ -32,6 +32,7 @@ USE_NGINX_X_ACCEL_REDIRECT = True
 
 # alphabetically ordered
 INSTALLED_APPS = (
+    'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     'django_extensions',
@@ -43,6 +44,7 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.notifications',
     'inventorum.ebay.apps.orders',
     'inventorum.ebay.apps.products',
+    'inventorum.ebay.apps.shipping',
 
     'raven.contrib.django.raven_compat',
     'rest_framework',
@@ -79,10 +81,10 @@ REST_FRAMEWORK = {
         'inventorum.ebay.lib.auth.backends.TrustedHeaderAuthentication',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-    # TODO jm: check compatibility with new rest framework version
-    # 'DEFAULT_THROTTLE_RATES': {
-    # 'default': '20/sec', # Default one for everything
-    # },
+    'DEFAULT_THROTTLE_RATES': {
+        'default': '20/sec',
+    },
+    'DEFAULT_PAGINATION_CLASS': 'inventorum.ebay.lib.rest.APIPagination',
     'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
 }
 

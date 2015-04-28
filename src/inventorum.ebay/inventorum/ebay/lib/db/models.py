@@ -53,4 +53,5 @@ class MappedInventorumModel(BaseModel):
 
 class MappedInventorumModelFactory(factory.DjangoModelFactory):
     # A randomly generated inv_id to better reflect reality
+    # TODO jm: Use fuzzy attribute instead
     inv_id = factory.LazyAttribute(lambda m: randint(999, 99999))
