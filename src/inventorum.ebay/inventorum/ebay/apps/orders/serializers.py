@@ -34,7 +34,7 @@ class OrderLineItemModelCoreAPIDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderLineItemModel
-        fields = ("product", "quantity", "gross_price")
+        fields = ("product", "name", "quantity", "gross_price")
 
     product = serializers.IntegerField(source="orderable_item.inv_product_id")
     gross_price = MoneyField(source="unit_price")

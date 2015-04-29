@@ -26,12 +26,13 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
         published_ebay_item = PublishedEbayItemFactory(product__inv_id=23)
         OrderLineItemFactory.create(order=order,
                                     orderable_item=published_ebay_item,
+                                    name="Inventorum T-Shirt [Green, L]",
                                     quantity=5, unit_price=D("3.99"))
 
         serializer = OrderModelCoreAPIDataSerializer(order)
 
         self.assertDictEqual(serializer.data, {
-            "items": [{"product": 23, "quantity": 5, "gross_price": "3.99"}],
+            "items": [{"product": 23, "name": "Inventorum T-Shirt [Green, L]", "quantity": 5, "gross_price": "3.99"}],
             "shipment": {
                 "name": "DHL Paket",
                 "cost": "4.50",
