@@ -43,3 +43,9 @@ class RelatedModelByIdField(serializers.PrimaryKeyRelatedField):
 
     def to_representation(self, value):
         return self.serializer(value).data
+
+
+class MoneyField(serializers.DecimalField):
+
+    def __init__(self, max_digits=10, decimal_places=2, **kwargs):
+        super(MoneyField, self).__init__(max_digits=max_digits, decimal_places=decimal_places, **kwargs)

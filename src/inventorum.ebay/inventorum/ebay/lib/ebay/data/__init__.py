@@ -24,6 +24,12 @@ class CompleteStatusCodeType(object):
     # Generally speaking, an order is pending when payment from the buyer has been initiated but not yet fully processed
     Pending = "Pending"
 
+    CHOICES = (
+        (Complete, "Complete"),
+        (Incomplete, "Incomplete"),
+        (Pending, "Pending")
+    )
+
 
 # TODO jm: Move to data/utils.py #######################################################################################
 

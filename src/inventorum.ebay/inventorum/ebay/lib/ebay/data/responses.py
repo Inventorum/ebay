@@ -108,6 +108,14 @@ class TransactionStatusType(object):
 
     # / Deserialization ###############
 
+    def __init__(self, complete_status):
+        """
+        :type complete_status: CompleteStatusCodeType
+        """
+        self.complete_status = complete_status
+
+TransactionStatusType.Deserializer.Meta.model = TransactionStatusType
+
 
 class TransactionType(object):
     """
@@ -123,27 +131,31 @@ class TransactionType(object):
             model = None
 
         TransactionID = serializers.CharField(source="transaction_id")
-        QuantityPurchased = serializers.IntegerField(source="quantity")
-        TransactionPrice = EbayAmountField(source="unit_price")
-        AmountPaid = EbayAmountField(source="total_price")
+        QuantityPurchased = serializers.IntegerField(source="quantity_purchased")
+        TransactionPrice = EbayAmountField(source="transaction_price")
+        AmountPaid = EbayAmountField(source="amount_paid")
+        Status = TransactionStatusType.Deserializer(source="status")
         ShippingServiceSelected = ShippingServiceOption.Deserializer(source="shipping_service_selected",
                                                                      required=False)
 
     # / Deserialization ###############
 
-    def __init__(self, transaction_id, quantity, unit_price, total_price, shipping_service_selected=None):
+    def __init__(self, transaction_id, quantity_purchased, transaction_price, amount_paid, status,
+                 shipping_service_selected=None):
         """
         :type transaction_id: unicode
-        :type quantity: int
-        :type unit_price: decimal.Decimal
-        :type total_price: decimal.Decimal
+        :type quantity_purchased: int
+        :type transaction_price: decimal.Decimal
+        :type amount_paid: decimal.Decimal
+        :type status: TransactionStatusType
         :type shipping_service_selected: ShippingServiceOption
         """
 
         self.transaction_id = transaction_id
-        self.total_price = total_price
-        self.quantity = quantity
-        self.unit_price = unit_price
+        self.amount_paid = amount_paid
+        self.quantity_purchased = quantity_purchased
+        self.transaction_price = transaction_price
+        self.status = status
         self.shipping_service_selected = shipping_service_selected
 
 TransactionType.Deserializer.Meta.model = TransactionType
