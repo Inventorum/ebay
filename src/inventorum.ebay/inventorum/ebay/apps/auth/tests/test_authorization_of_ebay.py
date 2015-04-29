@@ -77,6 +77,12 @@ class EbayAuthorizationTest(APITestCase):
             self.assertEqual(address.country, 'DE')
             self.assertEqual(address.postal_code, 'default')
 
+            response = self.client.post('/auth/logout/')
+            self.assertEqual(response.status_code, 200)
+
+            account = EbayAccountModel.objects.get(pk=self.account.pk)
+            self.assertIsNone(account.token)
+
 
     def test_fetch_token_from_AT(self):
         with MockedTest.use_cassette("ebay_fetch_token_fake_AT.yaml") as cass:
