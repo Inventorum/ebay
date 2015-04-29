@@ -366,15 +366,7 @@ class UnpublishingService(PublishingUnpublishingService):
             return
 
         api = EbayInventoryManagement(token=self.user.account.token.ebay_object)
-
-        locations_availability = [
-            EbayLocationAvailability(
-                availability=EbayAvailability.IN_STOCK,
-                location_id=self.user.account.ebay_location_id,
-                quantity=self.item.quantity
-            )
-        ]
-        api.add_inventory(self.item.sku, locations_availability=locations_availability)
+        api.delete_inventory(self.item.sku, delete_all=True)
 
     def finalize_unpublish_attempt(self):
         """

@@ -114,7 +114,7 @@ class EbayLocationAvailability(object):
         return {
             "Availability": self.availability,
             "LocationID": self.location_id,
-            "Quantity": self.quantity
+            "Quantity": int(self.quantity)
         }
 
 
