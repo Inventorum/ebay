@@ -118,7 +118,7 @@ fixed_price_transaction_notification_template = lambda timestamp, signature: """
    </Item>
    <TransactionArray>
     <Transaction>
-     <AmountPaid currencyID="EUR">0.0</AmountPaid>
+     <AmountPaid currencyID="EUR">136.9</AmountPaid>
      <AdjustmentAmount currencyID="EUR">0.0</AdjustmentAmount>
      <ConvertedAdjustmentAmount currencyID="EUR">0.0</ConvertedAdjustmentAmount>
      <Buyer>
@@ -213,7 +213,7 @@ fixed_price_transaction_notification_template = lambda timestamp, signature: """
      <ShippingServiceSelected>
       <ShippingInsuranceCost currencyID="EUR">0.0</ShippingInsuranceCost>
       <ShippingService>DE_DHLPackchen</ShippingService>
-      <ShippingServiceCost currencyID="EUR">0.0</ShippingServiceCost>
+      <ShippingServiceCost currencyID="EUR">4.90</ShippingServiceCost>
      </ShippingServiceSelected>
      <FinalValueFee currencyID="EUR">10.32</FinalValueFee>
      <TransactionPlatform>eBay</TransactionPlatform>

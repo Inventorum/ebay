@@ -4,13 +4,17 @@ import logging
 
 import datetime
 from datetime import timedelta
+from inventorum.ebay.apps.notifications.models import EbayNotificationModel
 from inventorum.ebay.apps.notifications.tests import templates
 from inventorum.ebay.apps.notifications.tests.templates import compile_notification_template
 
 from inventorum.ebay.apps.notifications import EbayNotificationEventType
+from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+from inventorum.ebay.apps.products.models import EbayItemModel
+from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
+from inventorum.ebay.tests.testcases import APITestCase
 
 from rest_framework import status
-from rest_framework.test import APITestCase
 
 
 log = logging.getLogger(__name__)
@@ -53,3 +57,27 @@ class TestNotificationsResource(APITestCase):
                                     SOAPACTION=EbayNotificationEventType.FixedPriceTransaction,
                                     data="""<? echo "Invalid xml"; ?>""")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_fixed_price_transaction(self):
+        published_item = PublishedEbayItemFactory(external_id=110136115192)
+        assert isinstance(published_item, EbayItemModel)
+
+        self.assertPrecondition(published_item.order_line_items.count(), 0)
+
+        response = self.post_notification(event_type=EbayNotificationEventType.FixedPriceTransaction)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertPostcondition(published_item.order_line_items.count(), 1)
+
+        order_line_item = published_item.order_line_items.first()
+        assert isinstance(order_line_item, OrderLineItemModel)
+
+        self.assertEqual(order_line_item.quantity, 2)
+        self.assertDecimal(order_line_item.unit_price, "66.00")
+
+        order = order_line_item.order
+        assert isinstance(order, OrderModel)
+
+        self.assertEqual(order.ebay_id, "{}-{}".format(published_item.external_id, order_line_item.ebay_id))
+        self.assertDecimal(order.final_price, "136.90")
+        self.assertEqual(type(order.created_from), EbayNotificationModel)

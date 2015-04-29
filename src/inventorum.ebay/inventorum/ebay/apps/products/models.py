@@ -7,6 +7,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
+from inventorum.ebay.apps.orders.models import OrderableItemModel
 
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
@@ -124,7 +125,7 @@ class EbayItemModelQuerySet(BaseQuerySet):
         return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
 
 
-class EbayItemModel(BaseModel):
+class EbayItemModel(OrderableItemModel, BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="items",
                                 verbose_name="Inventorum ebay account")
     product = models.ForeignKey("products.EbayProductModel", related_name="items")
@@ -195,6 +196,10 @@ class EbayItemModel(BaseModel):
     def has_variations(self):
         return self.variations.exists()
 
+    @property
+    def inv_product_id(self):
+        return self.product.inv_id
+
 
 class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):
     def by_sku(self, sku):
@@ -202,7 +207,8 @@ class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):
         return self.filter(inv_id=inv_id)
 
 
-class EbayItemVariationModel(MappedInventorumModel):
+# TODO jm: Do not inherit from MappedProductModel, call foreign key inv_product_id, remove property
+class EbayItemVariationModel(OrderableItemModel, MappedInventorumModel):
     quantity = models.IntegerField(default=0)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20)
     item = models.ForeignKey(EbayItemModel, related_name="variations")
@@ -222,6 +228,10 @@ class EbayItemVariationModel(MappedInventorumModel):
     @property
     def sku(self):
         return settings.EBAY_SKU_FORMAT.format(self.inv_id)
+
+    @property
+    def inv_product_id(self):
+        return self.product.inv_id
 
 
 class EbayItemVariationSpecificModel(BaseModel):
