@@ -78,6 +78,9 @@ class ShippingServiceConfigurationModel(BaseModel):
     also represent a selected shipping service configuration in an ``OrderModel``.
     """
     service = models.ForeignKey("shipping.ShippingServiceModel")
+
+    # Note: In case the instance is assigned as shipping to an order, the cost always represent the total shipping cost
+    # and there are no additional costs
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     additional_cost = models.DecimalField(max_digits=10, decimal_places=2, default=D("0.00"))
 
