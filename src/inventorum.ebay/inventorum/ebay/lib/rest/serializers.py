@@ -8,11 +8,20 @@ from rest_framework import serializers
 
 log = logging.getLogger(__name__)
 
+class POPOListSerializer(serializers.ListSerializer):
+    def build(self):
+        if not hasattr(self, "_errors"):
+            self.is_valid(raise_exception=True)
+
+        return self.save()
+
 
 class POPOSerializer(serializers.Serializer):
     """
     Serializer for Plain Old Python Objects (POPO)
     """
+    class Meta:
+        list_serializer_class = POPOListSerializer
 
     def create(self, validated_data):
         """

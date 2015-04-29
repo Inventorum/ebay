@@ -2,12 +2,14 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
+import urllib
 from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
     CoreProductDeltaDeserializer
 from inventorum.ebay.apps.core_api.pager import Pager
 import requests
 
 from django.conf import settings
+from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponse
 
 log = logging.getLogger(__name__)
 
@@ -264,6 +266,21 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         response = self.get("/api/info/")
         json = response.json()
         serializer = CoreInfoDeserializer(data=json)
+        return serializer.build()
+
+    def get_quantity_info(self, product_ids):
+        """
+        Ask core API about current quantity of products.
+
+        :type product_ids list - List of inventorum products ids
+        :rtype: inventorum.ebay.apps.inventory.serializers.CoreQuantity
+        :raises requests.exceptions.HTTPError
+                rest_framework.exceptions.ValidationError
+        """
+        query_params = urllib.urlencode({'id': product_ids}, True)
+        response = self.get('/api/products/quantity/?{0}'.format(query_params))
+        json = response.json()
+        serializer = QuantityCoreApiResponse(data=json, many=True)
         return serializer.build()
 
     def get_paginated_product_delta_modified(self, start_date, limit_per_page=100):

@@ -42,7 +42,7 @@ class TestSanityCheck(EbayAuthenticatedAPITestCase):
                         "LocationID": locationID,
                         "sku": settings.EBAY_SKU_FORMAT.format(StagingTestAccount.Products.SIMPLE_PRODUCT_ID),
                         "available": "IN_STOCK",
-                        "quantity": 10
+                        "quantity": 2000
                     },
                     {
                         "LocationID": locationID,
@@ -62,7 +62,7 @@ class TestSanityCheck(EbayAuthenticatedAPITestCase):
                         "LocationID": locationID,
                         "sku": settings.EBAY_SKU_FORMAT.format(StagingTestAccount.Products.SIMPLE_PRODUCT_ID),
                         "available": "IN_STOCK",
-                        "quantity": 10
+                        "quantity": 1000
                     },
                     {
                         "LocationID": locationID,
