@@ -4,8 +4,7 @@ from __builtin__ import property
 
 import os
 import logging
-from inventorum.ebay.tests.utils import PatchMixin
-import vcr
+from inventorum.ebay.tests.utils import PatchMixin, AssertionMixin
 import unittest
 
 from django.conf import settings
@@ -26,7 +25,7 @@ class APIClient(test.APIClient):
     pass
 
 
-class APITestCase(test.APITestCase):
+class APITestCase(AssertionMixin, PatchMixin, test.APITestCase):
     maxDiff = None
     client_class = APIClient
 
@@ -76,7 +75,7 @@ class EbayAuthenticatedAPITestCase(APITestCase):
                          site_id=settings.EBAY_SUPPORTED_SITES['DE'])
 
 
-class UnitTestCase(TestCase, PatchMixin):
+class UnitTestCase(AssertionMixin, PatchMixin, TestCase):
     pass
 
 
