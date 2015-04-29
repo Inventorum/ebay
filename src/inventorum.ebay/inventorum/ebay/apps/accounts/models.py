@@ -69,7 +69,7 @@ class EbayAccountModel(MappedInventorumModel):
     user_id = CharField(max_length=255, null=True, blank=True)
     country = CountryField(null=True, blank=True)
     registration_date = DateTimeField(null=True, blank=True)
-    ebay_location_uuid = CharField(max_length=36)
+    ebay_location_uuid = CharField(max_length=36, null=True, blank=True)
 
     last_core_api_sync = DateTimeField(null=True, blank=True)
 
