@@ -309,7 +309,7 @@ class PublishingService(PublishingUnpublishingService):
             EbayLocationAvailability(
                 availability=EbayAvailability.IN_STOCK,
                 location_id=self.user.account.ebay_location_id,
-                quantity=self.item.quantity
+                quantity=None
             )
         ]
         api.add_inventory('test_sky', locations_availability=locations_availability)
@@ -335,7 +335,6 @@ class UnpublishingService(PublishingUnpublishingService):
         """
         :raises UnpublishingException
         """
-        self._delete_inventory_for_click_and_collect()
 
         service = EbayItems(self.user.account.token.ebay_object)
         try:
@@ -351,6 +350,8 @@ class UnpublishingService(PublishingUnpublishingService):
 
             raise UnpublishingException(e.message, original_exception=e)
 
+        self._delete_inventory_for_click_and_collect()
+        
         self.item.unpublished_at = response.end_time
         self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
         self.item.save()

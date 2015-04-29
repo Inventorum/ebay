@@ -111,11 +111,13 @@ class EbayLocationAvailability(object):
         self.quantity = quantity
 
     def dict(self):
-        return {
+        data = {
             "Availability": self.availability,
             "LocationID": self.location_id,
-            "Quantity": int(self.quantity)
         }
+        if self.quantity is not None:
+            data["Quantity"] = int(self.quantity)
+        return data
 
 
 class EbayAddLocationResponse(object):
