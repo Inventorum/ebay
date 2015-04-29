@@ -452,7 +452,7 @@ class EbayApiAttempt(BaseModel):
     def create_succeeded_update_attempt(cls, item_update, ebay):
         """
         :type item_update: EbayItemUpdateModel
-        :type ebay_api: inventorum.ebay.lib.ebay.Ebay
+        :type ebay_api: inventorum.ebay.lib.ebay.EbayTrading
         :return: EbayApiAttempt
         """
         return cls._create_update_attempt(

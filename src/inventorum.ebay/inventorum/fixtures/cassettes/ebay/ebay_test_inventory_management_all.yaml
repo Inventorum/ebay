@@ -1,0 +1,28 @@
+interactions:
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="utf-8"?><AddInventoryLocationRequest><Address1>Voltrastr
+      5</Address1><Address2>Gebaude 2</Address2><City>Berlin</City><Country>DE</Country><Hours><Day><DayOfWeek>1</DayOfWeek><Interval><Close>10:00:00</Close><Open>08:00:00</Open></Interval></Day></Hours><Latitude>37.374488</Latitude><LocationID>test_inventorum_location</LocationID><LocationType>STORE</LocationType><Longitude>-122.032876</Longitude><Name>Test
+      location Inventorum</Name><Phone>072 445 78 75</Phone><PickupInstructions>Pick
+      it up as soon as possible</PickupInstructions><PostalCode>13355</PostalCode><Region>Berlin</Region><URL>http://inventorum.com</URL><UTCOffset>+02:00</UTCOffset></AddInventoryLocationRequest>
+    headers:
+      Content-Length: ['711']
+      Content-Type: [application/xml]
+      User-Agent: [eBaySDK/2.1.1-dev3 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-SDK-REQUEST-ID: [968117ab-7ad2-45f2-b331-b5beafd48f0d]
+    method: POST
+    uri: https://api.ebay.com/selling/inventory/v1/locations/delta/add
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><AddInventoryLocationResponse><Ack>SUCCESS</Ack><LocationID>TEST_INVENTORUM_LOCATION</LocationID><LocationUUID>D5DD5A33-F105-4076-B0B3-54CB40AF81A7</LocationUUID></AddInventoryLocationResponse>'}
+    headers:
+      content-type: [application/xml]
+      date: ['Wed, 29 Apr 2015 14:33:39 GMT']
+      guid: [14d0598f-0090-a358-a141-4451ff4e1e3f]
+      rlogid: [t6jkptufoi9%3Fuk%601d71f%2B%3Fa14%29pqtfwpu%29pie%29fgg%7E-fij-14d0598f009-0x15133]
+      server: [Apache-Coyote/1.1]
+      set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
+      transfer-encoding: [chunked]
+      x-ebay-c-version: [1.0.0]
+      x-ebay-request-id: ['14d0598f-0090-a358-a141-4451ff4e1e3f!selling.inventory.v1.locations!10.53.138.20!comosesb[!inventory.v1!r1invsvcin[]]']
+      x-frame-options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1
