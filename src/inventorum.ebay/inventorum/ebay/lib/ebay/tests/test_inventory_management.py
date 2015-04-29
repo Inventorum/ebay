@@ -63,3 +63,20 @@ class TestEbayInventoryManagement(EbayAuthenticatedAPITestCase):
 
         response = api.delete_location(location.location_id)
         self.assertEqual(response.location_id.lower(), location.location_id)
+
+    @EbayTest.use_cassette("ebay_test_add_inventory_to_non_existing_location.yaml")
+    def test_add_inventory_to_non_existing_location(self):
+        api = EbayInventoryManagement(token=self.ebay_token)
+
+        locations_availability = [
+            EbayLocationAvailability(
+                availability=EbayAvailability.IN_STOCK,
+                location_id="SOME_WIERD_NON_EXISTING_ID",
+                quantity=10
+            )
+        ]
+        # I dont know what I expected here, maybe ERROR because this location DOES NOT EXIST ... BUT NO!
+        # Ebay has his own reasons and they accept this request....
+
+        response = api.add_inventory('test_sky', locations_availability=locations_availability)
+        self.assertEqual(response.sku.lower(), 'test_sky')
