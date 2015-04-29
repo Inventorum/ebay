@@ -1,10 +1,10 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+
 import json
-
+from decimal import Decimal as D
 from django.utils.functional import cached_property
-
 from inventorum.ebay.apps.categories.models import CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, \
     CategoryFeaturesFactory, DurationFactory
@@ -15,6 +15,7 @@ from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingPreparationService
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
 from inventorum.ebay.tests import StagingTestAccount
+from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -23,7 +24,8 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 log = logging.getLogger(__name__)
 
 
-class TestProductPublish(EbayAuthenticatedAPITestCase):
+class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin):
+
     @cached_property
     def category(self):
         return CategoryFactory.create(external_id="176973")
@@ -36,10 +38,19 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         for value in durations or []:
             category.features.durations.add(DurationFactory.create(value=value))
 
+    def _assign_shipping_services(self, product):
+        product.shipping_services.create(service=self.get_shipping_service_hermes(), cost="10.00",
+                                         additional_cost=D("1.00"))
+        product.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("20.00"),
+                                         additional_cost=D("3.00"))
+
     @ApiTest.use_cassette("publish_product_resource_no_category.yaml")
     def test_publish_no_category(self):
         inv_product_id = StagingTestAccount.Products.SIMPLE_PRODUCT_ID
         assert not EbayProductModel.objects.by_inv_id(inv_product_id).exists()
+
+        self.account.shipping_services.create(service=self.get_shipping_service_dhl(),
+                                              cost=D("5.00"), additional_cost=D("0.00"))
 
         response = self.client.post("/products/%s/publish" % inv_product_id)
         log.debug('Got response: %s', response)
@@ -69,6 +80,10 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
         product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
         self._assign_category(product)
 
+        # assign valid shipping service
+        product.shipping_services.create(service=self.get_shipping_service_dhl(),
+                                         cost="5.00", additional_cost="2.00")
+
         response = self.client.post("/products/%s/publish" % inv_product_id)
         log.debug('Got response: %s', response)
         self.assertEqual(response.status_code, 200)
@@ -96,10 +111,12 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
 
     @celery_test_case()
     def test_failing_publish(self):
+
         with ApiTest.use_cassette("failing_publish.yaml") as cass:
             inv_product_id = StagingTestAccount.Products.IPAD_STAND
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             self._assign_category(product, durations=['Days_120'])  # Send wrong duration
+            self._assign_shipping_services(product)
 
             response = self.client.post("/products/%s/publish" % inv_product_id)
             log.debug('Got response: %s', response)
@@ -157,6 +174,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             inv_product_id = StagingTestAccount.Products.IPAD_STAND
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             self._assign_category(product)
+            self._assign_shipping_services(product)
 
             service = PublishingPreparationService(product, self.user)
             item = service.create_ebay_item()
@@ -196,6 +214,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             self._assign_category(product)
+            self._assign_shipping_services(product)
 
             response = self.client.post("/products/%s/publish" % inv_product_id)
             log.debug('Got response: %s', response)
@@ -235,6 +254,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             required_specific = CategorySpecificFactory.create_required(category=category)
 
             self._assign_category(product, category=category)
+            self._assign_shipping_services(product)
 
             response = self.client.post("/products/%s/publish" % inv_product_id)
             log.debug('Got response: %s', response)
@@ -256,6 +276,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase):
             size_specific = CategorySpecificFactory.create_required(category=category, name="Größe")
             brand_specific = CategorySpecificFactory.create_required(category=category, name="Marke")
             self._assign_category(product, category=category)
+            self._assign_shipping_services(product)
 
             EbayProductSpecificFactory.create(
                 product=product,

@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from collections import defaultdict
 import logging
+
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext
 
@@ -10,6 +10,7 @@ from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer, \
     CategorySpecificsSerializer
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayProductSpecificModel
+from inventorum.ebay.apps.shipping.serializers import ShippingServiceConfigurableSerializer
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
 from inventorum.ebay.lib.rest.fields import RelatedModelByIdField
 from rest_framework import serializers
@@ -46,10 +47,12 @@ class EbayProductCategorySerializer(CategorySerializer):
     specifics = CategorySpecificsSerializer(many=True)
 
 
-class EbayProductSerializer(serializers.ModelSerializer):
+class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.ModelSerializer):
+
     class Meta:
         model = EbayProductModel
-        fields = ('id', 'category', 'is_published', 'listing_url', 'specific_values', 'is_click_and_collect')
+        fields = ('id', 'category', 'is_published', 'listing_url', 'specific_values', 'is_click_and_collect',
+                  'shipping_services')
 
     category = RelatedModelByIdField(serializer=EbayProductCategorySerializer, allow_null=True, required=False)
 
@@ -57,10 +60,6 @@ class EbayProductSerializer(serializers.ModelSerializer):
     is_published = serializers.BooleanField(read_only=True)
     listing_url = serializers.BooleanField(read_only=True)
     specific_values = EbayProductSpecificSerializer(many=True)
-
-    def update(self, instance, validated_data):
-        self._update_specific_values(instance, validated_data)
-        return super(EbayProductSerializer, self).update(instance, validated_data)
 
     def validate_category(self, category):
         if category is None:
@@ -75,6 +74,18 @@ class EbayProductSerializer(serializers.ModelSerializer):
 
         return category
 
+    def validate_shipping_services(self, shipping_services):
+        """
+        Validates the correct country scope of the shipping services
+
+        :type shipping_services: list[dict]
+        """
+        product = self.instance
+        for config in shipping_services:
+            if config["service"].country != product.account.country:
+                raise ValidationError(ugettext("Invalid shipping service"))
+        return shipping_services
+
     def validate(self, attrs):
         specific_values = attrs.get('specific_values', None)
         category = attrs.get('category', None)
@@ -84,10 +95,14 @@ class EbayProductSerializer(serializers.ModelSerializer):
             validator.validate(raise_exception=True)
         return attrs
 
-    # METHODS FOR SPECIFIC_VALUES
-    def _update_specific_values(self, instance, validated_data):
+    def update(self, instance, validated_data):
+        self.create_or_update_specific_values(instance, validated_data)
+        self.create_or_update_shipping_services(instance, validated_data)
+        return super(EbayProductSerializer, self).update(instance, validated_data)
+
+    def create_or_update_specific_values(self, instance, validated_data):
         specific_values = validated_data.pop('specific_values', None)
-        if not specific_values:
+        if specific_values is None:
             return
 
         current_specific_values = set(instance.specific_values.values_list('id', flat=True))
@@ -110,5 +125,3 @@ class EbayProductSerializer(serializers.ModelSerializer):
         to_be_deleted = current_specific_values - set(new_specific_values)
         if to_be_deleted:
             instance.specific_values.filter(id__in=to_be_deleted).delete()
-
-

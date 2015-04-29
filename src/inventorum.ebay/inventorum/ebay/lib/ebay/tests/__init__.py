@@ -1,4 +1,5 @@
 from ebaysdk.trading import Connection
+from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.tests.testcases import UnitTestCase
 from mock import patch, Mock
 
@@ -17,8 +18,10 @@ class EbayClassTestCase(UnitTestCase):
     def setUp(self):
         super(EbayClassTestCase, self).setUp()
         self.connection_original = Connection
-        self.patcher = patch('inventorum.ebay.lib.ebay.Connection', spec=True)
+        self.patcher = patch('inventorum.ebay.lib.ebay.TradingConnection', spec=True)
         self.connection_mock = self.patcher.start()
+        self.original_class = EbayTrading.default_connection_cls
+        EbayTrading.default_connection_cls = self.connection_mock
         self.instance_mock = self.connection_mock.return_value
 
         self.config = ConfigMocked()
@@ -40,4 +43,5 @@ class EbayClassTestCase(UnitTestCase):
     def tearDown(self):
         self.patcher.stop()
         self.patcher_parallel.stop()
+        EbayTrading.default_connection_cls = self.original_class
         super(EbayClassTestCase, self).tearDown()

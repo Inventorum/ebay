@@ -4,7 +4,7 @@ import logging
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.tasks import schedule_ebay_item_publish, schedule_ebay_item_unpublish
 
-from rest_framework import exceptions
+from rest_framework import exceptions, mixins
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -38,23 +38,17 @@ class ProductResourceMixin(object):
         return product
 
 
-class EbayProductResource(APIResource, ProductResourceMixin):
+class EbayProductResource(APIResource, ProductResourceMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
     serializer_class = EbayProductSerializer
 
-    def get(self, request, inv_product_id):
-        product = self.get_or_create_product(inv_product_id, request.user.account)
+    def get_object(self):
+        return self.get_or_create_product(self.kwargs["inv_product_id"], self.request.user.account)
 
-        serializer = self.get_serializer(product, many=False)
-        return Response(data=serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
-    def put(self, request, inv_product_id):
-        product = self.get_or_create_product(inv_product_id, request.user.account)
-
-        serializer = self.get_serializer(product, data=request.data, many=False)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(data=serializer.data)
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
 
 class PublishResource(APIResource, ProductResourceMixin):

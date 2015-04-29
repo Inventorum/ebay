@@ -6,7 +6,7 @@ import re
 
 from django.utils.datetime_safe import datetime
 from rest_framework.fields import BooleanField
-from rest_framework.serializers import ListSerializer
+from rest_framework import serializers
 
 
 class EbayParser(object):
@@ -48,8 +48,15 @@ class EbayBooleanField(BooleanField):
     FALSE_VALUES = frozenset(BooleanField.FALSE_VALUES | {'Disabled'})
 
 
-class EbayListSerializer(ListSerializer):
+class EbayListSerializer(serializers.ListSerializer):
     def to_internal_value(self, data):
         if isinstance(data, dict):
             data = [data]
         return super(EbayListSerializer, self).to_internal_value(data)
+
+
+class EbayNullableIntegerField(serializers.IntegerField):
+    def to_internal_value(self, data):
+        if data == 'null':
+            return None
+        return super(EbayNullableIntegerField, self).to_internal_value(data)

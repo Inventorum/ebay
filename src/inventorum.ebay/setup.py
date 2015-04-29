@@ -19,7 +19,7 @@ manage = inventorum.util.paste:manage
 # alphabetically ordered(!)
 required_eggs = [
     'celery>=3.1.17',
-    'ebaysdk>=2.1.1-dev2',
+    'ebaysdk>=2.1.1-dev3',
     'flower>=0.8.1',
     'grequests>=0.3.1',
 
@@ -70,7 +70,7 @@ setup(
     dependency_links=[
         # use the last commit-id in our branch that we rely on
         'https://github.com/bimusiek/ebaysdk-python/archive/master.zip'
-        '#egg=ebaysdk-2.1.1-dev2',
+        '#egg=ebaysdk-2.1.1-dev3',
         'https://github.com/rtdean/grequests/archive/0.3.0.zip'
         '#egg=grequests-0.3.1',
     ],

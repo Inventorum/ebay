@@ -1,11 +1,11 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.lib.ebay import Ebay
+from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse, \
     EbayReviseFixedPriceItemResponse
 
 
-class EbayItems(Ebay):
+class EbayItems(EbayTrading):
 
     def publish(self, item):
         """

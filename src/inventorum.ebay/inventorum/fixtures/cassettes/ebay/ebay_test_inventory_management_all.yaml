@@ -1,0 +1,51 @@
+interactions:
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="utf-8"?><AddInventoryLocationRequest><Address1>Voltrastr
+      5</Address1><Address2>Gebaude 2</Address2><City>Berlin</City><Country>DE</Country><Hours><Day><DayOfWeek>1</DayOfWeek><Interval><Close>10:00:00</Close><Open>08:00:00</Open></Interval></Day></Hours><Latitude>37.374488</Latitude><LocationID>test_inventorum_location</LocationID><LocationType>STORE</LocationType><Longitude>-122.032876</Longitude><Name>Test
+      location Inventorum</Name><Phone>072 445 78 75</Phone><PickupInstructions>Pick
+      it up as soon as possible</PickupInstructions><PostalCode>13355</PostalCode><Region>Berlin</Region><URL>http://inventorum.com</URL><UTCOffset>+02:00</UTCOffset></AddInventoryLocationRequest>
+    headers:
+      Content-Length: ['711']
+      Content-Type: [application/xml]
+      User-Agent: [eBaySDK/2.1.1-dev3 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-SDK-REQUEST-ID: [ea19c47a-29cc-4b7d-bc8d-9f6713264fd5]
+    method: POST
+    uri: https://api.ebay.com/selling/inventory/v1/locations/delta/add
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><AddInventoryLocationResponse><Ack>SUCCESS</Ack><LocationID>TEST_INVENTORUM_LOCATION</LocationID><LocationUUID>D5DD5A33-F105-4076-B0B3-54CB40AF81A7</LocationUUID></AddInventoryLocationResponse>'}
+    headers:
+      content-type: [application/xml]
+      date: ['Wed, 29 Apr 2015 14:54:41 GMT']
+      guid: [14d05ac3-3c50-a2b6-0271-92c1ff3be4e4]
+      rlogid: [t6jkptufoi9%3Feog4d71f%2B43a%60%29pqtfwpu%29sm%7E%29fgg%7E-fij-14d05ac33c7-0xe2ef]
+      server: [Apache-Coyote/1.1]
+      set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
+      transfer-encoding: [chunked]
+      x-ebay-c-version: [1.0.0]
+      x-ebay-request-id: ['14d05ac3-3c50-a2b6-0271-92c1ff3be4e4!selling.inventory.v1.locations!10.43.96.39!comosesb[!inventory.v1!r1invsvcin[]]']
+      x-frame-options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="utf-8"?><AddInventoryRequest><Locations><Location><Availability>IN_STOCK</Availability><LocationID>test_inventorum_location</LocationID><Quantity>10</Quantity></Location></Locations><SKU>test_sky</SKU></AddInventoryRequest>
+    headers:
+      Content-Length: ['253']
+      Content-Type: [application/xml]
+      User-Agent: [eBaySDK/2.1.1-dev3 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-SDK-REQUEST-ID: [765be4b6-5a87-40be-9006-8927d2f4d3dd]
+    method: POST
+    uri: https://api.ebay.com/selling/inventory/v1/inventory/delta/add
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><AddInventoryResponse><Ack>SUCCESS</Ack><SKU>TEST_SKY</SKU></AddInventoryResponse>'}
+    headers:
+      content-type: [application/xml]
+      date: ['Wed, 29 Apr 2015 14:54:41 GMT']
+      guid: [14d05ac3-6c70-a56c-e0c7-6d37ff36540f]
+      rlogid: [t6jkptufoi9%3Fvo%7B%3Dd70f%2B0%60%3Dc-14d05ac36c8-0xc2d]
+      server: [Apache-Coyote/1.1]
+      set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
+      transfer-encoding: [chunked]
+      x-ebay-c-version: [1.0.0]
+      x-ebay-request-id: ['14d05ac3-6c70-a56c-e0c7-6d37ff36540f!selling.inventory.v1.inventory!10.86.206.12!comosesb[!inventory.v1!r1invsvcin[]]']
+      x-frame-options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1

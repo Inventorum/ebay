@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from decimal import Decimal as D, Decimal
+from decimal import Decimal as D
 
 from django.conf import settings
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
@@ -11,7 +11,6 @@ from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.tests.testcases import APITestCase
 
 from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient, CoreAPIClient
-from mock import patch
 
 
 log = logging.getLogger(__name__)
@@ -55,7 +54,6 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertTrue(image.url.endswith(
             "/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG"))
 
-
     @CoreApiTest.use_cassette("get_product_with_ebay_meta.yaml")
     def test_get_product_with_ebay_meta(self):
         core_product = self.subject.get_product(StagingTestAccount.Products.PRODUCT_WITH_EBAY_META_ID)
@@ -82,21 +80,6 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertTrue(image_2.url.endswith(
             "/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad_retina.JPEG"))
 
-    @CoreApiTest.use_cassette("get_product_with_shipping_services.yaml")
-    def test_get_product_with_ebay_meta(self):
-        core_product = self.subject.get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES)
-
-        self.assertEqual(core_product.id, StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES)
-        self.assertEqual(len(core_product.shipping_services), 2)
-
-        first_shipping = core_product.shipping_services[0]
-        self.assertEqual(first_shipping.id, 'DE_HermesPaket')
-        self.assertEqual(first_shipping.description, 'Hermes Paket')
-        self.assertEqual(first_shipping.time_min, 1)
-        self.assertEqual(first_shipping.time_max, 2)
-        self.assertEqual(first_shipping.additional_cost, Decimal(1))
-        self.assertEqual(first_shipping.cost, Decimal(10))
-
     @CoreApiTest.use_cassette("get_account_info.yaml")
     def test_get_account_info(self):
         core_account = self.subject.get_account_info()
@@ -115,16 +98,9 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(billing.company, "Inventorum")
 
         account_settings = core_account.account.settings
-        self.assertEqual(len(account_settings.shipping_services), 1)
         self.assertEqual(account_settings.ebay_paypal_email, 'bartosz@hernas.pl')
         self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
         self.assertTrue(account_settings.ebay_click_and_collect)
-
-        shipping_service = account_settings.shipping_services[0]
-        self.assertEqual(shipping_service.id, 'DE_DHLPaket')
-        self.assertEqual(shipping_service.description, 'DHL Paket')
-        self.assertEqual(shipping_service.additional_cost, Decimal('2'))
-        self.assertEqual(shipping_service.cost, Decimal('5'))
 
     @CoreApiTest.use_cassette("get_product_with_variations.yaml")
     def test_product_with_variations(self):

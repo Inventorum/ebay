@@ -8,11 +8,13 @@ from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
 
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
-from inventorum.ebay.lib.ebay.data.items import EbayShippingService, EbayFixedPriceItem, EbayPicture, EbayItemSpecific, \
-    EbayVariation, EbayReviseFixedPriceItem, EbayReviseFixedPriceVariation
+
+from inventorum.ebay.lib.ebay.data.items import EbayItemShippingService, EbayFixedPriceItem, EbayPicture,\
+    EbayItemSpecific, EbayVariation, EbayReviseFixedPriceItem, EbayReviseFixedPriceVariation
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -35,7 +37,7 @@ class EbayProductModelQuerySet(MappedInventorumModelQuerySet):
         return self.filter(account=account)
 
 
-class EbayProductModel(MappedInventorumModel):
+class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
     """ Represents an inventorum product in the ebay context """
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="products",
                                 verbose_name="Inventorum ebay account")
@@ -101,7 +103,7 @@ class EbayItemShippingDetails(BaseModel):
 
     @property
     def ebay_object(self):
-        return EbayShippingService(
+        return EbayItemShippingService(
             id=self.external_id,
             cost=self.cost,
             additional_cost=self.additional_cost
@@ -462,7 +464,7 @@ class EbayApiAttempt(BaseModel):
     def create_succeeded_update_attempt(cls, item_update, ebay):
         """
         :type item_update: EbayItemUpdateModel
-        :type ebay_api: inventorum.ebay.lib.ebay.Ebay
+        :type ebay_api: inventorum.ebay.lib.ebay.EbayTrading
         :return: EbayApiAttempt
         """
         return cls._create_update_attempt(
