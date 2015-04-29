@@ -17,7 +17,8 @@ class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.M
 
     class Meta:
         model = EbayAccountModel
-        fields = ('shipping_services', )
+        read_only_fields = ('email', 'user_id')
+        fields = ('shipping_services', ) + read_only_fields
 
     def validate_shipping_services(self, shipping_services):
         """
