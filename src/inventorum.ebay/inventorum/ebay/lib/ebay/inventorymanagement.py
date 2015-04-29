@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import Ebay
 from ebaysdk.inventorymanagement import Connection as InventoryManagementConnection
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayAddLocationResponseDeserializer, \
-    EbayAddInventoryResponseDeserializer
+    EbayAddDeleteInventoryResponseDeserializer, EbayDeleteInventoryLocationDeserializer
 
 
 class EbayInventoryManagement(Ebay):
@@ -21,7 +21,7 @@ class EbayInventoryManagement(Ebay):
         """
         :type sku: unicode
         :type locations: list[inventorum.ebay.lib.ebay.data.inventorymanagement.EbayLocationAvailability]
-        :rtype: inventorum.ebay.lib.ebay.data.inventorymanagement.EbayAddInventoryResponse
+        :rtype: inventorum.ebay.lib.ebay.data.inventorymanagement.EbayAddDeleteInventoryResponse
         """
         response = self.execute('AddInventory', {
             "SKU": sku,
@@ -29,4 +29,27 @@ class EbayInventoryManagement(Ebay):
                 "Location": [l.dict() for l in locations_availability]
             }
         })
-        return EbayAddInventoryResponseDeserializer(data=response).build()
+        return EbayAddDeleteInventoryResponseDeserializer(data=response).build()
+
+    def delete_inventory(self, sku, delete_all, locations_ids=None):
+        assert delete_all or locations_ids, "If you do not specify locations, you need to delete all"
+        locations_ids = locations_ids or []
+
+        response = self.execute('DeleteInventory', {
+            'SKU': sku,
+            'Confirm': unicode(delete_all).lower(),
+            'Locations': {
+                'Location': [{'LocationID': location_id} for location_id in locations_ids]
+            }
+        })
+        return EbayAddDeleteInventoryResponseDeserializer(data=response).build()
+
+    def delete_location(self, location_id):
+        """
+        :param location_id: unicode
+        :rtype: inventorum.ebay.lib.ebay.data.inventorymanagement.EbayDeleteInventoryLocationResponse
+        """
+        response = self.execute('DeleteInventoryLocation', {
+            'LocationID': location_id
+        })
+        return EbayDeleteInventoryLocationDeserializer(data=response).build()

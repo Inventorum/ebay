@@ -57,3 +57,9 @@ class TestEbayInventoryManagement(EbayAuthenticatedAPITestCase):
         ]
         response = api.add_inventory('test_sky', locations_availability=locations_availability)
         self.assertEqual(response.sku.lower(), 'test_sky')
+
+        response = api.delete_inventory('test_sky', delete_all=True)
+        self.assertEqual(response.sku.lower(), 'test_sky')
+
+        response = api.delete_location(location.location_id)
+        self.assertEqual(response.location_id.lower(), location.location_id)
