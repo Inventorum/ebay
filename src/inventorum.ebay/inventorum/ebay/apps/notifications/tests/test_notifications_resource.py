@@ -11,7 +11,7 @@ from inventorum.ebay.apps.notifications.models import EbayNotificationModel
 from inventorum.ebay.apps.notifications import EbayNotificationEventType, EbayNotificationStatus
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.products.models import EbayItemModel
-from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
+from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory, EbayItemVariationFactory
 from inventorum.ebay.lib.ebay.data import CompleteStatusCodeType
 from inventorum.ebay.tests.testcases import APITestCase
 
@@ -94,3 +94,18 @@ class TestNotificationsResource(APITestCase):
         self.assertDecimal(order.final_price, "29.95")
         self.assertEqual(order.ebay_status, CompleteStatusCodeType.Complete)
         self.assertEqual(type(order.created_from), EbayNotificationModel)
+
+    def test_fixed_price_transaction_for_variation(self):
+        published_item = PublishedEbayItemFactory(external_id="1337")
+        variation = EbayItemVariationFactory.create(item=published_item)
+
+        event_type = EbayNotificationEventType.FixedPriceTransaction
+        template = notification_templates.fixed_price_transaction_notification_template_for_variation
+
+        data = compile_notification_template(template, item_id="1337", item_title="Inventorum T-Shirt",
+                                             variation_sku="9999", variation_title="Inventorum T-Shirt [Blau, M]",
+                                             transaction_id="1111", transaction_price="5.99", quantity_purchased=1,
+                                             amount_paid="5.99", complete_status=CompleteStatusCodeType.Incomplete)
+
+        response = self.post_notification(event_type=event_type, data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

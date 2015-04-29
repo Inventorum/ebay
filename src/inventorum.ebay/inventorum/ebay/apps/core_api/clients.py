@@ -18,6 +18,7 @@ class CoreAPIClientException(Exception):
 
 class CoreAPIClient(object):
     API_VERSION = 9
+    EBAY_CHANNEL = "ebay"
 
     @property
     def default_headers(self):
@@ -317,3 +318,11 @@ class UserScopedCoreAPIClient(CoreAPIClient):
             'details': details
         }
         return self.post('/api/products/{}/state/'.format(inv_product_id), data=data)
+
+    def create_order(self, data):
+        """
+
+        :param data:
+        :return:
+        """
+        return self.post('/api/orders?channel={}'.format(self.EBAY_CHANNEL), data=data)
