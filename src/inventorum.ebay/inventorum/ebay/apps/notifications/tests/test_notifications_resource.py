@@ -84,6 +84,7 @@ class TestNotificationsResource(APITestCase):
         order_line_item = published_item.order_line_items.first()
         assert isinstance(order_line_item, OrderLineItemModel)
 
+        self.assertEqual(order_line_item.name, "Inventorum T-Shirt")
         self.assertEqual(order_line_item.quantity, 5)
         self.assertDecimal(order_line_item.unit_price, "5.99")
 
@@ -97,15 +98,35 @@ class TestNotificationsResource(APITestCase):
 
     def test_fixed_price_transaction_for_variation(self):
         published_item = PublishedEbayItemFactory(external_id="1337")
-        variation = EbayItemVariationFactory.create(item=published_item)
+        variation = EbayItemVariationFactory.create(item=published_item, inv_id="23")
+
+        self.assertPrecondition(published_item.order_line_items.count(), 0)
+        self.assertPrecondition(variation.sku.endswith("23"), True)
 
         event_type = EbayNotificationEventType.FixedPriceTransaction
         template = notification_templates.fixed_price_transaction_notification_template_for_variation
 
         data = compile_notification_template(template, item_id="1337", item_title="Inventorum T-Shirt",
-                                             variation_sku="9999", variation_title="Inventorum T-Shirt [Blau, M]",
+                                             variation_sku=variation.sku, variation_title="Inventorum T-Shirt [Blau, M]",
                                              transaction_id="1111", transaction_price="5.99", quantity_purchased=1,
                                              amount_paid="5.99", complete_status=CompleteStatusCodeType.Incomplete)
 
         response = self.post_notification(event_type=event_type, data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertPostcondition(variation.order_line_items.count(), 1)
+
+        order_line_item = variation.order_line_items.first()
+        assert isinstance(order_line_item, OrderLineItemModel)
+
+        self.assertEqual(order_line_item.name, "Inventorum T-Shirt [Blau, M]")
+        self.assertEqual(order_line_item.quantity, 1)
+        self.assertDecimal(order_line_item.unit_price, "5.99")
+
+        order = order_line_item.order
+        assert isinstance(order, OrderModel)
+
+        self.assertEqual(order.ebay_id, "1337-1111")
+        self.assertDecimal(order.final_price, "5.99")
+        self.assertEqual(order.ebay_status, CompleteStatusCodeType.Incomplete)
+        self.assertEqual(type(order.created_from), EbayNotificationModel)

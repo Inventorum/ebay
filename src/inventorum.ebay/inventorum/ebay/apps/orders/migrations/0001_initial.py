@@ -29,6 +29,7 @@ class Migration(migrations.Migration):
                 ('inv_id', models.IntegerField(unique=True, null=True, verbose_name='Universal inventorum id', blank=True)),
                 ('ebay_id', models.CharField(max_length=255, verbose_name='Ebay transaction id')),
                 ('orderable_item_id', models.PositiveIntegerField()),
+                ('name', models.CharField(max_length=255)),
                 ('quantity', models.PositiveIntegerField(verbose_name='Quantity')),
                 ('unit_price', inventorum.ebay.lib.db.fields.MoneyField(verbose_name='Unit price', max_digits=10, decimal_places=2)),
             ],

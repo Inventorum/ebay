@@ -39,6 +39,8 @@ class OrderLineItemFactory(factory.DjangoModelFactory):
         # django_get_or_create = ("ebay_id",)
 
     ebay_id = fuzzy.FuzzyText(length=10, chars=NUMBER_CHARS)
+
+    name = factory.Sequence(lambda n: "Order line item {}".format(n))
     unit_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
     quantity = fuzzy.FuzzyInteger(low=1, high=100)
 

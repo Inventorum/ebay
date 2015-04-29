@@ -34,6 +34,7 @@ class OrderLineItemModel(BaseModel):
     orderable_item_id = models.PositiveIntegerField()
     orderable_item = GenericForeignKey('orderable_item_type', 'orderable_item_id')
 
+    name = models.CharField(max_length=255)
     quantity = models.PositiveIntegerField(verbose_name="Quantity")
     unit_price = MoneyField(verbose_name="Unit price")
 

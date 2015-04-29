@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from inventorum.ebay.apps.orders.models import OrderModel
-from inventorum.ebay.apps.products.models import EbayItemModel
+from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemVariationModel
 
 from inventorum.ebay.lib.ebay.data.responses import GetItemTransactionsResponse, GetItemResponse
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
@@ -71,6 +71,33 @@ class FixedPriceTransactionNotificationHandler(EbayNotificationHandler):
             # We fail gracefully here as this happens when the account has other ebay listings not created with our tool
             return
 
+        orderable_item, orderable_name = None, None
+        if ebay_item_model.has_variations and transaction.variation:
+            # => variation has been bought from multi item listing
+            sku = transaction.variation.sku
+            try:
+                ebay_variation_model = ebay_item_model.variations.by_sku(sku).get()
+            except EbayItemVariationModel.DoesNotExist:
+                raise EbayNotificationHandlerException("No EbayItemVariationModel found with sku {}".format(sku))
+            except EbayItemVariationModel.MultipleObjectsReturned:
+                raise EbayNotificationHandlerException("Multiple EbayItemVariationModels found with sku {}".format(sku))
+
+            orderable_item = ebay_variation_model
+            orderable_name = transaction.variation.variation_title
+        elif not ebay_item_model.has_variations and not transaction.variation:
+            # => regular item has been bought
+            orderable_item = ebay_item_model
+            orderable_name = item.title
+        # Exception handling for cases that should never happen
+        elif ebay_item_model.has_variations and not transaction.variation:
+            raise EbayNotificationHandlerException("")
+        elif not ebay_item_model.has_variations and transaction.variation:
+            raise EbayNotificationHandlerException("Got ebay transaction with variation for an item (pk: {})) "
+                                                   "without variations".format(ebay_item_model.pk))
+        elif ebay_item_model.has_variations and not transaction.variation:
+            raise EbayNotificationHandlerException("Got ebay transaction without variation for an item (pk: {})) "
+                                                   "with variations".format(ebay_item_model.pk))
+
         account = ebay_item_model.account
 
         # Since we do not support multiple line item orders (known as a Combined Invoice orders),
@@ -85,7 +112,8 @@ class FixedPriceTransactionNotificationHandler(EbayNotificationHandler):
                                           created_from=self.notification)
 
         order.line_items.create(ebay_id=transaction.transaction_id,
-                                orderable_item=ebay_item_model,
+                                orderable_item=orderable_item,
+                                name=orderable_name,
                                 quantity=transaction.quantity_purchased,
                                 unit_price=transaction.transaction_price)
 

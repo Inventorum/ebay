@@ -10,6 +10,35 @@ from rest_framework import serializers
 log = logging.getLogger(__name__)
 
 
+class VariationType(object):
+    """
+    Represents the ebay `VariationType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/VariationType.html
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        SKU = serializers.CharField(source="sku")
+        VariationTitle = serializers.CharField(source="variation_title")
+
+    # / Deserialization ###############
+
+    def __init__(self, sku, variation_title):
+        """
+        :type sku: unicode
+        :type variation_title: unicode
+        """
+        self.sku = sku
+        self.variation_title = variation_title
+
+VariationType.Deserializer.Meta.model = VariationType
+
+
 class ItemType(object):
     """
     Represents the ebay `ItemType`
@@ -24,14 +53,17 @@ class ItemType(object):
             model = None
 
         ItemID = serializers.CharField(source="item_id")
+        Title = serializers.CharField(source="title")
 
     # / Deserialization ###############
 
-    def __init__(self, item_id):
+    def __init__(self, item_id, title):
         """
         :type item_id: unicode
+        :type title: unicode
         """
         self.item_id = item_id
+        self.title = title
 
 ItemType.Deserializer.Meta.model = ItemType
 
@@ -135,12 +167,13 @@ class TransactionType(object):
         TransactionPrice = EbayAmountField(source="transaction_price")
         AmountPaid = EbayAmountField(source="amount_paid")
         Status = TransactionStatusType.Deserializer(source="status")
+        Variation = VariationType.Deserializer(source="variation", required=False)
         ShippingServiceSelected = ShippingServiceOption.Deserializer(source="shipping_service_selected",
                                                                      required=False)
 
     # / Deserialization ###############
 
-    def __init__(self, transaction_id, quantity_purchased, transaction_price, amount_paid, status,
+    def __init__(self, transaction_id, quantity_purchased, transaction_price, amount_paid, status, variation=None,
                  shipping_service_selected=None):
         """
         :type transaction_id: unicode
@@ -148,6 +181,7 @@ class TransactionType(object):
         :type transaction_price: decimal.Decimal
         :type amount_paid: decimal.Decimal
         :type status: TransactionStatusType
+        :type variation: VariationType
         :type shipping_service_selected: ShippingServiceOption
         """
 
@@ -156,6 +190,7 @@ class TransactionType(object):
         self.quantity_purchased = quantity_purchased
         self.transaction_price = transaction_price
         self.status = status
+        self.variation = variation
         self.shipping_service_selected = shipping_service_selected
 
 TransactionType.Deserializer.Meta.model = TransactionType
