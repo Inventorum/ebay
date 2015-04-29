@@ -5,7 +5,7 @@ from inventorum.ebay.apps.auth.serializers import AuthorizeEbayParametersSeriali
 from inventorum.ebay.apps.auth.services import AuthorizationService, AuthorizationServiceException
 from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
 from inventorum.ebay.lib.rest.exceptions import BadRequest
-from inventorum.ebay.lib.rest.resources import UnauthorizedEbayAPIResource
+from inventorum.ebay.lib.rest.resources import UnauthorizedEbayAPIResource, APIResource
 from rest_framework.response import Response
 
 
@@ -38,4 +38,12 @@ class AuthorizeEbayResource(UnauthorizedEbayAPIResource):
         except AuthorizationServiceException as e:
             raise BadRequest(e.message, key="auth.service.error")
 
+        return Response()
+
+
+class LogoutEbayResource(APIResource):
+    @atomic
+    def post(self, request):
+        service = AuthorizationService(request.user)
+        service.logout()
         return Response()
