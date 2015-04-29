@@ -108,16 +108,11 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
         for val in specific_values:
             specific_obj = val['specific']
             value = val['value']
-            defaults = dict(value=value)
             prod_spec_obj, c = EbayProductSpecificModel.objects.get_or_create(
                 specific=specific_obj,
                 product=instance,
-                defaults=defaults
+                value=value
             )
-            if not c:
-                for key, value in defaults.iteritems():
-                    setattr(prod_spec_obj, key, value)
-                prod_spec_obj.save()
             new_specific_values.append(prod_spec_obj.id)
 
         to_be_deleted = current_specific_values - set(new_specific_values)
