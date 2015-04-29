@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.util.celery import TaskExecutionContext
+from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
 from inventorum.ebay.lib.rest.permissions import IsEbayAuthenticated
 
@@ -32,3 +33,7 @@ class APIResource(UnauthorizedEbayAPIResource):
             account_id=account.id,
             request_id=request_id
         )
+
+
+class APIListResource(APIResource, mixins.ListModelMixin):
+    pass

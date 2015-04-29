@@ -57,8 +57,9 @@ class PublishingPreparationService(object):
         :type product: EbayProductModel
         :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
         """
-        self.user = user
         self.product = product
+        self.account = user.account
+        self.user = user
 
     @cached_property
     def core_product(self):
@@ -83,14 +84,16 @@ class PublishingPreparationService(object):
         Validates account and product before publishing to ebay
         :raises: PublishingValidationException
         """
+        self._validate_product_existence_in_core_api()
+
         if self.product.is_published:
             raise PublishingValidationException(ugettext('Product was already published'))
 
         if not self.core_account.billing_address:
             raise PublishingValidationException(ugettext('To publish product we need your billing address'))
 
-        if not (self.core_product.shipping_services or self.core_account.settings.shipping_services):
-            raise PublishingValidationException(ugettext('Product has not shipping services selected'))
+        if not (self.product.shipping_services.exists() or self.account.shipping_services.exists()):
+            raise PublishingValidationException(ugettext('Neither product or account have configured shipping services'))
 
         self._validate_prices()
         self._validate_attributes_in_variations()
@@ -117,6 +120,9 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(ugettext("You cannot publish product with Click & Collect, because you "
                                                          "don't have it enabled for your account!"))
 
+    def _validate_product_existence_in_core_api(self):
+        return self.core_product
+
     def _validate_prices(self):
         if not self.core_product.is_parent and self.core_product.gross_price < Decimal("1"):
             raise PublishingValidationException(ugettext('Price needs to be greater or equal than 1'))
@@ -139,7 +145,6 @@ class PublishingPreparationService(object):
         if not all_variations_has_the_same_attributes:
             raise PublishingValidationException(ugettext("All variations needs to have exactly the same number of "
                                                          "attributes"))
-
 
     def create_ebay_item(self):
         """
@@ -168,12 +173,15 @@ class PublishingPreparationService(object):
                 url=image.url,
                 item=item
             )
-        shipping_services = self.core_product.shipping_services or self.core_account.settings.shipping_services
-        for service in shipping_services:
+
+        shipping_services = self.product.shipping_services.all() if self.product.shipping_services.exists() \
+            else self.account.shipping_services.all()
+
+        for service_config in shipping_services:
             EbayItemShippingDetails.objects.create(
-                additional_cost=service.additional_cost,
-                cost=service.cost,
-                external_id=service.id,
+                additional_cost=service_config.additional_cost,
+                cost=service_config.cost,
+                external_id=service_config.service.external_id,
                 item=item
             )
 

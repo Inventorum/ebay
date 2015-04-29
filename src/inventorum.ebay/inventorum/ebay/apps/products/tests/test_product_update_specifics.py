@@ -37,7 +37,6 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         self.assertEqual(leaf_category.specifics.count(), 3)
         return leaf_category
 
-
     def _get_valid_data_for(self, product):
         return EbayProductSerializer(product).data
 
@@ -104,7 +103,6 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
         self.assertEqual(specific_values.get(specific=self.required_specific_selection_only).value,
                          selection_only_specific_value)
 
-
     def test_save_validation_handling(self):
         """
         Test save specifics to product. Sending here specifics without one required
@@ -165,7 +163,6 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
 
         specific_values = product.specific_values.all()
         self.assertEqual(specific_values.count(), 0)
-
 
     def test_save_wrong_specific_category(self):
         """
@@ -313,4 +310,3 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
             'non_field_errors': ['You send too many values for one specific (specific_ids: [%s])!'
                                  % self.required_specific.pk]
         })
-

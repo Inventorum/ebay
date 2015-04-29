@@ -3,12 +3,14 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.conf import settings
+
 from django.db.models.fields import CharField, EmailField, BooleanField, DateTimeField
 from django.db.models.fields.related import ForeignKey
 from django_countries.fields import CountryField
 
 from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 
 from inventorum.ebay.lib.auth.models import AuthenticableModelMixin
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
@@ -55,7 +57,7 @@ class EbayAccountModelQuerySet(MappedInventorumModelQuerySet):
         return self.filter(products__items__publishing_status=EbayItemPublishingStatus.PUBLISHED).distinct()
 
 
-class EbayAccountModel(MappedInventorumModel):
+class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
     """ Represents an inventorum account in the ebay context """
     token = ForeignKey("auth.EbayTokenModel", null=True, blank=True, related_name="accounts",
                        verbose_name="Ebay token")
