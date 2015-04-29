@@ -1,17 +1,12 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from decimal import Decimal
 import logging
-import urllib
-from django.utils.translation import ugettext
 from inventorum.ebay.apps.inventory.serializers import SanityCheckEbaySerializer
 from inventorum.ebay.apps.products.models import EbayItemModel
 
-from rest_framework import exceptions
 from rest_framework.response import Response
-from rest_framework import status
 
-from inventorum.ebay.lib.rest.exceptions import ApiException, BadRequest
+from inventorum.ebay.lib.rest.exceptions import BadRequest
 
 from inventorum.ebay.lib.rest.resources import APIResource
 

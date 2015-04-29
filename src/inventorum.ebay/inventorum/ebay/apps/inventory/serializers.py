@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 import logging
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from rest_framework.fields import CharField, ChoiceField, IntegerField, DecimalField, SerializerMethodField
+from rest_framework.fields import CharField, IntegerField, DecimalField, SerializerMethodField
 from rest_framework.serializers import Serializer
 
 log = logging.getLogger(__name__)

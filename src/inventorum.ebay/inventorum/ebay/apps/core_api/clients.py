@@ -272,8 +272,8 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         """
         Ask core API about current quantity of products.
 
-        :type product_ids list - List of inventorum products ids
-        :rtype: inventorum.ebay.apps.inventory.serializers.CoreQuantity
+        :type product_ids list of int
+        :rtype: list of inventorum.ebay.apps.inventory.serializers.CoreQuantity
         :raises requests.exceptions.HTTPError
                 rest_framework.exceptions.ValidationError
         """
