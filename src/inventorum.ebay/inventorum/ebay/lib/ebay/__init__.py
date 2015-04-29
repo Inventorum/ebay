@@ -219,19 +219,3 @@ class EbayParallel(EbayTrading):
             raise EbayConnectionException(err, None)
 
         return rt
-
-
-class EbayAddLocationResponse(object):
-    def __init__(self, location_id):
-        """
-        :type location_id: unicode
-        :return:
-        """
-        self.location_id = location_id
-
-
-class EbayAddLocationResponseDeserializer(POPOSerializer):
-    LocationID = serializers.CharField(source="location_id")
-
-    class Meta:
-        model = EbayAddLocationResponse

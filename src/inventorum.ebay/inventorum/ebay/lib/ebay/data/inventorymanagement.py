@@ -1,5 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from inventorum.ebay.lib.rest.serializers import POPOSerializer
+from rest_framework import serializers
 
 
 class EbayInterval(object):
@@ -94,3 +96,55 @@ class EbayLocation(object):
             'URL': self.url,
             'UTCOffset': self.utc_offset,
         }
+
+
+class EbayAvailability(object):
+    IN_STOCK = "IN_STOCK"
+    OUT_OF_STOCK = "OUT_OF_STOCK"
+    SHIP_TO_STORE = "SHIP_TO_STORE"
+
+
+class EbayLocationAvailability(object):
+    def __init__(self, availability, location_id, quantity):
+        self.availability = availability
+        self.location_id = location_id
+        self.quantity = quantity
+
+    def dict(self):
+        return {
+            "Availability": self.availability,
+            "LocationID": self.location_id,
+            "Quantity": self.quantity
+        }
+
+
+class EbayAddLocationResponse(object):
+    def __init__(self, location_id):
+        """
+        :type location_id: unicode
+        :return:
+        """
+        self.location_id = location_id
+
+
+class EbayAddLocationResponseDeserializer(POPOSerializer):
+    LocationID = serializers.CharField(source="location_id")
+
+    class Meta:
+        model = EbayAddLocationResponse
+
+
+class EbayAddInventoryResponse(object):
+    def __init__(self, sku):
+        """
+        :type sku: unicode
+        :return:
+        """
+        self.sku = sku
+
+
+class EbayAddInventoryResponseDeserializer(POPOSerializer):
+    SKU = serializers.CharField(source="sku")
+
+    class Meta:
+        model = EbayAddInventoryResponse

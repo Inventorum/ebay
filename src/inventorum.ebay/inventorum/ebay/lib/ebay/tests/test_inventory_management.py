@@ -2,8 +2,9 @@
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
 from inventorum.ebay.apps.core_api.tests import EbayTest
-from inventorum.ebay.lib.ebay.clickcollect import EbayInventoryManagement
-from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation, EbayDay, EbayInterval
+from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
+from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation, EbayDay, EbayInterval, \
+    EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
@@ -46,3 +47,13 @@ class TestEbayInventoryManagement(EbayAuthenticatedAPITestCase):
         api = EbayInventoryManagement(token=self.ebay_token)
         response = api.add_location(location=location)
         self.assertEqual(response.location_id.lower(), "test_inventorum_location")
+
+        locations_availability = [
+            EbayLocationAvailability(
+                availability=EbayAvailability.IN_STOCK,
+                location_id=location.location_id,
+                quantity=10
+            )
+        ]
+        response = api.add_inventory('test_sky', locations_availability=locations_availability)
+        self.assertEqual(response.sku.lower(), 'test_sky')
