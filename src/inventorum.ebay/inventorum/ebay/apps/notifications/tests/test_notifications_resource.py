@@ -4,14 +4,15 @@ import logging
 
 import datetime
 from datetime import timedelta
+from inventorum.ebay.apps.notifications.fixtures import notification_templates
+from inventorum.ebay.apps.notifications.fixtures.notification_templates import compile_notification_template
 from inventorum.ebay.apps.notifications.models import EbayNotificationModel
-from inventorum.ebay.apps.notifications.tests import templates
-from inventorum.ebay.apps.notifications.tests.templates import compile_notification_template
 
-from inventorum.ebay.apps.notifications import EbayNotificationEventType
+from inventorum.ebay.apps.notifications import EbayNotificationEventType, EbayNotificationStatus
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
+from inventorum.ebay.lib.ebay.data import CompleteStatusCodeType
 from inventorum.ebay.tests.testcases import APITestCase
 
 from rest_framework import status
@@ -23,16 +24,16 @@ log = logging.getLogger(__name__)
 class TestNotificationsResource(APITestCase):
 
     TEMPLATES = {
-        EbayNotificationEventType.FixedPriceTransaction: templates.fixed_price_transaction_notification_template,
-        EbayNotificationEventType.ItemSold: templates.item_sold_notification_template,
-        EbayNotificationEventType.ItemClosed: templates.item_closed_notification_template,
-        EbayNotificationEventType.ItemSuspended: templates.item_suspended_notification_template
+        EbayNotificationEventType.FixedPriceTransaction: notification_templates.fixed_price_transaction_notification_template,
+        EbayNotificationEventType.ItemSold: notification_templates.item_sold_notification_template,
+        EbayNotificationEventType.ItemClosed: notification_templates.item_closed_notification_template,
+        EbayNotificationEventType.ItemSuspended: notification_templates.item_suspended_notification_template
     }
 
-    def post_notification(self, event_type, timestamp=None, signature=None, **kwargs):
-        template = self.TEMPLATES[event_type]
-        data = compile_notification_template(template, timestamp=timestamp, signature=signature, **kwargs)
-
+    def post_notification(self, event_type, data=None, timestamp=None, signature=None, **kwargs):
+        if data is None:
+            template = self.TEMPLATES[event_type]
+            data = compile_notification_template(template, timestamp=timestamp, signature=signature, **kwargs)
         return self.client.post("/notifications/", content_type='text/xml; charset="utf-8"',
                                 SOAPACTION=event_type, data=data)
 
@@ -40,6 +41,10 @@ class TestNotificationsResource(APITestCase):
         for event_type in self.TEMPLATES.keys():
             response = self.post_notification(event_type=event_type)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
+            # notification should have been persisted and handled
+            self.assertPostcondition(EbayNotificationModel
+                                     .objects.filter(event_type=event_type,
+                                                     status=EbayNotificationStatus.HANDLED).count(), 1)
 
     def test_invalid_signature(self):
         expired_timestamp = datetime.datetime.utcnow() - timedelta(minutes=15)
@@ -59,12 +64,19 @@ class TestNotificationsResource(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_fixed_price_transaction(self):
-        published_item = PublishedEbayItemFactory(external_id=110136115192)
+        published_item = PublishedEbayItemFactory(external_id="1234")
         assert isinstance(published_item, EbayItemModel)
 
         self.assertPrecondition(published_item.order_line_items.count(), 0)
 
-        response = self.post_notification(event_type=EbayNotificationEventType.FixedPriceTransaction)
+        event_type = EbayNotificationEventType.FixedPriceTransaction
+        template = notification_templates.fixed_price_transaction_notification_template
+
+        data = compile_notification_template(template, item_id="1234", item_title="Inventorum T-Shirt",
+                                             transaction_id="5678", transaction_price="5.99", quantity_purchased=5,
+                                             amount_paid="29.95", complete_status=CompleteStatusCodeType.Complete)
+
+        response = self.post_notification(event_type=event_type, data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertPostcondition(published_item.order_line_items.count(), 1)
@@ -72,12 +84,13 @@ class TestNotificationsResource(APITestCase):
         order_line_item = published_item.order_line_items.first()
         assert isinstance(order_line_item, OrderLineItemModel)
 
-        self.assertEqual(order_line_item.quantity, 2)
-        self.assertDecimal(order_line_item.unit_price, "66.00")
+        self.assertEqual(order_line_item.quantity, 5)
+        self.assertDecimal(order_line_item.unit_price, "5.99")
 
         order = order_line_item.order
         assert isinstance(order, OrderModel)
 
-        self.assertEqual(order.ebay_id, "{}-{}".format(published_item.external_id, order_line_item.ebay_id))
-        self.assertDecimal(order.final_price, "136.90")
+        self.assertEqual(order.ebay_id, "1234-5678")
+        self.assertDecimal(order.final_price, "29.95")
+        self.assertEqual(order.ebay_status, CompleteStatusCodeType.Complete)
         self.assertEqual(type(order.created_from), EbayNotificationModel)

@@ -4,7 +4,7 @@ import logging
 
 import datetime
 from django.conf import settings
-from inventorum.ebay.lib.ebay.data import EbayParser
+from inventorum.ebay.lib.ebay.data import EbayParser, CompleteStatusCodeType
 from inventorum.ebay.lib.ebay.notifications import EbayNotification
 
 
@@ -24,209 +24,255 @@ def compile_notification_template(template, timestamp=None, signature=None, **kw
     return template(timestamp, signature, **kwargs)
 
 
-fixed_price_transaction_notification_template = lambda timestamp, signature: """<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
- <soapenv:Header>
-  <ebl:RequesterCredentials soapenv:mustUnderstand="0" xmlns:ns="urn:ebay:apis:eBLBaseComponents" xmlns:ebl="urn:ebay:apis:eBLBaseComponents">
-   <ebl:NotificationSignature xmlns:ebl="urn:ebay:apis:eBLBaseComponents">{signature}</ebl:NotificationSignature>
-  </ebl:RequesterCredentials>
- </soapenv:Header>
- <soapenv:Body>
-  <GetItemTransactionsResponse xmlns="urn:ebay:apis:eBLBaseComponents">
-   <Timestamp>{timestamp}</Timestamp>
-   <Ack>Success</Ack>
-   <CorrelationID>586806200</CorrelationID>
-   <Version>853</Version>
-   <Build>E853_CORE_API_16609591_R1</Build>
-   <NotificationEventName>FixedPriceTransaction</NotificationEventName>
-   <RecipientUserID>testuser_michalhernas</RecipientUserID>
-   <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFk4GhCpiGpAqdj6x9nY+seQ==</EIASToken>
-   <PaginationResult>
-    <TotalNumberOfPages>1</TotalNumberOfPages>
-    <TotalNumberOfEntries>1</TotalNumberOfEntries>
-   </PaginationResult>
-   <HasMoreTransactions>false</HasMoreTransactions>
-   <TransactionsPerPage>100</TransactionsPerPage>
-   <PageNumber>1</PageNumber>
-   <ReturnedTransactionCountActual>1</ReturnedTransactionCountActual>
-   <Item>
-    <AutoPay>false</AutoPay>
-    <BuyItNowPrice currencyID="EUR">0.0</BuyItNowPrice>
-    <Currency>EUR</Currency>
-    <ItemID>110136115192</ItemID>
-    <ListingDetails>
-     <StartTime>2014-01-16T15:19:06.000Z</StartTime>
-     <EndTime>2014-01-26T15:19:06.000Z</EndTime>
-     <ViewItemURL>http://cgi.sandbox.ebay.de/ws/eBayISAPI.dll?ViewItem&amp;Item=110136115192</ViewItemURL>
-     <ExpressListing>false</ExpressListing>
-     <ViewItemURLForNaturalSearch>http://cgi.sandbox.ebay.de/ws/eBayISAPI.dll?ViewItem&amp;item=110136115192&amp;category=0</ViewItemURLForNaturalSearch>
-    </ListingDetails>
-    <ListingType>FixedPriceItem</ListingType>
-    <PaymentMethods>PayPal</PaymentMethods>
-    <PrimaryCategory>
-     <CategoryID>19526</CategoryID>
-    </PrimaryCategory>
-    <PrivateListing>false</PrivateListing>
-    <Quantity>88</Quantity>
-    <SecondaryCategory>
-     <CategoryID>0</CategoryID>
-    </SecondaryCategory>
-    <Seller>
-     <AboutMePage>false</AboutMePage>
-     <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFk4GhCpiGpAqdj6x9nY+seQ==</EIASToken>
-     <Email>michal@hernas.pl</Email>
-     <FeedbackScore>500</FeedbackScore>
-     <PositiveFeedbackPercent>0.0</PositiveFeedbackPercent>
-     <FeedbackPrivate>false</FeedbackPrivate>
-     <FeedbackRatingStar>Purple</FeedbackRatingStar>
-     <IDVerified>true</IDVerified>
-     <eBayGoodStanding>true</eBayGoodStanding>
-     <NewUser>false</NewUser>
-     <RegistrationDate>1995-01-01T00:00:00.000Z</RegistrationDate>
-     <Site>Germany</Site>
-     <Status>Confirmed</Status>
-     <UserID>testuser_michalhernas</UserID>
-     <UserIDChanged>false</UserIDChanged>
-     <UserIDLastChanged>2013-08-29T08:46:47.000Z</UserIDLastChanged>
-     <VATStatus>VATTax</VATStatus>
-     <SellerInfo>
-      <AllowPaymentEdit>true</AllowPaymentEdit>
-      <CheckoutEnabled>true</CheckoutEnabled>
-      <CIPBankAccountStored>false</CIPBankAccountStored>
-      <GoodStanding>true</GoodStanding>
-      <LiveAuctionAuthorized>false</LiveAuctionAuthorized>
-      <MerchandizingPref>OptIn</MerchandizingPref>
-      <QualifiesForB2BVAT>false</QualifiesForB2BVAT>
-      <SellerLevel>None</SellerLevel>
-      <StoreOwner>false</StoreOwner>
-      <ExpressEligible>false</ExpressEligible>
-      <ExpressWallet>false</ExpressWallet>
-      <SafePaymentExempt>true</SafePaymentExempt>
-     </SellerInfo>
-    </Seller>
-    <SellingStatus>
-     <ConvertedCurrentPrice currencyID="EUR">66.0</ConvertedCurrentPrice>
-     <CurrentPrice currencyID="EUR">66.0</CurrentPrice>
-     <QuantitySold>3</QuantitySold>
-     <ListingStatus>Active</ListingStatus>
-    </SellingStatus>
-    <Site>Germany</Site>
-    <StartPrice currencyID="EUR">66.0</StartPrice>
-    <Title>Aba DUPLICATED</Title>
-    <GetItFast>false</GetItFast>
-    <IntegratedMerchantCreditCardEnabled>false</IntegratedMerchantCreditCardEnabled>
-   </Item>
-   <TransactionArray>
-    <Transaction>
-     <AmountPaid currencyID="EUR">136.9</AmountPaid>
-     <AdjustmentAmount currencyID="EUR">0.0</AdjustmentAmount>
-     <ConvertedAdjustmentAmount currencyID="EUR">0.0</ConvertedAdjustmentAmount>
-     <Buyer>
-      <AboutMePage>false</AboutMePage>
-      <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFk4GhCpiGow6dj6x9nY+seQ==</EIASToken>
-      <Email>michal@inventorum.com</Email>
-      <FeedbackScore>500</FeedbackScore>
-      <PositiveFeedbackPercent>0.0</PositiveFeedbackPercent>
-      <FeedbackPrivate>false</FeedbackPrivate>
-      <FeedbackRatingStar>Purple</FeedbackRatingStar>
-      <IDVerified>true</IDVerified>
-      <eBayGoodStanding>true</eBayGoodStanding>
-      <NewUser>false</NewUser>
-      <RegistrationAddress>
-       <Name>Test User</Name>
-       <Street>address</Street>
-       <Street1>address</Street1>
-       <CityName>city</CityName>
-       <StateOrProvince>Bad Oyenhausen</StateOrProvince>
-       <Country>DE</Country>
-       <CountryName>Deutschland</CountryName>
-       <Phone>Invalid Request</Phone>
-       <PostalCode>32547</PostalCode>
-      </RegistrationAddress>
-      <RegistrationDate>1995-01-01T00:00:00.000Z</RegistrationDate>
-      <Site>Germany</Site>
-      <Status>Confirmed</Status>
-      <UserID>testuser_inventorum1234</UserID>
-      <UserIDChanged>false</UserIDChanged>
-      <UserIDLastChanged>2013-08-28T15:17:57.000Z</UserIDLastChanged>
-      <VATStatus>VATTax</VATStatus>
-      <BuyerInfo>
-       <ShippingAddress>
-        <Name>Test User</Name>
-        <Street1>address</Street1>
-        <CityName>city</CityName>
-        <StateOrProvince>Bad Oyenhausen</StateOrProvince>
-        <Country>DE</Country>
-        <CountryName>Deutschland</CountryName>
-        <Phone>Invalid Request</Phone>
-        <PostalCode>32547</PostalCode>
-        <AddressID>6977656</AddressID>
-        <AddressOwner>eBay</AddressOwner>
-       </ShippingAddress>
-      </BuyerInfo>
-      <UserAnonymized>false</UserAnonymized>
-     </Buyer>
-     <ShippingDetails>
-      <ChangePaymentInstructions>true</ChangePaymentInstructions>
-      <InsuranceFee currencyID="EUR">0.0</InsuranceFee>
-      <InsuranceOption>NotOffered</InsuranceOption>
-      <InsuranceWanted>false</InsuranceWanted>
-      <PaymentEdited>false</PaymentEdited>
-      <SalesTax>
-       <SalesTaxPercent>0.0</SalesTaxPercent>
-       <ShippingIncludedInTax>false</ShippingIncludedInTax>
-       <SalesTaxAmount currencyID="EUR">0.0</SalesTaxAmount>
-      </SalesTax>
-      <ShippingServiceOptions>
-       <ShippingService>DE_DHLPackchen</ShippingService>
-       <ShippingServiceCost currencyID="EUR">0.0</ShippingServiceCost>
-       <ShippingServiceAdditionalCost currencyID="EUR">0.0</ShippingServiceAdditionalCost>
-       <ShippingServicePriority>1</ShippingServicePriority>
-       <ExpeditedService>false</ExpeditedService>
-       <ShippingTimeMin>1</ShippingTimeMin>
-       <ShippingTimeMax>2</ShippingTimeMax>
-      </ShippingServiceOptions>
-      <ShippingType>Flat</ShippingType>
-      <SellingManagerSalesRecordNumber>112</SellingManagerSalesRecordNumber>
-      <ThirdPartyCheckout>false</ThirdPartyCheckout>
-      <TaxTable/>
-      <GetItFast>false</GetItFast>
-     </ShippingDetails>
-     <ConvertedAmountPaid currencyID="EUR">132.0</ConvertedAmountPaid>
-     <ConvertedTransactionPrice currencyID="EUR">66.0</ConvertedTransactionPrice>
-     <CreatedDate>2014-01-16T15:30:44.000Z</CreatedDate>
-     <DepositType>None</DepositType>
-     <QuantityPurchased>2</QuantityPurchased>
-     <Status>
-      <eBayPaymentStatus>NoPaymentFailure</eBayPaymentStatus>
-      <CheckoutStatus>CheckoutIncomplete</CheckoutStatus>
-      <LastTimeModified>2014-01-16T15:30:45.000Z</LastTimeModified>
-      <PaymentMethodUsed>None</PaymentMethodUsed>
-      <CompleteStatus>Incomplete</CompleteStatus>
-      <BuyerSelectedShipping>false</BuyerSelectedShipping>
-      <PaymentHoldStatus>None</PaymentHoldStatus>
-      <IntegratedMerchantCreditCardEnabled>false</IntegratedMerchantCreditCardEnabled>
-     </Status>
-     <TransactionID>27209385001</TransactionID>
-     <TransactionPrice currencyID="EUR">66.0</TransactionPrice>
-     <BestOfferSale>false</BestOfferSale>
-     <ShippingServiceSelected>
-      <ShippingInsuranceCost currencyID="EUR">0.0</ShippingInsuranceCost>
-      <ShippingService>DE_DHLPackchen</ShippingService>
-      <ShippingServiceCost currencyID="EUR">4.90</ShippingServiceCost>
-     </ShippingServiceSelected>
-     <FinalValueFee currencyID="EUR">10.32</FinalValueFee>
-     <TransactionPlatform>eBay</TransactionPlatform>
-     <TransactionSiteID>Germany</TransactionSiteID>
-     <Platform>eBay</Platform>
-     <PayPalEmailAddress>ferry@inventorum.com</PayPalEmailAddress>
-     <BuyerGuaranteePrice currencyID="EUR">20000.0</BuyerGuaranteePrice>
-     <IntangibleItem>false</IntangibleItem>
-    </Transaction>
-   </TransactionArray>
-  </GetItemTransactionsResponse>
- </soapenv:Body>
-</soapenv:Envelope>""".format(timestamp=timestamp, signature=signature)
+def fixed_price_transaction_notification_template(timestamp, signature, item_id="261869293885", item_title="T-Shirt",
+                                                  transaction_id="1231284123123", transaction_price="3.99",
+                                                  quantity_purchased=1, amount_paid="3.99",
+                                                  complete_status=CompleteStatusCodeType.Complete,
+                                                  variation_xml=""):
+
+    return """<?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <soapenv:Header>
+            <ebl:RequesterCredentials soapenv:mustUnderstand="0" xmlns:ns="urn:ebay:apis:eBLBaseComponents" xmlns:ebl="urn:ebay:apis:eBLBaseComponents">
+                <ebl:NotificationSignature xmlns:ebl="urn:ebay:apis:eBLBaseComponents">{signature}</ebl:NotificationSignature>
+            </ebl:RequesterCredentials>
+        </soapenv:Header>
+        <soapenv:Body>
+            <GetItemTransactionsResponse
+                xmlns="urn:ebay:apis:eBLBaseComponents">
+                <Timestamp>{timestamp}</Timestamp>
+                <Ack>Success</Ack>
+                <Version>915</Version>
+                <Build>E915_INTL_APIXO_17437404_R1</Build>
+                <PaginationResult>
+                    <TotalNumberOfPages>1</TotalNumberOfPages>
+                    <TotalNumberOfEntries>1</TotalNumberOfEntries>
+                </PaginationResult>
+                <HasMoreTransactions>false</HasMoreTransactions>
+                <TransactionsPerPage>100</TransactionsPerPage>
+                <PageNumber>1</PageNumber>
+                <ReturnedTransactionCountActual>1</ReturnedTransactionCountActual>
+                <Item>
+                    <AutoPay>false</AutoPay>
+                    <Currency>EUR</Currency>
+                    <ItemID>{item_id}</ItemID>
+                    <ListingDetails>
+                        <ViewItemURL>http://cgi.ebay.de/ws/eBayISAPI.dll?ViewItem&amp;Item=261869293885</ViewItemURL>
+                        <ViewItemURLForNaturalSearch>http://cgi.ebay.de/Inventorum-T-Shirt?item=261869293885&amp;category=0&amp;cmd=ViewItem</ViewItemURLForNaturalSearch>
+                    </ListingDetails>
+                    <ListingType>FixedPriceItem</ListingType>
+                    <PaymentMethods>COD</PaymentMethods>
+                    <PaymentMethods>CashOnPickup</PaymentMethods>
+                    <PaymentMethods>PayPal</PaymentMethods>
+                    <PrivateListing>false</PrivateListing>
+                    <Quantity>11</Quantity>
+                    <Seller>
+                        <AboutMePage>false</AboutMePage>
+                        <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ==</EIASToken>
+                        <Email>tech+ebay@inventorum.com</Email>
+                        <FeedbackScore>0</FeedbackScore>
+                        <PositiveFeedbackPercent>0.0</PositiveFeedbackPercent>
+                        <FeedbackPrivate>false</FeedbackPrivate>
+                        <FeedbackRatingStar>None</FeedbackRatingStar>
+                        <IDVerified>false</IDVerified>
+                        <eBayGoodStanding>true</eBayGoodStanding>
+                        <NewUser>true</NewUser>
+                        <RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate>
+                        <Site>Germany</Site>
+                        <Status>Confirmed</Status>
+                        <UserID>newmade</UserID>
+                        <UserIDChanged>false</UserIDChanged>
+                        <VATStatus>VATTax</VATStatus>
+                        <SellerInfo>
+                            <AllowPaymentEdit>true</AllowPaymentEdit>
+                            <CheckoutEnabled>true</CheckoutEnabled>
+                            <CIPBankAccountStored>false</CIPBankAccountStored>
+                            <GoodStanding>true</GoodStanding>
+                            <LiveAuctionAuthorized>false</LiveAuctionAuthorized>
+                            <MerchandizingPref>OptIn</MerchandizingPref>
+                            <QualifiesForB2BVAT>false</QualifiesForB2BVAT>
+                            <StoreOwner>false</StoreOwner>
+                            <SafePaymentExempt>false</SafePaymentExempt>
+                        </SellerInfo>
+                    </Seller>
+                    <SellingStatus>
+                        <ConvertedCurrentPrice currencyID="EUR">1.0</ConvertedCurrentPrice>
+                        <CurrentPrice currencyID="EUR">1.0</CurrentPrice>
+                        <QuantitySold>7</QuantitySold>
+                        <ListingStatus>Active</ListingStatus>
+                    </SellingStatus>
+                    <Site>Germany</Site>
+                    <Title>{item_title}</Title>
+                    <GetItFast>false</GetItFast>
+                    <IntegratedMerchantCreditCardEnabled>false</IntegratedMerchantCreditCardEnabled>
+                    <ConditionID>1000</ConditionID>
+                    <ConditionDisplayName>Neu mit Etikett</ConditionDisplayName>
+                </Item>
+                <TransactionArray>
+                    <Transaction>
+                        <AmountPaid currencyID="EUR">{amount_paid}</AmountPaid>
+                        <AdjustmentAmount currencyID="EUR">0.0</AdjustmentAmount>
+                        <ConvertedAdjustmentAmount currencyID="EUR">0.0</ConvertedAdjustmentAmount>
+                        <Buyer>
+                            <AboutMePage>false</AboutMePage>
+                            <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkYKnDpiFoQ6dj6x9nY+seQ==</EIASToken>
+                            <Email>info@paydroid.de</Email>
+                            <FeedbackScore>2</FeedbackScore>
+                            <PositiveFeedbackPercent>0.0</PositiveFeedbackPercent>
+                            <FeedbackPrivate>false</FeedbackPrivate>
+                            <FeedbackRatingStar>None</FeedbackRatingStar>
+                            <IDVerified>false</IDVerified>
+                            <eBayGoodStanding>true</eBayGoodStanding>
+                            <NewUser>false</NewUser>
+                            <RegistrationAddress>
+                                <Name>Ferry Hötzel</Name>
+                                <Street>Königin-Sophie-Str. 4</Street>
+                                <Street1>Königin-Sophie-Str. 4</Street1>
+                                <CityName>Bad Honnef</CityName>
+                                <Country>DE</Country>
+                                <CountryName>Deutschland</CountryName>
+                                <Phone>Invalid Request</Phone>
+                                <PostalCode>53604</PostalCode>
+                            </RegistrationAddress>
+                            <RegistrationDate>2012-04-25T12:14:28.000Z</RegistrationDate>
+                            <Site>Germany</Site>
+                            <Status>Confirmed</Status>
+                            <UserID>paydroid</UserID>
+                            <UserIDChanged>false</UserIDChanged>
+                            <UserIDLastChanged>2012-04-25T12:13:56.000Z</UserIDLastChanged>
+                            <VATStatus>VATTax</VATStatus>
+                            <BuyerInfo>
+                                <ShippingAddress>
+                                    <Name>Ferry Hötzel</Name>
+                                    <Street1>Königin-Sophie-Str. 4</Street1>
+                                    <CityName>Bad Honnef</CityName>
+                                    <StateOrProvince></StateOrProvince>
+                                    <Country>DE</Country>
+                                    <CountryName>Deutschland</CountryName>
+                                    <Phone>Invalid Request</Phone>
+                                    <PostalCode>53604</PostalCode>
+                                    <AddressID>1345968314018</AddressID>
+                                    <AddressOwner>eBay</AddressOwner>
+                                    <AddressUsage>DefaultShipping</AddressUsage>
+                                </ShippingAddress>
+                            </BuyerInfo>
+                            <UserAnonymized>false</UserAnonymized>
+                            <StaticAlias>paydro_jqwp5748pcfa@members.ebay.de</StaticAlias>
+                            <UserFirstName>Ferry</UserFirstName>
+                            <UserLastName>Hötzel</UserLastName>
+                        </Buyer>
+                        <ShippingDetails>
+                            <ChangePaymentInstructions>true</ChangePaymentInstructions>
+                            <InsuranceFee currencyID="EUR">0.0</InsuranceFee>
+                            <InsuranceOption>NotOffered</InsuranceOption>
+                            <InsuranceWanted>false</InsuranceWanted>
+                            <PaymentEdited>true</PaymentEdited>
+                            <SalesTax>
+                                <SalesTaxPercent>0.0</SalesTaxPercent>
+                                <ShippingIncludedInTax>false</ShippingIncludedInTax>
+                                <SalesTaxAmount currencyID="EUR">0.0</SalesTaxAmount>
+                            </SalesTax>
+                            <ShippingServiceOptions>
+                                <ShippingService>DE_DHLPaket</ShippingService>
+                                <ShippingServiceCost currencyID="EUR">4.29</ShippingServiceCost>
+                                <ShippingServiceAdditionalCost currencyID="EUR">2.0</ShippingServiceAdditionalCost>
+                                <ShippingServicePriority>1</ShippingServicePriority>
+                                <ExpeditedService>false</ExpeditedService>
+                                <ShippingTimeMin>1</ShippingTimeMin>
+                                <ShippingTimeMax>2</ShippingTimeMax>
+                            </ShippingServiceOptions>
+                            <ShippingServiceOptions>
+                                <ShippingService>DE_HermesPackchen</ShippingService>
+                                <ShippingServiceCost currencyID="EUR">5.0</ShippingServiceCost>
+                                <ShippingServiceAdditionalCost currencyID="EUR">5.0</ShippingServiceAdditionalCost>
+                                <ShippingServicePriority>2</ShippingServicePriority>
+                                <ExpeditedService>false</ExpeditedService>
+                                <ShippingTimeMin>1</ShippingTimeMin>
+                                <ShippingTimeMax>2</ShippingTimeMax>
+                            </ShippingServiceOptions>
+                            <ShippingServiceOptions>
+                                <ShippingService>DE_Pickup</ShippingService>
+                                <ShippingServiceCost currencyID="EUR">0.0</ShippingServiceCost>
+                                <ShippingServiceAdditionalCost currencyID="EUR">0.0</ShippingServiceAdditionalCost>
+                                <ShippingServicePriority>3</ShippingServicePriority>
+                                <ExpeditedService>false</ExpeditedService>
+                            </ShippingServiceOptions>
+                            <ShippingType>Flat</ShippingType>
+                            <SellingManagerSalesRecordNumber>105</SellingManagerSalesRecordNumber>
+                            <ThirdPartyCheckout>false</ThirdPartyCheckout>
+                            <TaxTable/>
+                            <GetItFast>false</GetItFast>
+                            <CODCost currencyID="EUR">0.0</CODCost>
+                        </ShippingDetails>
+                        <ConvertedAmountPaid currencyID="EUR">8.29</ConvertedAmountPaid>
+                        <ConvertedTransactionPrice currencyID="EUR">1.0</ConvertedTransactionPrice>
+                        <CreatedDate>2015-04-28T15:17:08.000Z</CreatedDate>
+                        <DepositType>None</DepositType>
+                        <QuantityPurchased>{quantity_purchased}</QuantityPurchased>
+                        <Status>
+                            <eBayPaymentStatus>NoPaymentFailure</eBayPaymentStatus>
+                            <CheckoutStatus>CheckoutComplete</CheckoutStatus>
+                            <LastTimeModified>2015-04-28T15:18:56.000Z</LastTimeModified>
+                            <PaymentMethodUsed>COD</PaymentMethodUsed>
+                            <CompleteStatus>{complete_status}</CompleteStatus>
+                            <BuyerSelectedShipping>true</BuyerSelectedShipping>
+                            <PaymentHoldStatus>None</PaymentHoldStatus>
+                            <IntegratedMerchantCreditCardEnabled>false</IntegratedMerchantCreditCardEnabled>
+                            <InquiryStatus>NotApplicable</InquiryStatus>
+                            <ReturnStatus>NotApplicable</ReturnStatus>
+                        </Status>
+                        <TransactionID>{transaction_id}</TransactionID>
+                        <TransactionPrice currencyID="EUR">{transaction_price}</TransactionPrice>
+                        <BestOfferSale>false</BestOfferSale>
+                        <ShippingServiceSelected>
+                            <ShippingInsuranceCost currencyID="EUR">0.0</ShippingInsuranceCost>
+                            <ShippingService>DE_DHLPaket</ShippingService>
+                            <ShippingServiceCost currencyID="EUR">6.29</ShippingServiceCost>
+                        </ShippingServiceSelected>
+                        <TransactionSiteID>Germany</TransactionSiteID>
+                        <Platform>eBay</Platform>
+                        <PayPalEmailAddress>mail@jmaicher.de</PayPalEmailAddress>
+                        <BuyerGuaranteePrice currencyID="EUR">20000.0</BuyerGuaranteePrice>
+                        {variation_xml}
+                        <ActualShippingCost currencyID="EUR">6.29</ActualShippingCost>
+                        <OrderLineItemID>261869293885-1616130054016</OrderLineItemID>
+                        <IsMultiLegShipping>false</IsMultiLegShipping>
+                        <IntangibleItem>false</IntangibleItem>
+                        <ExtendedOrderID>261869293885-1616130054016!464372855012</ExtendedOrderID>
+                    </Transaction>
+                </TransactionArray>
+                <PayPalPreferred>false</PayPalPreferred>
+            </GetItemTransactionsResponse>
+     </soapenv:Body>
+    </soapenv:Envelope>""".format(timestamp=timestamp, signature=signature, item_id=item_id, item_title=item_title,
+                                  transaction_id=transaction_id, transaction_price=transaction_price,
+                                  quantity_purchased=quantity_purchased, complete_status=complete_status,
+                                  amount_paid=amount_paid, variation_xml=variation_xml)
+
+
+def fixed_price_transaction_notification_template_for_variation(timestamp, signature, variation_sku="23",
+                                                                variation_title="T-Shirt[Blau,M]", **kwargs):
+        variation_xml = """
+        <Variation>
+            <SKU>{variation_sku}</SKU>
+            <VariationSpecifics>
+                <NameValueList>
+                    <Name>Farbe</Name>
+                    <Value>Blau</Value>
+                </NameValueList>
+                <NameValueList>
+                    <Name>Size</Name>
+                    <Value>M</Value>
+                </NameValueList>
+            </VariationSpecifics>
+            <VariationTitle>{variation_title}</VariationTitle>
+            <VariationViewItemURL>http://cgi.ebay.de/ws/eBayISAPI.dll?ViewItem&amp;item=261869293885&amp;vti=Farbe%09Blau%0ASize%09M</VariationViewItemURL>
+        </Variation>
+        """.format(variation_sku=variation_sku, variation_title=variation_title)
+
+        return fixed_price_transaction_notification_template(timestamp=timestamp, signature=signature,
+                                                             variation_xml=variation_xml, **kwargs)
+
 
 
 item_closed_notification_template = lambda timestamp, signature: """<?xml version="1.0" encoding="UTF-8"?>
