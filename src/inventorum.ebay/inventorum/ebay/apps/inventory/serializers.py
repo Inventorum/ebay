@@ -3,10 +3,8 @@ from __future__ import absolute_import, unicode_literals
 
 import logging
 from inventorum.ebay.apps.inventory.models import CoreQuantity, EbayItemForQuantityCheck, EbaySanityCheck
-from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayAvailability
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from rest_framework.fields import CharField, IntegerField, DecimalField, SerializerMethodField
-from rest_framework.serializers import Serializer
+from rest_framework.fields import CharField, IntegerField, DecimalField
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +27,7 @@ class SanityCheckEbaySerializer(POPOSerializer):
         model = EbaySanityCheck
 
 
-class QuantityCoreApiResponse(POPOSerializer):
+class QuantityCoreApiResponseDeserializer(POPOSerializer):
     id = CharField()
     quantity = DecimalField(max_digits=20, decimal_places=10)
 

@@ -8,7 +8,7 @@ from inventorum.ebay.apps.core_api.pager import Pager
 import requests
 
 from django.conf import settings
-from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponse
+from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponseDeserializer
 
 log = logging.getLogger(__name__)
 
@@ -278,7 +278,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         """
         response = self.get('/api/products/quantity/', params={'id': product_ids})
         json = response.json()
-        serializer = QuantityCoreApiResponse(data=json, many=True)
+        serializer = QuantityCoreApiResponseDeserializer(data=json, many=True)
         return serializer.build()
 
     def get_paginated_product_delta_modified(self, start_date, limit_per_page=100):
