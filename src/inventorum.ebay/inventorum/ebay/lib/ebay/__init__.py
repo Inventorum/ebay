@@ -91,7 +91,6 @@ class Ebay(object):
 
         self.token = token
 
-
     # EBAY PROPERTIES
     @property
     def token(self):

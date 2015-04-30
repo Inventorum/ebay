@@ -16,9 +16,11 @@ from inventorum.ebay.tests import StagingTestAccount
 
 log = logging.getLogger(__name__)
 
+
 class EbayItemVariationSpecificValueFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.EbayItemVariationSpecificValueModel
+
 
 class EbayItemVariationSpecificFactory(factory.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Specific 1')
@@ -83,7 +85,7 @@ class EbayItemFactory(factory.DjangoModelFactory):
 
 class PublishedEbayItemFactory(EbayItemFactory):
     external_id = "1002"
-    publishing_status=EbayItemPublishingStatus.PUBLISHED
+    publishing_status = EbayItemPublishingStatus.PUBLISHED
 
     @factory.lazy_attribute
     def published_at(self):

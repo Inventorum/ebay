@@ -40,6 +40,8 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.accounts',
     'inventorum.ebay.apps.auth',
     'inventorum.ebay.apps.categories',
+    'inventorum.ebay.apps.notifications',
+    'inventorum.ebay.apps.orders',
     'inventorum.ebay.apps.products',
     'inventorum.ebay.apps.shipping',
 

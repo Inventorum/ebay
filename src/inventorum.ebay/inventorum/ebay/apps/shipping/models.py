@@ -21,6 +21,12 @@ class ShippingServiceQuerySet(BaseQuerySet):
 
 
 class ShippingServiceModel(BaseModel):
+    """
+    Persistent representation of an ebay shipping service.
+
+    While a shipping service is not directly associated with shipping costs, it can be configured
+    for various purposes through the ``ShippingServiceConfigurationModel``.
+    """
     country = CountryField()
 
     external_id = models.CharField(max_length=255)
@@ -64,13 +70,24 @@ class ShippingServiceModel(BaseModel):
 
 
 class ShippingServiceConfigurationModel(BaseModel):
+    """
+    This model represents a selection or configuration of an ebay shipping service with associated shipping costs.
+
+    Apart from the generic entity relation, which allows to assign many shipping service configurations to a
+    ShippingServiceConfigurable model (either ``EbayAccountModel`` or ``EbayProductModel``), this model can
+    also represent a selected shipping service configuration in an ``OrderModel``.
+    """
     service = models.ForeignKey("shipping.ShippingServiceModel")
+
+    # Note: In case the instance is assigned as shipping to an order, the cost always represent the total shipping cost
+    # and there are no additional costs
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     additional_cost = models.DecimalField(max_digits=10, decimal_places=2, default=D("0.00"))
 
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    # Generic relationship to a "shipping configurable" entity that can have *many* shipping service configurations
+    entity_type = models.ForeignKey(ContentType, blank=True, null=True)
+    entity_id = models.PositiveIntegerField(blank=True, null=True)
+    entity = GenericForeignKey("entity_type", "entity_id")
 
     def is_free_shipping(self):
         return self.cost + self.additional_cost == 0
@@ -78,7 +95,7 @@ class ShippingServiceConfigurationModel(BaseModel):
 
 class ShippingServiceConfigurable(models.Model):
     """
-    Mixin for models that can be configured with shipping services
+    Mixin for models that can be configured with multiple shipping services (EbayAccountModel and EbayProductModel)
 
     Note jm: We've to inherit here form models, otherwise django won't pick up the generic field.
     See: http://stackoverflow.com/questions/28115239/django-genericrelation-in-model-mixin
@@ -86,4 +103,6 @@ class ShippingServiceConfigurable(models.Model):
     class Meta:
         abstract = True
 
-    shipping_services = GenericRelation("shipping.ShippingServiceConfigurationModel")
+    shipping_services = GenericRelation("shipping.ShippingServiceConfigurationModel",
+                                        content_type_field="entity_type",
+                                        object_id_field="entity_id")

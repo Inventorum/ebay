@@ -9,6 +9,7 @@ from inventorum.ebay.tests import StagingTestAccount
 
 log = logging.getLogger(__name__)
 
+
 class DurationFactory(factory.DjangoModelFactory):
 
     class Meta:
@@ -16,11 +17,11 @@ class DurationFactory(factory.DjangoModelFactory):
 
     value = factory.Sequence(lambda n: "Days_{0}".format(n))
 
+
 class CategoryFeaturesFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = models.CategoryFeaturesModel
-
 
     @factory.post_generation
     def durations(self, create, extracted, **kwargs):

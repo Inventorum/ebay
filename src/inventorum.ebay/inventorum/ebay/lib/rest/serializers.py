@@ -27,7 +27,7 @@ class POPOSerializer(serializers.Serializer):
         """
         :type validated_data: dict | collections.OrderedDict
         """
-        assert hasattr(self, "Meta") and hasattr(self.Meta, "model"), "No `Meta.model` defined"
+        assert hasattr(self, "Meta") and getattr(self.Meta, "model", None), "No `Meta.model` defined"
 
         ModelClass = self.Meta.model
 

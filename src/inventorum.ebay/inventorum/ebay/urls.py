@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 urlpatterns = patterns('',
     url(r'^account/', include('inventorum.ebay.apps.accounts.urls', namespace='accounts')),
     url(r'^auth/', include('inventorum.ebay.apps.auth.urls', namespace='auth')),
+    url(r'^notifications/', include('inventorum.ebay.apps.notifications.urls', namespace='notifications')),
     url(r'^products/', include('inventorum.ebay.apps.products.urls', namespace='products')),
     url(r'^categories/', include('inventorum.ebay.apps.categories.urls', namespace='categories')),
     url(r'^inventory/', include('inventorum.ebay.apps.inventory.urls', namespace='inventory')),
