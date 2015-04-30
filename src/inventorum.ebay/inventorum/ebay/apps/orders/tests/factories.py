@@ -32,7 +32,7 @@ class OrderModelFactory(factory.DjangoModelFactory):
                                              CompleteStatusCodeType.Pending])
 
 
-class OrderLineItemFactory(factory.DjangoModelFactory):
+class OrderLineItemModelFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = OrderLineItemModel

@@ -196,7 +196,7 @@ class TransactionType(object):
 TransactionType.Deserializer.Meta.model = TransactionType
 
 
-class GetItemTransactionsResponse(object):
+class GetItemTransactionsResponseType(object):
     """
     Represents the ebay `GetItemTransactions` response
     http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/GetItemTransactions.html#Output
@@ -223,4 +223,4 @@ class GetItemTransactionsResponse(object):
         self.item = item
         self.transactions = transactions
 
-GetItemTransactionsResponse.Deserializer.Meta.model = GetItemTransactionsResponse
+GetItemTransactionsResponseType.Deserializer.Meta.model = GetItemTransactionsResponseType

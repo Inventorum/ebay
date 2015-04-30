@@ -4,7 +4,7 @@ import logging
 
 from decimal import Decimal as D
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
-from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemFactory
+from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
@@ -24,13 +24,14 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
         order = OrderModelFactory.create(shipping=shipping)
 
         published_ebay_item = PublishedEbayItemFactory(product__inv_id=23)
-        OrderLineItemFactory.create(order=order,
+        OrderLineItemModelFactory.create(order=order,
                                     orderable_item=published_ebay_item,
                                     name="Inventorum T-Shirt [Green, L]",
                                     quantity=5, unit_price=D("3.99"))
 
         serializer = OrderModelCoreAPIDataSerializer(order)
 
+        # TODO jm: Add rest of the data and sync with andi
         self.assertDictEqual(serializer.data, {
             "items": [{"product": 23, "name": "Inventorum T-Shirt [Green, L]", "quantity": 5, "gross_price": "3.99"}],
             "shipment": {
