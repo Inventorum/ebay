@@ -23,9 +23,6 @@ USE_THOUSAND_SEPARATOR = True
 
 FORMAT_MODULE_PATH = 'inventorum.ebay.conf.locale'
 
-# Needed to suppress 1_6.W001 warning
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
 # if True use nginx to serve protected files
 # Else user django default django.views.static.serve (which would not be for production)
 USE_NGINX_X_ACCEL_REDIRECT = True
