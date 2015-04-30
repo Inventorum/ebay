@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.accounts.models import EbayLocationModel
 from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer
 
 from inventorum.ebay.lib.rest.resources import APIResource

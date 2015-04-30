@@ -99,7 +99,7 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
 
 
 class EbayLocationModel(BaseModel):
-    account = OneToOneField(EbayAccountModel, related_name="location")
+    account = OneToOneField(EbayAccountModel, related_name="location", null=True, blank=True)
     address = ForeignKey(AddressModel, null=True, blank=True, related_name="locations",
                                       verbose_name="Registration address")
     latitude = DecimalField(max_digits=20, decimal_places=10, null=True, blank=True)

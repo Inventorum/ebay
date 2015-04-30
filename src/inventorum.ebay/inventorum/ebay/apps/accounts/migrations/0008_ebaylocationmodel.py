@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('phone', models.CharField(max_length=255, null=True, blank=True)),
                 ('pickup_instruction', models.TextField(null=True, blank=True)),
                 ('url', models.URLField(null=True, blank=True)),
-                ('account', models.OneToOneField(related_name='location', to='accounts.EbayAccountModel')),
+                ('account', models.OneToOneField(related_name='location', null=True, blank=True, to='accounts.EbayAccountModel')),
                 ('address', models.ForeignKey(related_name='locations', verbose_name='Registration address', blank=True, to='accounts.AddressModel', null=True)),
             ],
             options={

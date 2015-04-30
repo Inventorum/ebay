@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from decimal import Decimal as D
-import logging
-from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 
-from inventorum.ebay.apps.shipping.tests import ShippingServiceConfigurableSerializerTest, ShippingServiceTestMixin
+import logging
+import json
+
+from decimal import Decimal as D
+from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer
+from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayLocationFactory
+
+from inventorum.ebay.apps.shipping.tests import ShippingServiceConfigurableSerializerTest
 from inventorum.ebay.tests.testcases import UnitTestCase
 
 
@@ -33,9 +36,13 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
     def test_serialize(self):
         account = self.get_account_with_default_data()
         shipping_service = account.shipping_services.first()
+        location = EbayLocationFactory.create(account=account)
 
         subject = EbayAccountSerializer(account)
-        self.assertEqual(subject.data, {
+        # Crazy trick to have nice diff in case of failure
+        data = json.loads(json.dumps(subject.data))
+
+        self.assertEqual(data, {
             "shipping_services": [{
                 "service": shipping_service.service_id,
                 "external_id": "DE_DHLPaket",
@@ -43,8 +50,25 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
                 "additional_cost": "0.00"
             }],
             'user_id': account.user_id,
-            'email': account.email
+            'email': account.email,
+            'location': {
+                'name': location.name,
+                'url': location.url,
+                'longitude': unicode(location.longitude),
+                'phone': location.phone,
+                'address': {
+                    'name': location.address.name,
+                    'street': location.address.street,
+                    'street1': location.address.street1,
+                    'city': location.address.city,
+                    'country': unicode(location.address.country),
+                    'postal_code': location.address.postal_code,
+                },
+                'latitude': unicode(location.latitude),
+                'pickup_instruction': location.pickup_instruction
+            }
         })
+
 
     def test_deserialize_serialized(self):
         account = self.get_account_with_default_data()
