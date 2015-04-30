@@ -19,7 +19,7 @@ class EbayClassTestCase(UnitTestCase, PatchMixin):
     def setUp(self):
         super(EbayClassTestCase, self).setUp()
         self.connection_mock = self.patch('inventorum.ebay.lib.ebay.TradingConnection', spec=True)
-        
+
         # Swap class in EbayTrading but store original one!
         self.original_class = EbayTrading.default_connection_cls
         EbayTrading.default_connection_cls = self.connection_mock
