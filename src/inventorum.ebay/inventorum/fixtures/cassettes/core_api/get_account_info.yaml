@@ -57,27 +57,43 @@ interactions:
         "users_quota": 3, "active": false}, {"start_date": "2015-04-02T13:37:41+02:00",
         "due_date": null, "subscription_plan": {"id": 39, "name": "Inventorum Premium"},
         "users_quota": null, "active": true}], "users_quota": null, "image_absolute":
-        null, "return_prefix": "", "id": 346, "opening_hours": [], "is_ece": false,
-        "bank_account_holder": "", "first_app_login": "2015-04-02T11:48:58.474Z",
-        "account_creation": "2015-04-02T11:16:20.623Z", "country": "DE"}, "ece_categories":
-        [], "channels": [{"name": "ipad", "description": "ipad", "translated_name":
-        "POS"}, {"name": "shop", "description": "shop", "translated_name": "Shop"}],
-        "carriers": [{"description": "DHL"}, {"description": "Pick up in store"},
-        {"description": "Deutsche Post"}, {"description": "UPS"}, {"description":
-        "Hermes"}, {"description": "DPD"}, {"description": "GLS"}], "countries": {"DE":
-        "Germany", "AT": "Austria"}}'}
+        null, "return_prefix": "", "id": 346, "opening_hours": [{"id": 414, "day_of_week":
+        1, "opens_hour": 8, "opens_minute": 0, "closes_hour": 10, "closes_minute":
+        0, "valid_from": null, "valid_through": null, "enabled": true}, {"id": 415,
+        "day_of_week": 2, "opens_hour": 12, "opens_minute": 0, "closes_hour": 14,
+        "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
+        true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute": 0,
+        "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": true}, {"id": 416, "day_of_week": 3, "opens_hour": 0, "opens_minute":
+        0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": false}, {"id": 417, "day_of_week": 4, "opens_hour": 0, "opens_minute":
+        0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": false}, {"id": 418, "day_of_week": 5, "opens_hour": 0, "opens_minute":
+        0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": false}, {"id": 419, "day_of_week": 6, "opens_hour": 0, "opens_minute":
+        0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": false}, {"id": 420, "day_of_week": 7, "opens_hour": 0, "opens_minute":
+        0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": false}], "is_ece": false, "bank_account_holder": "", "first_app_login":
+        "2015-04-02T11:48:58.474Z", "account_creation": "2015-04-02T11:16:20.623Z",
+        "country": "DE"}, "ece_categories": [], "channels": [{"name": "ipad", "description":
+        "ipad", "translated_name": "POS"}, {"name": "shop", "description": "shop",
+        "translated_name": "Shop"}], "carriers": [{"description": "DHL"}, {"description":
+        "Pick up in store"}, {"description": "Deutsche Post"}, {"description": "UPS"},
+        {"description": "Hermes"}, {"description": "DPD"}, {"description": "GLS"}],
+        "countries": {"DE": "Germany", "AT": "Austria"}}'}
     headers:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Tue, 28 Apr 2015 15:32:57 GMT']
+      date: ['Thu, 30 Apr 2015 16:39:07 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yn7VJ:s1Lw98hAZ88KKKjGvf_MQFjS1f8"; Domain=app.intern.inventorum.net;
-          expires=Tue, 28-Apr-2015 17:32:57 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YnrUR:Xw4WzfhGc-D3n5qa-d33pH50smc"; Domain=app.intern.inventorum.net;
+          expires=Thu, 30-Apr-2015 18:39:07 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['2300637139411985908']
+      x-rid: ['2039709836001207796']
     status: {code: 200, message: OK}
 version: 1

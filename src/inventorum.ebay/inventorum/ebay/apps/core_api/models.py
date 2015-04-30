@@ -224,17 +224,42 @@ class CoreAccountSettingsDeserializer(POPOSerializer):
         model = CoreAccountSettings
 
 
+class CoreOpeningHours(object):
+    class Deserializer(POPOSerializer):
+        class Meta:
+            model = None
+
+        closes_hour = serializers.IntegerField()
+        closes_minute = serializers.IntegerField()
+        day_of_week = serializers.IntegerField()
+        opens_hour = serializers.IntegerField()
+        opens_minute = serializers.IntegerField()
+        enabled = serializers.BooleanField()
+
+    def __init__(self, closes_hour, closes_minute, day_of_week, opens_hour, opens_minute, enabled=False):
+        self.closes_hour = closes_hour
+        self.closes_minute = closes_minute
+        self.day_of_week = day_of_week
+        self.opens_hour = opens_hour
+        self.opens_minute = opens_minute
+        self.enabled = enabled
+
+CoreOpeningHours.Deserializer.Meta.model = CoreOpeningHours
+
+
 class CoreAccount(object):
-    def __init__(self, country, settings, email=None, billing_address=None):
+    def __init__(self, country, settings, email=None, billing_address=None, opening_hours=None):
         """
         :type settings: CoreAccountSettings
         :type email: unicode | None
         :type billing_address: CoreAddress
+        :type opening_hours: list[CoreOpeningHours]
         """
         self.email = email
         self.country = country
         self.billing_address = billing_address
         self.settings = settings
+        self.opening_hours = [o for o in opening_hours or [] if o.enabled]
 
 
 class CoreAccountDeserializer(POPOSerializer):
@@ -242,6 +267,7 @@ class CoreAccountDeserializer(POPOSerializer):
     country = serializers.CharField()
     settings = CoreAccountSettingsDeserializer()
     billing_address = CoreAddressDeserializer(required=False)
+    opening_hours = CoreOpeningHours.Deserializer(required=False, many=True)
 
     class Meta:
         model = CoreAccount
@@ -298,3 +324,5 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
     def create(self, validated_data):
         self.overwrite_attrs_from_meta(validated_data, remove_meta=True)
         return super(CoreProductDeltaDeserializer, self).create(validated_data)
+
+
