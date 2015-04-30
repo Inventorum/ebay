@@ -3,20 +3,16 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.ebay.apps.inventory.serializers import SanityCheckEbaySerializer
 from inventorum.ebay.apps.products.models import EbayItemModel
-
 from rest_framework.response import Response
-
 from inventorum.ebay.lib.rest.exceptions import BadRequest
-
 from inventorum.ebay.lib.rest.resources import APIResource
-
 
 log = logging.getLogger(__name__)
 
-
 class SanityCheckResource(APIResource):
+    serializer_class = SanityCheckEbaySerializer
     def post(self, request):
-        serializer = SanityCheckEbaySerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.data
         product_ids = []
@@ -39,6 +35,6 @@ class SanityCheckResource(APIResource):
             ebay_item_index = ebay_items[item.id]['index']
             data['availabilities'][ebay_item_index]['quantity'] = int(item.quantity)
 
-        response_serializer = SanityCheckEbaySerializer(data=data)
+        response_serializer = self.get_serializer(data=data)
         response_serializer.is_valid(raise_exception=True)
         return Response(data=response_serializer.data)

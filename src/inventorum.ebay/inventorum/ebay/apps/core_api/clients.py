@@ -2,7 +2,6 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
-import urllib
 from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
     CoreProductDeltaDeserializer
 from inventorum.ebay.apps.core_api.pager import Pager
@@ -277,8 +276,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         :raises requests.exceptions.HTTPError
                 rest_framework.exceptions.ValidationError
         """
-        query_params = urllib.urlencode({'id': product_ids}, True)
-        response = self.get('/api/products/quantity/?{0}'.format(query_params))
+        response = self.get('/api/products/quantity/', params={'id': product_ids})
         json = response.json()
         serializer = QuantityCoreApiResponse(data=json, many=True)
         return serializer.build()
