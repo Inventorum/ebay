@@ -1,6 +1,7 @@
 from ebaysdk.trading import Connection
 from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.tests.testcases import UnitTestCase
+from inventorum.ebay.tests.utils import PatchMixin
 from mock import patch, Mock
 
 
@@ -14,14 +15,15 @@ class ConfigMocked(object):
         return self.values.get(key, None)
 
 
-class EbayClassTestCase(UnitTestCase):
+class EbayClassTestCase(UnitTestCase, PatchMixin):
     def setUp(self):
         super(EbayClassTestCase, self).setUp()
-        self.connection_original = Connection
-        self.patcher = patch('inventorum.ebay.lib.ebay.TradingConnection', spec=True)
-        self.connection_mock = self.patcher.start()
+        self.connection_mock = self.patch('inventorum.ebay.lib.ebay.TradingConnection', spec=True)
+        
+        # Swap class in EbayTrading but store original one!
         self.original_class = EbayTrading.default_connection_cls
         EbayTrading.default_connection_cls = self.connection_mock
+
         self.instance_mock = self.connection_mock.return_value
 
         self.config = ConfigMocked()
@@ -34,14 +36,10 @@ class EbayClassTestCase(UnitTestCase):
         self.execute_mock.dict.return_value = {}
         self.instance_mock.execute.return_value = self.execute_mock
 
-
-        self.patcher_parallel = patch('inventorum.ebay.lib.ebay.Parallel', spec=True)
-        self.class_parallel_mock = self.patcher_parallel.start()
+        self.class_parallel_mock = self.patch('inventorum.ebay.lib.ebay.Parallel', spec=True)
         self.parallel_mock = self.class_parallel_mock.return_value
         self.parallel_mock.error.return_value = False
 
     def tearDown(self):
-        self.patcher.stop()
-        self.patcher_parallel.stop()
         EbayTrading.default_connection_cls = self.original_class
         super(EbayClassTestCase, self).tearDown()
