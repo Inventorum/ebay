@@ -41,7 +41,9 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
                 "external_id": "DE_DHLPaket",
                 "cost": "3.49",
                 "additional_cost": "0.00"
-            }]
+            }],
+            'user_id': account.user_id,
+            'email': account.email
         })
 
     def test_deserialize_serialized(self):

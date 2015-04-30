@@ -100,6 +100,7 @@ class TestUserScopedCoreAPIClient(APITestCase):
         account_settings = core_account.account.settings
         self.assertEqual(account_settings.ebay_paypal_email, 'bartosz@hernas.pl')
         self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
+        self.assertTrue(account_settings.ebay_click_and_collect)
 
     @CoreApiTest.use_cassette("get_product_with_variations.yaml")
     def test_product_with_variations(self):

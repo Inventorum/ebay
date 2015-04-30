@@ -68,5 +68,9 @@ class AuthorizationService(object):
         if self.auto_commit:
             self.save()
 
+    def logout(self):
+        self.account.token = None
+        self._auto_committed_save()
+
     def save(self):
         self.account.save()

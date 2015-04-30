@@ -32,7 +32,8 @@ class APITestCase(AssertionMixin, PatchMixin, test.APITestCase):
     def setUp(self):
         super(APITestCase, self).setUp()
 
-        self._account = EbayAccountFactory(inv_id=StagingTestAccount.ACCOUNT_ID)
+        self._account = EbayAccountFactory(inv_id=StagingTestAccount.ACCOUNT_ID,
+                                           ebay_location_uuid='BB54CED9-2A34-480A-B187-11A97C4E15D4')
         self._user = EbayUserFactory(inv_id=StagingTestAccount.USER_ID, account=self.account)
 
         self.authenticate(self.user)

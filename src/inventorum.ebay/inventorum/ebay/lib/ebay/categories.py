@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.lib.ebay import Ebay, EbayParallel
+from inventorum.ebay.lib.ebay import EbayTrading, EbayParallel
 from inventorum.ebay.lib.ebay.data.categories import EbayCategorySerializer, EbayCategory
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature
 from inventorum.ebay.lib.ebay.data.categories.specifics import EbayCategorySpecifics
@@ -11,7 +11,7 @@ from inventorum.ebay.lib.ebay.data.categories.specifics import EbayCategorySpeci
 log = logging.getLogger(__name__)
 
 
-class EbayCategories(Ebay):
+class EbayCategories(EbayTrading):
     parallel_api = None
 
     def __init__(self, *args, **kwargs):

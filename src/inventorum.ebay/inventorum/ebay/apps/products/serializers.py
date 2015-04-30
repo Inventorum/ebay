@@ -51,10 +51,12 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
 
     class Meta:
         model = EbayProductModel
-        fields = ('id', 'category', 'is_published', 'listing_url', 'specific_values', 'shipping_services')
+        fields = ('id', 'category', 'is_published', 'listing_url', 'specific_values', 'is_click_and_collect',
+                  'shipping_services')
 
     category = RelatedModelByIdField(serializer=EbayProductCategorySerializer, allow_null=True, required=False)
 
+    is_click_and_collect = serializers.BooleanField()
     is_published = serializers.BooleanField(read_only=True)
     listing_url = serializers.BooleanField(read_only=True)
     specific_values = EbayProductSpecificSerializer(many=True)
@@ -108,16 +110,11 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
         for val in specific_values:
             specific_obj = val['specific']
             value = val['value']
-            defaults = dict(value=value)
             prod_spec_obj, c = EbayProductSpecificModel.objects.get_or_create(
                 specific=specific_obj,
                 product=instance,
-                defaults=defaults
+                value=value
             )
-            if not c:
-                for key, value in defaults.iteritems():
-                    setattr(prod_spec_obj, key, value)
-                prod_spec_obj.save()
             new_specific_values.append(prod_spec_obj.id)
 
         to_be_deleted = current_specific_values - set(new_specific_values)

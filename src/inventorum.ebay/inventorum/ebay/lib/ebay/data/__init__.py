@@ -106,4 +106,12 @@ class EbayAmountField(serializers.DecimalField):
     def to_internal_value(self, data):
         return super(EbayAmountField, self).to_internal_value(data["value"])
 
+
+class EbayNullableIntegerField(serializers.IntegerField):
+    def to_internal_value(self, data):
+        if data == 'null':
+            return None
+        return super(EbayNullableIntegerField, self).to_internal_value(data)
+
+
 # TODO jm: Move to data/utils.py #######################################################################################

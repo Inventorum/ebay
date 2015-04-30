@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.functional import cached_property
-from inventorum.ebay.apps.products.models import EbayProductSpecificModel
+from inventorum.ebay.apps.products.models import EbayProductSpecificModel, EbayProductModel
 
 from rest_framework import status
 
@@ -310,3 +310,48 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
             'non_field_errors': ['You send too many values for one specific (specific_ids: [%s])!'
                                  % self.required_specific.pk]
         })
+
+
+    def test_more_than_one_value_in_one_specific_valid(self):
+        """
+        Test proving that saving 2 values for one specific works! 
+        :return:
+        """
+
+        multiple_required = CategorySpecificFactory.create(category=self.leaf_category,
+                                                           selection_mode='SelectionOnly',
+                                                           min_values=2,
+                                                           max_values=5)
+        selection_only_specific_value = self.required_specific_selection_only.values.last().value
+
+        product = EbayProductFactory.create(account=self.account)
+        data = self._get_valid_data_for(product)
+        data['category'] = {
+            'id': self.leaf_category.pk
+        }
+        data['specific_values'] = [
+            {
+                "specific": multiple_required.pk,
+                "value": multiple_required.values.all()[0].value
+            },
+            {
+                "specific": multiple_required.pk,
+                "value": multiple_required.values.all()[1].value
+            },
+            {
+                "specific": self.required_specific.pk,
+                "value": "Some non-standard value"  # Should be accepted!
+            },
+            {
+                "specific": self.required_specific_selection_only.pk,
+                "value": selection_only_specific_value  # Needs to be one of values
+            }
+        ]
+        response = self._request_update(product, data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        product = EbayProductModel.objects.get(id=product.id)
+        values = product.specific_values_for_current_category.filter(specific_id=multiple_required.id)
+        self.assertEqual(values.count(), 2)
+        self.assertEqual(product.specific_values_for_current_category.count(), 4)

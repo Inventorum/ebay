@@ -8,6 +8,8 @@ from decimal import Decimal
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
+from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
+from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
 from requests.exceptions import HTTPError
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
@@ -116,6 +118,10 @@ class PublishingPreparationService(object):
         if validator.errors:
             raise PublishingValidationException("\n".join(validator.errors))
 
+        if self.product.is_click_and_collect and not self.core_account.settings.ebay_click_and_collect:
+            raise PublishingValidationException(ugettext("You cannot publish product with Click & Collect, because you "
+                                                         "don't have it enabled for your account!"))
+
     def _validate_product_existence_in_core_api(self):
         return self.core_product
 
@@ -159,7 +165,8 @@ class PublishingPreparationService(object):
             country=self.core_account.country,
             quantity=self.core_product.quantity,
             paypal_email_address=self.core_account.settings.ebay_paypal_email,
-            postal_code=self.core_account.billing_address.zipcode
+            postal_code=self.core_account.billing_address.zipcode,
+            is_click_and_collect=self.product.is_click_and_collect
         )
 
         for image in self.core_product.images:
@@ -264,6 +271,8 @@ class PublishingService(PublishingUnpublishingService):
         """
         :raises PublishingException
         """
+        self._add_inventory_for_click_and_collect()
+
         ebay_api = EbayItems(self.user.account.token.ebay_object)
         try:
             response = ebay_api.publish(self.item.ebay_object)
@@ -290,6 +299,21 @@ class PublishingService(PublishingUnpublishingService):
             type=EbayApiAttemptType.PUBLISH
         )
 
+    def _add_inventory_for_click_and_collect(self):
+        if not self.product.is_click_and_collect:
+            return
+
+        api = EbayInventoryManagement(token=self.user.account.token.ebay_object)
+
+        locations_availability = [
+            EbayLocationAvailability(
+                availability=EbayAvailability.IN_STOCK,
+                location_id=self.user.account.ebay_location_id,
+                quantity=None
+            )
+        ]
+        api.add_inventory('test_sky', locations_availability=locations_availability)
+
     def finalize_publish_attempt(self):
         """
         :raises: PublishingSendStateFailedException
@@ -311,6 +335,7 @@ class UnpublishingService(PublishingUnpublishingService):
         """
         :raises UnpublishingException
         """
+
         service = EbayItems(self.user.account.token.ebay_object)
         try:
             response = service.unpublish(self.item.external_id)
@@ -325,6 +350,8 @@ class UnpublishingService(PublishingUnpublishingService):
 
             raise UnpublishingException(e.message, original_exception=e)
 
+        self._delete_inventory_for_click_and_collect()
+        
         self.item.unpublished_at = response.end_time
         self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
         self.item.save()
@@ -334,6 +361,13 @@ class UnpublishingService(PublishingUnpublishingService):
             item=self.item,
             type=EbayApiAttemptType.UNPUBLISH
         )
+
+    def _delete_inventory_for_click_and_collect(self):
+        if not self.product.is_click_and_collect:
+            return
+
+        api = EbayInventoryManagement(token=self.user.account.token.ebay_object)
+        api.delete_inventory(self.item.sku, delete_all=True)
 
     def finalize_unpublish_attempt(self):
         """
@@ -393,6 +427,7 @@ class UpdateService(object):
             model.gross_price = update_model.gross_price
 
         model.save()
+
 
 class ProductDeletionService(object):
     def __init__(self, product, user):

@@ -11,6 +11,7 @@ from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
     UnpublishingService, PublishingPreparationService
+from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
@@ -19,16 +20,10 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 log = logging.getLogger(__name__)
 
 
-class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin):
+class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
     def _get_product(self, inv_product_id, account):
         return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
-
-    def _assign_shipping_services(self, product):
-        product.shipping_services.create(service=self.get_shipping_service_hermes(), cost="4.50",
-                                         additional_cost=D("1.00"))
-        product.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("5.00"),
-                                         additional_cost=D("3.00"))
 
     def _assign_category(self, product):
         leaf_category = CategoryFactory.create(name="Leaf category", external_id='64540')
@@ -53,7 +48,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
 
         self.assertEqual(e.exception.message, 'Neither product or account have configured shipping services')
 
-        self._assign_shipping_services(product)
+        self.assign_valid_shipping_services(product)
 
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingPreparationService(product, self.user)
@@ -97,6 +92,31 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
                              'You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk)
 
             self._add_specific_to_product(product)
+
+        # Add click & collect to check validation of it!
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
+            # Mark product as click and collect product
+            product.is_click_and_collect = True
+            product.save()
+
+            service = PublishingPreparationService(product, self.user)
+
+            # Disable click and collect
+            service.core_account.settings.ebay_click_and_collect = False
+
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
+
+            self.assertEqual(e.exception.message,
+                             "You cannot publish product with Click & Collect, because you don't have it enabled for "
+                             "your account!")
+
+        product.is_click_and_collect = False
+        product.save()
+
+        product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
+            service = PublishingPreparationService(product, self.user)
             # Should not raise anything finally!
             service.validate()
 
@@ -108,7 +128,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
 
             self._assign_category(product)
             self._add_specific_to_product(product)
-            self._assign_shipping_services(product)
+            self.assign_valid_shipping_services(product)
 
             service.create_ebay_item()
 
@@ -179,7 +199,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
 
             self._assign_category(product)
             self._add_specific_to_product(product)
-            self._assign_shipping_services(product)
+            self.assign_valid_shipping_services(product)
 
             service.create_ebay_item()
             last_item = product.items.last()
@@ -189,6 +209,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
 
         data = ebay_item.dict()
         self.assertEqual(data, {'Item': {
+            'SKU': 'invdev_{0}'.format(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES),
             'ConditionID': 1000,
             'Country': 'DE',
             'Currency': 'EUR',
@@ -250,7 +271,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
             features.durations.add(duration)
 
         # assign valid shipping service
-        self._assign_shipping_services(product)
+        self.assign_valid_shipping_services(product)
 
         # Try to publish
         preparation_service = PublishingPreparationService(product, self.user)
@@ -286,7 +307,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
         with ApiTest.use_cassette("get_product_with_variations_for_testing_builder.yaml"):
             self._assign_category(product)
             self._add_specific_to_product(product)
-            self._assign_shipping_services(product)
+            self.assign_valid_shipping_services(product)
 
             # Try to publish
             preparation_service = PublishingPreparationService(product, self.user)
@@ -408,7 +429,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
         product = self._get_product(StagingTestAccount.Products.WITH_VARIATIONS_INVALID_ATTRS, self.account)
         with ApiTest.use_cassette("get_product_with_variations_invalid_attrs_for_testing_builder.yaml"):
             self._assign_category(product)
-            self._assign_shipping_services(product)
+            self.assign_valid_shipping_services(product)
             self._add_specific_to_product(product)
 
             preparation_service = PublishingPreparationService(product, self.user)
@@ -416,3 +437,76 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
                 preparation_service.validate()
 
             self.assertEqual(exc.exception.message, "All variations needs to have exactly the same number of attributes")
+
+
+    @ApiTest.use_cassette("get_product_for_click_and_collect.yaml")
+    def test_builder_for_click_and_collect(self):
+        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
+        product.is_click_and_collect = True
+        product.save()
+
+        service = PublishingPreparationService(product, self.user)
+
+        self._assign_category(product)
+        self._add_specific_to_product(product)
+        service.create_ebay_item()
+
+        last_item = product.items.last()
+        self.assertEqual(last_item.is_click_and_collect, True)
+
+        # Check data builder
+        ebay_item = last_item.ebay_object
+
+        data = ebay_item.dict()
+        item_data = data['Item']
+        self.assertIn('PickupInStoreDetails', item_data)
+        self.assertIn('AutoPay', item_data)
+        self.assertEqual(item_data['AutoPay'], True)
+
+        self.assertIn('EligibleForPickupInStore', item_data['PickupInStoreDetails'])
+        self.assertEqual(item_data['PickupInStoreDetails']['EligibleForPickupInStore'], True)
+
+
+    @ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml")
+    def test_builder_for_click_and_collect(self):
+        with ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml") as cass:
+            product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
+            product.is_click_and_collect = True
+            product.save()
+
+            self.assign_product_to_valid_category(product)
+            self.assign_valid_shipping_services(product)
+
+            # Try to publish
+            preparation_service = PublishingPreparationService(product, self.user)
+            preparation_service.validate()
+            item = preparation_service.create_ebay_item()
+
+            publishing_service = PublishingService(item, self.user)
+            publishing_service.initialize_publish_attempt()
+            publishing_service.publish()
+            publishing_service.finalize_publish_attempt()
+
+            item = product.published_item
+            self.assertIsNotNone(item)
+            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
+            self.assertIsNotNone(item.published_at)
+            self.assertIsNotNone(item.ends_at)
+            self.assertIsNone(item.unpublished_at)
+
+            # And now unpublish
+            unpublishing_service = UnpublishingService(item, self.user)
+            unpublishing_service.unpublish()
+
+            item = product.published_item
+            self.assertIsNone(item)
+
+            last_item = product.items.last()
+            self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
+            self.assertIsNotNone(last_item.published_at)
+            self.assertIsNotNone(last_item.unpublished_at)
+
+        requests = cass.requests
+        uris = [r.uri for r in requests]
+        self.assertIn('https://api.ebay.com/selling/inventory/v1/inventory/delta/add', uris)
+        self.assertIn('https://api.ebay.com/selling/inventory/v1/inventory/delta/delete', uris)

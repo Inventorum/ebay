@@ -1,0 +1,25 @@
+interactions:
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="utf-8"?><AddInventoryRequest><Locations><Location><Availability>IN_STOCK</Availability><LocationID>SOME_WIERD_NON_EXISTING_ID</LocationID><Quantity>10</Quantity></Location></Locations><SKU>test_sky</SKU></AddInventoryRequest>
+    headers:
+      Content-Length: ['255']
+      Content-Type: [application/xml]
+      User-Agent: [eBaySDK/2.1.1-dev3 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-SDK-REQUEST-ID: [aae5c46b-18d0-4153-bad1-5db2c3added8]
+    method: POST
+    uri: https://api.ebay.com/selling/inventory/v1/inventory/delta/add
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><AddInventoryResponse><Ack>SUCCESS</Ack><SKU>TEST_SKY</SKU></AddInventoryResponse>'}
+    headers:
+      content-type: [application/xml]
+      date: ['Wed, 29 Apr 2015 16:03:45 GMT']
+      guid: [14d05eb6-fb40-a2ae-8365-fbb5ff7f610b]
+      rlogid: [t6jkptufoi9%3Feog4d71f%2B7a%60%3F%29pqtfwpu%29sm%7E%29fgg%7E-fij-14d05eb6fb3-0x175e1]
+      server: [Apache-Coyote/1.1]
+      set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
+      transfer-encoding: [chunked]
+      x-ebay-c-version: [1.0.0]
+      x-ebay-request-id: ['14d05eb6-fb40-a2ae-8365-fbb5ff7f610b!selling.inventory.v1.inventory!10.42.232.54!comosesb[!inventory.v1!r1invsvcin[]]']
+      x-frame-options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1

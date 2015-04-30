@@ -1,11 +1,11 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.lib.ebay import Ebay
+from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature
 from inventorum.ebay.lib.ebay.data.user import EbayUser
 
 
-class EbayInfo(Ebay):
+class EbayInfo(EbayTrading):
     def get_user(self, user_id=None):
         """
         Get user data, if `user_id` is not specified, get currently authenticated one
