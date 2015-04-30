@@ -470,3 +470,63 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ShippingServiceTestMi
 
         self.assertIn('EligibleForPickupInStore', item_data['PickupInStoreDetails'])
         self.assertEqual(item_data['PickupInStoreDetails']['EligibleForPickupInStore'], True)
+
+
+    @ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml")
+    def test_builder_for_click_and_collect(self):
+        with ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml") as cass:
+            product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
+            product.is_click_and_collect = True
+            product.save()
+
+            # 176973 is valid ebay category id
+            category, c = CategoryModel.objects.get_or_create(external_id='176973')
+            product.category = category
+            product.save()
+
+            features = CategoryFeaturesModel.objects.create(
+                category=category
+            )
+            durations = ['Days_5', 'Days_30']
+            for d in durations:
+                duration = DurationModel.objects.create(
+                    value=d
+                )
+                features.durations.add(duration)
+
+            # assign valid shipping service
+            self._assign_shipping_services(product)
+
+            # Try to publish
+            preparation_service = PublishingPreparationService(product, self.user)
+            preparation_service.validate()
+            item = preparation_service.create_ebay_item()
+
+            publishing_service = PublishingService(item, self.user)
+            publishing_service.initialize_publish_attempt()
+            publishing_service.publish()
+            publishing_service.finalize_publish_attempt()
+
+            item = product.published_item
+            self.assertIsNotNone(item)
+            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
+            self.assertIsNotNone(item.published_at)
+            self.assertIsNotNone(item.ends_at)
+            self.assertIsNone(item.unpublished_at)
+
+            # And now unpublish
+            unpublishing_service = UnpublishingService(item, self.user)
+            unpublishing_service.unpublish()
+
+            item = product.published_item
+            self.assertIsNone(item)
+
+            last_item = product.items.last()
+            self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
+            self.assertIsNotNone(last_item.published_at)
+            self.assertIsNotNone(last_item.unpublished_at)
+
+        requests = cass.requests
+        uris = [r.uri for r in requests]
+        self.assertIn('https://api.ebay.com/selling/inventory/v1/inventory/delta/add', uris)
+        self.assertIn('https://api.ebay.com/selling/inventory/v1/inventory/delta/delete', uris)

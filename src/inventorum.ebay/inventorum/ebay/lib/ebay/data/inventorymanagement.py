@@ -111,11 +111,13 @@ class EbayLocationAvailability(object):
         self.quantity = quantity
 
     def dict(self):
-        return {
+        data = {
             "Availability": self.availability,
             "LocationID": self.location_id,
-            "Quantity": self.quantity
         }
+        if self.quantity is not None:
+            data["Quantity"] = int(self.quantity)
+        return data
 
 
 class EbayAddLocationResponse(object):
@@ -134,7 +136,7 @@ class EbayAddLocationResponseDeserializer(POPOSerializer):
         model = EbayAddLocationResponse
 
 
-class EbayAddInventoryResponse(object):
+class EbayAddDeleteInventoryResponse(object):
     def __init__(self, sku):
         """
         :type sku: unicode
@@ -143,8 +145,24 @@ class EbayAddInventoryResponse(object):
         self.sku = sku
 
 
-class EbayAddInventoryResponseDeserializer(POPOSerializer):
+class EbayAddDeleteInventoryResponseDeserializer(POPOSerializer):
     SKU = serializers.CharField(source="sku")
 
     class Meta:
-        model = EbayAddInventoryResponse
+        model = EbayAddDeleteInventoryResponse
+
+
+class EbayDeleteInventoryLocationResponse(object):
+    def __init__(self, location_id):
+        """
+        :type location_id: unicode
+        :return:
+        """
+        self.location_id = location_id
+
+
+class EbayDeleteInventoryLocationDeserializer(POPOSerializer):
+    LocationID = serializers.CharField(source="location_id")
+
+    class Meta:
+        model = EbayDeleteInventoryLocationResponse
