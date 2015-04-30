@@ -10,11 +10,8 @@ from .celery import app as celery_app
 
 import os
 
-ini = os.environ.get('PYRAMID_SETTINGS', None)
-if ini:
-    config_file, section_name = ini.split('#', 1)
-    from paste.deploy.loadwsgi import appconfig
+config_file_name = os.environ.get('PYRAMID_SETTINGS', None)
+if config_file_name:
     import pyramid.paster
-
-    pyramid.paster.setup_logging(config_file)
-    app = pyramid.paster.get_app(config_file)
+    pyramid.paster.setup_logging(config_file_name)
+    app = pyramid.paster.get_app(config_file_name)
