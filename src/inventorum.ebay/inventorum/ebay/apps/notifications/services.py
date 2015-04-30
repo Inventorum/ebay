@@ -14,11 +14,8 @@ class EbayPlatformNotificationService(object):
     Entry point for all ebay platform notifications, responsible for invoking the correct notification handlers
     """
 
+    # EbayNotificationEventType -> EbayNotificationHandler
     handlers = {
-        EbayNotificationEventType.FixedPriceTransaction: handlers.FixedPriceTransactionNotificationHandler,
-        EbayNotificationEventType.ItemSold: handlers.ItemSoldNotificationHandler,
-        EbayNotificationEventType.ItemClosed: handlers.ItemClosedNotificationHandler,
-        EbayNotificationEventType.ItemSuspended: handlers.ItemSuspendedNotificationHandler
     }
 
     @classmethod

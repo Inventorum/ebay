@@ -2,9 +2,6 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.apps.orders.models import OrderModel
-from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemVariationModel
-
 from inventorum.ebay.lib.ebay.data.responses import GetItemTransactionsResponseType, GetItemResponseType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework.exceptions import ValidationError

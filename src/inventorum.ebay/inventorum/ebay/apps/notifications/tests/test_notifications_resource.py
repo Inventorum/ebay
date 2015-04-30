@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 class TestNotificationsResource(APITestCase):
 
-    HANDLED_NOTIFICATIONS = {
+    NOTIFICATIONS = {
         EbayNotificationEventType.FixedPriceTransaction: notification_templates.fixed_price_transaction_notification_template,
         EbayNotificationEventType.ItemSold: notification_templates.item_sold_notification_template,
         EbayNotificationEventType.ItemClosed: notification_templates.item_closed_notification_template,
@@ -31,11 +31,11 @@ class TestNotificationsResource(APITestCase):
         return self.client.post("/notifications/", content_type='text/xml; charset="utf-8"',
                                 SOAPACTION=event_type, data=data)
 
-    def test_handled(self):
-        for event_type, template in self.HANDLED_NOTIFICATIONS.iteritems():
+    def test_unhandled(self):
+        for event_type, template in self.NOTIFICATIONS.iteritems():
             self.assertPrecondition(EbayNotificationModel
                                     .objects.filter(event_type=event_type,
-                                                    status=EbayNotificationStatus.HANDLED).count(), 0)
+                                                    status=EbayNotificationStatus.UNHANDLED).count(), 0)
 
             response = self.post_notification(event_type=event_type, template=template)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -43,22 +43,7 @@ class TestNotificationsResource(APITestCase):
             # notification should have been persisted and handled
             self.assertPostcondition(EbayNotificationModel
                                      .objects.filter(event_type=event_type,
-                                                     status=EbayNotificationStatus.HANDLED).count(), 1)
-
-    def test_unhandled(self):
-        feedback_type = "Feedback"
-        self.assertPrecondition(EbayNotificationModel
-                                .objects.filter(event_type=feedback_type,
-                                                status=EbayNotificationStatus.UNHANDLED).count(), 0)
-
-        response = self.post_notification(event_type=feedback_type,
-                                          template=notification_templates.unhandled_feedback_notification_template)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # notification should have been persisted and unhandled
-        self.assertPostcondition(EbayNotificationModel
-                                 .objects.filter(event_type=feedback_type,
-                                                 status=EbayNotificationStatus.UNHANDLED).count(), 1)
+                                                     status=EbayNotificationStatus.UNHANDLED).count(), 1)
 
     def test_invalid_signature(self):
         expired_timestamp = datetime.datetime.utcnow() - timedelta(minutes=15)
