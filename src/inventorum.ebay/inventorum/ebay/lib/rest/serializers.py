@@ -55,7 +55,10 @@ class POPOSerializer(serializers.Serializer):
         if not hasattr(self, "_errors"):
             self.is_valid(raise_exception=True)
 
-        return self.save()
+        instance = self.save()
+        setattr(instance, "_initial_data", self.initial_data)
+
+        return instance
 
     def update(self, instance, validated_data):
         raise NotImplemented("`update()` not implemented.")

@@ -61,11 +61,7 @@ class OrderModel(BaseModel):
 
     ebay_status = models.CharField(max_length=255, choices=CompleteStatusCodeType.CHOICES)
 
-    # Generic reference that allows us to track from what/where this order has been created
-    # For instance, ``created_from`` could refer to an FixedPriceTransaction notification
-    created_from_type = models.ForeignKey(ContentType, null=True, blank=True)
-    created_from_id = models.PositiveIntegerField(null=True, blank=True)
-    created_from = GenericForeignKey('created_from_type', 'created_from_id')
+    ebay_data = models.TextField()
 
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()
 

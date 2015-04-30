@@ -50,7 +50,7 @@ class EbayOrdersSync(object):
             buyer = order.transactions[0].buyer
             shipping_address = order.shipping_address
 
-            log.info(getattr(order, "__data", ""))
+            log.info(getattr(order, "_initial_data", ""))
 
             log.info(json.dumps({
                 "basket": {
