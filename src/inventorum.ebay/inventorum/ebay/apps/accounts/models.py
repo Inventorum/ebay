@@ -95,6 +95,10 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
         """
         return self.default_user.core_api
 
+    @property
+    def is_ebay_authenticated(self):
+        return self.token is not None
+
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):
     """ Represents an inventorum user in the ebay context """
