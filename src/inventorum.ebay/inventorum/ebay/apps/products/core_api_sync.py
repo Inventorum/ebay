@@ -1,10 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from collections import defaultdict
+
 import logging
-import datetime
 from datetime import datetime
-from django.utils.functional import cached_property
 
 from inventorum.ebay.apps.products import tasks, EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemUpdateModel, \
