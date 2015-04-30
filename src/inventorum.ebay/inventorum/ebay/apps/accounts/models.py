@@ -100,14 +100,14 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
 
 class EbayLocationModel(BaseModel):
     account = OneToOneField(EbayAccountModel, related_name="location")
-    address = ForeignKey(AddressModel, null=True, blank=True, related_name="accounts",
+    address = ForeignKey(AddressModel, null=True, blank=True, related_name="locations",
                                       verbose_name="Registration address")
-    latitude = DecimalField(max_digits=20, decimal_places=10)
-    longitude = DecimalField(max_digits=20, decimal_places=10)
-    name = CharField(max_length=255)
-    phone = CharField(max_length=255)
-    pickup_instruction = TextField()
-    url = URLField()
+    latitude = DecimalField(max_digits=20, decimal_places=10, null=True, blank=True)
+    longitude = DecimalField(max_digits=20, decimal_places=10, null=True, blank=True)
+    name = CharField(max_length=255, null=True, blank=True)
+    phone = CharField(max_length=255, null=True, blank=True)
+    pickup_instruction = TextField(null=True, blank=True)
+    url = URLField(null=True, blank=True)
 
     @property
     def ebay_location_object(self):

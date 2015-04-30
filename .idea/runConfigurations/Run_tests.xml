@@ -19,8 +19,10 @@
     <option name="USE_OPTIONS" value="false" />
     <option name="OPTIONS" value="" />
     <RunnerSettings RunnerId="PyDebugRunner" />
+    <RunnerSettings RunnerId="PythonCover" />
     <RunnerSettings RunnerId="PythonRunner" />
     <ConfigurationWrapper RunnerId="PyDebugRunner" />
+    <ConfigurationWrapper RunnerId="PythonCover" />
     <ConfigurationWrapper RunnerId="PythonRunner" />
     <method />
   </configuration>
