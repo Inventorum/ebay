@@ -18,12 +18,12 @@ class AddressFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.AddressModel
 
-    name = fuzzy.FuzzyText(length=50)
-    street = fuzzy.FuzzyText(length=50)
-    street1 = fuzzy.FuzzyText(length=50)
-    city = fuzzy.FuzzyText(length=50)
+    name = fuzzy.FuzzyText(length=10)
+    street = fuzzy.FuzzyText(length=10)
+    street1 = fuzzy.FuzzyText(length=10)
+    city = fuzzy.FuzzyText(length=10)
     country = 'DE'
-    postal_code = fuzzy.FuzzyText(length=5)
+    postal_code = fuzzy.FuzzyText(length=2)
 
 
 class EbayLocationFactory(factory.DjangoModelFactory):

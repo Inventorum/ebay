@@ -28,10 +28,8 @@ class EbayDay(object):
 
     def dict(self):
         return {
-            'Day': {
-                'DayOfWeek': self.day_of_week,
-                'Interval': [i.dict() for i in self.intervals]
-            }
+            'DayOfWeek': self.day_of_week,
+            'Interval': [i.dict() for i in self.intervals]
         }
 
 
@@ -83,7 +81,7 @@ class EbayLocation(object):
             'Address2': self.address2,
             'City': self.city,
             'Country': self.country,
-            'Hours': [day.dict() for day in self.days],
+            'Hours': {'Day': [day.dict() for day in self.days]},
             'Latitude': self.latitude,
             'Longitude': self.longitude,
             'LocationID': self.location_id,

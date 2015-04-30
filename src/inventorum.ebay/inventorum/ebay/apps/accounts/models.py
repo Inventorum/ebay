@@ -109,9 +109,10 @@ class EbayLocationModel(BaseModel):
     pickup_instruction = TextField(null=True, blank=True)
     url = URLField(null=True, blank=True)
 
-    @property
-    def ebay_location_object(self):
+    def get_ebay_location_object(self, days):
         """
+        Days are comming from `core_account` thats why we need to pass them, so lets pass them as ebay object
+        :type days: list[inventorum.ebay.lib.ebay.data.inventorymanagement.EbayDay]
         :rtype: EbayLocation
         """
         return EbayLocation(
@@ -120,16 +121,16 @@ class EbayLocationModel(BaseModel):
             address2=self.address.street1,
             city=self.address.city,
             country=self.address.country,
-            days=[],
+            days=days,
             latitude=self.latitude,
             longitude=self.longitude,
             name=self.name,
             phone=self.phone,
             pickup_instruction=self.pickup_instruction,
             postal_code=self.address.postal_code,
-            region=self.address.region,
+            region="",
             url=self.url,
-            utc_offset="+02:00"  # WHat to do with it???
+            utc_offset="+02:00"  # TODO: What to do with it???
             )
 
 
