@@ -124,7 +124,7 @@ class EbayItemModelQuerySet(BaseQuerySet):
         return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
 
     def by_sku(self, sku):
-        inv_id = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
+        inv_id = EbayItemModel.clean_sku(sku)
         return self.filter(product__inv_id=inv_id)
 
 
@@ -155,6 +155,16 @@ class EbayItemModel(BaseModel):
     unpublished_at = models.DateTimeField(null=True, blank=True)
 
     objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
+
+    @classmethod
+    def clean_sku(cls, sku):
+        """
+        Extracts Inventorum id from sku
+        :type sku: unicode
+        :rtype: unicode
+        """
+        return sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
+
 
     @property
     def ebay_object(self):

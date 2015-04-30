@@ -1,10 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Ebay tests" type="PythonConfigurationType" factoryName="Python">
+  <configuration default="false" name="Inventory test" type="PythonConfigurationType" factoryName="Python">
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
-      <env name="SKIP_LONG_TESTS" value="1" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
@@ -14,7 +13,7 @@
     <module name="ebay" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/bin/ebay/manage" />
-    <option name="PARAMETERS" value="src/inventorum.ebay/test.ini test --noinput $PROJECT_DIR$/src/inventorum.ebay/inventorum/ebay/lib/ebay/tests/" />
+    <option name="PARAMETERS" value="src/inventorum.ebay/test.ini test --noinput $PROJECT_DIR$/src/inventorum.ebay/inventorum/ebay/apps/inventory/tests/" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <RunnerSettings RunnerId="PyDebugRunner" />
     <RunnerSettings RunnerId="PythonRunner" />

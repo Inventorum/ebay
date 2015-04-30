@@ -8,6 +8,7 @@ from inventorum.ebay.apps.core_api.pager import Pager
 import requests
 
 from django.conf import settings
+from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponseDeserializer
 
 log = logging.getLogger(__name__)
 
@@ -264,6 +265,20 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         response = self.get("/api/info/")
         json = response.json()
         serializer = CoreInfoDeserializer(data=json)
+        return serializer.build()
+
+    def get_quantity_info(self, product_ids):
+        """
+        Ask core API about current quantity of products.
+
+        :type product_ids list of int
+        :rtype: list of inventorum.ebay.apps.inventory.models.CoreQuantity
+        :raises requests.exceptions.HTTPError
+                rest_framework.exceptions.ValidationError
+        """
+        response = self.get('/api/products/quantity/', params={'id': product_ids})
+        json = response.json()
+        serializer = QuantityCoreApiResponseDeserializer(data=json, many=True)
         return serializer.build()
 
     def get_paginated_product_delta_modified(self, start_date, limit_per_page=100):
