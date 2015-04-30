@@ -14,6 +14,10 @@ class CoreQuantity(object):
 
 class EbaySanityCheck(object):
     def __init__(self, trackingUUID, availabilities):
+        """
+        :type trackingUUID: unicode
+        :type availabilities: list[inventorum.ebay.apps.inventory.models.EbayItemForQuantityCheck]
+        """
         self.trackingUUID = trackingUUID
         self.availabilities = availabilities
 
