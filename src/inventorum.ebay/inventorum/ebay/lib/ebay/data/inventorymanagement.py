@@ -48,7 +48,7 @@ class EbayLocation(object):
         :type country: unicode
         :type days: list[EbayDay]
         :type latitude: decimal.Decimal
-        :type longitude: float
+        :type longitude: decimal.Decimal
         :type name: unicode
         :type phone: unicode
         :type pickup_instruction: unicode

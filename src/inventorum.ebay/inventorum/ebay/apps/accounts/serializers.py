@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.utils.translation import ugettext
-from inventorum.ebay.apps.accounts.models import EbayAccountModel
+from inventorum.ebay.apps.accounts.models import EbayAccountModel, EbayLocationModel
 from inventorum.ebay.apps.shipping.serializers import ShippingServiceConfigurableSerializer
 
 from rest_framework import serializers
@@ -12,6 +12,9 @@ from rest_framework.exceptions import ValidationError
 
 log = logging.getLogger(__name__)
 
+class EbayLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =EbayLocationModel
 
 class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.ModelSerializer):
 

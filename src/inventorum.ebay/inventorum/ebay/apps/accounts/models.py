@@ -4,8 +4,9 @@ import logging
 
 from django.conf import settings
 
-from django.db.models.fields import CharField, EmailField, BooleanField, DateTimeField
-from django.db.models.fields.related import ForeignKey
+from django.db.models.fields import CharField, EmailField, BooleanField, DateTimeField, DecimalField, TextField, \
+    URLField
+from django.db.models.fields.related import ForeignKey, OneToOneField
 from django_countries.fields import CountryField
 
 from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
@@ -14,6 +15,7 @@ from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 
 from inventorum.ebay.lib.auth.models import AuthenticableModelMixin
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
+from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -94,6 +96,41 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
         :rtype: UserScopedCoreAPIClient
         """
         return self.default_user.core_api
+
+
+class EbayLocationModel(BaseModel):
+    account = OneToOneField(EbayAccountModel, related_name="location")
+    address = ForeignKey(AddressModel, null=True, blank=True, related_name="accounts",
+                                      verbose_name="Registration address")
+    latitude = DecimalField(max_digits=20, decimal_places=10)
+    longitude = DecimalField(max_digits=20, decimal_places=10)
+    name = CharField(max_length=255)
+    phone = CharField(max_length=255)
+    pickup_instruction = TextField()
+    url = URLField()
+
+    @property
+    def ebay_location_object(self):
+        """
+        :rtype: EbayLocation
+        """
+        return EbayLocation(
+            location_id=self.account.ebay_location_id,
+            address1=self.address.street,
+            address2=self.address.street1,
+            city=self.address.city,
+            country=self.address.country,
+            days=[],
+            latitude=self.latitude,
+            longitude=self.longitude,
+            name=self.name,
+            phone=self.phone,
+            pickup_instruction=self.pickup_instruction,
+            postal_code=self.address.postal_code,
+            region=self.address.region,
+            url=self.url,
+            utc_offset="+02:00"  # WHat to do with it???
+            )
 
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):
