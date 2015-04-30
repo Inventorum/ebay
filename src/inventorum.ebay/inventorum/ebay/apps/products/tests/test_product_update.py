@@ -68,6 +68,32 @@ class TestProductUpdate(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin):
         get_product = self.client.get("/products/{inv_id}".format(inv_id=self.product.inv_id))
         self.assertEqual(get_product.data, self.get_valid_data_for(self.product))
 
+    def test_click_and_collect_saving(self):
+        assert self.product.category is None
+
+        # set is_click_and_collect
+        data = self.get_valid_data_for(self.product)
+        data["is_click_and_collect"] = True
+
+        response = self.request_update(self.product, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        updated_product = self.product.reload()
+        self.assertEqual(updated_product.is_click_and_collect, True)
+
+        # remove is_click_and_collect
+        data = response.data
+        data["is_click_and_collect"] = False
+
+        response = self.request_update(self.product, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        updated_product = self.product.reload()
+        self.assertEqual(updated_product.is_click_and_collect, False)
+
+        get_product = self.client.get("/products/{inv_id}".format(inv_id=self.product.inv_id))
+        self.assertEqual(get_product.data, self.get_valid_data_for(self.product))
+
     def test_shipping_service_updates(self):
         assert self.product.shipping_services.count() == 0
 

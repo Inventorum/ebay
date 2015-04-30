@@ -1,12 +1,12 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.lib.ebay import Ebay
+from inventorum.ebay.lib.ebay import EbayTrading
 from django.conf import settings
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 
 
-class EbayAuthentication(Ebay):
+class EbayAuthentication(EbayTrading):
     def get_session_id(self):
         response = self.execute('GetSessionID', {'RuName': settings.EBAY_RUNAME})
         return response['SessionID']

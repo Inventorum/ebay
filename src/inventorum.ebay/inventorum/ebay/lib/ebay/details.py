@@ -2,16 +2,13 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.lib.ebay import Ebay
+from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.lib.ebay.data.shipping import EbayShippingService
-from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from rest_framework import fields
-
 
 log = logging.getLogger(__name__)
 
 
-class EbayDetails(Ebay):
+class EbayDetails(EbayTrading):
 
     def get_shipping_services(self):
         response = self._get_details("ShippingServiceDetails")
