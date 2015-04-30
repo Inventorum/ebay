@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from django.utils.translation import ugettext as _
 
 import logging
 from inventorum.ebay.apps.inventory.models import EbayItemForQuantityCheck
@@ -40,7 +41,7 @@ class CoreApiQuantityCheck(object):
 
             if not availability.LocationID == self.location_id:
                 raise CoreApiQuantityCheckBadLocation(
-                    'Ebay\'s LocationID is not equal to currently authenticated account location id ("{0}" != "{1}")'.format(
+                    _('Ebay\'s LocationID is not equal to currently authenticated account location id ("{0}" != "{1}")').format(
                         availability.LocationID, self.location_id))
 
         core_api_quantity = self.core_api_client.get_quantity_info(product_ids)
