@@ -955,3 +955,43 @@ item_suspended_notification_template = lambda timestamp, signature: """<?xml ver
     </GetItemResponse>
   </soapenv:Body>
 </soapenv:Envelope>""".format(timestamp=timestamp, signature=signature)
+
+
+unhandled_feedback_notification_template = lambda timestamp, signature: """<?xml version="1.0" encoding="utf-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Header>
+    <ebl:RequesterCredentials soapenv:mustUnderstand="0"
+   xmlns:ns="urn:ebay:apis:eBLBaseComponents" xmlns:ebl="urn:ebay:apis:eBLBaseComponents">
+      <ebl:NotificationSignature xmlns:ebl="urn:ebay:apis:eBLBaseComponents">
+       {signature}</ebl:NotificationSignature>
+    </ebl:RequesterCredentials>
+  </soapenv:Header>
+  <soapenv:Body>
+    <GetFeedbackResponse xmlns="urn:ebay:apis:eBLBaseComponents">
+      <Timestamp>{timestamp}</Timestamp>
+      <Ack>Success</Ack>
+      <CorrelationID>82083320</CorrelationID>
+      <Version>407</Version>
+      <Build>20050429131630</Build>
+      <NotificationEventName>Feedback</NotificationEventName>
+      <RecipientUserID>seller1</RecipientUserID>
+      <FeedbackDetailArray>
+        <FeedbackDetail>
+          <CommentingUser>buyer1</CommentingUser>
+          <CommentingUserScore>2</CommentingUserScore>
+          <CommentText>Your product sucks!</CommentText>
+          <CommentTime>2005-04-30T03:39:46.000Z</CommentTime>
+          <CommentType>Negative</CommentType>
+          <ItemID>704637038</ItemID>
+          <Role>Seller</Role>
+          <FeedbackID>3900595379</FeedbackID>
+          <TransactionID>854387</TransactionID>
+        </FeedbackDetail>
+      </FeedbackDetailArray>
+      <FeedbackDetailItemTotal>151</FeedbackDetailItemTotal>
+      <FeedbackScore>-1</FeedbackScore>
+    </GetFeedbackResponse>
+  </soapenv:Body>
+</soapenv:Envelope>""".format(timestamp=timestamp, signature=signature)

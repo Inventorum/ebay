@@ -5,7 +5,7 @@ import logging
 from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemVariationModel
 
-from inventorum.ebay.lib.ebay.data.responses import GetItemTransactionsResponse, GetItemResponse
+from inventorum.ebay.lib.ebay.data.responses import GetItemTransactionsResponseType, GetItemResponseType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework.exceptions import ValidationError
 
@@ -51,100 +51,40 @@ class EbayNotificationHandler(object):
 
 
 class FixedPriceTransactionNotificationHandler(EbayNotificationHandler):
-    payload_deserializer_class = GetItemTransactionsResponse.Deserializer
+    payload_deserializer_class = GetItemTransactionsResponseType.Deserializer
 
     def handle(self, payload):
         """
         :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemTransactionsResponse
         """
-        # There should be exactly one as the GetItemTransactionsResponse is generated with the ItemID and TransactionID
-        if len(payload.transactions) != 1:
-            raise EbayNotificationHandlerException("Expected 1 but got %s transactions" % len(payload.transactions))
-
-        transaction = payload.transactions[0]
-        item = payload.item
-
-        try:
-            ebay_item_model = EbayItemModel.objects.get(external_id=item.item_id)
-        except EbayItemModel.DoesNotExist as e:
-            log.error("No EbayItemModel found with ebay item id {}".format(item.item_id))
-            # We fail gracefully here as this happens when the account has other ebay listings not created with our tool
-            return
-
-        orderable_item, orderable_name = None, None
-        if ebay_item_model.has_variations and transaction.variation:
-            # => variation has been bought from multi item listing
-            sku = transaction.variation.sku
-            try:
-                ebay_variation_model = ebay_item_model.variations.by_sku(sku).get()
-            except EbayItemVariationModel.DoesNotExist:
-                raise EbayNotificationHandlerException("No EbayItemVariationModel found with sku {}".format(sku))
-            except EbayItemVariationModel.MultipleObjectsReturned:
-                raise EbayNotificationHandlerException("Multiple EbayItemVariationModels found with sku {}".format(sku))
-
-            orderable_item = ebay_variation_model
-            orderable_name = transaction.variation.variation_title
-        elif not ebay_item_model.has_variations and not transaction.variation:
-            # => regular item has been bought
-            orderable_item = ebay_item_model
-            orderable_name = item.title
-        # Exception handling for cases that should never happen
-        elif ebay_item_model.has_variations and not transaction.variation:
-            raise EbayNotificationHandlerException("")
-        elif not ebay_item_model.has_variations and transaction.variation:
-            raise EbayNotificationHandlerException("Got ebay transaction with variation for an item (pk: {})) "
-                                                   "without variations".format(ebay_item_model.pk))
-        elif ebay_item_model.has_variations and not transaction.variation:
-            raise EbayNotificationHandlerException("Got ebay transaction without variation for an item (pk: {})) "
-                                                   "with variations".format(ebay_item_model.pk))
-
-        account = ebay_item_model.account
-
-        # Since we do not support multiple line item orders (known as a Combined Invoice orders),
-        # we can safely assume that the order_id is the ItemID and TransactionID, with a hyphen in between
-        # See: http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/GetItemTransactions.html
-        ebay_order_id = "%s-%s" % (item.item_id, transaction.transaction_id)
-
-        order = OrderModel.objects.create(account=account,
-                                          ebay_id=ebay_order_id,
-                                          final_price=transaction.amount_paid,
-                                          ebay_status=transaction.status.complete_status,
-                                          created_from=self.notification)
-
-        order.line_items.create(ebay_id=transaction.transaction_id,
-                                orderable_item=orderable_item,
-                                name=orderable_name,
-                                quantity=transaction.quantity_purchased,
-                                unit_price=transaction.transaction_price)
-
-        # schedule_order_creation_in_core_api(order.id)
+        pass
 
 
 class ItemSoldNotificationHandler(EbayNotificationHandler):
-    payload_deserializer_class = GetItemResponse.Deserializer
+    payload_deserializer_class = GetItemResponseType.Deserializer
 
     def handle(self, payload):
         """
-        :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponse
+        :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponseType
         """
         pass
 
 
 class ItemClosedNotificationHandler(EbayNotificationHandler):
-    payload_deserializer_class = GetItemResponse.Deserializer
+    payload_deserializer_class = GetItemResponseType.Deserializer
 
     def handle(self, payload):
         """
-        :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponse
+        :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponseType
         """
         pass
 
 
 class ItemSuspendedNotificationHandler(EbayNotificationHandler):
-    payload_deserializer_class = GetItemResponse.Deserializer
+    payload_deserializer_class = GetItemResponseType.Deserializer
 
     def handle(self, payload):
         """
-        :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponse
+        :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponseType
         """
         pass

@@ -68,9 +68,9 @@ class ItemType(object):
 ItemType.Deserializer.Meta.model = ItemType
 
 
-class GetItemResponse(object):
+class GetItemResponseType(object):
     """
-    Represents the ebay `GetItem` response
+    Represents the ebay `GetItemResponseType`
     http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/GetItem.html#Output
     """
 
@@ -91,7 +91,7 @@ class GetItemResponse(object):
         """
         self.item = item
 
-GetItemResponse.Deserializer.Meta.model = GetItemResponse
+GetItemResponseType.Deserializer.Meta.model = GetItemResponseType
 
 
 class ShippingServiceOption(object):
@@ -198,7 +198,7 @@ TransactionType.Deserializer.Meta.model = TransactionType
 
 class GetItemTransactionsResponseType(object):
     """
-    Represents the ebay `GetItemTransactions` response
+    Represents the ebay `GetItemTransactionsResponseType` response
     http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/GetItemTransactions.html#Output
     """
 
