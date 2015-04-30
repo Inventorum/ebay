@@ -70,14 +70,7 @@ class AuthorizationService(object):
 
     def logout(self):
         self.account.token = None
-        self.account.email = None
-        self.account.id_verified = None
-        self.account.status = None
-        self.account.user_id = None
-        self.account.qualifies_for_b2b_vat = None
-        self.account.store_owner = None
-        self.account.registration_date = None
-        self.account.registration_address = None
+        self._auto_committed_save()
 
     def save(self):
         self.account.save()
