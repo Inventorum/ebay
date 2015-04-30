@@ -54,6 +54,7 @@ class TestSanityCheck(EbayAuthenticatedAPITestCase):
             }
 
             response = self.client.post('/inventory/check/', data=post_data)
+            log.info(response.data)
             self.assertEqual(response.status_code, 200)
             self.assertDictEqual(response.data, {
                 "trackingUUID": "sadsadsadsadsad",

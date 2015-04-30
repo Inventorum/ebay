@@ -2,6 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
+from inventorum.ebay.apps.inventory.models import CoreQuantity, EbayItemForQuantityCheck, EbaySanityCheck
+from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayAvailability
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework.fields import CharField, IntegerField, DecimalField, SerializerMethodField
 from rest_framework.serializers import Serializer
@@ -9,25 +11,22 @@ from rest_framework.serializers import Serializer
 log = logging.getLogger(__name__)
 
 
-class AvailabilityEbaySerializer(Serializer):
+class AvailabilityEbaySerializer(POPOSerializer):
     sku = CharField()
-    available = SerializerMethodField(read_only=True)
+    available = CharField(read_only=True)
     LocationID = CharField()
     quantity = IntegerField()
 
-    def get_available(self, obj):
-        return 'IN_STOCK' if obj['quantity'] > 0 else 'OUT_OF_STOCK'
+    class Meta(POPOSerializer.Meta):
+        model = EbayItemForQuantityCheck
 
 
-class SanityCheckEbaySerializer(Serializer):
+class SanityCheckEbaySerializer(POPOSerializer):
     trackingUUID = CharField()
     availabilities = AvailabilityEbaySerializer(many=True)
 
-
-class CoreQuantity(object):
-    def __init__(self, id, quantity):
-        self.id = id
-        self.quantity = quantity
+    class Meta(POPOSerializer.Meta):
+        model = EbaySanityCheck
 
 
 class QuantityCoreApiResponse(POPOSerializer):
