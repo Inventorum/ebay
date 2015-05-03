@@ -77,8 +77,8 @@ class OrderModel(BaseModel):
     shipping_state = models.CharField(max_length=255, null=True, blank=True)
     shipping_country = CountryField(null=True, blank=True)
 
-    selected_shipping_service = models.CharField(max_length=255, null=True, blank=True)
-    selected_shipping_cost = MoneyField(null=True, blank=True)
+    selected_shipping = models.OneToOneField("shipping.ShippingServiceConfigurationModel", related_name="order",
+                                             null=True, blank=True)
 
     # the total cost of all order line items, does not include any shipping/handling, insurance, or sales tax costs.
     subtotal = MoneyField(null=True, blank=True)

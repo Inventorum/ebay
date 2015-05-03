@@ -9,6 +9,7 @@ from inventorum.ebay.apps.core_api.tests import MockedTest
 from inventorum.ebay.apps.orders.ebay_orders_sync import PeriodicEbayOrdersSync
 from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory, EbayItemVariationFactory
+from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.tests.factories import OrderTypeFactory, GetOrdersResponseTypeFactory
 from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
@@ -18,7 +19,7 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTe
 log = logging.getLogger(__name__)
 
 
-class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase):
+class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin):
 
     def setUp(self):
         super(IntegrationTestPeriodicEbayOrdersSync, self).setUp()
@@ -29,12 +30,15 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase):
 
     @MockedTest.use_cassette("ebay_orders_sync.yaml")
     def test_ebay_orders_sync(self):
+        # create published item with variations that are included in the response cassette
         published_item = PublishedEbayItemFactory.create(external_id="261869293885")
         EbayItemVariationFactory.create(inv_id=1, item=published_item)
         EbayItemVariationFactory.create(inv_id=2, item=published_item)
         EbayItemVariationFactory.create(inv_id=3, item=published_item)
         EbayItemVariationFactory.create(inv_id=4, item=published_item)
         EbayItemVariationFactory.create(inv_id=5, item=published_item)
+        # create shipping service that is selected in the response cassette
+        dhl_shipping = self.get_shipping_service_dhl()
 
         sync = PeriodicEbayOrdersSync(account=self.account)
         sync.run()

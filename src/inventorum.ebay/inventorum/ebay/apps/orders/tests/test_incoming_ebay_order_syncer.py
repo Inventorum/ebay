@@ -4,6 +4,8 @@ import logging
 
 from decimal import Decimal as D
 from inventorum.ebay.apps.products.models import EbayItemVariationModel, EbayItemModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
+from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.tests.testcases import UnitTestCase
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
 from inventorum.ebay.apps.orders.ebay_orders_sync import IncomingEbayOrderSyncer
@@ -17,7 +19,7 @@ from inventorum.ebay.lib.ebay.data.tests.factories import OrderTypeFactory, Tran
 log = logging.getLogger(__name__)
 
 
-class UnitTestEbayOrderSyncer(UnitTestCase):
+class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
 
     def setUp(self):
         super(UnitTestEbayOrderSyncer, self).setUp()
@@ -36,6 +38,8 @@ class UnitTestEbayOrderSyncer(UnitTestCase):
         order_id = "123456789-987654321"
 
         published_item = PublishedEbayItemFactory.create(external_id=published_ebay_item_id)
+
+        shipping_service_dhl = self.get_shipping_service_dhl()
 
         incoming_order = OrderTypeFactory.create(
             order_id=order_id,
@@ -65,7 +69,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase):
             shipping_address__state_or_province="Wedding",
             shipping_address__country="DE",
 
-            shipping_service_selected__shipping_service="DE_DHLPaket",
+            shipping_service_selected__shipping_service=shipping_service_dhl.external_id,
             shipping_service_selected__shipping_cost=D("4.90")
         )
 
@@ -97,8 +101,14 @@ class UnitTestEbayOrderSyncer(UnitTestCase):
         self.assertEqual(order_model.shipping_state, "Wedding")
         self.assertEqual(order_model.shipping_country, "DE")
 
-        self.assertEqual(order_model.selected_shipping_service, "DE_DHLPaket")
-        self.assertEqual(order_model.selected_shipping_cost, D("4.90"))
+        self.assertIsNotNone(order_model.selected_shipping)
+
+        selected_shipping = order_model.selected_shipping
+        assert isinstance(selected_shipping, ShippingServiceConfigurationModel)
+
+        self.assertEqual(selected_shipping.service_id, shipping_service_dhl.id)
+        self.assertEqual(selected_shipping.cost, D("4.90"))
+        self.assertEqual(selected_shipping.additional_cost, D("0.00"))
 
         self.assertEqual(order_model.subtotal, D("7.98"))
         self.assertEqual(order_model.total, D("12.88"))
@@ -136,6 +146,8 @@ class UnitTestEbayOrderSyncer(UnitTestCase):
         assert published_variation.sku.endswith("23")
         assert published_item.id != published_variation.id
 
+        shipping_service_dhl = self.get_shipping_service_dhl()
+
         incoming_order = OrderTypeFactory.create(
             order_id=order_id,
             order_status=OrderStatusCodeType.Completed,
@@ -148,6 +160,8 @@ class UnitTestEbayOrderSyncer(UnitTestCase):
                     variation__sku=published_variation.sku,
                 )
             ],
+            shipping_service_selected__shipping_service=shipping_service_dhl.external_id,
+            shipping_service_selected__shipping_cost=D("4.90")
         )
 
         sync = IncomingEbayOrderSyncer(self.account)

@@ -9,6 +9,7 @@ from django.utils.functional import cached_property
 from inventorum.ebay.apps.orders import tasks
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemVariationModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceModel, ShippingServiceConfigurationModel
 from inventorum.ebay.lib.ebay.data import OrderStatusCodeType, TradingRoleCodeType, EbayParser
 from inventorum.ebay.lib.ebay.orders import EbayOrders
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
@@ -115,11 +116,6 @@ class IncomingEbayOrderSyncer(object):
         model.buyer_last_name = buyer.user_last_name
         model.buyer_email = buyer.email
 
-        # extract shipping information
-        selected_shipping = ebay_order.shipping_service_selected
-        model.selected_shipping_service = selected_shipping.shipping_service
-        model.selected_shipping_cost = selected_shipping.shipping_cost
-
         shipping_address = ebay_order.shipping_address
         # ebay only returns a name, we distinguish between first and last name
         if " " in shipping_address.name:
@@ -145,6 +141,20 @@ class IncomingEbayOrderSyncer(object):
         model.subtotal = ebay_order.subtotal
         model.total = ebay_order.total
 
+        model.save()
+
+        # extract shipping information
+        selected_shipping = ebay_order.shipping_service_selected
+
+        try:
+            service_model = ShippingServiceModel.objects.by_country(self.account.country)\
+                .get(external_id=selected_shipping.shipping_service)
+        except ShippingServiceModel.DoesNotExist:
+            raise EbayOrderSyncException("No matching ShippingServiceModel found with `external_id={}`"
+                                         .format(selected_shipping.shipping_service))
+
+        model.selected_shipping = ShippingServiceConfigurationModel.create(service=service_model,
+                                                                           cost=selected_shipping.shipping_cost)
         model.save()
 
         for ebay_transaction in ebay_order.transactions:

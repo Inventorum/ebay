@@ -14,6 +14,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RenameField(
+            model_name='ordermodel',
+            old_name='shipping',
+            new_name='selected_shipping',
+        ),
         migrations.RemoveField(
             model_name='orderlineitemmodel',
             name='inv_id',
@@ -29,10 +34,6 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='ordermodel',
             name='final_price',
-        ),
-        migrations.RemoveField(
-            model_name='ordermodel',
-            name='shipping',
         ),
         migrations.AddField(
             model_name='ordermodel',
@@ -73,18 +74,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='ordermodel',
             name='payment_status',
-            field=models.CharField(max_length=255, null=True, blank=True),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='ordermodel',
-            name='selected_shipping_cost',
-            field=inventorum.ebay.lib.db.fields.MoneyField(null=True, max_digits=10, decimal_places=2, blank=True),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='ordermodel',
-            name='selected_shipping_service',
             field=models.CharField(max_length=255, null=True, blank=True),
             preserve_default=True,
         ),
