@@ -64,9 +64,9 @@ class OrderModel(BaseModel):
                                    verbose_name="Ebay order status")
     original_ebay_data = JSONField(verbose_name="Original ebay data", null=True)
 
-    buyer_first_name = models.CharField(max_length=255)
-    buyer_last_name = models.CharField(max_length=255)
-    buyer_email = models.CharField(max_length=255)
+    buyer_first_name = models.CharField(max_length=255, null=True, blank=True)
+    buyer_last_name = models.CharField(max_length=255, null=True, blank=True)
+    buyer_email = models.CharField(max_length=255, null=True, blank=True)
 
     shipping_first_name = models.CharField(max_length=255, null=True, blank=True)
     shipping_last_name = models.CharField(max_length=255, null=True, blank=True)
