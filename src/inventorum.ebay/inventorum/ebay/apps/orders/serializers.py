@@ -48,7 +48,6 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderModel
-        fields = ("items", "shipment")
+        fields = ("items",)
 
     items = OrderLineItemModelCoreAPIDataSerializer(source="line_items", many=True)
-    shipment = OrderShippingConfigurationCoreAPIDataSerializer(source="shipping")

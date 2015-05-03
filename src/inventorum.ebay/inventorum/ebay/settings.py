@@ -42,10 +42,10 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.products',
     'inventorum.ebay.apps.shipping',
 
+    'mptt',
     'raven.contrib.django.raven_compat',
     'rest_framework',
-    'rest_framework_swagger',
-    'mptt'
+    'rest_framework_swagger'
 )
 
 AUTH_USER_MODEL = 'inventorum.ebay.apps.accounts.models.EbayAccountModel'

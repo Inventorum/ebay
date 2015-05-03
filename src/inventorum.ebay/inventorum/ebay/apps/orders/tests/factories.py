@@ -26,8 +26,6 @@ class OrderModelFactory(factory.DjangoModelFactory):
     account = factory.SubFactory(EbayAccountFactory)
 
     ebay_id = fuzzy.FuzzyText(length=10, chars=NUMBER_CHARS, prefix="9912341245-")
-    final_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
-
     ebay_status = fuzzy.FuzzyChoice(choices=[CompleteStatusCodeType.Complete, CompleteStatusCodeType.Incomplete,
                                              CompleteStatusCodeType.Pending])
 

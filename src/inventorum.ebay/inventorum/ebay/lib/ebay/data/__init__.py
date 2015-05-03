@@ -40,9 +40,27 @@ class OrderStatusCodeType(object):
     Completed = "Completed"
 
 
+class BuyerPaymentMethodCodeType(object):
+    """
+    Provides consts for the ebay `BuyerPaymentMethodCodeType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
+    """
+
+    PayPal = "PayPal"
+
+
+class PaymentStatusCodeType(object):
+    """
+    Provides consts for the ebay `PaymentStatusCodeType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/PaymentStatusCodeType.html
+    """
+
+    NoPaymentFailure = "NoPaymentFailure"
+
+
 class TradingRoleCodeType(object):
     """
-    Provide consts for the ebay `TradingRoleCodeType`
+    Provides consts for the ebay `TradingRoleCodeType`
     http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/TradingRoleCodeType.html
     """
 

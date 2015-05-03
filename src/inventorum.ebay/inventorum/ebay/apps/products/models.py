@@ -223,6 +223,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
 
 
 class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):
+
     def by_sku(self, sku):
         inv_id = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
         return self.filter(inv_id=inv_id)

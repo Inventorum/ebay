@@ -76,7 +76,7 @@ class EbayAuthenticatedAPITestCase(APITestCase):
                          site_id=settings.EBAY_SUPPORTED_SITES['DE'])
 
 
-class UnitTestCase(AssertionMixin, PatchMixin, TestCase):
+class UnitTestCase(TestCase, AssertionMixin, PatchMixin):
     pass
 
 

@@ -47,7 +47,6 @@ class CoreAPISyncService(object):
             elif isinstance(ebay_item_or_variation, EbayItemVariationModel):
                 self._sync_ebay_variation(ebay_item_or_variation, core_product_delta)
 
-
     def _sync_ebay_item(self, ebay_item, core_product_delta):
         ebay_item_update = self._create_item_update_from_diff(ebay_item, core_product_delta)
         if ebay_item_update:
@@ -132,7 +131,6 @@ class CoreAPISyncService(object):
             item = self._get_update_item_for_variation(deleted_variation)
             EbayItemVariationUpdateModel.objects.create(variation=deleted_variation, update_item=item, is_deleted=True)
 
-
     def _get_core_modifications_of_published_items(self, modified_since):
         """
         Returns product deltas of products that are published to ebay and have been modified since the given datetime
@@ -190,5 +188,3 @@ class CoreAPISyncService(object):
 
         for item_update in self.item_update_for_variations.values():
             tasks.schedule_ebay_item_update(item_update.id, context=self.get_task_execution_context())
-
-

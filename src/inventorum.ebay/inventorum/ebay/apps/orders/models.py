@@ -4,6 +4,8 @@ import logging
 
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django_countries.fields import CountryField
+from django_extensions.db.fields.json import JSONField
 from inventorum.ebay.lib.db.fields import MoneyField
 
 from inventorum.ebay.lib.db.models import BaseModel, MappedInventorumModelQuerySet
@@ -26,7 +28,6 @@ class OrderLineItemModel(BaseModel):
     """
     order = models.ForeignKey("orders.OrderModel", verbose_name="Order", related_name="line_items")
 
-    inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
     ebay_id = models.CharField(max_length=255, verbose_name="Ebay transaction id")
 
     # Generic reference to an orderable item (either `EbayItemModel` or `EbayItemVariationModel`)
@@ -44,29 +45,58 @@ class OrderLineItemModel(BaseModel):
 
 
 class OrderModelQuerySet(MappedInventorumModelQuerySet):
-    pass
+
+    def by_account(self, account):
+        """
+        :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :rtype: OrderModelQuerySet
+        """
+        return self.filter(account_id=account.id)
 
 
 class OrderModel(BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", verbose_name="Ebay account")
 
     inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
-    ebay_id = models.CharField(max_length=255, verbose_name="Ebay id")
 
-    # final price as computed by ebay including shipping and anything else
-    final_price = MoneyField(verbose_name="Final price on ebay")
+    ebay_id = models.CharField(unique=True, max_length=255, verbose_name="Ebay id")
+    ebay_status = models.CharField(max_length=255, choices=CompleteStatusCodeType.CHOICES,
+                                   verbose_name="Ebay order status")
+    original_ebay_data = JSONField(verbose_name="Original ebay data", null=True)
 
-    shipping = models.OneToOneField("shipping.ShippingServiceConfigurationModel", null=True, blank=True,
-                                    related_name="order")
+    buyer_first_name = models.CharField(max_length=255)
+    buyer_last_name = models.CharField(max_length=255)
+    buyer_email = models.CharField(max_length=255)
 
-    ebay_status = models.CharField(max_length=255, choices=CompleteStatusCodeType.CHOICES)
+    shipping_first_name = models.CharField(max_length=255, null=True, blank=True)
+    shipping_last_name = models.CharField(max_length=255, null=True, blank=True)
+    shipping_address1 = models.CharField(max_length=255, null=True, blank=True)
+    shipping_address2 = models.CharField(max_length=255, null=True, blank=True)
+    shipping_city = models.CharField(max_length=255, null=True, blank=True)
+    shipping_postal_code = models.CharField(max_length=255, null=True, blank=True)
+    shipping_state = models.CharField(max_length=255, null=True, blank=True)
+    shipping_country = CountryField(null=True, blank=True)
 
-    ebay_data = models.TextField()
+    selected_shipping_service = models.CharField(max_length=255, null=True, blank=True)
+    selected_shipping_cost = MoneyField(null=True, blank=True)
+
+    # the total cost of all order line items, does not include any shipping/handling, insurance, or sales tax costs.
+    subtotal = MoneyField(null=True, blank=True)
+    # equals the subtotal value plus the shipping/handling, shipping insurance, and sales tax costs.
+    total = MoneyField(null=True, blank=True)
+
+    payment_method = models.CharField(max_length=255, null=True, blank=True)
+    payment_amount = MoneyField(null=True, blank=True)
+    payment_status = models.CharField(max_length=255, null=True, blank=True)
 
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()
 
     def __unicode__(self):
         return "{} (inv_id: {}, ebay_id: {})".format(self.pk, self.inv_id, self.ebay_id)
+
+    @property
+    def created_in_core_api(self):
+        return self.inv_id is not None
 
 
 class OrderableItemModel(models.Model):

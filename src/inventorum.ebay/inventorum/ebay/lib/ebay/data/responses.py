@@ -341,7 +341,7 @@ class CheckoutStatusType(object):
 
     def __init__(self, status, payment_method, payment_status):
         """
-        :type status: status
+        :type status: unicode
         :type payment_method: unicode
         :type payment_status: unicode
         """
