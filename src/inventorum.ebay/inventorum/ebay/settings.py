@@ -3,7 +3,8 @@
 """Base settings shared by all environments"""
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
+from inventorum.util.celery import TaskExecutionContext
 
 here = os.path.abspath(os.path.dirname(__file__))
 VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()
@@ -91,6 +92,16 @@ RABBITMQ_USER = 'ebay'
 RABBITMQ_PASSWORD = 'ebay'
 
 BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum_ebay"
+
+CELERYBEAT_SCHEDULE = {
+    'periodic_ebay_orders_sync_task': {
+        'task': 'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task',
+        'schedule': timedelta(seconds=10),
+        'kwargs': {
+            "context": TaskExecutionContext(user_id=None, account_id=None, request_id=None)
+        }
+    },
+}
 
 
 # Others =======================================================================

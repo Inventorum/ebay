@@ -496,7 +496,8 @@ class GetOrdersResponseType(object):
         class Meta:
             model = None
 
-        OrderArray = EbayArrayField(source="orders", item_key="Order", item_deserializer=OrderType.Deserializer)
+        OrderArray = EbayArrayField(source="orders", item_key="Order", item_deserializer=OrderType.Deserializer,
+                                    allow_null=True)
         PaginationResult = PaginationResultType.Deserializer(source="pagination_result")
         PageNumber = serializers.IntegerField(source="page_number")
 
@@ -508,6 +509,11 @@ class GetOrdersResponseType(object):
         :type pagination_result: PaginationResultType
         :type page_number: int
         """
+        # if there are no orders, the response will contain <OrderArray />, which translates to { OrderArray: None }
+        # rest framework does not easily allow us to let orders default to [], so we simply do it here
+        if orders is None:
+            orders = []
+
         self.orders = orders
         self.pagination_result = pagination_result
         self.page_number = page_number

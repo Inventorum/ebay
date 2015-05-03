@@ -20,9 +20,6 @@ log = logging.getLogger(__name__)
 
 
 class PeriodicEbayOrdersSync(object):
-    """
-    [...]
-    """
 
     def __init__(self, account):
         """
@@ -45,7 +42,12 @@ class PeriodicEbayOrdersSync(object):
                  .format(len(orders), self.account, last_sync_start))
 
         for order in orders:
-            self.sync(order)
+            try:
+                self.sync(order)
+            except EbayOrderSyncException as e:
+                # For now, we simply log errors to see how the sync behaves in production
+                # Later, we probably want to or need to create some special error handling for certain cases
+                log.error(str(e))
 
         self.account.last_ebay_orders_sync = current_sync_start
         self.account.save()
@@ -171,7 +173,6 @@ class IncomingEbayOrderSyncer(object):
         try:
             item_model = EbayItemModel.objects.get(external_id=ebay_transaction.item.item_id)
         except EbayItemModel.DoesNotExist as e:
-            # We fail gracefully here as this happens when the account has other ebay listings not created with our tool
             raise EbayOrderSyncException("No EbayItemModel found with ebay item id {}"
                                          .format(ebay_transaction.item.item_id))
 

@@ -50,9 +50,15 @@ class AddressModel(BaseModel):
 
 class EbayAccountModelQuerySet(MappedInventorumModelQuerySet):
 
+    def ebay_authenticated(self):
+        """
+        :rtype: EbayAccountModelQuerySet
+        """
+        return self.filter(token__isnull=False)
+
     def with_published_products(self):
         """
-        :rtype: EbayProductModelQuerySet
+        :rtype: EbayAccountModelQuerySet
         """
         return self.filter(products__items__publishing_status=EbayItemPublishingStatus.PUBLISHED).distinct()
 
