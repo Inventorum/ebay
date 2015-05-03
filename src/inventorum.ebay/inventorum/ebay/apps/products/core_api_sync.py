@@ -27,6 +27,7 @@ class CoreAPISyncService(object):
         current_sync_start = datetime.utcnow()
         # if there was no sync yet, the ebay account creation is taken as starting point
         last_sync_start = self.account.last_core_api_sync or self.account.time_added
+
         self._sync_core_modifications(modified_since=last_sync_start)
         self._sync_core_deletions(deleted_since=last_sync_start)
         self._sync_variations_modifications()
