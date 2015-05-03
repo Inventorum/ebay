@@ -7,6 +7,7 @@ from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
 from inventorum.ebay.lib.rest.exceptions import BadRequest
 from inventorum.ebay.lib.rest.resources import UnauthorizedEbayAPIResource, APIResource
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 
 class AuthorizeEbayResource(UnauthorizedEbayAPIResource):
@@ -42,6 +43,8 @@ class AuthorizeEbayResource(UnauthorizedEbayAPIResource):
 
 
 class LogoutEbayResource(APIResource):
+    # Trick for Swagger to not raise 500
+    serializer_class = Serializer
     @atomic
     def post(self, request):
         service = AuthorizationService(request.user)
