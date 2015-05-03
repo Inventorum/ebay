@@ -336,8 +336,13 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
     def create_order(self, data):
         """
+        :type data: dict
 
-        :param data:
-        :return:
+        :returns: The inventorum order id
+        :rtype: int
+
+        :raises requests.exceptions.HTTPError
+                rest_framework.exceptions.ValidationError
         """
-        return self.post('/api/orders?channel={}'.format(self.EBAY_CHANNEL), data=data)
+        response = self.post('/api/orders?channel={}'.format(self.EBAY_CHANNEL), data=data)
+        return response.json()["id"]
