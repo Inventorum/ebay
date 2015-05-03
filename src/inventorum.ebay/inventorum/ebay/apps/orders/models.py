@@ -72,8 +72,8 @@ class OrderModel(BaseModel):
     shipping_last_name = models.CharField(max_length=255, null=True, blank=True)
     shipping_address1 = models.CharField(max_length=255, null=True, blank=True)
     shipping_address2 = models.CharField(max_length=255, null=True, blank=True)
-    shipping_city = models.CharField(max_length=255, null=True, blank=True)
     shipping_postal_code = models.CharField(max_length=255, null=True, blank=True)
+    shipping_city = models.CharField(max_length=255, null=True, blank=True)
     shipping_state = models.CharField(max_length=255, null=True, blank=True)
     shipping_country = CountryField(null=True, blank=True)
 
