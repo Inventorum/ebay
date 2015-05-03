@@ -55,7 +55,7 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${buildout:directory}/var/log/celery_beat.development.log
-autostart=true
+autostart=false
 autorestart=true
 
 [program:flower]
