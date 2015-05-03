@@ -12,12 +12,6 @@ log = logging.getLogger(__name__)
 class POPOListSerializer(serializers.ListSerializer):
     """ List serializer for Plain Old Python Objects (POPO) """
 
-    def create(self, validated_data):
-        instance = super(POPOListSerializer, self).create(validated_data)
-        # Preserve original data for debugging and later processing
-        setattr(instance, POPOSerializer.ORIGINAL_DATA_ATTR, self.initial_data)
-        return instance
-
     def build(self):
         if not hasattr(self, "_errors"):
             self.is_valid(raise_exception=True)
