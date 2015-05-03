@@ -11,7 +11,7 @@ from rest_framework import serializers
 log = logging.getLogger(__name__)
 
 
-class OrderShippingConfigurationCoreAPIDataSerializer(serializers.ModelSerializer):
+class OrderShipmentCoreAPIDataSerializer(serializers.ModelSerializer):
     """
     Responsible for serializing a `ShippingServiceConfigurationModel` instance assigned as shipping to an order
     into the according data format to create/update its representation in the core api
@@ -48,6 +48,7 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderModel
-        fields = ("items",)
+        fields = ("items", "shipment")
 
     items = OrderLineItemModelCoreAPIDataSerializer(source="line_items", many=True)
+    shipment = OrderShipmentCoreAPIDataSerializer(source="selected_shipping")

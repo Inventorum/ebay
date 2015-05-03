@@ -18,7 +18,10 @@ log = logging.getLogger(__name__)
 class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
     def test_without_payment_and_shipping(self):
-        order = OrderModelFactory.create()
+        selected_shipping = ShippingServiceConfigurationModel.objects.create(service=self.get_shipping_service_dhl(),
+                                                                             cost=D("4.50"))
+
+        order = OrderModelFactory.create(selected_shipping=selected_shipping)
 
         published_ebay_item = PublishedEbayItemFactory(product__inv_id=23)
         OrderLineItemModelFactory.create(order=order,
@@ -30,5 +33,10 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
         # TODO jm: Add rest of the data and sync with andi
         self.assertDictEqual(serializer.data, {
-            "items": [{"product": 23, "name": "Inventorum T-Shirt [Green, L]", "quantity": 5, "gross_price": "3.99"}]
+            "items": [{"product": 23, "name": "Inventorum T-Shirt [Green, L]", "quantity": 5, "gross_price": "3.99"}],
+            "shipment": {
+                "name": "DHL Paket",
+                "cost": "4.50",
+                "external_id": "DE_DHLPaket"
+            }
         })
