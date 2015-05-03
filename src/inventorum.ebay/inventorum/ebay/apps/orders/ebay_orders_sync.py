@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.db import transaction
 from django.utils.functional import cached_property
 
@@ -34,19 +34,20 @@ class PeriodicEbayOrdersSync(object):
 
     def run(self):
         current_sync_start = datetime.utcnow()
-        last_sync_time = (datetime.utcnow() - timedelta(days=5))
+        # if there was no sync yet, the ebay account creation is taken as starting point
+        last_sync_start = self.account.last_ebay_orders_sync or self.account.time_added
 
-        get_orders_response = self._get_completed_orders(mod_time_from=last_sync_time)
+        get_orders_response = self._get_completed_orders(mod_time_from=last_sync_start)
         orders = get_orders_response.orders
 
         log.info("Received {} completed orders from ebay for account {} since {}"
-                 .format(len(orders), self.account, last_sync_time))
+                 .format(len(orders), self.account, last_sync_start))
 
         for order in orders:
             self.sync(order)
 
-        last_sync_time = current_sync_start
-        log.info(last_sync_time)
+        self.account.last_ebay_orders_sync = current_sync_start
+        self.account.save()
 
     def _get_completed_orders(self, mod_time_from):
         """

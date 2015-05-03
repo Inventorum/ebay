@@ -8,7 +8,8 @@ from decimal import Decimal as D
 from inventorum.ebay.lib.ebay.data import OrderStatusCodeType, CompleteStatusCodeType, PaymentStatusCodeType, \
     BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.responses import OrderType, UserType, AddressType, TransactionType, \
-    CheckoutStatusType, TransactionStatusType, ItemType, ShippingServiceOptionType, VariationType
+    CheckoutStatusType, TransactionStatusType, ItemType, ShippingServiceOptionType, VariationType, GetOrdersResponseType, \
+    PaginationResultType
 
 
 log = logging.getLogger(__name__)
@@ -128,3 +129,25 @@ class OrderTypeFactory(factory.Factory):
 
     shipping_address = factory.SubFactory(AddressTypeFactory)
     shipping_service_selected = factory.SubFactory(ShippingServiceOptionTypeFactory)
+
+
+class PaginationResultTypeFactory(factory.Factory):
+
+    class Meta:
+        model = PaginationResultType
+
+    total_number_of_entries = 1
+    total_number_of_pages = 1
+
+
+class GetOrdersResponseTypeFactory(factory.Factory):
+
+    class Meta:
+        model = GetOrdersResponseType
+
+    page_number = 1
+    pagination_result = factory.SubFactory(PaginationResultTypeFactory)
+
+    @factory.lazy_attribute
+    def orders(self):
+        return [OrderTypeFactory.create()]
