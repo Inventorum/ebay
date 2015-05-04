@@ -9,10 +9,11 @@ class EbayEventType(object):
     READY_FOR_PICKUP = 'EBAY.ORDER.READY_FOR_PICKUP'
     PICKED_UP = 'EBAY.ORDER.PICKEDUP'
     RETURNED = 'EBAY.ORDER.RETURNED'
+    CANCELED = 'EBAY.ORDER.PICKUP_CANCELED'
 
 
 class EbayEventBase(object):
-    def __init__(self, order_id, seller_id=None, error=None):
+    def __init__(self, order_id, seller_id=None):
         """
         :type order_id: unicode
         :type seller_id: unicode
@@ -21,7 +22,6 @@ class EbayEventBase(object):
         """
         self.order_id = order_id
         self.seller_id = seller_id
-        self.error = error
 
     @property
     def payload(self):
@@ -40,6 +40,61 @@ class EbayEventBase(object):
 
 class EbayEventReadyForPickup(EbayEventBase):
     type = EbayEventType.READY_FOR_PICKUP
+
+    def __init__(self, order_id, pickup_note=None, pickup_id=None, seller_id=None):
+        self.pickup_note = pickup_note
+        self.pickup_id = pickup_id
+        super(EbayEventReadyForPickup, self).__init__(order_id=order_id, seller_id=seller_id)
+
+    @property
+    def payload(self):
+        payload = super(EbayEventReadyForPickup, self).payload
+
+        if self.pickup_id is not None:
+            payload['notifierPickupId'] = self.pickup_id
+
+        if self.pickup_note is not None:
+            payload['notifierPickupNote'] = self.pickup_note
+
+        return payload
+
+
+class EbayEventPickedUp(EbayEventBase):
+    type = EbayEventType.PICKED_UP
+
+
+class EbayEventCanceled(EbayEventBase):
+    class CancellationType(object):
+        OUT_OF_STOCK = 'OUT_OF_STOCK'
+        BUYER_NO_SHOW = 'BUYER_NO_SHOW'
+        BUYER_REFUSED = 'BUYER_REFUSED'
+
+    class RefundType(object):
+        EBAY = 'EBAY'
+
+    type = EbayEventType.CANCELED
+
+    def __init__(self, order_id, cancellation_type, refund_type=RefundType.EBAY, pickup_note=None, pickup_id=None,
+                 seller_id=None):
+        self.cancellation_type = cancellation_type
+        self.refund_type = refund_type
+        self.pickup_note = pickup_note
+        self.pickup_id = pickup_id
+        super(EbayEventCanceled, self).__init__(order_id=order_id, seller_id=seller_id)
+
+    @property
+    def payload(self):
+        payload = super(EbayEventCanceled, self).payload
+        payload['notifierCancelType'] = self.cancellation_type
+        payload['notifierRefundType'] = self.refund_type
+
+        if self.pickup_id is not None:
+            payload['notifierPickupId'] = self.pickup_id
+
+        if self.pickup_note is not None:
+            payload['notifierPickupNote'] = self.pickup_note
+
+        return payload
 
 
 class EbayEventError(object):
@@ -76,8 +131,9 @@ class EbayEventResponse(object):
         ackValue = EbayBooleanField(source='ack')
         _errors = EbayEventError.Deserializer(source='errors', many=True, required=False, allow_null=True)
 
-
         def to_internal_value(self, data):
+            # Tricky part to be able to easy fetch list of errors (errorMessage.error[]) and we want to access it
+            # directly
             data['_errors'] = data.get('errorMessage', {}).get('error')
             return super(EbayEventResponse.Deserializer, self).to_internal_value(data)
 

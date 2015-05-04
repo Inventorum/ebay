@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: '{"event": {"version": "1.0", "type": "EBAY.ORDER.PICKUP_CANCELED", "notifierReferenceId":
+      "test", "payload": {"ebayOrderId": "123", "notifierCancelType": "OUT_OF_STOCK",
+      "notifierRefundType": "EBAY"}}}'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['201']
+      Content-Type: [!!python/unicode application/json]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.8 Darwin/14.1.0]
+      X-EBAY-EVENT-TYPE: [!!python/unicode EBAY.ORDER.PICKUP_CANCELED]
+    method: POST
+    uri: https://svcs.ebay.com/eventbridge/InboundEvent/publish
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAACWOS2vDMBCE/8uebaOH06i6JYoOoa9gJ4W2hKLK6yLayEZSQkvIf6/cwF5mZ4Zv
+        zoAhDOEBYzSfCPJ81SDf9pcC8Cehj27wky7A2K9n833MMWh3Sum2hQICxnHwEdtk0jGCZIQUkNwB
+        YzKHMUcZobOS5Ku3REjGJaPVjeCvuYsn9GmCnjBcMUArko30O04UvVy8VE/NSjfVZq3udpt3tXhU
+        +l6vcsYPyfUOQ4M9BvQW112upMyFPH10HrchL/7/CmYtFZSWnZ3Ny7rnvDQfnJW3tu6E4XMUjMLl
+        D04qkj8NAQAA
+    headers:
+      connection: [keep-alive]
+      content-encoding: [gzip]
+      content-type: [application/json]
+      date: ['Mon, 04 May 2015 15:23:20 GMT']
+      guid: [14d1f863-fb30-a625-5874-3284e9131d15]
+      rlogid: [t6fsreqlb%60f%3F%3Cwk%7D%3Ee36e*352%3F-14d1f863fb8-0x9a]
+      server: [Apache-Coyote/1.1]
+      set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
+      transfer-encoding: [chunked]
+      x-ebay-c-version: [1.0.0]
+      x-ebay-request-id: ['14d1f863-fb30-a625-5874-3284e9131d15!eventbridge.InboundEvent.publish!10.98.85.135!esvcsesb[!evtbridge.InboundEvent!r1evtbridge[]]']
+      x-frame-options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1
