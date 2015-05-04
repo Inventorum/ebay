@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = AddressModel
-        fields = ('name', 'street', 'street1', 'city', 'country', 'postal_code')
+        fields = ('name', 'street', 'street1', 'city', 'country', 'postal_code', 'region')
 
 
 class EbayLocationSerializer(serializers.ModelSerializer):

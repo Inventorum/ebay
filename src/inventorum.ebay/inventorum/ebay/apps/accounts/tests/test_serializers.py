@@ -61,6 +61,7 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
                     'street': location.address.street,
                     'street1': location.address.street1,
                     'city': location.address.city,
+                    'region': location.address.region,
                     'country': unicode(location.address.country),
                     'postal_code': location.address.postal_code,
                 },

@@ -16,6 +16,10 @@ class EbayLocationUpdateService(object):
     def __init__(self, user):
         self.user = user
 
+    @property
+    def can_be_saved(self):
+        return self.user.account.has_location and self.core_account.settings.ebay_click_and_collect
+
     @cached_property
     def core_info(self):
         try:
@@ -25,6 +29,9 @@ class EbayLocationUpdateService(object):
 
     @property
     def core_account(self):
+        """
+        :rtype: inventorum.ebay.apps.core_api.models.CoreAccount
+        """
         return self.core_info.account
 
     @property

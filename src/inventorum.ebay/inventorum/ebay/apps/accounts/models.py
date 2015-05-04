@@ -30,6 +30,7 @@ class AddressModel(BaseModel):
     city = CharField(max_length=255, null=True, blank=True)
     country = CountryField(null=True, blank=True)
     postal_code = CharField(max_length=255, null=True, blank=True)
+    region = CharField(max_length=255, null=True, blank=True)
 
     @classmethod
     def create_from_ebay_address(cls, ebay_address):
@@ -97,6 +98,10 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
         """
         return self.default_user.core_api
 
+    @property
+    def has_location(self):
+        return hasattr(self, "location")
+
 
 class EbayLocationModel(BaseModel):
     account = OneToOneField(EbayAccountModel, related_name="location", null=True, blank=True)
@@ -128,7 +133,7 @@ class EbayLocationModel(BaseModel):
             phone=self.phone,
             pickup_instruction=self.pickup_instruction,
             postal_code=self.address.postal_code,
-            region="",
+            region=self.address.region,
             url=self.url,
             utc_offset="+02:00"  # TODO: What to do with it???
             )

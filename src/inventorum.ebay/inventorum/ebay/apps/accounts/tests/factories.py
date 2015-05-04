@@ -22,6 +22,7 @@ class AddressFactory(factory.DjangoModelFactory):
     street = fuzzy.FuzzyText(length=10)
     street1 = fuzzy.FuzzyText(length=10)
     city = fuzzy.FuzzyText(length=10)
+    region = fuzzy.FuzzyText(length=10)
     country = 'DE'
     postal_code = fuzzy.FuzzyText(length=2)
 
