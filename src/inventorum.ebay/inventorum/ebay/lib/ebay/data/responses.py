@@ -396,8 +396,6 @@ class OrderType(object):
         class Meta:
             model = None
 
-        # This amount includes the sale price of each line item, shipping and any other charges.
-        # It is returned after the buyer has completed checkout (=> CheckoutStatus.Status = Complete)
         OrderID = serializers.CharField(source="order_id")
         OrderStatus = serializers.CharField(source="order_status")
         CheckoutStatus = CheckoutStatusType.Deserializer(source="checkout_status")
@@ -411,8 +409,6 @@ class OrderType(object):
         ShippingAddress = AddressType.Deserializer(source="shipping_address")
         ShippingServiceSelected = ShippingServiceOptionType.Deserializer(source="shipping_service_selected")
         PickupMethodSelected = PickupMethodSelectedType.Deserializer(source="pickup_method_selected", required=False)
-
-        # ShippingAddress: AddressType
 
     # / Deserialization ###############
 
