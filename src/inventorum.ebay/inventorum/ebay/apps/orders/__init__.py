@@ -14,6 +14,11 @@ class CorePaymentMethod(object):
     PAYPAL = "4"
     BANK_TRANSFER = "6"
 
+    CHOICES = (
+        (PAYPAL, "PayPal"),
+        (BANK_TRANSFER, "Bank Transfer")
+    )
+
     EBAY_PAYMENT_CODE_TYPE_MAPPING = {
         BuyerPaymentMethodCodeType.PayPal: PAYPAL,
         BuyerPaymentMethodCodeType.MoneyXferAccepted: BANK_TRANSFER,

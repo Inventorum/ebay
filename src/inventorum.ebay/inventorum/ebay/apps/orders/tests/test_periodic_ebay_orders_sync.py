@@ -31,7 +31,8 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, Shippi
     @MockedTest.use_cassette("ebay_orders_sync.yaml")
     def test_ebay_orders_sync(self):
         # create published item with variations that are included in the response cassette
-        published_item = PublishedEbayItemFactory.create(external_id="261869293885")
+        published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         external_id="261869293885")
         EbayItemVariationFactory.create(inv_id=1, item=published_item)
         EbayItemVariationFactory.create(inv_id=2, item=published_item)
         EbayItemVariationFactory.create(inv_id=3, item=published_item)

@@ -124,9 +124,27 @@ class EbayItemModelQuerySet(BaseQuerySet):
         """
         return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
 
+    def by_ebay_id(self, ebay_id):
+        """
+        :type ebay_id: unicode
+        :rtype EbayItemModelQuerySet
+        """
+        return self.filter(external_id=ebay_id)
+
     def by_sku(self, sku):
+        """
+        :type sku: unicode
+        :rtype EbayItemModelQuerySet
+        """
         inv_id = EbayItemModel.clean_sku(sku)
         return self.filter(product__inv_id=inv_id)
+
+    def by_account(self, account):
+        """
+        :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :rtype EbayItemModelQuerySet
+        """
+        return self.filter(account=account)
 
 
 class EbayItemModel(OrderableItemModel, BaseModel):

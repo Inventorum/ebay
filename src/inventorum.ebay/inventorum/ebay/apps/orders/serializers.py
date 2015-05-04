@@ -65,7 +65,6 @@ class OrderPaymentCoreAPIDataSerializer(serializers.ModelSerializer):
         fields = ("payment_amount", "payment_method")
 
     payment_amount = MoneyField()
-    payment_method = serializers.CharField()
 
 
 class OrderLineItemModelCoreAPIDataSerializer(serializers.ModelSerializer):

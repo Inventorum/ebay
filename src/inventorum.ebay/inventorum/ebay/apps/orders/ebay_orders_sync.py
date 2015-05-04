@@ -7,7 +7,7 @@ from django.db import transaction
 from django.utils.functional import cached_property
 from inventorum.ebay.apps.accounts.models import AddressModel
 
-from inventorum.ebay.apps.orders import tasks
+from inventorum.ebay.apps.orders import tasks, CorePaymentMethod
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemVariationModel
 from inventorum.ebay.apps.shipping.models import ShippingServiceModel, ShippingServiceConfigurationModel
@@ -93,6 +93,9 @@ class IncomingEbayOrderSyncer(object):
         """
         :type ebay_order: inventorum.ebay.lib.ebay.data.responses.OrderType
         """
+        if self._skip_incoming_order(ebay_order):
+            return
+
         is_new_order = not OrderModel.objects.filter(ebay_id=ebay_order.order_id).exists()
         if is_new_order:
             order_model = self._create_order_model_from_ebay_order(ebay_order)
@@ -100,6 +103,20 @@ class IncomingEbayOrderSyncer(object):
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
             log.info("Order with `ebay_id={}` already exists".format(ebay_order.order_id))
+
+    def _skip_incoming_order(self, ebay_order):
+        """
+        :type ebay_order: inventorum.ebay.lib.ebay.data.responses.OrderType
+        :rtype: bool
+        """
+        # skip if ebay item does not exist in our system (= was not published via inventorum)
+        for transaction in ebay_order.transactions:
+            item_id = transaction.item.item_id
+            if not EbayItemModel.objects.by_account(self.account).by_ebay_id(item_id).exists():
+                log.info("Skipping incoming order because of unknown ebay item id {}".format(item_id))
+                return True
+
+        return False
 
     def _create_order_model_from_ebay_order(self, ebay_order):
         """
@@ -148,8 +165,15 @@ class IncomingEbayOrderSyncer(object):
 
         # extract payment information
         model.payment_amount = ebay_order.amount_paid
-        model.payment_method = ebay_order.checkout_status.payment_method
-        model.payment_status = ebay_order.checkout_status.payment_status
+
+        ebay_payment_method = ebay_order.checkout_status.payment_method
+        payment_method = CorePaymentMethod.from_ebay_payment_method(ebay_payment_method)
+        if payment_method is None:
+            raise EbayOrderSyncException("Unmapped payment method {} for ebay order with id {}"
+                                         .format(ebay_payment_method, ebay_order.order_id))
+        model.payment_method = payment_method
+        model.ebay_payment_method = ebay_payment_method
+        model.ebay_payment_status = ebay_order.checkout_status.payment_status
 
         # extract order details
         model.subtotal = ebay_order.subtotal
@@ -179,11 +203,8 @@ class IncomingEbayOrderSyncer(object):
         :type ebay_transaction: inventorum.ebay.lib.ebay.data.responses.TransactionType
         :rtype: OrderLineItemModel
         """
-        try:
-            item_model = EbayItemModel.objects.get(external_id=ebay_transaction.item.item_id)
-        except EbayItemModel.DoesNotExist:
-            raise EbayOrderSyncException("No EbayItemModel found with ebay item id {}"
-                                         .format(ebay_transaction.item.item_id))
+        # The existence of the ebay item has already been confirmed in `_skip_incoming_order`
+        item_model = EbayItemModel.objects.by_account(self.account).by_ebay_id(ebay_transaction.item.item_id).get()
 
         orderable_item, orderable_name = None, None
         if item_model.has_variations and ebay_transaction.variation:

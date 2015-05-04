@@ -4,6 +4,7 @@ import json
 import logging
 
 from decimal import Decimal as D
+from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
@@ -45,7 +46,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                                          selected_shipping__service=shipping_service_dhl,
                                          selected_shipping__cost=D("4.50"),
 
-                                         payment_method=BuyerPaymentMethodCodeType.PayPal,
+                                         payment_method=CorePaymentMethod.PAYPAL,
                                          payment_amount=D("24.45"))
 
         OrderLineItemModelFactory.create(order=order,
@@ -95,7 +96,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                 }]
             },
             "payments": [{
-                "payment_method": BuyerPaymentMethodCodeType.PayPal,
-                "payment_amount": "24.45"
+                "payment_amount": "24.45",
+                "payment_method": CorePaymentMethod.PAYPAL
             }]
         })

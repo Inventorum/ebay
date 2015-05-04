@@ -4,6 +4,7 @@ import logging
 
 from decimal import Decimal as D
 from inventorum.ebay.apps.accounts.models import AddressModel
+from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.products.models import EbayItemVariationModel, EbayItemModel
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
@@ -12,7 +13,7 @@ from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, Eb
 from inventorum.ebay.apps.orders.ebay_orders_sync import IncomingEbayOrderSyncer
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory, EbayItemVariationFactory
-from inventorum.ebay.lib.ebay.data import OrderStatusCodeType, PaymentStatusCodeType
+from inventorum.ebay.lib.ebay.data import OrderStatusCodeType, PaymentStatusCodeType, BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.tests.factories import OrderTypeFactory, TransactionTypeFactory, \
     TransactionTypeWithVariationFactory
 
@@ -38,7 +39,8 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         transaction_id = "987654321"
         order_id = "123456789-987654321"
 
-        published_item = PublishedEbayItemFactory.create(external_id=published_ebay_item_id)
+        published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         external_id=published_ebay_item_id)
 
         shipping_service_dhl = self.get_shipping_service_dhl()
 
@@ -129,8 +131,9 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.assertEqual(order_model.total, D("12.88"))
 
         self.assertEqual(order_model.payment_amount, D("12.88"))
-        self.assertEqual(order_model.payment_method, "PayPal")
-        self.assertEqual(order_model.payment_status, PaymentStatusCodeType.NoPaymentFailure)
+        self.assertEqual(order_model.payment_method, CorePaymentMethod.PAYPAL)
+        self.assertEqual(order_model.ebay_payment_method, BuyerPaymentMethodCodeType.PayPal)
+        self.assertEqual(order_model.ebay_payment_status, PaymentStatusCodeType.NoPaymentFailure)
 
         self.assertEqual(order_model.line_items.count(), 1)
 
@@ -155,7 +158,8 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         transaction_id = "111111111"
         order_id = "000000000-111111111"
 
-        published_item = PublishedEbayItemFactory.create(external_id=published_ebay_item_id)
+        published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         external_id=published_ebay_item_id)
         published_variation = EbayItemVariationFactory(item=published_item,
                                                        inv_id=23)
         assert published_variation.sku.endswith("23")

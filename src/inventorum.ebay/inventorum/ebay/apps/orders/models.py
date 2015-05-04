@@ -6,6 +6,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
+from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.lib.db.fields import MoneyField
 
 from inventorum.ebay.lib.db.models import BaseModel, MappedInventorumModelQuerySet
@@ -81,9 +82,10 @@ class OrderModel(BaseModel):
     # equals the subtotal value plus the shipping/handling, shipping insurance, and sales tax costs.
     total = MoneyField(null=True, blank=True)
 
-    payment_method = models.CharField(max_length=255, null=True, blank=True)
+    payment_method = models.CharField(max_length=255, choices=CorePaymentMethod.CHOICES, null=True, blank=True)
     payment_amount = MoneyField(null=True, blank=True)
-    payment_status = models.CharField(max_length=255, null=True, blank=True)
+    ebay_payment_method = models.CharField(max_length=255, null=True, blank=True)
+    ebay_payment_status = models.CharField(max_length=255, null=True, blank=True)
 
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()
 

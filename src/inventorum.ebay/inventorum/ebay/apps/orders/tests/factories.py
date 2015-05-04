@@ -4,6 +4,7 @@ import logging
 
 import factory
 from factory import fuzzy
+from inventorum.ebay.apps.orders import CorePaymentMethod
 
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, AddressFactory
@@ -40,9 +41,10 @@ class OrderModelFactory(factory.DjangoModelFactory):
     subtotal = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
     total = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
 
-    payment_method = BuyerPaymentMethodCodeType.PayPal
+    payment_method = CorePaymentMethod.PAYPAL
     payment_amount = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
-    payment_status = PaymentStatusCodeType.NoPaymentFailure
+    ebay_payment_method = BuyerPaymentMethodCodeType.PayPal
+    ebay_payment_status = PaymentStatusCodeType.NoPaymentFailure
 
 
 class OrderLineItemModelFactory(factory.DjangoModelFactory):
