@@ -300,9 +300,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         pager = self.paginated_get("/api/products/delta/modified/", limit_per_page=limit_per_page, params=params)
         for page in pager.pages:
             serializer = CoreProductDeltaDeserializer(data=page.data, many=True)
-            # TODO jm: Exception: ListSerializer has no method build, save works here but its ugly :-x
-            serializer.is_valid(raise_exception=True)
-            yield serializer.save()
+            yield serializer.build()
 
     def get_paginated_product_delta_deleted(self, start_date, limit_per_page=10000):
         """

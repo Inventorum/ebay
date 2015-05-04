@@ -115,7 +115,7 @@ class CoreProductAttributeSerializer(POPOSerializer):
     key = serializers.CharField()
     values = serializers.ListField(child=serializers.CharField())
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreProductAttribute
         list_serializer_class = CoreProductAttributeListSerializer
 
@@ -130,7 +130,7 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
 
         images = CoreProductImageDeserializer(many=True)
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreProduct
 
     id = serializers.IntegerField()
@@ -193,7 +193,7 @@ class CoreAddressDeserializer(POPOSerializer):
     last_name = serializers.CharField()
     company = serializers.CharField(allow_null=True)
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreAddress
 
 
@@ -220,7 +220,7 @@ class CoreAccountSettingsDeserializer(POPOSerializer):
     ebay_payment_methods = serializers.ListField(child=serializers.IntegerField(), allow_null=True)
     ebay_click_and_collect = serializers.BooleanField(default=False, required=False)
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreAccountSettings
 
 
@@ -243,7 +243,7 @@ class CoreAccountDeserializer(POPOSerializer):
     settings = CoreAccountSettingsDeserializer()
     billing_address = CoreAddressDeserializer(required=False)
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreAccount
 
 
@@ -282,7 +282,7 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
         gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreProductDelta
 
     id = serializers.IntegerField()
