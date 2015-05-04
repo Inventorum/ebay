@@ -48,6 +48,12 @@ class BuyerPaymentMethodCodeType(object):
 
     PayPal = "PayPal"
 
+    # Direct (bank) transfer of money
+    MoneyXferAccepted = "MoneyXferAccepted"
+
+    # Direct (bank) transfer of money if the seller has bank account information on file
+    MoneyXferAcceptedInCheckout = "MoneyXferAcceptedInCheckout"
+
 
 class PaymentStatusCodeType(object):
     """
