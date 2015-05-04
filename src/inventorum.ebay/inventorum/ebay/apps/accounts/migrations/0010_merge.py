@@ -8,13 +8,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('accounts', '0008_ebayaccountmodel_last_ebay_orders_sync'),
+        ('accounts', '0009_addressmodel_region'),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='addressmodel',
-            name='state',
-            field=models.CharField(max_length=255, null=True, blank=True),
-            preserve_default=True,
-        ),
     ]
