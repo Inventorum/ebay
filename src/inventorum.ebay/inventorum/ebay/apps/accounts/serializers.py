@@ -41,15 +41,13 @@ class EbayLocationSerializer(serializers.ModelSerializer):
         if not address_data:
             raise serializers.ValidationError('Missing `address` in location')
 
-        if not instance.address:
-            instance.address = AddressModel.objects.create(**address_data)
-            instance.save()
-        else:
-            address = instance.address
-            for key, value in address_data.iteritems():
-                setattr(address, key, value)
-            address.save()
-        
+        serializer = AddressSerializer(instance=instance.address, data=address_data)
+        serializer.is_valid(raise_exception=True)
+        address_object = serializer.save()
+
+        instance.address = address_object
+        instance.save()
+
 
 class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.ModelSerializer):
     location = EbayLocationSerializer(required=False, allow_null=True)

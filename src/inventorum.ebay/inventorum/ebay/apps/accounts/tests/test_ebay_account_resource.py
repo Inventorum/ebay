@@ -46,7 +46,7 @@ class TestEbayAccountResource(EbayAuthenticatedAPITestCase):
         self.assertEqual(put_response.data, self.get_serialized_data_for(self.account))
 
     def test_location_save_new(self):
-        with ApiTest.use_cassette("test_saving_location_ednpoint.yaml") as cass:
+        with ApiTest.use_cassette("test_saving_location_endpoint.yaml") as cass:
             get_response = self.request_get_account()
             self.assertEqual(get_response.status_code, status.HTTP_200_OK)
             self.assertEqual(get_response.data, self.get_serialized_data_for(self.account))
