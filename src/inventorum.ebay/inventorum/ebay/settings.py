@@ -3,7 +3,8 @@
 """Base settings shared by all environments"""
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
+from inventorum.util.celery import TaskExecutionContext
 
 here = os.path.abspath(os.path.dirname(__file__))
 VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()
@@ -42,10 +43,10 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.products',
     'inventorum.ebay.apps.shipping',
 
+    'mptt',
     'raven.contrib.django.raven_compat',
     'rest_framework',
-    'rest_framework_swagger',
-    'mptt'
+    'rest_framework_swagger'
 )
 
 AUTH_USER_MODEL = 'inventorum.ebay.apps.accounts.models.EbayAccountModel'
@@ -91,6 +92,16 @@ RABBITMQ_USER = 'ebay'
 RABBITMQ_PASSWORD = 'ebay'
 
 BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum_ebay"
+
+CELERYBEAT_SCHEDULE = {
+    'periodic_ebay_orders_sync_task': {
+        'task': 'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task',
+        'schedule': timedelta(minutes=1),
+        'kwargs': {
+            "context": TaskExecutionContext(user_id=None, account_id=None, request_id=None)
+        }
+    },
+}
 
 
 # Others =======================================================================

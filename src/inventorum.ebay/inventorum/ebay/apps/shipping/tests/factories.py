@@ -3,7 +3,9 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 import factory
-from inventorum.ebay.apps.shipping.models import ShippingServiceModel
+from factory import fuzzy
+
+from inventorum.ebay.apps.shipping.models import ShippingServiceModel, ShippingServiceConfigurationModel
 from inventorum.ebay.tests import Countries
 
 
@@ -24,3 +26,12 @@ class ShippingServiceFactory(factory.DjangoModelFactory):
     shipping_time_max = 3
 
     is_international = False
+
+
+class ShippingServiceConfigurationFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = ShippingServiceConfigurationModel
+
+    service = factory.SubFactory(ShippingServiceFactory)
+    cost = fuzzy.FuzzyDecimal(low=1, high=10, precision=2)

@@ -38,3 +38,7 @@ missing_versions.cfg
 /.idea/encodings.xml
 /.idea/ebay.iml
 /.idea/.name
+
+celerybeat-schedule
+celerybeat.pid
+

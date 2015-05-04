@@ -36,7 +36,7 @@ stdout_logfile = ${buildout:directory}/var/log/rabbit.development.log
 stopsignal=INT
 
 [group:celery]
-programs=celery_worker, flower
+programs=celery_worker, celery_beat, flower
 
 [program:celery_worker]
 command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/development.ini -A inventorum.ebay.celery worker -l debug -c 4
@@ -46,6 +46,16 @@ priority = 10
 redirect_stderr = true
 stdout_logfile = ${buildout:directory}/var/log/celery_worker.development.log
 autostart=true
+autorestart=true
+
+[program:celery_beat]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/development.ini -A inventorum.ebay.celery beat -l debug
+process_name = celery_beat
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${buildout:directory}/var/log/celery_beat.development.log
+autostart=false
 autorestart=true
 
 [program:flower]
