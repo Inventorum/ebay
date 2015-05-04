@@ -1,6 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.accounts.models import AddressModel
+from inventorum.ebay.apps.accounts.serializers import AddressSerializer
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
 from inventorum.ebay.lib.rest.fields import MoneyField
@@ -26,20 +28,16 @@ class OrderShipmentCoreAPIDataSerializer(serializers.ModelSerializer):
     external_id = serializers.CharField(source="service.external_id")
 
 
-class OrderShippingAddressCoreAPIDataSerializer(serializers.ModelSerializer):
+class OrderCustomerAddressCoreAPIDataSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = OrderModel
+        model = AddressModel
         fields = ("first_name", "last_name", "address1", "address2", "zipcode", "city", "state", "country")
 
-    first_name = serializers.CharField(source="shipping_first_name")
-    last_name = serializers.CharField(source="shipping_last_name")
-    address1 = serializers.CharField(source="shipping_address1")
-    address2 = serializers.CharField(source="shipping_address2")
-    zipcode = serializers.CharField(source="shipping_postal_code")
-    city = serializers.CharField(source="shipping_city")
-    state = serializers.CharField(source="shipping_state")
-    country = serializers.CharField(source="shipping_country")
+    address1 = serializers.CharField(source="street")
+    address2 = serializers.CharField(source="street1")
+    zipcode = serializers.CharField(source="postal_code")
+    state = serializers.CharField(source="region")
 
 
 class OrderCustomerCoreAPIDataSerializer(serializers.ModelSerializer):
@@ -52,16 +50,12 @@ class OrderCustomerCoreAPIDataSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source="buyer_last_name")
     email = serializers.CharField(source="buyer_email")
 
-    billing_address = serializers.SerializerMethodField()
+    billing_address = OrderCustomerAddressCoreAPIDataSerializer()
     shipping_address = serializers.SerializerMethodField()
 
-    def get_billing_address(self, order):
-        # we simply use the shipping address as billing address?!
-        return OrderShippingAddressCoreAPIDataSerializer(order).data
-
     def get_shipping_address(self, order):
-        # core api expects list?!
-        return [OrderShippingAddressCoreAPIDataSerializer(order).data]
+        # Note: core api wants to have a list of shipping addresses :-(
+        return [OrderCustomerAddressCoreAPIDataSerializer(order.shipping_address).data]
 
 
 class OrderPaymentCoreAPIDataSerializer(serializers.ModelSerializer):

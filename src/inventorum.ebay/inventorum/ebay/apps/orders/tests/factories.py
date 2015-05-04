@@ -6,7 +6,7 @@ import factory
 from factory import fuzzy
 
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
+from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, AddressFactory
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
 from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceConfigurationFactory
 from inventorum.ebay.lib.ebay.data import CompleteStatusCodeType, BuyerPaymentMethodCodeType, PaymentStatusCodeType
@@ -32,18 +32,9 @@ class OrderModelFactory(factory.DjangoModelFactory):
     buyer_first_name = "John"
     buyer_last_name = "Wayne"
     buyer_email = "test@inventorum.com"
+    billing_address = factory.SubFactory(AddressFactory)
 
-    # shipping_address = factory.SubFactory(AddressM)
-
-    # shipping_first_name = "Christoph"
-    # shipping_last_name = "Brem"
-    # shipping_address1 = "Voltastraße 5"
-    # shipping_address2 = "Inventorum, Gebäude 10"
-    # shipping_postal_code = "13355"
-    # shipping_city = "Berlin"
-    # shipping_state = "Wedding"
-    # shipping_country = "DE"
-
+    shipping_address = factory.SubFactory(AddressFactory)
     selected_shipping = factory.SubFactory(ShippingServiceConfigurationFactory)
 
     subtotal = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)

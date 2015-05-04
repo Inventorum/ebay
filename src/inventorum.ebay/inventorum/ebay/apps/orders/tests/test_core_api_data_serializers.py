@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import json
 import logging
 
 from decimal import Decimal as D
@@ -30,7 +31,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                                          shipping_address__street1="Inventorum, Gebäude 10",
                                          shipping_address__postal_code="13355",
                                          shipping_address__city="Berlin",
-                                         shipping_address__state="Wedding",
+                                         shipping_address__region="Wedding",
                                          shipping_address__country="DE",
 
                                          billing_address__name="Andreas Balke",
@@ -38,7 +39,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                                          billing_address__street1="Inventorum, Gebäude 10",
                                          billing_address__postal_code="13355",
                                          billing_address__city="Berlin",
-                                         billing_address__state="Wedding",
+                                         billing_address__region="Wedding",
                                          billing_address__country="DE",
 
                                          selected_shipping__service=shipping_service_dhl,
@@ -57,7 +58,12 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
         # TODO jm: Sync with core api
         self.assertDictEqual(serializer.data, {
-            "items": [{"product": 23, "name": "Inventorum T-Shirt [Green, L]", "quantity": 5, "gross_price": "3.99"}],
+            "items": [{
+                "product": 23,
+                "name": "Inventorum T-Shirt [Green, L]",
+                "quantity": 5,
+                "gross_price": "3.99"
+            }],
             "shipment": {
                 "name": "DHL Paket",
                 "cost": "4.50",
@@ -67,6 +73,16 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                 "first_name": "Andreas",
                 "last_name": "Balke",
                 "email": "andi@inventorum.com",
+                "billing_address": {
+                    "first_name": "Andreas",
+                    "last_name": "Balke",
+                    "address1": "Voltastraße 5",
+                    "address2": "Inventorum, Gebäude 10",
+                    "zipcode": "13355",
+                    "city": "Berlin",
+                    "state": "Wedding",
+                    "country": "DE"
+                },
                 "shipping_address": [{
                     "first_name": "Christoph",
                     "last_name": "Brem",
@@ -76,17 +92,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                     "city": "Berlin",
                     "state": "Wedding",
                     "country": "DE"
-                }],
-                "billing_address": {  # equals shipping address
-                    "first_name": "Christoph",
-                    "last_name": "Brem",
-                    "address1": "Voltastraße 5",
-                    "address2": "Inventorum, Gebäude 10",
-                    "zipcode": "13355",
-                    "city": "Berlin",
-                    "state": "Wedding",
-                    "country": "DE"
-                }
+                }]
             },
             "payments": [{
                 "payment_method": BuyerPaymentMethodCodeType.PayPal,
