@@ -4,8 +4,9 @@ import logging
 
 from django.conf import settings
 
-from django.db.models.fields import CharField, EmailField, BooleanField, DateTimeField
-from django.db.models.fields.related import ForeignKey
+from django.db.models.fields import CharField, EmailField, BooleanField, DateTimeField, DecimalField, TextField, \
+    URLField
+from django.db.models.fields.related import ForeignKey, OneToOneField
 from django_countries.fields import CountryField
 
 from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
@@ -14,6 +15,7 @@ from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 
 from inventorum.ebay.lib.auth.models import AuthenticableModelMixin
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
+from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -28,7 +30,7 @@ class AddressModel(BaseModel):
     street1 = CharField(max_length=255, null=True, blank=True)
     postal_code = CharField(max_length=255, null=True, blank=True)
     city = CharField(max_length=255, null=True, blank=True)
-    state = CharField(max_length=255, null=True, blank=True)
+    region = CharField(max_length=255, null=True, blank=True)
     country = CountryField(null=True, blank=True)
 
     @property
@@ -125,6 +127,46 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
     @property
     def is_ebay_authenticated(self):
         return self.token is not None
+
+    @property
+    def has_location(self):
+        return hasattr(self, "location")
+
+
+class EbayLocationModel(BaseModel):
+    account = OneToOneField(EbayAccountModel, related_name="location", null=True, blank=True)
+    address = ForeignKey(AddressModel, null=True, blank=True, related_name="locations",
+                                      verbose_name="Registration address")
+    latitude = DecimalField(max_digits=20, decimal_places=10, null=True, blank=True)
+    longitude = DecimalField(max_digits=20, decimal_places=10, null=True, blank=True)
+    name = CharField(max_length=255, null=True, blank=True)
+    phone = CharField(max_length=255, null=True, blank=True)
+    pickup_instruction = TextField(null=True, blank=True)
+    url = URLField(null=True, blank=True)
+
+    def get_ebay_location_object(self, days):
+        """
+        Days are comming from `core_account` thats why we need to pass them, so lets pass them as ebay object
+        :type days: list[inventorum.ebay.lib.ebay.data.inventorymanagement.EbayDay]
+        :rtype: EbayLocation
+        """
+        return EbayLocation(
+            location_id=self.account.ebay_location_id,
+            address1=self.address.street,
+            address2=self.address.street1,
+            city=self.address.city,
+            country=self.address.country,
+            days=days,
+            latitude=self.latitude,
+            longitude=self.longitude,
+            name=self.name,
+            phone=self.phone,
+            pickup_instruction=self.pickup_instruction,
+            postal_code=self.address.postal_code,
+            region=self.address.region,
+            url=self.url,
+            utc_offset="+02:00"  # TODO: What to do with it???
+            )
 
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):

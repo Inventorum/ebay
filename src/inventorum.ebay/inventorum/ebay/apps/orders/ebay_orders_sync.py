@@ -126,7 +126,7 @@ class IncomingEbayOrderSyncer(object):
         shipping_address_model.street1 = ebay_shipping_address.street_2
         shipping_address_model.postal_code = ebay_shipping_address.postal_code
         shipping_address_model.city = ebay_shipping_address.city_name
-        shipping_address_model.state = ebay_shipping_address.state_or_province
+        shipping_address_model.region = ebay_shipping_address.state_or_province
         shipping_address_model.country = ebay_shipping_address.country
         shipping_address_model.save()
 
@@ -140,7 +140,7 @@ class IncomingEbayOrderSyncer(object):
         billing_address_model.street1 = shipping_address_model.street1
         billing_address_model.postal_code = shipping_address_model.postal_code
         billing_address_model.city = shipping_address_model.city
-        billing_address_model.state = shipping_address_model.state
+        billing_address_model.region = shipping_address_model.region
         billing_address_model.country = shipping_address_model.country
         billing_address_model.save()
 

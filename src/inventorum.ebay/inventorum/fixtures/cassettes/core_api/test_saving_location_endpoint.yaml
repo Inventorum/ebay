@@ -86,14 +86,38 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Thu, 30 Apr 2015 16:39:07 GMT']
+      date: ['Mon, 04 May 2015 09:29:57 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YnrUR:Xw4WzfhGc-D3n5qa-d33pH50smc"; Domain=app.intern.inventorum.net;
-          expires=Thu, 30-Apr-2015 18:39:07 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YpChJ:L871j8YGitCOoFsIueLhnJ6DtQs"; Domain=app.intern.inventorum.net;
+          expires=Mon, 04-May-2015 11:29:57 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['2039709836001207796']
+      x-rid: ['3509009214430832116']
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="utf-8"?><AddInventoryLocationRequest><Address1>WgWEzlJOGn</Address1><Address2>SShAyTJPTJ</Address2><City>qybPXXGrAH</City><Country>DE</Country><Hours><Day><DayOfWeek>1</DayOfWeek><Interval><Close>10:00:00</Close><Open>08:00:00</Open></Interval></Day><Day><DayOfWeek>2</DayOfWeek><Interval><Close>14:00:00</Close><Open>12:00:00</Open></Interval><Interval><Close>20:00:00</Close><Open>18:00:00</Open></Interval></Day></Hours><Latitude>87.2370085870</Latitude><LocationID>invdev_346</LocationID><LocationType>STORE</LocationType><Longitude>134.0446870671</Longitude><Name>SCybnaaiLaLocvGMTCGq</Name><Phone>udEjxHwKrGWLazbJpSzh</Phone><PickupInstructions>sjbEiofKzpXNBZsxTyEc</PickupInstructions><PostalCode>ZX</PostalCode><Region>CnuzimRCRo</Region><URL>http://inventorum.com</URL><UTCOffset>+02:00</UTCOffset></AddInventoryLocationRequest>
+    headers:
+      Authorization: [TOKEN AgAAAA**AQAAAA**aAAAAA**+SoxVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHloamDZGGpwmdj6x9nY+seQ**qeUBAA**AAMAAA**C3hLSGxBbPWdVJyUL0CWP/+WBVv+WH+m27U0atsiRZd0O6YeiXxXIeDv0FlwDBPtiDGXqP9GXaRgrn0GPTeumA7qhjocNfuHZyuwr80/bh9IqSXKA1EcNCmMbyI/696cKoaxPm7R6nczyIZV0ssT7t5vCwANcJEMsfXSJGVsJEX0Y54YV+Z70Bk6E2RyxJ1B9XN4rKG3yGvnyT+dOXMZN7W7S9gQqyeMPJ7B6Ebk9TyekHaFHEBwnArRQjVWuiMxX53GuRsBGFB07ekJhe+4UgBDN0v4/5LyHzAolM+UkE7/is2nZz74JQ7kHRXiLzHRstmU1aifkeBj1NsdwHV6QScA7ubNITHgFWkO4z2wmpkWfIdevnw42UHhsCdKRXp2p/AYuZ1O9bwVt7uLm0gJi3EvmDRmEevMk4j/VfLRwhC15qbFAMzL+g+zNK9qIJ/gy6TwO04Pr3H4001ASE+SBpKgr1CgoydwRGa3/w6IrnsQbjwgBR+tRyuad6r3251U0e7wNyXqqCGOMkk4y/8W91g6tIeuS0Iv73cw9h1fpoFz9vUf8qsy640UTQPkrUQqYYn3tyootvwBmskYNV7b1S7r9MTf9ygWkxgvndaV49nJji+xnshPtFfpr1qBX3bRU/3j7pdVLpMuQUw7sz9faDGkA19EKoXtefqkbzgP+f0mnOx0y6vwTADhVsfwo2sJowyqvPfNVxpYVuWJ+jBJuQDM91oukkS9uBxDrwWa8Rofe03JkTmHE/807wkzi+zg]
+      Content-Length: ['867']
+      Content-Type: [application/xml]
+      User-Agent: [eBaySDK/2.1.1-dev3 Python/2.7.8 Darwin/14.1.0]
+      X-EBAY-SDK-REQUEST-ID: [228ca342-8574-49ab-ab00-39e4e2cb4212]
+    method: POST
+    uri: https://api.ebay.com/selling/inventory/v1/locations/delta/add
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><AddInventoryLocationResponse><Ack>SUCCESS</Ack><LocationID>INVDEV_346</LocationID><LocationUUID>DB4EC21A-DFF0-4B78-90FB-8A2E56C9A127</LocationUUID></AddInventoryLocationResponse>'}
+    headers:
+      content-type: [application/xml]
+      date: ['Mon, 04 May 2015 09:29:59 GMT']
+      guid: [14d1e42b-7830-a358-a116-f1e6f93e15c2]
+      rlogid: [t6jkptufoi9%3Fuk%601d70f%2B0b%3C0-14d1e42b787-0x16157]
+      server: [Apache-Coyote/1.1]
+      set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
+      transfer-encoding: [chunked]
+      x-ebay-c-version: [1.0.0]
+      x-ebay-request-id: ['14d1e42b-7830-a358-a116-f1e6f93e15c2!selling.inventory.v1.locations!10.53.138.17!comosesb[!inventory.v1!r1invsvcin[]]']
+      x-frame-options: [SAMEORIGIN]
     status: {code: 200, message: OK}
 version: 1

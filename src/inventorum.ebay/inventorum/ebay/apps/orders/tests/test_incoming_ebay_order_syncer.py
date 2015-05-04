@@ -102,7 +102,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.assertEqual(shipping_address.street1, None)
         self.assertEqual(shipping_address.postal_code, "13355")
         self.assertEqual(shipping_address.city, "Berlin")
-        self.assertEqual(shipping_address.state, "Wedding")
+        self.assertEqual(shipping_address.region, "Wedding")
         self.assertEqual(shipping_address.country, "DE")
 
         # billing address should equal shipping address with buyer name
@@ -115,7 +115,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.assertEqual(billing_address.street1, None)
         self.assertEqual(billing_address.postal_code, "13355")
         self.assertEqual(billing_address.city, "Berlin")
-        self.assertEqual(billing_address.state, "Wedding")
+        self.assertEqual(billing_address.region, "Wedding")
         self.assertEqual(billing_address.country, "DE")
 
         self.assertIsNotNone(order_model.selected_shipping)

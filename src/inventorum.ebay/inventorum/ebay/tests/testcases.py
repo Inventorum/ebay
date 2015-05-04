@@ -77,7 +77,7 @@ class EbayAuthenticatedAPITestCase(APITestCase):
 
 
 class UnitTestCase(TestCase, AssertionMixin, PatchMixin):
-    pass
+    maxDiff = None
 
 
 def long_running_test():
