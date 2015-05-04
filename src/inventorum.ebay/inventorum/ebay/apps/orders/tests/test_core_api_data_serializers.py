@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-import json
 import logging
 
 from decimal import Decimal as D
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
-from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
-from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 
 from inventorum.ebay.tests.testcases import UnitTestCase
 
