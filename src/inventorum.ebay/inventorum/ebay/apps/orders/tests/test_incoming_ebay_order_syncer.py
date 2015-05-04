@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from decimal import Decimal as D
+from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.products.models import EbayItemVariationModel, EbayItemModel
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
@@ -91,21 +92,35 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.assertEqual(order_model.buyer_last_name, "Newman")
         self.assertEqual(order_model.buyer_email, "test@inventorum.com")
 
+        self.assertIsNotNone(order_model.shipping_address)
+        shipping_address = order_model.shipping_address
+        assert isinstance(shipping_address, AddressModel)
         # shipping name should have been correctly split into first and last name
-        self.assertEqual(order_model.shipping_first_name, "Max")
-        self.assertEqual(order_model.shipping_last_name, "Mustermann")
-        self.assertEqual(order_model.shipping_address1, "Voltastraße 5")
-        self.assertEqual(order_model.shipping_address2, None)
-        self.assertEqual(order_model.shipping_postal_code, "13355")
-        self.assertEqual(order_model.shipping_city, "Berlin")
-        self.assertEqual(order_model.shipping_state, "Wedding")
-        self.assertEqual(order_model.shipping_country, "DE")
+        self.assertEqual(shipping_address.first_name, "Max")
+        self.assertEqual(shipping_address.last_name, "Mustermann")
+        self.assertEqual(shipping_address.street, "Voltastraße 5")
+        self.assertEqual(shipping_address.street1, None)
+        self.assertEqual(shipping_address.postal_code, "13355")
+        self.assertEqual(shipping_address.city, "Berlin")
+        self.assertEqual(shipping_address.state, "Wedding")
+        self.assertEqual(shipping_address.country, "DE")
+
+        # billing address should equal shipping address with buyer name
+        self.assertIsNotNone(order_model.billing_address)
+        billing_address = order_model.billing_address
+        assert isinstance(billing_address, AddressModel)
+        self.assertEqual(billing_address.first_name, "John")
+        self.assertEqual(billing_address.last_name, "Newman")
+        self.assertEqual(billing_address.street, "Voltastraße 5")
+        self.assertEqual(billing_address.street1, None)
+        self.assertEqual(billing_address.postal_code, "13355")
+        self.assertEqual(billing_address.city, "Berlin")
+        self.assertEqual(billing_address.state, "Wedding")
+        self.assertEqual(billing_address.country, "DE")
 
         self.assertIsNotNone(order_model.selected_shipping)
-
         selected_shipping = order_model.selected_shipping
         assert isinstance(selected_shipping, ShippingServiceConfigurationModel)
-
         self.assertEqual(selected_shipping.service_id, shipping_service_dhl.id)
         self.assertEqual(selected_shipping.cost, D("4.90"))
         self.assertEqual(selected_shipping.additional_cost, D("0.00"))
@@ -131,7 +146,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
 
         # task to create order in core api should have been scheduled
         self.schedule_core_order_creation_mock\
-            .assert_called_once_with(order_model.id, context=sync.task_execution_context)
+            .assert_called_once_with(order_model.id, context=sync.get_task_execution_context())
 
     def test_new_incoming_order_for_variation_listing(self):
         self.assertPrecondition(OrderModel.objects.count(), 0)
@@ -184,4 +199,4 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
 
         # task to create order in core api should have been scheduled
         self.schedule_core_order_creation_mock\
-            .assert_called_once_with(order_model.id, context=sync.task_execution_context)
+            .assert_called_once_with(order_model.id, context=sync.get_task_execution_context())

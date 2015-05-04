@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 from django.db import transaction
 from django.utils.functional import cached_property
+from inventorum.ebay.apps.accounts.models import AddressModel
 
 from inventorum.ebay.apps.orders import tasks
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
@@ -82,8 +83,7 @@ class IncomingEbayOrderSyncer(object):
         """
         self.account = account
 
-    @cached_property
-    def task_execution_context(self):
+    def get_task_execution_context(self):
         return TaskExecutionContext(user_id=self.account.default_user.id,
                                     account_id=self.account.id,
                                     request_id=None)
@@ -96,7 +96,7 @@ class IncomingEbayOrderSyncer(object):
         is_new_order = not OrderModel.objects.filter(ebay_id=ebay_order.order_id).exists()
         if is_new_order:
             order_model = self._create_order_model_from_ebay_order(ebay_order)
-            tasks.schedule_core_order_creation(order_model.id, context=self.task_execution_context)
+            tasks.schedule_core_order_creation(order_model.id, context=self.get_task_execution_context())
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
             log.info("Order with `ebay_id={}` already exists".format(ebay_order.order_id))
@@ -118,21 +118,33 @@ class IncomingEbayOrderSyncer(object):
         model.buyer_last_name = buyer.user_last_name
         model.buyer_email = buyer.email
 
-        shipping_address = ebay_order.shipping_address
-        # ebay only returns a name, we distinguish between first and last name
-        if " " in shipping_address.name:
-            shipping_first_name, shipping_last_name = shipping_address.name.split(" ", 1)
-        else:
-            shipping_first_name, shipping_last_name = shipping_address.name, ""
+        # extract shipping address information
+        ebay_shipping_address = ebay_order.shipping_address
+        shipping_address_model = AddressModel()
+        shipping_address_model.name = ebay_shipping_address.name
+        shipping_address_model.street = ebay_shipping_address.street_1
+        shipping_address_model.street1 = ebay_shipping_address.street_2
+        shipping_address_model.postal_code = ebay_shipping_address.postal_code
+        shipping_address_model.city = ebay_shipping_address.city_name
+        shipping_address_model.state = ebay_shipping_address.state_or_province
+        shipping_address_model.country = ebay_shipping_address.country
+        shipping_address_model.save()
 
-        model.shipping_first_name = shipping_first_name
-        model.shipping_last_name = shipping_last_name
-        model.shipping_address1 = shipping_address.street_1
-        model.shipping_address2 = shipping_address.street_2
-        model.shipping_city = shipping_address.city_name
-        model.shipping_postal_code = shipping_address.postal_code
-        model.shipping_state = shipping_address.state_or_province
-        model.shipping_country = shipping_address.country
+        model.shipping_address = shipping_address_model
+
+        # extract billing address information (since ebay does not support billing addresses, we simply
+        # use the buyer name in combination with the shipping address)
+        billing_address_model = AddressModel()
+        billing_address_model.name = "{} {}".format(model.buyer_first_name, model.buyer_last_name)
+        billing_address_model.street = shipping_address_model.street
+        billing_address_model.street1 = shipping_address_model.street1
+        billing_address_model.postal_code = shipping_address_model.postal_code
+        billing_address_model.city = shipping_address_model.city
+        billing_address_model.state = shipping_address_model.state
+        billing_address_model.country = shipping_address_model.country
+        billing_address_model.save()
+
+        model.billing_address = billing_address_model
 
         # extract payment information
         model.payment_amount = ebay_order.amount_paid
@@ -143,11 +155,8 @@ class IncomingEbayOrderSyncer(object):
         model.subtotal = ebay_order.subtotal
         model.total = ebay_order.total
 
-        model.save()
-
         # extract shipping information
         selected_shipping = ebay_order.shipping_service_selected
-
         try:
             service_model = ShippingServiceModel.objects.by_country(self.account.country)\
                 .get(external_id=selected_shipping.shipping_service)
@@ -172,7 +181,7 @@ class IncomingEbayOrderSyncer(object):
         """
         try:
             item_model = EbayItemModel.objects.get(external_id=ebay_transaction.item.item_id)
-        except EbayItemModel.DoesNotExist as e:
+        except EbayItemModel.DoesNotExist:
             raise EbayOrderSyncException("No EbayItemModel found with ebay item id {}"
                                          .format(ebay_transaction.item.item_id))
 

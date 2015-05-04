@@ -68,14 +68,10 @@ class OrderModel(BaseModel):
     buyer_last_name = models.CharField(max_length=255, null=True, blank=True)
     buyer_email = models.CharField(max_length=255, null=True, blank=True)
 
-    shipping_first_name = models.CharField(max_length=255, null=True, blank=True)
-    shipping_last_name = models.CharField(max_length=255, null=True, blank=True)
-    shipping_address1 = models.CharField(max_length=255, null=True, blank=True)
-    shipping_address2 = models.CharField(max_length=255, null=True, blank=True)
-    shipping_postal_code = models.CharField(max_length=255, null=True, blank=True)
-    shipping_city = models.CharField(max_length=255, null=True, blank=True)
-    shipping_state = models.CharField(max_length=255, null=True, blank=True)
-    shipping_country = CountryField(null=True, blank=True)
+    shipping_address = models.OneToOneField("accounts.AddressModel", null=True, blank=True,
+                                            related_name="shipping_order")
+    billing_address = models.OneToOneField("accounts.AddressModel", null=True, blank=True,
+                                           related_name="billing_order")
 
     selected_shipping = models.OneToOneField("shipping.ShippingServiceConfigurationModel", related_name="order",
                                              null=True, blank=True)

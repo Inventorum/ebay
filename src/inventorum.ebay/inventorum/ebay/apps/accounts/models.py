@@ -23,16 +23,36 @@ log = logging.getLogger(__name__)
 class AddressModel(BaseModel):
     """ Represents an address model """
     name = CharField(max_length=255)
+    # TODO jm: Rename to street1 and street2
     street = CharField(max_length=255, null=True, blank=True)
     street1 = CharField(max_length=255, null=True, blank=True)
-    city = CharField(max_length=255, null=True, blank=True)
-    country = CountryField(null=True, blank=True)
     postal_code = CharField(max_length=255, null=True, blank=True)
+    city = CharField(max_length=255, null=True, blank=True)
+    state = CharField(max_length=255, null=True, blank=True)
+    country = CountryField(null=True, blank=True)
+
+    @property
+    def first_name(self):
+        return self._split_name()[0]
+
+    @property
+    def last_name(self):
+        return self._split_name()[1]
+
+    def _split_name(self):
+        """
+        Splits the `name` into first and last name
+        :rtype: (unicode, unicode)
+        """
+        if " " in self.name:
+            # split name on the *first* occurrence of " "
+            return self.name.split(" ", 1)
+        else:
+            return self.name, ""
 
     @classmethod
     def create_from_ebay_address(cls, ebay_address):
         """
-
         :param ebay_address:
         :return:
 

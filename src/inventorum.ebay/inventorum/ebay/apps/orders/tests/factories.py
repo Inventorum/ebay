@@ -33,14 +33,16 @@ class OrderModelFactory(factory.DjangoModelFactory):
     buyer_last_name = "Wayne"
     buyer_email = "test@inventorum.com"
 
-    shipping_first_name = "Christoph"
-    shipping_last_name = "Brem"
-    shipping_address1 = "Voltastraße 5"
-    shipping_address2 = "Inventorum, Gebäude 10"
-    shipping_postal_code = "13355"
-    shipping_city = "Berlin"
-    shipping_state = "Wedding"
-    shipping_country = "DE"
+    # shipping_address = factory.SubFactory(AddressM)
+
+    # shipping_first_name = "Christoph"
+    # shipping_last_name = "Brem"
+    # shipping_address1 = "Voltastraße 5"
+    # shipping_address2 = "Inventorum, Gebäude 10"
+    # shipping_postal_code = "13355"
+    # shipping_city = "Berlin"
+    # shipping_state = "Wedding"
+    # shipping_country = "DE"
 
     selected_shipping = factory.SubFactory(ShippingServiceConfigurationFactory)
 
