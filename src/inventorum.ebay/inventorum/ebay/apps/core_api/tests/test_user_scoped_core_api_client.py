@@ -102,6 +102,13 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
         self.assertTrue(account_settings.ebay_click_and_collect)
 
+        self.assertEqual(len(core_account.account.opening_hours), 3)
+        self.assertEqual(core_account.account.opening_hours[0].closes_hour, 10)
+        self.assertEqual(core_account.account.opening_hours[0].closes_minute, 0)
+        self.assertEqual(core_account.account.opening_hours[0].opens_hour, 8)
+        self.assertEqual(core_account.account.opening_hours[0].opens_minute, 0)
+        self.assertEqual(core_account.account.opening_hours[0].day_of_week, 1)
+
     @CoreApiTest.use_cassette("get_product_with_variations.yaml")
     def test_product_with_variations(self):
         product = self.subject.get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS)
