@@ -2,19 +2,8 @@
 
 """Base settings shared by all environments"""
 import os
-
-# ini = os.environ.get('PYRAMID_SETTINGS', None)
-# if ini:
-#     config_file, section_name = ini.split('#', 1)
-#     from paste.deploy.loadwsgi import appconfig
-#     import pyramid.paster
-#
-#     pyramid.paster.setup_logging(config_file)
-#     app = pyramid.paster.get_app(config_file)
-
 import logging
 from datetime import datetime
-from inventorum.util.paste import boostrap_from_config
 
 here = os.path.abspath(os.path.dirname(__file__))
 VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()

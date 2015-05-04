@@ -2,7 +2,6 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
-import json
 
 from decimal import Decimal as D
 from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer
@@ -40,9 +39,8 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
 
         subject = EbayAccountSerializer(account)
         # Crazy trick to have nice diff in case of failure
-        data = json.loads(json.dumps(subject.data))
 
-        self.assertEqual(data, {
+        self.assertDictEqual(subject.data, {
             "shipping_services": [{
                 "service": shipping_service.service_id,
                 "external_id": "DE_DHLPaket",
