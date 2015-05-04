@@ -13,7 +13,7 @@ from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 
 from inventorum.ebay.tests.testcases import APITestCase, UnitTestCase
 
-from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient, CoreAPIClient
+from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
 
 
 log = logging.getLogger(__name__)
