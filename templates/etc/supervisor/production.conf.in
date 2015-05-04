@@ -19,7 +19,7 @@ serverurl=unix:///${os:root-prefix}/var/run/com.inventorum.ebay/supervisor.sock
 
 
 [group:celery]
-programs=celery_worker, flower
+programs=celery_worker, celery_beat, flower
 
 [program:celery_worker]
 command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -l info
@@ -28,6 +28,16 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.log
+autostart=true
+autorestart=true
+
+[program:celery_beat]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery beat -l debug
+process_name = celery_beat
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${buildout:directory}/var/log/celery_beat.production.log
 autostart=true
 autorestart=true
 

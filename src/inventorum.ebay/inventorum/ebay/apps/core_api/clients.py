@@ -114,6 +114,7 @@ class CoreAPIClient(object):
         response = requests.post(self.url_for(path), json=data, params=params, headers=headers)
 
         if not response.ok:
+            log.error(response.content)
             response.raise_for_status()
 
         return response
@@ -248,7 +249,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
         :type product_id: int
         :rtype: inventorum.ebay.apps.core_api.models.CoreProduct
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
         response = self.get("/api/products/{product_id}".format(product_id=product_id))
@@ -260,7 +261,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
     def get_account_info(self):
         """
         :rtype: inventorum.ebay.apps.core_api.models.CoreInfo
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
         response = self.get("/api/info/")
@@ -274,7 +275,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
         :type product_ids list of int
         :rtype: list of inventorum.ebay.apps.inventory.models.CoreQuantity
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
         response = self.get('/api/products/quantity/', params={'id': product_ids})
@@ -288,7 +289,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         :type limit_per_page: int
 
         :rtype: collections.Iterable[list of inventorum.ebay.apps.core_api.models.CoreProductDelta]
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
         # verbose = ebay meta attributes will be included in the response
@@ -310,7 +311,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         :type limit_per_page: int
 
         :rtype: collections.Iterable[list of int]
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
         params = {
@@ -326,6 +327,9 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         :param inv_product_id: Product id of inventorum database
         :param state: State of publishing (check PublishStates)
         :param details: Additional details (optional)
+
+        :raises requests.exceptions.RequestException
+                rest_framework.exceptions.ValidationError
         """
         data = {
             'channel': 'ebay',
@@ -336,8 +340,15 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
     def create_order(self, data):
         """
+        Tries to create an order with the given data
 
-        :param data:
-        :return:
+        :type data: dict
+
+        :returns: The inventorum order id
+        :rtype: int
+
+        :raises requests.exceptions.RequestException
+                rest_framework.exceptions.ValidationError
         """
-        return self.post('/api/orders?channel={}'.format(self.EBAY_CHANNEL), data=data)
+        response = self.post('/api/orders?channel={}'.format(self.EBAY_CHANNEL), data=data)
+        return response.json()["id"]

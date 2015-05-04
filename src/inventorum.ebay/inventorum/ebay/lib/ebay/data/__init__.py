@@ -3,8 +3,8 @@ from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
 
 import re
-
 from django.utils.datetime_safe import datetime
+from inventorum.ebay.lib.rest.fields import MoneyField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -31,6 +31,48 @@ class CompleteStatusCodeType(object):
     )
 
 
+class OrderStatusCodeType(object):
+    """
+    Provides consts for the ebay `OrderStatusCodeType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/OrderStatusCodeType.html
+    """
+
+    Completed = "Completed"
+
+
+class BuyerPaymentMethodCodeType(object):
+    """
+    Provides consts for the ebay `BuyerPaymentMethodCodeType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
+    """
+
+    PayPal = "PayPal"
+
+    # Direct (bank) transfer of money
+    MoneyXferAccepted = "MoneyXferAccepted"
+
+    # Direct (bank) transfer of money if the seller has bank account information on file
+    MoneyXferAcceptedInCheckout = "MoneyXferAcceptedInCheckout"
+
+
+class PaymentStatusCodeType(object):
+    """
+    Provides consts for the ebay `PaymentStatusCodeType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/PaymentStatusCodeType.html
+    """
+
+    NoPaymentFailure = "NoPaymentFailure"
+
+
+class TradingRoleCodeType(object):
+    """
+    Provides consts for the ebay `TradingRoleCodeType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/TradingRoleCodeType.html
+    """
+
+    Seller = "Seller"
+
+
 # TODO jm: Move to data/utils.py #######################################################################################
 
 class EbayParser(object):
@@ -48,6 +90,15 @@ class EbayParser(object):
         :rtype: datetime
         """
         return datetime.strptime(str_date, cls.DATE_FORMAT)
+
+    @classmethod
+    def format_date(cls, date):
+        """
+        Formats the given datetime to the ebay datetime format
+        :type date: datetime
+        :rtype: unicode
+        """
+        return date.strftime(cls.DATE_FORMAT)
 
     @classmethod
     def encode_price(cls, price):
@@ -98,7 +149,7 @@ class EbayArrayField(serializers.Field):
         return [self.item_deserializer(data=data).build() for data in item_data]
 
 
-class EbayAmountField(serializers.DecimalField):
+class EbayAmountField(MoneyField):
 
     def __init__(self, **kwargs):
         super(EbayAmountField, self).__init__(decimal_places=2, max_digits=10, **kwargs)

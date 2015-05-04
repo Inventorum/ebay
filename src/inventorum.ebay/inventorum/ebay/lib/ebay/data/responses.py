@@ -10,6 +10,97 @@ from rest_framework import serializers
 log = logging.getLogger(__name__)
 
 
+class UserType(object):
+    """
+    Represents the ebay `UserType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/UserType.html
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        Email = serializers.CharField(source="email")
+        UserFirstName = serializers.CharField(source="user_first_name")
+        UserLastName = serializers.CharField(source="user_last_name")
+
+    # / Deserialization ###############
+
+    def __init__(self, email, user_first_name, user_last_name):
+        """
+        :type email: unicode
+        :type user_first_name: unicode
+        :type user_last_name: unicode
+        """
+        self.email = email
+        self.user_first_name = user_first_name
+        self.user_last_name = user_last_name
+
+UserType.Deserializer.Meta.model = UserType
+
+
+class AddressType(object):
+    """
+    Represents the ebay `AddressType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/AddressType.html
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        AddressID = serializers.CharField(source="address_id")
+        Name = serializers.CharField(source="name")
+        Street1 = serializers.CharField(source="street_1")
+        Street2 = serializers.CharField(source="street_2", allow_blank=True, allow_null=True)
+        CityName = serializers.CharField(source="city_name")
+        PostalCode = serializers.CharField(source="postal_code")
+        StateOrProvince = serializers.CharField(source="state_or_province", allow_blank=True, allow_null=True)
+        Country = serializers.CharField(source="country")
+        CountryName = serializers.CharField(source="country_name")
+
+    # / Deserialization ###############
+
+    def __init__(self, address_id, name, street_1, street_2, city_name, postal_code, state_or_province, country,
+                 country_name):
+        """
+        :param address_id: Unique ID for a user's address in the eBay database. This value can help prevent the need
+            to store an address multiple times across multiple orders. The ID changes if a user changes their address.
+        :type address_id: unicode
+
+        :param name: User's name for the address
+        :type name: unicode
+
+        :type street_1: unicode
+        :type street_2: unicode
+        :type city_name: unicode
+        :type postal_code: unicode
+        :type state_or_province: unicode
+
+        :param country: Two-digit code representing the country of the user.
+        :type country: unicode
+
+        :type country_name: unicode
+        """
+        self.address_id = address_id
+        self.name = name
+        self.street_1 = street_1
+        self.street_2 = street_2
+        self.city_name = city_name
+        self.postal_code = postal_code
+        self.state_or_province = state_or_province
+        self.country = country
+        self.country_name = country_name
+
+AddressType.Deserializer.Meta.model = AddressType
+
+
 class VariationType(object):
     """
     Represents the ebay `VariationType`
@@ -23,18 +114,18 @@ class VariationType(object):
         class Meta:
             model = None
 
-        SKU = serializers.CharField(source="sku")
         VariationTitle = serializers.CharField(source="variation_title")
+        SKU = serializers.CharField(source="sku", required=False)
 
     # / Deserialization ###############
 
-    def __init__(self, sku, variation_title):
+    def __init__(self, variation_title, sku=None):
         """
-        :type sku: unicode
         :type variation_title: unicode
+        :type sku: unicode | None
         """
-        self.sku = sku
         self.variation_title = variation_title
+        self.sku = sku
 
 VariationType.Deserializer.Meta.model = VariationType
 
@@ -94,7 +185,7 @@ class GetItemResponseType(object):
 GetItemResponseType.Deserializer.Meta.model = GetItemResponseType
 
 
-class ShippingServiceOption(object):
+class ShippingServiceOptionType(object):
     """
     Represents the ebay `ShippingServiceOptionsType`
     http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/ShippingServiceOptionsType.html
@@ -120,7 +211,7 @@ class ShippingServiceOption(object):
         self.shipping_service = shipping_service
         self.shipping_cost = shipping_cost
 
-ShippingServiceOption.Deserializer.Meta.model = ShippingServiceOption
+ShippingServiceOptionType.Deserializer.Meta.model = ShippingServiceOptionType
 
 
 class TransactionStatusType(object):
@@ -136,13 +227,13 @@ class TransactionStatusType(object):
         class Meta:
             model = None
 
-        CompleteStatus = serializers.CharField(source="complete_status")
+        CompleteStatus = serializers.CharField(source="complete_status", required=False)
 
     # / Deserialization ###############
 
-    def __init__(self, complete_status):
+    def __init__(self, complete_status=None):
         """
-        :type complete_status: CompleteStatusCodeType
+        :type complete_status: unicode | None
         """
         self.complete_status = complete_status
 
@@ -165,31 +256,34 @@ class TransactionType(object):
         TransactionID = serializers.CharField(source="transaction_id")
         QuantityPurchased = serializers.IntegerField(source="quantity_purchased")
         TransactionPrice = EbayAmountField(source="transaction_price")
-        AmountPaid = EbayAmountField(source="amount_paid")
         Status = TransactionStatusType.Deserializer(source="status")
+        Buyer = UserType.Deserializer(source="buyer")
+        Item = ItemType.Deserializer(source="item", required=False)
         Variation = VariationType.Deserializer(source="variation", required=False)
-        ShippingServiceSelected = ShippingServiceOption.Deserializer(source="shipping_service_selected",
-                                                                     required=False)
+        ShippingServiceSelected = ShippingServiceOptionType.Deserializer(source="shipping_service_selected",
+                                                                         required=False)
 
     # / Deserialization ###############
 
-    def __init__(self, transaction_id, quantity_purchased, transaction_price, amount_paid, status, variation=None,
+    def __init__(self, transaction_id, quantity_purchased, transaction_price, status, buyer, item=None, variation=None,
                  shipping_service_selected=None):
         """
         :type transaction_id: unicode
         :type quantity_purchased: int
         :type transaction_price: decimal.Decimal
-        :type amount_paid: decimal.Decimal
         :type status: TransactionStatusType
+        :type buyer: UserType
+        :type item: ItemType
         :type variation: VariationType
-        :type shipping_service_selected: ShippingServiceOption
+        :type shipping_service_selected: ShippingServiceOptionType
         """
 
         self.transaction_id = transaction_id
-        self.amount_paid = amount_paid
         self.quantity_purchased = quantity_purchased
         self.transaction_price = transaction_price
         self.status = status
+        self.buyer = buyer
+        self.item = item
         self.variation = variation
         self.shipping_service_selected = shipping_service_selected
 
@@ -224,3 +318,200 @@ class GetItemTransactionsResponseType(object):
         self.transactions = transactions
 
 GetItemTransactionsResponseType.Deserializer.Meta.model = GetItemTransactionsResponseType
+
+
+class CheckoutStatusType(object):
+    """
+    Represents the ebay `CheckoutStatusType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/CheckoutStatusType.html
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        Status = serializers.CharField(source="status")
+        PaymentMethod = serializers.CharField(source="payment_method")
+        eBayPaymentStatus = serializers.CharField(source="payment_status")
+
+    # / Deserialization ###############
+
+    def __init__(self, status, payment_method, payment_status):
+        """
+        :type status: unicode
+        :type payment_method: unicode
+        :type payment_status: unicode
+        """
+        self.status = status
+        self.payment_method = payment_method
+        self.payment_status = payment_status
+
+CheckoutStatusType.Deserializer.Meta.model = CheckoutStatusType
+
+
+class PickupMethodSelectedType(object):
+    """
+    Represents the ebay `PickupMethodSelectedType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/PickupMethodSelectedType.html
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        # http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/PickupMethodCodeType.html
+        PickupMethod = serializers.CharField()
+        PickupStoreID = serializers.CharField()
+        PickupLocationUUID = serializers.CharField()
+
+    # / Deserialization ###############
+
+    def __init__(self, pickup_method, pickup_store_id, pickup_location_uuid):
+        """
+        :type pickup_method: unicode
+        :type pickup_store_id: unicode
+        :type pickup_location_uuid: unicode
+        """
+        self.pickup_method = pickup_method
+        self.pickup_store_id = pickup_store_id
+        self.pickup_location_uuid = pickup_location_uuid
+
+
+class OrderType(object):
+    """
+    Represents the ebay `OrderType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/OrderType.html
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        OrderID = serializers.CharField(source="order_id")
+        OrderStatus = serializers.CharField(source="order_status")
+        CheckoutStatus = CheckoutStatusType.Deserializer(source="checkout_status")
+        AmountPaid = EbayAmountField(source="amount_paid")
+        Total = EbayAmountField(source="total")
+        Subtotal = EbayAmountField(source="subtotal")
+
+        TransactionArray = EbayArrayField(source="transactions", item_key="Transaction",
+                                          item_deserializer=TransactionType.Deserializer)
+
+        ShippingAddress = AddressType.Deserializer(source="shipping_address")
+        ShippingServiceSelected = ShippingServiceOptionType.Deserializer(source="shipping_service_selected")
+        PickupMethodSelected = PickupMethodSelectedType.Deserializer(source="pickup_method_selected", required=False)
+
+    # / Deserialization ###############
+
+    def __init__(self, order_id, order_status, checkout_status, amount_paid, total, subtotal, transactions,
+                 shipping_address, shipping_service_selected, pickup_method_selected=None):
+        """
+        :type order_id: unicode
+        :type order_status: unicode
+        :type checkout_status: CheckoutStatusType
+
+        :type amount_paid: decimal.Decimal
+        :type total: decimal.Decimal
+        :type subtotal: decimal.Decimal
+        :type transactions: list[TransactionType]
+
+        :type shipping_address: AddressType
+        :type shipping_service_selected: ShippingServiceOptionType
+        :type pickup_method_selected: PickupMethodSelectedType
+        """
+        self.order_id = order_id
+        self.order_status = order_status
+        self.checkout_status = checkout_status
+
+        self.amount_paid = amount_paid
+        self.total = total
+        self.subtotal = subtotal
+        self.transactions = transactions
+
+        self.shipping_address = shipping_address
+        self.shipping_service_selected = shipping_service_selected
+        self.pickup_method_selected = pickup_method_selected
+
+OrderType.Deserializer.Meta.model = OrderType
+
+
+class PaginationResultType(object):
+    """
+    Represents the ebay `PaginationResultType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/PaginationResultType.html
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        TotalNumberOfEntries = serializers.IntegerField(source="total_number_of_entries")
+        TotalNumberOfPages = serializers.IntegerField(source="total_number_of_pages")
+
+    # / Deserialization ###############
+
+    def __init__(self, total_number_of_entries, total_number_of_pages):
+        """
+        :param total_number_of_entries: Indicates the total number of entries that could be returned by repeated call
+            requests. Returned with a value of 0 if no entries are available.
+        :type total_number_of_entries: int
+
+        :param total_number_of_pages: Indicates the total number of pages of data that could be returned by repeated
+            requests. Returned with a value of 0 if no pages are available.
+        :type total_number_of_pages: int
+        """
+        self.total_number_of_entries = total_number_of_entries
+        self.total_number_of_pages = total_number_of_pages
+
+
+PaginationResultType.Deserializer.Meta.model = PaginationResultType
+
+
+class GetOrdersResponseType(object):
+    """
+    Represents the ebay `GetOrdersResponseType`
+    http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/GetOrders.html#Output
+    """
+
+    # Deserialization #################
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        OrderArray = EbayArrayField(source="orders", item_key="Order", item_deserializer=OrderType.Deserializer,
+                                    allow_null=True)
+        PaginationResult = PaginationResultType.Deserializer(source="pagination_result")
+        PageNumber = serializers.IntegerField(source="page_number")
+
+    # / Deserialization ###############
+
+    def __init__(self, orders, pagination_result, page_number):
+        """
+        :type orders: list[OrderType]
+        :type pagination_result: PaginationResultType
+        :type page_number: int
+        """
+        # if there are no orders, the response will contain <OrderArray />, which translates to { OrderArray: None }
+        # rest framework does not easily allow us to let orders default to [], so we simply do it here
+        if orders is None:
+            orders = []
+
+        self.orders = orders
+        self.pagination_result = pagination_result
+        self.page_number = page_number
+
+GetOrdersResponseType.Deserializer.Meta.model = GetOrdersResponseType
