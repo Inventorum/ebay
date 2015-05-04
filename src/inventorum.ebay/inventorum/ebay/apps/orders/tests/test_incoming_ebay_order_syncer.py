@@ -52,6 +52,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
             amount_paid=D("12.88"),
             checkout_status__payment_method="PayPal",
             checkout_status__payment_status=PaymentStatusCodeType.NoPaymentFailure,
+
             transactions=[
                 TransactionTypeFactory.create(
                     transaction_id=transaction_id,
