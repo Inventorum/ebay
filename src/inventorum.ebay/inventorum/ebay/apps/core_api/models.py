@@ -326,3 +326,5 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         return super(CoreProductDeltaDeserializer, self).create(validated_data)
 
 
+class CoreOrder(object):
+    pass
