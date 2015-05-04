@@ -5,21 +5,24 @@ import logging
 from decimal import Decimal as D
 
 from django.conf import settings
+from inventorum.ebay.apps.core_api import FakeCoreAPIResponse
 from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.tests import StagingTestAccount
+from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
+from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 
-from inventorum.ebay.tests.testcases import APITestCase
+from inventorum.ebay.tests.testcases import APITestCase, UnitTestCase
 
-from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient, CoreAPIClient
+from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
 
 
 log = logging.getLogger(__name__)
 
 
-class TestUserScopedCoreAPIClient(APITestCase):
+class IntegrationTestUserScopedCoreAPIClient(APITestCase):
 
     def setUp(self):
-        super(TestUserScopedCoreAPIClient, self).setUp()
+        super(IntegrationTestUserScopedCoreAPIClient, self).setUp()
 
         self.account_id = StagingTestAccount.ACCOUNT_ID
         self.user_id = StagingTestAccount.USER_ID
@@ -102,6 +105,13 @@ class TestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
         self.assertTrue(account_settings.ebay_click_and_collect)
 
+        self.assertEqual(len(core_account.account.opening_hours), 3)
+        self.assertEqual(core_account.account.opening_hours[0].closes_hour, 10)
+        self.assertEqual(core_account.account.opening_hours[0].closes_minute, 0)
+        self.assertEqual(core_account.account.opening_hours[0].opens_hour, 8)
+        self.assertEqual(core_account.account.opening_hours[0].opens_minute, 0)
+        self.assertEqual(core_account.account.opening_hours[0].day_of_week, 1)
+
     @CoreApiTest.use_cassette("get_product_with_variations.yaml")
     def test_product_with_variations(self):
         product = self.subject.get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS)
@@ -149,3 +159,88 @@ class TestUserScopedCoreAPIClient(APITestCase):
 
         self.assertEqual(len(second_variation.images), 1)
         self.assertTrue(second_variation.images[0].url.startswith("https://app.inventorum.net/uploads/"))
+
+
+class UnitTestUserScopedCoreAPIClient(UnitTestCase):
+
+    def setUp(self):
+        super(UnitTestUserScopedCoreAPIClient, self).setUp()
+
+        self.mock_core_api_client()
+        self.subject = UserScopedCoreAPIClient(user_id="SOME_USER_ID", account_id="SOME_ACCOUNT_ID")
+
+    def mock_core_api_client(self):
+        self.client_get_mock = self.patch("inventorum.ebay.apps.core_api.clients.CoreAPIClient.get")
+        self.client_post_mock = self.patch("inventorum.ebay.apps.core_api.clients.CoreAPIClient.post")
+        self.client_put_mock = self.patch("inventorum.ebay.apps.core_api.clients.CoreAPIClient.put")
+        self.client_delete_mock = self.patch("inventorum.ebay.apps.core_api.clients.CoreAPIClient.delete")
+
+    def test_create_order(self):
+        order = OrderModelFactory.create()
+        data = OrderModelCoreAPIDataSerializer(order).data
+
+        created_order_id = 23
+
+        # Note: Output copied from here:
+        # https://zoidberg.inventorum.net/inventorum/api/blob/5961afec9d1b2cd5782e0416b7a14ce6869ba12c/src/inventorum.api/inventorum/api/apps/orders/tests/test_api.py
+        self.client_post_mock.return_value = FakeCoreAPIResponse(json={
+            u'basket': {u'items': [{u'discount': None,
+                                    u'gross_price': u'0.71',
+                                    u'id': 1,
+                                    u'name': u'Notenheft A5 quer Lin 14',
+                                    u'original_quantity': u'1.00',
+                                    u'price': u'0.6000000000',
+                                    u'product': 1,
+                                    u'quantity': u'1.00',
+                                    u'tax_rate': u'19.000',
+                                    u'unit_gross_price': u'0.71'},
+                                   {u'discount': None,
+                                    u'gross_price': u'2.98',
+                                    u'id': 2,
+                                    u'name': u'Geschenkpapier ABC+Ziffern',
+                                    u'original_quantity': u'1.00',
+                                    u'price': u'2.5000000000',
+                                    u'product': 6,
+                                    u'quantity': u'1.00',
+                                    u'tax_rate': u'19.000',
+                                    u'unit_gross_price': u'2.98'}],
+                        u'note_external': None,
+                        u'note_internal': None},
+            u'customer': {u'billing_address': {u'address1': u'Foostr. 3',
+                                               u'address2': None,
+                                               u'city': u'Berlin',
+                                               u'company': None,
+                                               u'country': u'DE',
+                                               u'first_name': None,
+                                               u'id': 2,
+                                               u'last_name': None,
+                                               u'state': u'BE',
+                                               u'title': None,
+                                               u'zipcode': u'10000'},
+                          u'channel': 1,
+                          u'email': u'test@inventorum.com',
+                          u'first_name': u'Test',
+                          u'id': 10,
+                          u'last_name': u'Customer',
+                          u'middle_name': None,
+                          u'shipping_address': [],
+                          u'title': None},
+            u'gross_amount': u'8.6900000000',
+            u'id': created_order_id,
+            u'payments': [{u'date': u'30.04.2015 - 17:19',
+                           u'id': 1,
+                           u'payment_amount': u'8.6900000000',
+                           u'payment_method': u'0',
+                           u'paypal_invoice_id': None,
+                           u'paypal_tab_id': None,
+                           u'transaction_duration': None,
+                           u'transaction_id': None}],
+            u'shipment': {u'cost': u'5.0000000000', u'name': u'DE_DHLPaket'},
+            u'state': 2})
+
+        inv_id = self.subject.create_order(data)
+
+        self.assertEqual(self.client_post_mock.call_count, 1)
+        self.client_post_mock.assert_called_once_with("/api/orders?channel=ebay", data=data)
+
+        self.assertEqual(inv_id, created_order_id)

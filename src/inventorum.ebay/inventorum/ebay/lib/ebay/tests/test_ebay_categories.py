@@ -9,6 +9,7 @@ from inventorum.ebay.lib.ebay.categories import EbayCategories
 from inventorum.ebay.lib.ebay.data.categories import EbayCategory
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature, EbayFeatureDefinition, \
     EbayListingDurationDefinition
+from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, long_running_test
 
 log = logging.getLogger(__name__)
@@ -93,7 +94,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         # So in Category 353 we got SetId: 8 for FixedPriceItem, lets check if this is in definitions
         self.assertIsInstance(feature_definition.durations_dict[8], EbayListingDurationDefinition)
-        log.debug('Original data: %s', feature_definition.durations_dict[8]._poposerializer_original_data)
+        log.debug('Original data: %s', POPOSerializer.extract_original_data(feature_definition.durations_dict[8]))
         self.assertEqual(feature_definition.durations_dict[8].durations, ['Days_3', 'Days_5', 'Days_7', 'Days_10',
                                                                           'Days_30'])
 

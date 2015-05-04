@@ -315,7 +315,6 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         calls = self.schedule_ebay_product_deletion_mock.call_args_list
         self.assertEqual([args[0] for args, kwargs in calls], [product_d.id, product_e.id])
 
-
     def test_published_modified_and_deleted_variations(self):
         subject = CoreProductsSync(account=self.account)
 
@@ -417,8 +416,6 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertEqual(variation_e_update.quantity, 0)
         self.assertEqual(variation_e_update.is_deleted, True)
 
-
         self.assertEqual(self.schedule_ebay_item_update_mock.call_count, 1)
         # assert deletions
         self.assertEqual(self.schedule_ebay_product_deletion_mock.call_count, 0)
-
