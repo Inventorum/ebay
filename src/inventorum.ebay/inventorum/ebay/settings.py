@@ -3,6 +3,7 @@
 """Base settings shared by all environments"""
 import os
 import logging
+import sys
 from datetime import datetime
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -190,4 +191,20 @@ EBAY_LIVE_TOKEN = 'AgAAAA**AQAAAA**aAAAAA**+SoxVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj
 EBAY_LIVE_TOKEN_EXPIRATION_DATE = datetime(2016, 10, 14, 13, 57, 40)
 
 EBAY_LISTING_URL = "http://cgi.ebay.de/ws/eBayISAPI.dll?ViewItem&item={listing_id}"
+
+
+# http://stackoverflow.com/questions/6957016/detect-django-testing-mode
+TEST = 'test' in sys.argv
+
+if TEST:
+    # http://stackoverflow.com/questions/25161425/disable-migrations-when-running-unit-tests-in-django-1-7
+    class DisableMigrations(object):
+
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return "notmigrations"
+
+    MIGRATION_MODULES = DisableMigrations()
 

@@ -97,6 +97,60 @@ class EbayEventCanceled(EbayEventBase):
         return payload
 
 
+class EbayEventReturnedItem(object):
+    def __init__(self, item_id, transaction_id, quantity, amount, currency='EUR'):
+        self.item_id = item_id
+        self.transaction_id = transaction_id
+        self.quantity = quantity
+        self.amount = amount
+        self.currency = currency
+
+    @property
+    def payload(self):
+        return {
+            'eBayItemId': self.item_id,
+            'eBayTransactionId': self.transaction_id,
+            'notifierRefundQuantity': self.quantity,
+            'notifierRefundAmount': self.amount,
+            'notifierRefundCurrency': self.currency,
+        }
+
+
+class EbayEventReturned(EbayEventBase):
+
+    class RefundType(object):
+        EBAY = 'EBAY'
+        STORE_CREDIT = 'STORE_CREDIT'
+
+    type = EbayEventType.RETURNED
+
+    def __init__(self, order_id, total_amount, refund_type, items, refund_id=None, refund_note=None, currency='EUR',
+                 seller_id=None):
+        self.total_amount = total_amount
+        self.currency = currency
+        self.refund_type = refund_type
+        self.refund_note = refund_note
+        self.refund_id = refund_id
+        self.items = items
+        super(EbayEventReturned, self).__init__(order_id=order_id, seller_id=seller_id)
+
+    @property
+    def payload(self):
+        payload = super(EbayEventReturned, self).payload
+        payload['notifierTotalRefundAmount'] = self.total_amount
+        payload['notifierTotalRefundCurrency'] = self.currency
+        payload['notifierRefundType'] = self.refund_type
+        payload['refundLineItems'] = [i.payload for i in self.items]
+
+        if self.refund_note is not None:
+            payload['notifierRefundNote'] = self.refund_note
+
+        if self.refund_id is not None:
+            payload['notifierRefundId'] = self.refund_id
+
+        return payload
+
+
 class EbayEventError(object):
     class Deserializer(POPOSerializer):
         class Meta:

@@ -6,7 +6,8 @@ from datetime import datetime
 
 from inventorum.ebay.apps.core_api.tests import EbayTest
 from inventorum.ebay.lib.ebay.data.authorization import EbayToken
-from inventorum.ebay.lib.ebay.data.events import EbayEventReadyForPickup, EbayEventPickedUp, EbayEventCanceled
+from inventorum.ebay.lib.ebay.data.events import EbayEventReadyForPickup, EbayEventPickedUp, EbayEventCanceled, \
+    EbayEventReturned, EbayEventReturnedItem
 from inventorum.ebay.lib.ebay.events import EbayInboundEvents, EbayInboundEventsException
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
@@ -90,5 +91,46 @@ class TestEbayInboundEvents(EbayAuthenticatedAPITestCase):
                     'notifierRefundType': 'EBAY'
                 },
                 'type': 'EBAY.ORDER.PICKUP_CANCELED',
+                'version': '1.0'
+            }})
+
+    def test_returned(self):
+        api = EbayInboundEvents(self.ebay_token)
+
+        item = EbayEventReturnedItem(
+            item_id=123,
+            transaction_id=456,
+            quantity=2,
+            amount='22.33'
+        )
+        event = EbayEventReturned(order_id='123',
+                                  total_amount='123.44',
+                                  refund_type=EbayEventReturned.RefundType.EBAY,
+                                  items=[item])
+
+        # Return 200, so accepted by ebay.
+        with EbayTest.use_cassette('ebay_event_returned.yaml') as cass:
+            api.publish(event)
+
+        first_request = cass.requests[0]
+        data = json.loads(first_request.body)
+        self.assertDictEqual(data, {
+            'event': {
+                'notifierReferenceId': 'test',
+                'payload': {
+                    'ebayOrderId': '123',
+                    'notifierRefundType': 'EBAY',
+                    'notifierTotalRefundAmount': '123.44',
+                    'notifierTotalRefundCurrency': 'EUR',
+                    'refundLineItems': [
+                        {
+                            'eBayItemId': 123,
+                            'eBayTransactionId': 456,
+                            'notifierRefundAmount': '22.33',
+                            'notifierRefundCurrency': 'EUR',
+                            'notifierRefundQuantity': 2
+                        }
+                    ]},
+                'type': 'EBAY.ORDER.RETURNED',
                 'version': '1.0'
             }})
