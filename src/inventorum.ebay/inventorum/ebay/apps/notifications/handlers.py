@@ -36,7 +36,7 @@ class EbayNotificationHandler(object):
             return payload_deserializer_class(data=payload).build()
         except ValidationError as e:
             raise EbayNotificationHandlerException("{exception}: {error}".format(exception=e.__class__.__name__,
-                                                                                 error=str(e)))
+                                                                                 error=unicode(e)))
 
     def handle(self, payload):
         """

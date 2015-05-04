@@ -47,7 +47,7 @@ class PeriodicEbayOrdersSync(object):
             except EbayOrderSyncException as e:
                 # For now, we simply log errors to see how the sync behaves in production
                 # Later, we probably want to or need to create some special error handling for certain cases
-                log.error(str(e))
+                log.error(unicode(e))
 
         self.account.last_ebay_orders_sync = current_sync_start
         self.account.save()
