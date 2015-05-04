@@ -26,7 +26,7 @@ class PeriodicEbayOrdersSync(object):
         :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
         """
         self.account = account
-        assert self.account.is_ebay_authenticated, "Account {} is not authenticated to ebay".format(account.id)
+        assert self.account.is_ebay_authenticated, "Account {} is not authenticated to ebay".format(account)
 
         self.sync = IncomingEbayOrderSyncer(self.account)
 
