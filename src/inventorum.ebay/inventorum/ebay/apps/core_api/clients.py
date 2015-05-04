@@ -10,6 +10,7 @@ import requests
 from django.conf import settings
 from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponseDeserializer
 
+
 log = logging.getLogger(__name__)
 
 
@@ -315,6 +316,24 @@ class UserScopedCoreAPIClient(CoreAPIClient):
             "start_date": self._encode_datetime(start_date)
         }
         pager = self.paginated_get("/api/products/delta/deleted/", limit_per_page=limit_per_page, params=params)
+        for page in pager.pages:
+            yield page.data
+
+    def get_paginated_orders_delta(self, start_date, limit_per_page=100):
+        """
+        :type start_date: datetime.datetime
+        :type limit_per_page: int
+
+        :rtype: collections.Iterable[list of ???]
+        :raises requests.exceptions.RequestError
+                rest_framework.exceptions.ValidationError
+        """
+        params = {
+            "channel": self.EBAY_CHANNEL,
+            "start_date": self._encode_datetime(start_date)
+        }
+
+        pager = self.paginated_get("/api/orders/delta/", limit_per_page=limit_per_page, params=params)
         for page in pager.pages:
             yield page.data
 
