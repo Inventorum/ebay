@@ -1,22 +1,18 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from collections import defaultdict
 import logging
-import datetime
-from datetime import datetime
-from django.utils.functional import cached_property
 
+from datetime import datetime
 from inventorum.ebay.apps.products import tasks, EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemUpdateModel, \
     EbayItemVariationModel, EbayItemVariationUpdateModel
 from inventorum.util.celery import TaskExecutionContext
-from inventorum.util.django.middlewares import fallback_uuid
 
 
 log = logging.getLogger(__name__)
 
 
-class CoreAPISyncService(object):
+class CoreProductsSync(object):
 
     def __init__(self, account):
         """
@@ -29,6 +25,7 @@ class CoreAPISyncService(object):
         current_sync_start = datetime.utcnow()
         # if there was no sync yet, the ebay account creation is taken as starting point
         last_sync_start = self.account.last_core_api_sync or self.account.time_added
+
         self._sync_core_modifications(modified_since=last_sync_start)
         self._sync_core_deletions(deleted_since=last_sync_start)
         self._sync_variations_modifications()
@@ -48,7 +45,6 @@ class CoreAPISyncService(object):
                 self._sync_ebay_item(ebay_item_or_variation, core_product_delta)
             elif isinstance(ebay_item_or_variation, EbayItemVariationModel):
                 self._sync_ebay_variation(ebay_item_or_variation, core_product_delta)
-
 
     def _sync_ebay_item(self, ebay_item, core_product_delta):
         ebay_item_update = self._create_item_update_from_diff(ebay_item, core_product_delta)
@@ -115,7 +111,7 @@ class CoreAPISyncService(object):
     def get_task_execution_context(self):
         return TaskExecutionContext(user_id=self.account.default_user.id,
                                     account_id=self.account.id,
-                                    request_id=fallback_uuid())
+                                    request_id=None)
 
     def _sync_core_deletions(self, deleted_since):
         """
@@ -133,7 +129,6 @@ class CoreAPISyncService(object):
         for deleted_variation in deleted_variations:
             item = self._get_update_item_for_variation(deleted_variation)
             EbayItemVariationUpdateModel.objects.create(variation=deleted_variation, update_item=item, is_deleted=True)
-
 
     def _get_core_modifications_of_published_items(self, modified_since):
         """
@@ -192,5 +187,3 @@ class CoreAPISyncService(object):
 
         for item_update in self.item_update_for_variations.values():
             tasks.schedule_ebay_item_update(item_update.id, context=self.get_task_execution_context())
-
-

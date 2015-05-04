@@ -13,7 +13,7 @@ from inventorum.ebay.apps.products.scripts import core_api_sync
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTestHelpers, ApiTest
 from inventorum.ebay.apps.core_api.tests.factories import CoreProductDeltaFactory
-from inventorum.ebay.apps.products.core_api_sync import CoreAPISyncService
+from inventorum.ebay.apps.products.core_products_sync import CoreProductsSync
 
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemVariationModel
 
@@ -164,7 +164,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
     def test_basic_logic_with_empty_delta(self):
         assert self.account.last_core_api_sync is None
 
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         self.expect_modified([])
         self.expect_deleted([])
@@ -190,7 +190,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
 
         last_core_api_sync = self.account.last_core_api_sync
 
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
         subject.run()
 
         self.core_api_mock.get_paginated_product_delta_modified.assert_called_once_with(
@@ -200,7 +200,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
 
     def test_unmapped_modified_and_deleted(self):
         # unmapped = products not connected to the ebay service
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         self.expect_modified([
             CoreProductDeltaFactory.build(),
@@ -214,7 +214,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertFalse(self.schedule_ebay_product_deletion_mock.called)
 
     def test_unpublished_modified_and_deleted(self):
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         # modified but not published, there should not be any updates
         product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
@@ -242,7 +242,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertEqual([args[0] for args, kwargs in calls], [product_c.id, product_d.id, product_e.id])
 
     def test_published_modified_and_deleted(self):
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         # product a with updated quantity
         product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
@@ -317,7 +317,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
 
 
     def test_published_modified_and_deleted_variations(self):
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         # product a is our parent product
         product_a = EbayProductFactory.create(account=self.account, inv_id=1001)

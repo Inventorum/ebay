@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 
 from inventorum.ebay.apps.accounts.models import EbayAccountModel
-from inventorum.ebay.apps.products.core_api_sync import CoreAPISyncService
+from inventorum.ebay.apps.products.core_products_sync import CoreProductsSync
 
 
 log = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ def run(*args):
 
     for account in accounts:
         log.info("Running core api sync for inv account {}".format(account.inv_id))
-        CoreAPISyncService(account).run()
+        CoreProductsSync(account).run()
 
     run_time = datetime.now() - start_time
     log.info("Finished core api sync in {}".format(run_time))
