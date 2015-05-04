@@ -101,7 +101,8 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
     registration_date = DateTimeField(null=True, blank=True)
     ebay_location_uuid = CharField(max_length=36, null=True, blank=True)
 
-    last_core_api_sync = DateTimeField(null=True, blank=True)
+    last_core_products_sync = DateTimeField(null=True, blank=True)
+    last_core_orders_sync = DateTimeField(null=True, blank=True)
     last_ebay_orders_sync = DateTimeField(null=True, blank=True)
 
     objects = PassThroughManager.for_queryset_class(EbayAccountModelQuerySet)()

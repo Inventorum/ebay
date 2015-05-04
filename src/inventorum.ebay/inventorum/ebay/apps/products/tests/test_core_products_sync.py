@@ -162,7 +162,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         mock.return_value = iter(pages)
 
     def test_basic_logic_with_empty_delta(self):
-        assert self.account.last_core_api_sync is None
+        assert self.account.last_core_products_sync is None
 
         subject = CoreProductsSync(account=self.account)
 
@@ -179,24 +179,24 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertFalse(self.schedule_ebay_item_update_mock.called)
         self.assertFalse(self.schedule_ebay_product_deletion_mock.called)
 
-        self.assertIsNotNone(self.account.last_core_api_sync)
-        self.assertTrue(datetime.utcnow() - self.account.last_core_api_sync < timedelta(seconds=1))
+        self.assertIsNotNone(self.account.last_core_products_sync)
+        self.assertTrue(datetime.utcnow() - self.account.last_core_products_sync < timedelta(seconds=1))
 
-        # next sync for the account should start from last_core_api_sync
+        # next sync for the account should start from last_core_products_sync
         self.reset_mocks()
 
         # reload changes from database
         self.account = self.account.reload()
 
-        last_core_api_sync = self.account.last_core_api_sync
+        last_core_products_sync = self.account.last_core_products_sync
 
         subject = CoreProductsSync(account=self.account)
         subject.run()
 
         self.core_api_mock.get_paginated_product_delta_modified.assert_called_once_with(
-            start_date=last_core_api_sync)
+            start_date=last_core_products_sync)
         self.core_api_mock.get_paginated_product_delta_deleted.assert_called_once_with(
-            start_date=last_core_api_sync)
+            start_date=last_core_products_sync)
 
     def test_unmapped_modified_and_deleted(self):
         # unmapped = products not connected to the ebay service
