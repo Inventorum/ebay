@@ -12,6 +12,7 @@ from inventorum.ebay.apps.orders.core_orders_sync import CoreOrdersSync, CoreOrd
 from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 from inventorum.ebay.apps.shipping.models import ShippingServiceModel
+from inventorum.ebay.lib.celery import celery_test_case
 from inventorum.ebay.lib.ebay.data.events import EbayEventType
 from inventorum.ebay.tests.testcases import UnitTestCase, EbayAuthenticatedAPITestCase
 from inventorum.util.celery import TaskExecutionContext
@@ -22,7 +23,38 @@ log = logging.getLogger(__name__)
 
 
 class IntegrationTestCoreOrdersSync(EbayAuthenticatedAPITestCase):
-    pass
+
+    @celery_test_case()
+    def smoke_test(self):
+        core_api_mock = self.patch("inventorum.ebay.apps.accounts.models.EbayAccountModel.core_api",
+                                   new_callable=PropertyMock(spec_set=UserScopedCoreAPIClient))
+
+        ebay_events_publish_mock = self.patch("inventorum.ebay.lib.ebay.events.EbayInboundEvents.publish")
+        ebay_orders_complete_sale_mock = self.patch("inventorum.ebay.lib.ebay.orders.EbayOrders.complete_sale")
+
+        order = OrderModelFactory.create(account=self.account,
+                                         inv_id=5000)
+        click_and_collect_service = ShippingServiceModel.get_click_and_collect_service(self.account.country)
+        click_and_collect_order = OrderModelFactory.create(account=self.account,
+                                                           inv_id=5001,
+                                                           selected_shipping__service=click_and_collect_service)
+        self.assertPrecondition(click_and_collect_order.is_click_and_collect, True)
+
+        core_order = CoreOrderFactory(id=order.inv_id,
+                                      state=BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED)
+
+        click_and_collect_core_order = CoreOrderFactory(id=click_and_collect_order.inv_id,
+                                                        state=BinaryCoreOrderStates.SHIPPED | BinaryCoreOrderStates.CLOSED)
+
+        core_api_mock.get_paginated_orders_delta.return_value = iter([[core_order, click_and_collect_core_order]])
+
+        subject = CoreOrdersSync(account=self.account)
+        subject.run()
+
+        self.assertTrue(core_api_mock.get_paginated_orders_delta.called)
+
+        self.assertEqual(ebay_events_publish_mock.call_count, 2)
+        self.assertEqual(ebay_orders_complete_sale_mock.call_count, 1)
 
 
 class UnitTestCoreOrdersSync(UnitTestCase):

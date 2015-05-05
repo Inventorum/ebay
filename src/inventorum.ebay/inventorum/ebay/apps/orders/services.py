@@ -1,16 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from django.db import transaction
-from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+
+from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
-from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemVariationModel
-from inventorum.ebay.lib.ebay.data import OrderStatusCodeType
 from inventorum.ebay.lib.ebay.data.events import EbayEventType, EbayEventReadyForPickup, EbayEventPickedUp, \
-    EbayEventCanceled, CancellationType
+    EbayEventCanceled
 from inventorum.ebay.lib.ebay.events import EbayInboundEvents
 from inventorum.ebay.lib.ebay.orders import EbayOrders
-from inventorum.ebay.lib.rest.serializers import POPOSerializer
 
 
 log = logging.getLogger(__name__)
@@ -79,7 +76,8 @@ class EbayOrderStatusUpdateService(object):
             self.order.ebay_status.is_closed = True
             self.order.ebay_status.save()
         elif event_type == EbayEventType.CANCELED and not self.order.ebay_status.is_canceled:
-            event = EbayEventCanceled(order_id=self.order.ebay_id, cancellation_type=CancellationType.OUT_OF_STOCK)
+            event = EbayEventCanceled(order_id=self.order.ebay_id,
+                                      cancellation_type=EbayEventCanceled.CancellationType.OUT_OF_STOCK)
             inbound_events.publish(event, raise_exceptions=True)
             # update succeeded => update ebay state
             self.order.ebay_status.is_canceled = True
