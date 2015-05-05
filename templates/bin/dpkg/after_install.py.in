@@ -132,6 +132,26 @@ if proc.returncode != 0:
     exit(proc.returncode)
 
 
+# http://askubuntu.com/a/431013
+# start and autostart daemon
+print '[inv-ebay] ``ebay_worker``: set autostart ...'
+proc = subprocess.Popen(['update-rc.d', 'com.inventorum.ebay_worker', 'enable'],
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+_out, _err = proc.communicate()
+print '[inv-ebay] %s' % _out
+if proc.returncode != 0:
+    print '[inv-ebay] %s' % _err
+    exit(proc.returncode)
+print '[inv-ebay] ``ebay_worker``: invoke ...'
+proc = subprocess.Popen(['invoke-rc.d', 'com.inventorum.ebay_worker', 'start'],
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+_out, _err = proc.communicate()
+print '[inv-ebay] %s' % _out
+if proc.returncode != 0:
+    print '[inv-ebay] %s' % _err
+    exit(proc.returncode)
+
+
 print ""
 print "[inv-ebay] restart you application services::"
 print ""
