@@ -368,5 +368,5 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
-        response = self.post('/api/orders?channel={}'.format(self.EBAY_CHANNEL), data=data)
+        response = self.post('/api/orders/?channel={}'.format(self.EBAY_CHANNEL), data=data)
         return response.json()["id"]
