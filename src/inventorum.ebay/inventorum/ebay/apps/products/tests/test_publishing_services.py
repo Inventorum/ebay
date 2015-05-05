@@ -272,8 +272,8 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             'ListingDuration': 'Days_120',
             'PayPalEmailAddress': 'bartosz@hernas.pl',
             'PaymentMethods': ['PayPal'],
-            'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
-                                              '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
+            'PictureDetails': {'PictureURL': ['http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
+                                              '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG']},
             'ShippingDetails': [
                 {
                     'ShippingServiceOptions': {
