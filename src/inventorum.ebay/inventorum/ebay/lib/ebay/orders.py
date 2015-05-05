@@ -21,7 +21,7 @@ class EbayOrders(EbayTrading):
         response = self.execute("GetOrders", data)
         return GetOrdersResponseType.Deserializer(data=response).build()
 
-    def complete_sale(self, order_id, shipped, shipment=None):
+    def complete_sale(self, order_id, shipped, paid, shipment=None):
         """
         http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/CompleteSale.html
 
@@ -31,11 +31,24 @@ class EbayOrders(EbayTrading):
         """
         data = {
             'OrderID': order_id,
-            'Shipped': shipped
+            'Shipped': shipped,
+            'Paid': paid,
         }
         if shipment is not None:
             data['Shipment'] = shipment.dict()
 
-        response = self.execute('CompleteSale', data)
-        # If something would go wrong, then we would get exception
-        return True
+        self.execute('CompleteSale', data)
+
+    def revise_checkout_status(self, order_id, checkout_status, payment_method_used):
+        """
+        http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/ReviseCheckoutStatus.html
+        :param checkout_status: Use CheckoutStatusType to determine status
+        :param payment_method_used: Use PaymentMethodType to determine payment method
+        :type order_id: unicode
+        """
+        self.execute('ReviseCheckoutStatus', {
+            'OrderID': order_id,
+            'CheckoutStatus': checkout_status,
+            'PaymentMethodUsed': payment_method_used
+
+        })

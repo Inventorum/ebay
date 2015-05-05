@@ -14,3 +14,14 @@ class EbayCompleteSaleShipment(object):
                 'ShippingCarrierUsed': self.carrier_used,
             }
         }
+
+
+class CheckoutStatusType(object):
+    COMPLETE = 'Complete'
+    INCOMPLETE = 'Incomplete'
+    PENDING = 'Pending'
+
+
+class PaymentMethodType(object):
+    BANK_TRANSFER = 'MoneyXferAccepted'
+    BANK_TRANSFER_IN_CHECKOUt = 'MoneyXferAcceptedInCheckout'
