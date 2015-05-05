@@ -7,6 +7,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django_countries.fields import CountryField
+from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.lib.db.models import BaseModel, BaseQuerySet
 
 from inventorum.util.django.model_utils import PassThroughManager
@@ -67,6 +68,17 @@ class ShippingServiceModel(BaseModel):
             shipping_service.save()
 
         return shipping_service
+
+    @classmethod
+    def get_click_and_collect_service(cls, country):
+        obj, c = cls.objects.get_or_create(
+            external_id=INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID,
+            country=country,
+            defaults=dict(
+                description='Inventorum: Click and collect shipping service for {country}'.format(country=country)
+            )
+        )
+        return obj
 
 
 class ShippingServiceConfigurationModel(BaseModel):
