@@ -50,6 +50,10 @@ class EbayAccountFactory(MappedInventorumModelFactory):
     email = factory.Sequence(lambda n: 'test{0}@inventorum.com'.format(n))
     country = StagingTestAccount.COUNTRY
 
+    payment_method_paypal_enabled = True
+    payment_method_paypal_email_address = 'bartosz@hernas.pl'
+    payment_method_bank_transfer_enabled = False
+
 
 class EbayUserFactory(MappedInventorumModelFactory):
 

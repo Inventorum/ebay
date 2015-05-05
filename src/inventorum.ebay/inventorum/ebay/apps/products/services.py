@@ -164,7 +164,7 @@ class PublishingPreparationService(object):
             category=product.category,
             country=self.core_account.country,
             quantity=self.core_product.quantity,
-            paypal_email_address=self.core_account.settings.ebay_paypal_email,
+            paypal_email_address=self.account.payment_method_paypal_email_address,
             postal_code=self.core_account.billing_address.zipcode,
             is_click_and_collect=self.product.is_click_and_collect
         )
@@ -187,7 +187,7 @@ class PublishingPreparationService(object):
                 item=item
             )
 
-        for payment in self.core_account.settings.ebay_payment_methods:
+        for payment in self.account.ebay_payment_methods:
             EbayItemPaymentMethod.objects.create(
                 external_id=payment,
                 item=item

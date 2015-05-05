@@ -104,6 +104,11 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
     last_core_api_sync = DateTimeField(null=True, blank=True)
     last_ebay_orders_sync = DateTimeField(null=True, blank=True)
 
+    payment_method_paypal_enabled = BooleanField(default=False)
+    payment_method_paypal_email_address = EmailField(null=True, blank=True)
+    payment_method_bank_transfer_enabled = BooleanField(default=True)  # By default enabled
+
+
     objects = PassThroughManager.for_queryset_class(EbayAccountModelQuerySet)()
 
     @property
@@ -131,6 +136,18 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
     @property
     def has_location(self):
         return hasattr(self, "location")
+
+    @property
+    def ebay_payment_methods(self):
+        methods = []
+
+        if self.payment_method_paypal_enabled:
+            methods.append('PayPal')
+
+        if self.payment_method_bank_transfer_enabled:
+            methods.append('MoneyXferAccepted')
+
+        return methods
 
 
 class EbayLocationModel(BaseModel):
