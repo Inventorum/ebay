@@ -56,11 +56,30 @@ def schedule_core_order_creation(order_id, context):
     core_order_creation_task.delay(order_id, context=context)
 
 
+@inventorum_task()
+def send_click_and_collect_event_task(self, order_id, event_type):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    :type order_id: int
+    :type event_type: unicode
+    """
+    pass
+
+
 def schedule_click_and_collect_event(order_id, event_type, context):
     """
     :type order_id: int
     :type event_type: unicode
     :type context: inventorum.util.celery.TaskExecutionContext
+    """
+    send_click_and_collect_event_task.delay(order_id, event_type, context=context)
+
+
+@inventorum_task()
+def ebay_order_status_update_task(self, order_id):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    :type order_id: int
     """
     pass
 
@@ -70,4 +89,4 @@ def schedule_ebay_order_status_update(order_id, context):
     :type order_id: int
     :type context: inventorum.util.celery.TaskExecutionContext
     """
-    pass
+    ebay_order_status_update_task.delay(order_id, context=context)
