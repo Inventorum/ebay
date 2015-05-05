@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import json
 import logging
 from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
-    CoreProductDeltaDeserializer
+    CoreProductDeltaDeserializer, CoreOrder
 from inventorum.ebay.apps.core_api.pager import Pager
 import requests
 
@@ -336,7 +336,8 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
         pager = self.paginated_get("/api/orders/delta/", limit_per_page=limit_per_page, params=params)
         for page in pager.pages:
-            yield page.data
+            serializer = CoreOrder.Serializer(data=page.data, many=True)
+            yield serializer.build()
 
     def post_product_publishing_state(self, inv_product_id, state, details):
         """
