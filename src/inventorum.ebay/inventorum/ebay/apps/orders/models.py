@@ -8,6 +8,7 @@ from django.dispatch.dispatcher import receiver
 from django.db.models import signals
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay.apps.orders import CorePaymentMethod
+from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.lib.db.fields import MoneyField
 
 from inventorum.ebay.lib.db.models import BaseModel, MappedInventorumModelQuerySet
@@ -101,6 +102,10 @@ class OrderModel(BaseModel):
     @property
     def created_in_core_api(self):
         return self.inv_id is not None
+
+    @property
+    def is_click_and_collect(self):
+        return self.selected_shipping.service.external_id == INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 
 
 

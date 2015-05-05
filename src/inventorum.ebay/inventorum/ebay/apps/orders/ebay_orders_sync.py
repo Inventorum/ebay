@@ -178,17 +178,27 @@ class IncomingEbayOrderSyncer(object):
         model.total = ebay_order.total
 
         # extract shipping information
-        selected_shipping = ebay_order.shipping_service_selected
-        try:
-            service_model = ShippingServiceModel.objects.by_country(self.account.country)\
-                .get(external_id=selected_shipping.shipping_service)
-        except ShippingServiceModel.DoesNotExist:
-            raise EbayOrderSyncException("No matching ShippingServiceModel found with `external_id={}`"
-                                         .format(selected_shipping.shipping_service))
+        selected_pickup = ebay_order.pickup_method_selected
+        if not selected_pickup:
+            selected_shipping = ebay_order.shipping_service_selected
+            try:
+                service_model = ShippingServiceModel.objects.by_country(self.account.country)\
+                    .get(external_id=selected_shipping.shipping_service)
+            except ShippingServiceModel.DoesNotExist:
+                raise EbayOrderSyncException("No matching ShippingServiceModel found with `external_id={}`"
+                                             .format(selected_shipping.shipping_service))
 
-        model.selected_shipping = ShippingServiceConfigurationModel.create(service=service_model,
-                                                                           cost=selected_shipping.shipping_cost)
-        model.save()
+            model.selected_shipping = ShippingServiceConfigurationModel.create(service=service_model,
+                                                                               cost=selected_shipping.shipping_cost)
+            model.save()
+        elif selected_pickup.pickup_method == 'PickUpDropOff':
+            service_model = ShippingServiceModel.get_click_and_collect_service(self.account.country)
+            model.selected_shipping = ShippingServiceConfigurationModel.create(service=service_model,
+                                                                               cost=0)
+            model.save()
+        else:
+            raise EbayOrderSyncException("We got pickup method that we do not support yet: {pickup_method}"
+                                         .format(pickup_method=selected_pickup.pickup_method))
 
         for ebay_transaction in ebay_order.transactions:
             self._create_order_line_item_model_from_ebay_transaction(model, ebay_transaction)

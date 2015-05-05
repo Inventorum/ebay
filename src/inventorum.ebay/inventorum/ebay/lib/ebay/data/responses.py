@@ -366,13 +366,13 @@ class PickupMethodSelectedType(object):
             model = None
 
         # http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/types/PickupMethodCodeType.html
-        PickupMethod = serializers.CharField()
-        PickupStoreID = serializers.CharField()
-        PickupLocationUUID = serializers.CharField()
+        PickupMethod = serializers.CharField(source='pickup_method')
+        PickupStoreID = serializers.CharField(source='pickup_store_id')
+        PickupLocationUUID = serializers.CharField(source='pickup_location_uuid', required=False)
 
     # / Deserialization ###############
 
-    def __init__(self, pickup_method, pickup_store_id, pickup_location_uuid):
+    def __init__(self, pickup_method, pickup_store_id, pickup_location_uuid=None):
         """
         :type pickup_method: unicode
         :type pickup_store_id: unicode
@@ -381,6 +381,8 @@ class PickupMethodSelectedType(object):
         self.pickup_method = pickup_method
         self.pickup_store_id = pickup_store_id
         self.pickup_location_uuid = pickup_location_uuid
+
+PickupMethodSelectedType.Deserializer.Meta.model = PickupMethodSelectedType
 
 
 class OrderType(object):
@@ -407,13 +409,13 @@ class OrderType(object):
                                           item_deserializer=TransactionType.Deserializer)
 
         ShippingAddress = AddressType.Deserializer(source="shipping_address")
-        ShippingServiceSelected = ShippingServiceOptionType.Deserializer(source="shipping_service_selected")
+        ShippingServiceSelected = ShippingServiceOptionType.Deserializer(source="shipping_service_selected", required=False)
         PickupMethodSelected = PickupMethodSelectedType.Deserializer(source="pickup_method_selected", required=False)
 
     # / Deserialization ###############
 
     def __init__(self, order_id, order_status, checkout_status, amount_paid, total, subtotal, transactions,
-                 shipping_address, shipping_service_selected, pickup_method_selected=None):
+                 shipping_address, shipping_service_selected=None, pickup_method_selected=None):
         """
         :type order_id: unicode
         :type order_status: unicode
