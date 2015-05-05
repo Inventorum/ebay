@@ -14,7 +14,7 @@ class PublishStates(object):
     IN_PROGRESS = 'in_progress'
 
 
-class CoreOrderStates(object):
+class BinaryCoreOrderStates(object):
     # all is possible with this state
     DRAFT = 1
     # temporarily frozen, waiting for money

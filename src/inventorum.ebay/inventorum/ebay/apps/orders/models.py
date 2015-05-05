@@ -88,8 +88,10 @@ class OrderModel(BaseModel):
     ebay_payment_status = models.CharField(max_length=255, null=True, blank=True)
 
     # represents the status in the core api (presence of related enforced by `OrderFactory`)
+    """:type: OrderStatusModel"""
     core_status = models.OneToOneField("orders.OrderStatusModel", related_name="core_status_related_order")
     # represents the status on the ebay side (presence of related enforced by `OrderFactory`)
+    """:type: OrderStatusModel"""
     ebay_status = models.OneToOneField("orders.OrderStatusModel", related_name="ebay_status_related_order")
 
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()

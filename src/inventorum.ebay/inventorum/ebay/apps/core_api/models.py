@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.core_api import CoreOrderStates
+from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
 
 from rest_framework import serializers
 
@@ -358,14 +358,18 @@ class CoreOrder(object):
 
     @property
     def is_paid(self):
-        return self.state & CoreOrderStates.PAID == CoreOrderStates.PAID
+        return self.state & BinaryCoreOrderStates.PAID == BinaryCoreOrderStates.PAID
 
     @property
     def is_shipped(self):
-        return self.state & CoreOrderStates.SHIPPED == CoreOrderStates.SHIPPED
+        return self.state & BinaryCoreOrderStates.SHIPPED == BinaryCoreOrderStates.SHIPPED
 
     @property
     def is_closed(self):
-        return self.state & CoreOrderStates.CLOSED == CoreOrderStates.CLOSED
+        return self.state & BinaryCoreOrderStates.CLOSED == BinaryCoreOrderStates.CLOSED
+
+    @property
+    def is_canceled(self):
+        return self.state & BinaryCoreOrderStates.CANCELED == BinaryCoreOrderStates.CANCELED
 
 CoreOrder.Serializer.Meta.model = CoreOrder

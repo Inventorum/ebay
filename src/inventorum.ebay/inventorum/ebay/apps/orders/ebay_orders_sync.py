@@ -4,7 +4,6 @@ import logging
 
 from datetime import datetime
 from django.db import transaction
-from django.utils.functional import cached_property
 from inventorum.ebay.apps.accounts.models import AddressModel
 
 from inventorum.ebay.apps.orders import tasks, CorePaymentMethod

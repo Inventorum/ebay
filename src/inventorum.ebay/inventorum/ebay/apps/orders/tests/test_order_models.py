@@ -4,7 +4,7 @@ import logging
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 from inventorum.ebay.apps.orders.models import OrderFactory, OrderStatusModel
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel, ShippingServiceModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceModel
 from inventorum.ebay.lib.ebay.data import CompleteStatusCodeType
 from inventorum.ebay.tests.testcases import UnitTestCase
 
