@@ -1,10 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-import json
 
-from decimal import Decimal as D
 from ebaysdk.response import Response, ResponseDataObject
+from decimal import Decimal as D
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 
@@ -15,8 +14,9 @@ from inventorum.ebay.apps.products.services import PublishingService, Publishing
     UnpublishingService, PublishingPreparationService
 from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
+from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayInterval, EbayDay, EbayLocation
+from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
 from inventorum.ebay.tests import StagingTestAccount
-from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 log = logging.getLogger(__name__)
@@ -569,3 +569,66 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                                                                'LocationID': 'invdev_346',
                                                                'Quantity': '5'}},
                                     'SKU': last_item.sku}})
+
+    @ApiTest.use_cassette("test_publish_product_for_click_and_collect_no_unpublish.yaml")
+    def test_builder_for_click_and_collect_no_unpublish(self):
+
+        # Add location first
+        intervals = [
+            EbayInterval(
+                open='08:00:00',
+                close='10:00:00'
+            )
+        ]
+
+        days = [
+            EbayDay(
+                day_of_week=1,
+                intervals=intervals
+            )
+        ]
+        location = EbayLocation(
+            location_id=self.account.ebay_location_id,
+            address1="Voltrastr 5",
+            address2="Gebaude 2",
+            city="Berlin",
+            country="DE",
+            days=days,
+            latitude=D("52.54216"),
+            longitude=D("13.39031"),
+            name="Test location Inventorum",
+            phone="072 445 78 75",
+            pickup_instruction="Pick it up as soon as possible",
+            postal_code="13355",
+            region="Berlin",
+            url="http://inventorum.com",
+            utc_offset="+02:00"
+        )
+
+        api = EbayInventoryManagement(token=self.ebay_token)
+        response = api.add_location(location=location)
+
+
+        product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
+        product.is_click_and_collect = True
+        product.save()
+
+        self.assign_product_to_valid_category(product)
+        self.assign_valid_shipping_services(product)
+
+        # Try to publish
+        preparation_service = PublishingPreparationService(product, self.user)
+        preparation_service.validate()
+        item = preparation_service.create_ebay_item()
+
+        publishing_service = PublishingService(item, self.user)
+        publishing_service.initialize_publish_attempt()
+        publishing_service.publish()
+        publishing_service.finalize_publish_attempt()
+
+        item = product.published_item
+        self.assertIsNotNone(item)
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
+        self.assertIsNotNone(item.published_at)
+        self.assertIsNotNone(item.ends_at)
+        self.assertIsNone(item.unpublished_at)
