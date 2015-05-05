@@ -100,4 +100,9 @@ class UnitTestCoreOrdersSync(UnitTestCase):
 
 
 class UnitTestCoreOrderSyncer(UnitTestCase):
-    pass
+
+    def setUp(self):
+        super(UnitTestCoreOrderSyncer, self).setUp()
+
+    def test_without_changes(self):
+        pass
