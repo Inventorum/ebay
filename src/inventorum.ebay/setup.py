@@ -23,6 +23,8 @@ required_eggs = [
     'flower>=0.8.1',
     'grequests>=0.3.1',
 
+    'graypy>=0.2.11',
+
     'Django>=1.7.7',
     'django-countries>=3.3',
     'django-extensions>=1.5.2',
