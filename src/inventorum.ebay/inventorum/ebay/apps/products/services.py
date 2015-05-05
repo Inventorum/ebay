@@ -128,6 +128,10 @@ class PublishingPreparationService(object):
             if EbayPaymentType.PAYPAL not in self.account.ebay_payment_methods:
                 raise PublishingValidationException(ugettext('Click&Collect requires to use PayPal as payment method!'))
 
+        if EbayPaymentType.PAYPAL in self.account.ebay_payment_methods and \
+                not self.account.payment_method_paypal_email_address:
+            raise PublishingValidationException(ugettext('Missing paypal email addres, however paypal payment method '
+                                                         'is enabled!'))
 
     def _validate_product_existence_in_core_api(self):
         return self.core_product

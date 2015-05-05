@@ -136,6 +136,25 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         product.is_click_and_collect = False
         product.save()
 
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
+            # Enable Paypal, remove email
+            account = self.user.account
+            account.payment_method_paypal_enabled = True
+            account.payment_method_paypal_email_address = None
+            account.save()
+
+            service = PublishingPreparationService(product, self.user)
+
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
+
+            self.assertEqual(e.exception.message,
+                             'Missing paypal email addres, however paypal payment method is enabled!')
+
+        account = self.user.account
+        account.payment_method_paypal_email_address = "bartosz@hernas.pl"
+        account.save()
+
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingPreparationService(product, self.user)
