@@ -1,0 +1,96 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:         com.inventorum.ebay_worker
+# Required-Start:   $remote_fs $syslog
+# Required-Stop:    $remote_fs $syslog
+# Default-Start:    2 3 4 5
+# Default-Stop:     0 1 6
+# Short-Description:Inventorum Ebay Worker
+### END INIT INFO
+
+set -e
+
+BIN_DIR=${os:root-prefix}/opt/inventorum/ebay/bin
+RUNAS=www-data
+
+mkdir -p ${os:root-prefix}/var/log/com.inventorum.ebay ${os:root-prefix}/var/run/com.inventorum.ebay
+chown $RUNAS:$RUNAS ${os:root-prefix}/var/log/com.inventorum.ebay ${os:root-prefix}/var/run/com.inventorum.ebay
+
+test -x "$BIN_DIR/supervisord" || exit 1
+
+umask 022
+
+. /lib/lsb/init-functions
+
+# Are we running from init?
+run_by_init() {
+    ([ "$previous" ] && [ "$runlevel" ]) || [ "$runlevel" = S ]
+}
+
+check_for_upstart() {
+    if init_is_upstart; then
+	exit $1
+    fi
+}
+
+check_dev_null() {
+    if [ ! -c /dev/null ]; then
+	if [ "$1" = log_end_msg ]; then
+	    log_end_msg 1 || true
+	fi
+	if ! run_by_init; then
+	    log_action_msg "/dev/null is not a character device!" || true
+	fi
+	exit 1
+    fi
+}
+
+_start() {
+	check_for_upstart 1
+	check_dev_null
+	log_daemon_msg "Starting Inventorum Ebay Worker Service" "com.inventorum.ebay" || true
+	if start-stop-daemon --start --quiet --chuid $RUNAS --exec $BIN_DIR/supervisord -- ; then
+	    log_end_msg 0 || true
+	else
+	    log_end_msg 1 || true
+	fi
+}
+
+_stop() {
+	check_for_upstart 0
+	log_daemon_msg "Stopping Inventorum Ebay Worker Service" "com.inventorum.ebay" || true
+	if su - $RUNAS -c "$BIN_DIR/supervisorctl shutdown" ; then
+	    log_end_msg 0 || true
+	else
+	    log_end_msg 1 || true
+	fi
+}
+
+
+export PATH="$BIN_DIR:$PATH"
+
+case "$1" in
+  start)
+    _start
+	;;
+  stop)
+    _stop
+	;;
+
+  restart)
+    _stop
+    sleep 6
+    _start
+	;;
+
+  status)
+	su - $RUNAS -c "$BIN_DIR/supervisorctl status"
+	;;
+
+  *)
+	log_action_msg "Usage: /etc/init.d/$(basename $0) {start|stop|restart|status}" || true
+	exit 1
+esac
+
+exit 0

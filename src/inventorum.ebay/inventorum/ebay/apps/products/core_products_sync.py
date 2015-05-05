@@ -125,7 +125,7 @@ class CoreProductsSync(object):
 
             tasks.schedule_ebay_product_deletion(ebay_product.id, context=self.get_task_execution_context())
 
-        deleted_variations = EbayItemVariationModel.objects.filter(inv_id__in=deletions_ids)
+        deleted_variations = EbayItemVariationModel.objects.filter(inv_product_id__in=deletions_ids)
         for deleted_variation in deleted_variations:
             item = self._get_update_item_for_variation(deleted_variation)
             EbayItemVariationUpdateModel.objects.create(variation=deleted_variation, update_item=item, is_deleted=True)
@@ -161,7 +161,7 @@ class CoreProductsSync(object):
                                                    product__inv_id=main_product_id)
 
         if published_item.has_variations:
-            return published_item.variations.get(inv_id=core_product_delta.id)
+            return published_item.variations.get(inv_product_id=core_product_delta.id)
 
         return published_item
 

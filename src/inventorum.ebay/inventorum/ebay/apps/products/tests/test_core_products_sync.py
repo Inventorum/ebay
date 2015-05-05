@@ -330,10 +330,10 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=5,
             gross_price=D("3.99"),
-            inv_id=1002
+            inv_product_id=1002
         )
 
-        delta_variation_a = CoreProductDeltaFactory(id=variation_a.inv_id,
+        delta_variation_a = CoreProductDeltaFactory(id=variation_a.inv_product_id,
                                                     gross_price=D("3.99"),
                                                     quantity=78,
                                                     parent=product_a.inv_id)
@@ -343,9 +343,9 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=3,
             gross_price=D("100.0"),
-            inv_id=1003
+            inv_product_id=1003
         )
-        delta_variation_b = CoreProductDeltaFactory(id=variation_b.inv_id,
+        delta_variation_b = CoreProductDeltaFactory(id=variation_b.inv_product_id,
                                                     gross_price=D("125.00"),
                                                     quantity=3,
                                                     parent=product_a.inv_id)
@@ -355,10 +355,10 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=33,
             gross_price=D("99.99"),
-            inv_id=1004
+            inv_product_id=1004
         )
 
-        delta_variation_c = CoreProductDeltaFactory(id=variation_c.inv_id,
+        delta_variation_c = CoreProductDeltaFactory(id=variation_c.inv_product_id,
                                                     gross_price=D("111.11"),
                                                     quantity=22,
                                                     parent=product_a.inv_id)
@@ -368,21 +368,21 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=33,
             gross_price=D("99.99"),
-            inv_id=1005
+            inv_product_id=1005
         )
 
         variation_e = EbayItemVariationModel.create(
             item=item_a,
             quantity=88,
             gross_price=D("88.88"),
-            inv_id=1006
+            inv_product_id=1006
         )
 
         self.assertTrue(product_a.is_published)
         self.assertEqual(product_a.published_item.variations.count(), 5)
 
         self.expect_modified([delta_variation_a], [delta_variation_b], [delta_variation_c])
-        self.expect_deleted([variation_d.inv_id, variation_e.inv_id])
+        self.expect_deleted([variation_d.inv_product_id, variation_e.inv_product_id])
 
         subject.run()
 

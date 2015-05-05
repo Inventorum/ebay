@@ -49,6 +49,9 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
             }],
             'user_id': account.user_id,
             'email': account.email,
+            'payment_method_bank_transfer_enabled': False,
+            'payment_method_paypal_enabled': True,
+            'payment_method_paypal_email_address': 'bartosz@hernas.pl',
             'location': {
                 'name': location.name,
                 'url': location.url,

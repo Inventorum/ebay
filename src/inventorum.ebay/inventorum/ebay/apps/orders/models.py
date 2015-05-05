@@ -173,13 +173,3 @@ class OrderableItemModel(models.Model):
     order_line_items = GenericRelation("orders.OrderLineItemModel",
                                        content_type_field="orderable_item_type",
                                        object_id_field="orderable_item_id")
-
-    @property
-    def inv_product_id(self):
-        """
-        Must be defined by implementing classes either through a property or a model field
-        (http://stackoverflow.com/questions/1151212/equivalent-of-notimplementederror-for-fields-in-python)
-
-        :rtype: int
-        """
-        raise NotImplementedError

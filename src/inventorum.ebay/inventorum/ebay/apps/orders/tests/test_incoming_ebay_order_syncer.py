@@ -162,7 +162,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         published_item = PublishedEbayItemFactory.create(account=self.account,
                                                          external_id=published_ebay_item_id)
         published_variation = EbayItemVariationFactory(item=published_item,
-                                                       inv_id=23)
+                                                       inv_product_id=23)
         assert published_variation.sku.endswith("23")
         assert published_item.id != published_variation.id
 

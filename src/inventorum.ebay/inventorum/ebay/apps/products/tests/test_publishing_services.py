@@ -111,8 +111,49 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                              "You cannot publish product with Click & Collect, because you don't have it enabled for "
                              "your account!")
 
+        # Add click & collect to check validation of payment methods!
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
+            # Mark product as click and collect product
+            product.is_click_and_collect = True
+            product.save()
+
+            # Disable Paypal
+            account = self.user.account
+            account.payment_method_paypal_enabled = False
+            account.save()
+
+            service = PublishingPreparationService(product, self.user)
+
+            # Enable click and collect
+            service.core_account.settings.ebay_click_and_collect = True
+
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
+
+            self.assertEqual(e.exception.message,
+                             "Click&Collect requires to use PayPal as payment method!")
+
         product.is_click_and_collect = False
         product.save()
+
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
+            # Enable Paypal, remove email
+            account = self.user.account
+            account.payment_method_paypal_enabled = True
+            account.payment_method_paypal_email_address = None
+            account.save()
+
+            service = PublishingPreparationService(product, self.user)
+
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
+
+            self.assertEqual(e.exception.message,
+                             'Missing paypal email addres, however paypal payment method is enabled!')
+
+        account = self.user.account
+        account.payment_method_paypal_email_address = "bartosz@hernas.pl"
+        account.save()
 
         product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
@@ -157,7 +198,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertEqual(images.count(), 1)
 
         last_image = images.last()
-        self.assertEqual(last_image.inv_id, 2918)
+        self.assertEqual(last_image.inv_image_id, 2918)
         self.assertTrue(last_image.url.startswith('https://app.inventorum.net/'),
                         "Image does not starts with https:// (%s)" % last_image.url)
 

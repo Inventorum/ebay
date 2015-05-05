@@ -178,7 +178,7 @@ class CoreAddress(object):
 
     # / Serializer #######################
 
-    def __init__(self, id, address1, address2, zipcode, city, country, first_name, last_name, company, state=""):
+    def __init__(self, id, address1, zipcode, city, country, first_name, last_name, address2="", company="", state=""):
         """
         :type id: int
         :type address1: unicode
@@ -206,26 +206,15 @@ CoreAddress.Serializer.Meta.model = CoreAddress
 
 
 class CoreAccountSettings(object):
-    EBAY_PAYMENTS_MAPPING = {
-        1: 'PayPal',
-        2: 'MoneyXferAccepted'
-    }
 
-    def __init__(self, ebay_paypal_email, ebay_payment_methods, ebay_click_and_collect=False):
+    def __init__(self, ebay_click_and_collect=False):
         """
-        :type shipping_services: list of CoreShippingService
-        :type ebay_paypal_email: unicode
         :type ebay_click_and_collect: boolean
-        :type ebay_payment_methods: list[unicode]
         """
-        self.ebay_paypal_email = ebay_paypal_email
         self.ebay_click_and_collect = ebay_click_and_collect
-        self.ebay_payment_methods = [self.EBAY_PAYMENTS_MAPPING[m] for m in ebay_payment_methods]
 
 
 class CoreAccountSettingsDeserializer(POPOSerializer):
-    ebay_paypal_email = serializers.CharField(allow_null=True)
-    ebay_payment_methods = serializers.ListField(child=serializers.IntegerField(), allow_null=True)
     ebay_click_and_collect = serializers.BooleanField(default=False, required=False)
 
     class Meta(POPOSerializer.Meta):
