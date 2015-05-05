@@ -126,7 +126,7 @@ class IncomingEbayOrderSyncer(object):
 
         model.account = self.account
         model.ebay_id = ebay_order.order_id
-        model.ebay_status = ebay_order.order_status
+        model.ebay_complete_status = ebay_order.order_status
         model.original_ebay_data = POPOSerializer.extract_original_data(ebay_order)
 
         # extract buyer information

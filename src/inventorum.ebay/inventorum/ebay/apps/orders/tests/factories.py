@@ -28,7 +28,7 @@ class OrderModelFactory(factory.DjangoModelFactory):
     account = factory.SubFactory(EbayAccountFactory)
 
     ebay_id = fuzzy.FuzzyText(length=10, chars=NUMBER_CHARS, prefix="9912341245-")
-    ebay_status = CompleteStatusCodeType.Complete
+    ebay_complete_status = CompleteStatusCodeType.Complete
 
     buyer_first_name = "John"
     buyer_last_name = "Wayne"

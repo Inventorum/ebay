@@ -61,8 +61,8 @@ class OrderModel(BaseModel):
     inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
 
     ebay_id = models.CharField(unique=True, max_length=255, verbose_name="Ebay id")
-    ebay_status = models.CharField(max_length=255, choices=CompleteStatusCodeType.CHOICES,
-                                   verbose_name="Ebay order status")
+    ebay_complete_status = models.CharField(max_length=255, choices=CompleteStatusCodeType.CHOICES,
+                                            verbose_name="Ebay order status")
     original_ebay_data = JSONField(verbose_name="Original ebay data", null=True)
 
     buyer_first_name = models.CharField(max_length=255, null=True, blank=True)

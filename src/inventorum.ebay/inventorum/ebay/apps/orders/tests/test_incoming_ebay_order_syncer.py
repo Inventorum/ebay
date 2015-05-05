@@ -88,7 +88,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
 
         self.assertEqual(order_model.account, self.account)
         self.assertEqual(order_model.ebay_id, order_id)
-        self.assertEqual(order_model.ebay_status, OrderStatusCodeType.Completed)
+        self.assertEqual(order_model.ebay_complete_status, OrderStatusCodeType.Completed)
         self.assertEqual(order_model.created_in_core_api, False)
 
         self.assertEqual(order_model.buyer_first_name, "John")
