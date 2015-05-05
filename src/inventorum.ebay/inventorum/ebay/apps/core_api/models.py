@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from inventorum.ebay.apps.core_api import CoreOrderStates
 
 from rest_framework import serializers
 
@@ -156,6 +157,27 @@ class CoreProductDeserializer(CoreBasicProductDeserializer):
 
 
 class CoreAddress(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        id = serializers.IntegerField()
+        address1 = serializers.CharField()
+        address2 = serializers.CharField(allow_null=True)
+        zipcode = serializers.CharField()
+        city = serializers.CharField()
+        state = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+        country = serializers.CharField()
+        first_name = serializers.CharField()
+        last_name = serializers.CharField()
+        company = serializers.CharField(allow_null=True)
+
+    # / Serializer #######################
+
     def __init__(self, id, address1, address2, zipcode, city, country, first_name, last_name, company, state=""):
         """
         :type id: int
@@ -163,38 +185,24 @@ class CoreAddress(object):
         :type address2: unicode
         :type zipcode: unicode
         :type city: unicode
-        :type state: unicode
         :type country: unicode
         :type first_name: unicode
         :type last_name: unicode
         :type company: unicode
+        :type state: unicode
         """
         self.id = id
         self.address1 = address1
         self.address2 = address2
         self.zipcode = zipcode
         self.city = city
-        self.state = state
         self.country = country
         self.first_name = first_name
         self.last_name = last_name
         self.company = company
+        self.state = state
 
-
-class CoreAddressDeserializer(POPOSerializer):
-    id = serializers.IntegerField()
-    address1 = serializers.CharField()
-    address2 = serializers.CharField(allow_null=True)
-    zipcode = serializers.CharField()
-    city = serializers.CharField()
-    state = serializers.CharField(allow_null=True, required=False, allow_blank=True)
-    country = serializers.CharField()
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
-    company = serializers.CharField(allow_null=True)
-
-    class Meta(POPOSerializer.Meta):
-        model = CoreAddress
+CoreAddress.Serializer.Meta.model = CoreAddress
 
 
 class CoreAccountSettings(object):
@@ -266,7 +274,7 @@ class CoreAccountDeserializer(POPOSerializer):
     email = serializers.EmailField()
     country = serializers.CharField()
     settings = CoreAccountSettingsDeserializer()
-    billing_address = CoreAddressDeserializer(required=False)
+    billing_address = CoreAddress.Serializer(required=False)
     opening_hours = CoreOpeningHours.Deserializer(required=False, many=True)
 
     class Meta(POPOSerializer.Meta):
@@ -327,4 +335,37 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
 
 
 class CoreOrder(object):
-    pass
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        id = serializers.IntegerField()
+        state = serializers.IntegerField()
+
+    # / Serializer #######################
+
+    def __init__(self, id, state):
+        """
+        :type id: int
+        :type state: int
+        """
+        self.id = id
+        self.state = state
+
+    @property
+    def is_paid(self):
+        return self.state & CoreOrderStates.PAID == CoreOrderStates.PAID
+
+    @property
+    def is_shipped(self):
+        return self.state & CoreOrderStates.SHIPPED == CoreOrderStates.SHIPPED
+
+    @property
+    def is_closed(self):
+        return self.state & CoreOrderStates.CLOSED == CoreOrderStates.CLOSED
+
+CoreOrder.Serializer.Meta.model = CoreOrder
