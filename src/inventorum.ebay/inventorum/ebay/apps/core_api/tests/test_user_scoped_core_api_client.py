@@ -101,8 +101,6 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(billing.company, "Inventorum")
 
         account_settings = core_account.account.settings
-        self.assertEqual(account_settings.ebay_paypal_email, 'bartosz@hernas.pl')
-        self.assertEqual(account_settings.ebay_payment_methods, ['PayPal'])
         self.assertTrue(account_settings.ebay_click_and_collect)
 
         self.assertEqual(len(core_account.account.opening_hours), 3)
