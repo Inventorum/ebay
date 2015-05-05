@@ -323,7 +323,7 @@ class PublishingService(PublishingUnpublishingService):
                 quantity=None
             )
         ]
-        api.add_inventory('test_sky', locations_availability=locations_availability)
+        api.add_inventory(self.item.sku, locations_availability=locations_availability)
 
     def finalize_publish_attempt(self):
         """
