@@ -4,8 +4,6 @@ import logging
 
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.dispatch.dispatcher import receiver
-from django.db.models import signals
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
@@ -106,8 +104,6 @@ class OrderModel(BaseModel):
     @property
     def is_click_and_collect(self):
         return self.selected_shipping.service.external_id == INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
-
-
 
 
 class OrderFactory(object):
