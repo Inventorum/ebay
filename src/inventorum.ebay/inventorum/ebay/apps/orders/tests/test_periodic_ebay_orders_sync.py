@@ -9,6 +9,7 @@ from inventorum.ebay.apps.core_api.tests import MockedTest
 from inventorum.ebay.apps.orders.ebay_orders_sync import PeriodicEbayOrdersSync
 from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory, EbayItemVariationFactory
+from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.tests.factories import OrderTypeFactory, GetOrdersResponseTypeFactory
@@ -49,6 +50,32 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, Shippi
 
         for order in orders:
             self.assertIsNotNone(order.original_ebay_data)
+
+    @MockedTest.use_cassette("ebay_orders_sync_click_and_collect.yaml")
+    def test_ebay_orders_sync(self):
+        # create published item with variations that are included in the response cassette
+        published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         external_id="261869293885")
+        EbayItemVariationFactory.create(inv_id=1, item=published_item)
+        EbayItemVariationFactory.create(inv_id=2, item=published_item)
+        EbayItemVariationFactory.create(inv_id=3, item=published_item)
+        EbayItemVariationFactory.create(inv_id=4, item=published_item)
+        EbayItemVariationFactory.create(inv_id=5, item=published_item)
+        # create shipping service that is selected in the response cassette
+        dhl_shipping = self.get_shipping_service_dhl()
+
+        sync = PeriodicEbayOrdersSync(account=self.account)
+        sync.run()
+
+        orders = OrderModel.objects.by_account(self.account)
+        self.assertPostcondition(orders.count(), 5)
+
+        for order in orders:
+            self.assertIsNotNone(order.original_ebay_data)
+
+        first_order = OrderModel.objects.by_account(self.account).first()
+        self.assertEqual(first_order.selected_shipping.service.external_id, INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID)
+        self.assertTrue(first_order.is_click_and_collect)
 
 
 class UnitTestPeriodicEbayOrdersSync(UnitTestCase):
