@@ -111,6 +111,28 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                              "You cannot publish product with Click & Collect, because you don't have it enabled for "
                              "your account!")
 
+        # Add click & collect to check validation of payment methods!
+        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
+            # Mark product as click and collect product
+            product.is_click_and_collect = True
+            product.save()
+
+            # Disable Paypal
+            account = self.user.account
+            account.payment_method_paypal_enabled = False
+            account.save()
+
+            service = PublishingPreparationService(product, self.user)
+
+            # Enable click and collect
+            service.core_account.settings.ebay_click_and_collect = True
+
+            with self.assertRaises(PublishingValidationException) as e:
+                service.validate()
+
+            self.assertEqual(e.exception.message,
+                             "Click&Collect requires to use PayPal as payment method!")
+
         product.is_click_and_collect = False
         product.save()
 

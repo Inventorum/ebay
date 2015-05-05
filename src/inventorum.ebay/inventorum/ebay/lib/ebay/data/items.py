@@ -7,6 +7,11 @@ from inventorum.ebay.lib.utils import int_or_none
 from rest_framework import fields
 
 
+class EbayPaymentType(object):
+    PAYPAL = 'PayPal'
+    BANK_TRANSFER = 'MoneyXferAccepted'
+
+
 class EbayVariation(object):
     def __init__(self, sku, gross_price, quantity, specifics, images):
         """

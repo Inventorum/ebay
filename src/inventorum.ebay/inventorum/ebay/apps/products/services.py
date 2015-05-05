@@ -9,6 +9,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
+from inventorum.ebay.lib.ebay.data.items import EbayPaymentType
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
 from requests.exceptions import HTTPError
 
@@ -121,6 +122,12 @@ class PublishingPreparationService(object):
         if self.product.is_click_and_collect and not self.core_account.settings.ebay_click_and_collect:
             raise PublishingValidationException(ugettext("You cannot publish product with Click & Collect, because you "
                                                          "don't have it enabled for your account!"))
+
+        if self.product.is_click_and_collect and self.core_account.settings.ebay_click_and_collect:
+            # Click and collect valid here
+            if EbayPaymentType.PAYPAL not in self.account.ebay_payment_methods:
+                raise PublishingValidationException(ugettext('Click&Collect requires to use PayPal as payment method!'))
+
 
     def _validate_product_existence_in_core_api(self):
         return self.core_product
