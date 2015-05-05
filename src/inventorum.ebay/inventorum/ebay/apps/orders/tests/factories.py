@@ -6,7 +6,7 @@ import factory
 from factory import fuzzy
 from inventorum.ebay.apps.orders import CorePaymentMethod
 
-from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel, OrderStatusModel
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, AddressFactory
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
 from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceConfigurationFactory
@@ -19,6 +19,12 @@ log = logging.getLogger(__name__)
 NUMBER_CHARS = [str(i) for i in range(10)]
 
 
+class OrderStatusModelFactory(factory.DjangoModelFactory):
+    
+    class Meta:
+        model = OrderStatusModel
+
+
 class OrderModelFactory(factory.DjangoModelFactory):
 
     class Meta:
@@ -26,6 +32,8 @@ class OrderModelFactory(factory.DjangoModelFactory):
         # django_get_or_create = ("ebay_id",)
 
     account = factory.SubFactory(EbayAccountFactory)
+    ebay_status = factory.SubFactory(OrderStatusModelFactory)
+    core_status = factory.SubFactory(OrderStatusModelFactory)
 
     ebay_id = fuzzy.FuzzyText(length=10, chars=NUMBER_CHARS, prefix="9912341245-")
     ebay_complete_status = CompleteStatusCodeType.Complete
