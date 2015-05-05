@@ -119,8 +119,8 @@ class EbayParser(object):
 
 
 class EbayBooleanField(serializers.BooleanField):
-    TRUE_VALUES = frozenset(serializers.BooleanField.TRUE_VALUES | {'Enabled'})
-    FALSE_VALUES = frozenset(serializers.BooleanField.FALSE_VALUES | {'Disabled'})
+    TRUE_VALUES = frozenset(serializers.BooleanField.TRUE_VALUES | {'Enabled', 'SUCCESS'})
+    FALSE_VALUES = frozenset(serializers.BooleanField.FALSE_VALUES | {'Disabled', 'FAILURE'})
 
 
 class EbayListSerializer(serializers.ListSerializer):

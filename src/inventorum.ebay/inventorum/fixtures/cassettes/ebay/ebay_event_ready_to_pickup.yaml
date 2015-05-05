@@ -1,0 +1,37 @@
+interactions:
+- request:
+    body: '{"event": {"version": "1.0", "type": "EBAY.ORDER.READY_FOR_PICKUP", "notifierReferenceId":
+      "test", "payload": {"ebayOrderId": "123"}}}'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['134']
+      Content-Type: [!!python/unicode application/json]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.8 Darwin/14.1.0]
+      X-EBAY-EVENT-TYPE: [!!python/unicode EBAY.ORDER.READY_FOR_PICKUP]
+    method: POST
+    uri: https://svcs.ebay.com/eventbridge/InboundEvent/publish
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAACWOzWrDMBCE32XPltFfXNAtdVwIpSTISSEtJUj2uog2spGU0BLy7pUb2MvszPDN
+        FTCEMbxgjOYTQV3vGtT7x60A/Enooxv9rAsw3der+T7nGLT7um7aFgoIGKfRR2yTSecIilNaQHIn
+        jMmcphzllC0IzSd3tFJSqgUtJWdvuYsX9GmGXjDcMcBKmo30O82U5nF5KDd61ehSN8vV4fi00cft
+        un7eb3PIj8kNDoPGAQP6Dtd97qQMhrx9ch53IU/+/6LF3lbCEt53A5FWUGIkY0RIi8Jy8yAqBrc/
+        7k4UOg4BAAA=
+    headers:
+      connection: [keep-alive]
+      content-encoding: [gzip]
+      content-type: [application/json]
+      date: ['Mon, 04 May 2015 13:44:50 GMT']
+      guid: [14d1f2c0-daf0-a794-0ae0-0eb0fd2ca292]
+      rlogid: [t6fsreqlb%60f%3F%3Ctof2e36e*%3Ag%3Eb-14d1f2c0db3-0x8c]
+      server: [Apache-Coyote/1.1]
+      set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
+      transfer-encoding: [chunked]
+      x-ebay-c-version: [1.0.0]
+      x-ebay-request-id: ['14d1f2c0-daf0-a794-0ae0-0eb0fd2ca292!eventbridge.InboundEvent.publish!10.121.64.174!esvcsesb[!evtbridge.InboundEvent!r1evtbridge[]]']
+      x-frame-options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1

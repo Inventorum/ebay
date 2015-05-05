@@ -404,6 +404,8 @@ class OrderType(object):
         AmountPaid = EbayAmountField(source="amount_paid")
         Total = EbayAmountField(source="total")
         Subtotal = EbayAmountField(source="subtotal")
+        ShippedTime = serializers.DateTimeField(source="shipped_time", required=False)
+        PaidTime = serializers.DateTimeField(source="paid_time", required=False)
 
         TransactionArray = EbayArrayField(source="transactions", item_key="Transaction",
                                           item_deserializer=TransactionType.Deserializer)
@@ -415,7 +417,8 @@ class OrderType(object):
     # / Deserialization ###############
 
     def __init__(self, order_id, order_status, checkout_status, amount_paid, total, subtotal, transactions,
-                 shipping_address, shipping_service_selected=None, pickup_method_selected=None):
+                 shipping_address, shipping_service_selected=None, pickup_method_selected=None, shipped_time=None,
+                 paid_time=None):
         """
         :type order_id: unicode
         :type order_status: unicode
@@ -442,6 +445,17 @@ class OrderType(object):
         self.shipping_address = shipping_address
         self.shipping_service_selected = shipping_service_selected
         self.pickup_method_selected = pickup_method_selected
+
+        self.shipped_time = shipped_time
+        self.paid_time = paid_time
+
+    @property
+    def is_paid(self):
+        return self.paid_time is not None
+
+    @property
+    def is_shipped(self):
+        return self.shipped_time is not None
 
 OrderType.Deserializer.Meta.model = OrderType
 
