@@ -42,7 +42,7 @@ autostart=true
 autorestart=true
 
 [program:flower]
-command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini flower -A inventorum.ebay.celery --port=5555
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini flower -A inventorum.ebay.celery --address=127.0.0.1 --port=5555
 process_name = flower
 directory = ${buildout:directory}
 priority = 10
