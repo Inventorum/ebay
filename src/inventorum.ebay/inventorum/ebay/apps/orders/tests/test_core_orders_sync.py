@@ -9,11 +9,15 @@ from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.apps.core_api.tests.factories import CoreOrderFactory
 from inventorum.ebay.apps.orders.core_orders_sync import CoreOrdersSync
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
-from inventorum.ebay.tests.testcases import UnitTestCase
+from inventorum.ebay.tests.testcases import UnitTestCase, EbayAuthenticatedAPITestCase
 from mock import PropertyMock
 
 
 log = logging.getLogger(__name__)
+
+
+class IntegrationTestCoreOrdersSync(EbayAuthenticatedAPITestCase):
+    pass
 
 
 class UnitTestCoreOrdersSync(UnitTestCase):
@@ -93,3 +97,7 @@ class UnitTestCoreOrdersSync(UnitTestCase):
         second_call_args, second_call_kwargs = self.core_order_syncer_mock.call_args_list[1]
         self.assertEqual(second_call_args[0], order_2)
         self.assertEqual(second_call_args[1], core_order_2)
+
+
+class UnitTestCoreOrderSyncer(UnitTestCase):
+    pass

@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from datetime import datetime
+from inventorum.ebay.apps.orders import tasks
 from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.util.celery import TaskExecutionContext
 
@@ -67,4 +68,37 @@ class CoreOrderSyncer(object):
         :type order: OrderModel
         :type core_order: inventorum.ebay.apps.core_api.models.CoreOrder
         """
-        pass
+        # Since multiple non click-a-collect status updates can be performed with one call, we do it once in the end
+        regular_ebay_status_update_required = False
+
+        if core_order.is_paid and not order.core_status.is_paid:
+            order.core_status.is_paid = True
+            order.core_status.save()
+
+            regular_ebay_status_update_required = not order.is_click_and_collect
+            if order.is_click_and_collect:
+                tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.READY_FOR_PICKUP",
+                                                       context=self.get_task_execution_context())
+
+        if core_order.is_shipped and not order.core_status.is_shipped:
+            order.core_status.is_shipped = True
+            order.core_status.save()
+
+            regular_ebay_status_update_required = not order.is_click_and_collect
+            if order.is_click_and_collect:
+                tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.PICKEDUP",
+                                                       context=self.get_task_execution_context())
+
+        if core_order.is_canceled and not order.core_status.is_canceled:
+            order.core_status.is_canceled = True
+            order.core_status.save()
+
+            if order.is_click_and_collect:
+                tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.PICKUP_CANCELED",
+                                                       context=self.get_task_execution_context())
+            else:
+                log.error("Non-click-and-collect order {} was canceled in core api but regular ebay orders "
+                          "cannot be canceled right now.")
+
+        if regular_ebay_status_update_required:
+            tasks.schedule_ebay_order_status_update(order_id=order.id, context=self.get_task_execution_context())

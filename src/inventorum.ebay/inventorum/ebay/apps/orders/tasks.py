@@ -54,3 +54,20 @@ def schedule_core_order_creation(order_id, context):
     :type context: inventorum.util.celery.TaskExecutionContext
     """
     core_order_creation_task.delay(order_id, context=context)
+
+
+def schedule_click_and_collect_event(order_id, event_type, context):
+    """
+    :type order_id: int
+    :type event_type: unicode
+    :type context: inventorum.util.celery.TaskExecutionContext
+    """
+    pass
+
+
+def schedule_ebay_order_status_update(order_id, context):
+    """
+    :type order_id: int
+    :type context: inventorum.util.celery.TaskExecutionContext
+    """
+    pass
