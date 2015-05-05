@@ -86,10 +86,11 @@ class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
 
 # Models for data just before publishing
 
-class EbayItemImageModel(MappedInventorumModel):
+class EbayItemImageModel(BaseModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="images", null=True, blank=True)
     variation = models.ForeignKey("products.EbayItemVariationModel", related_name="images", null=True, blank=True)
     url = models.TextField()
+    inv_image_id = models.IntegerField(verbose_name="Inventorum image id")
 
     @property
     def ebay_object(self):
@@ -240,18 +241,18 @@ class EbayItemModel(OrderableItemModel, BaseModel):
         return settings.EBAY_SKU_FORMAT.format(self.product.inv_id)
 
 
-class EbayItemVariationModelQuerySet(MappedInventorumModelQuerySet):
+class EbayItemVariationModelQuerySet(BaseQuerySet):
 
     def by_sku(self, sku):
         inv_id = sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
-        return self.filter(inv_id=inv_id)
+        return self.filter(inv_product_id=inv_id)
 
 
-# TODO jm: Do not inherit from MappedProductModel, call foreign key inv_product_id, remove property
-class EbayItemVariationModel(OrderableItemModel, MappedInventorumModel):
+class EbayItemVariationModel(OrderableItemModel, BaseModel):
     quantity = models.IntegerField(default=0)
     gross_price = models.DecimalField(decimal_places=10, max_digits=20)
     item = models.ForeignKey(EbayItemModel, related_name="variations")
+    inv_product_id = models.IntegerField(verbose_name="Inventorum product id")
 
     objects = PassThroughManager.for_queryset_class(EbayItemVariationModelQuerySet)()
 
@@ -267,11 +268,7 @@ class EbayItemVariationModel(OrderableItemModel, MappedInventorumModel):
 
     @property
     def sku(self):
-        return settings.EBAY_SKU_FORMAT.format(self.inv_id)
-
-    @property
-    def inv_product_id(self):
-        return self.inv_id
+        return settings.EBAY_SKU_FORMAT.format(self.inv_product_id)
 
 
 class EbayItemVariationSpecificModel(BaseModel):

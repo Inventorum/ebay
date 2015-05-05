@@ -44,12 +44,13 @@ class EbayItemVariationSpecificFactory(factory.DjangoModelFactory):
             )
 
 
-class EbayItemVariationFactory(MappedInventorumModelFactory):
+class EbayItemVariationFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = models.EbayItemVariationModel
 
     gross_price = Decimal("1.99")
+    inv_product_id = factory.Sequence(lambda n: n)
     quantity = 10
 
 
