@@ -1,8 +1,10 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+import json
 
 from decimal import Decimal as D
+from ebaysdk.response import Response, ResponseDataObject
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 
@@ -21,7 +23,6 @@ log = logging.getLogger(__name__)
 
 
 class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
-
     def _get_product(self, inv_product_id, account):
         return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
 
@@ -271,8 +272,8 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             'ListingDuration': 'Days_120',
             'PayPalEmailAddress': 'bartosz@hernas.pl',
             'PaymentMethods': ['PayPal'],
-            'PictureDetails': [{'PictureURL': 'http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
-                                              '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG'}],
+            'PictureDetails': {'PictureURL': ['http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
+                                              '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG']},
             'ShippingDetails': [
                 {
                     'ShippingServiceOptions': {
@@ -456,11 +457,13 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                              'VariationSpecificName': 'size',
                              'VariationSpecificPictureSet': [
                                  {
-                                     'PictureURL': ['http://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad_retina.JPEG'],
+                                     'PictureURL': [
+                                         'http://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad_retina.JPEG'],
                                      'VariationSpecificValue': '22'
                                  },
                                  {
-                                     'PictureURL': ['http://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad_retina.JPEG'],
+                                     'PictureURL': [
+                                         'http://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad_retina.JPEG'],
                                      'VariationSpecificValue': '50'
                                  }
                              ]
@@ -477,7 +480,8 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             with self.assertRaises(PublishingValidationException) as exc:
                 preparation_service.validate()
 
-            self.assertEqual(exc.exception.message, "All variations needs to have exactly the same number of attributes")
+            self.assertEqual(exc.exception.message,
+                             "All variations needs to have exactly the same number of attributes")
 
 
     @ApiTest.use_cassette("get_product_for_click_and_collect.yaml")
@@ -551,3 +555,17 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         uris = [r.uri for r in requests]
         self.assertIn('https://api.ebay.com/selling/inventory/v1/inventory/delta/add', uris)
         self.assertIn('https://api.ebay.com/selling/inventory/v1/inventory/delta/delete', uris)
+
+        inventory_add_request = None
+        for r in requests:
+            if r.uri == 'https://api.ebay.com/selling/inventory/v1/inventory/delta/add':
+                inventory_add_request = r
+                break
+
+        self.assertIsNotNone(inventory_add_request)
+        body = Response(ResponseDataObject({'content': inventory_add_request.body.encode('utf-8')}, [])).dict()
+        self.assertEqual(body, {
+            'AddInventoryRequest': {'Locations': {'Location': {'Availability': 'IN_STOCK',
+                                                               'LocationID': 'invdev_346',
+                                                               'Quantity': '5'}},
+                                    'SKU': last_item.sku}})
