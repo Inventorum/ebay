@@ -20,3 +20,22 @@ class EbayOrders(EbayTrading):
         """
         response = self.execute("GetOrders", data)
         return GetOrdersResponseType.Deserializer(data=response).build()
+
+    def complete_sale(self, order_id, shipped, shipment=None):
+        """
+        http://developer.ebay.com/Devzone/xml/docs/Reference/ebay/CompleteSale.html
+
+        :type order_id: unicode
+        :type shipped: bool
+        :type shipment: inventorum.ebay.lib.ebay.data.orders.EbayCompleteSaleShipment
+        """
+        data = {
+            'OrderID': order_id,
+            'Shipped': shipped
+        }
+        if shipment is not None:
+            data['Shipment'] = shipment.dict()
+
+        response = self.execute('CompleteSale', data)
+        # If something would go wrong, then we would get exception
+        return True
