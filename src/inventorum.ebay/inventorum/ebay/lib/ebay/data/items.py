@@ -146,7 +146,7 @@ class EbayFixedPriceItem(object):
             'PrimaryCategory': {'CategoryID': self.category_id},
         }
         if self.pictures:
-            data['PictureDetails'] = [p.dict() for p in self.pictures]
+            data['PictureDetails'] = {'PictureURL': [p.url for p in self.pictures]}
         if self.shipping_services:
             data['ShippingDetails'] = [s.dict() for s in self.shipping_services]
 
