@@ -182,7 +182,7 @@ class PublishingPreparationService(object):
 
         for image in self.core_product.images:
             EbayItemImageModel.objects.create(
-                inv_id=image.id,
+                inv_image_id=image.id,
                 url=image.url,
                 item=item
             )
@@ -216,11 +216,11 @@ class PublishingPreparationService(object):
                 quantity=product.quantity,
                 gross_price=product.gross_price,
                 item=item,
-                inv_id=product.id
+                inv_product_id=product.id
             )
             for image in product.images:
                 EbayItemImageModel.objects.create(
-                    inv_id=image.id,
+                    inv_image_id=image.id,
                     url=image.url,
                     variation=variation_obj
                 )

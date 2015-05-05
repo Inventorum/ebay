@@ -56,11 +56,11 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, Shippi
         # create published item with variations that are included in the response cassette
         published_item = PublishedEbayItemFactory.create(account=self.account,
                                                          external_id="261869293885")
-        EbayItemVariationFactory.create(inv_id=1, item=published_item)
-        EbayItemVariationFactory.create(inv_id=2, item=published_item)
-        EbayItemVariationFactory.create(inv_id=3, item=published_item)
-        EbayItemVariationFactory.create(inv_id=4, item=published_item)
-        EbayItemVariationFactory.create(inv_id=5, item=published_item)
+        EbayItemVariationFactory.create(inv_product_id=1, item=published_item)
+        EbayItemVariationFactory.create(inv_product_id=2, item=published_item)
+        EbayItemVariationFactory.create(inv_product_id=3, item=published_item)
+        EbayItemVariationFactory.create(inv_product_id=4, item=published_item)
+        EbayItemVariationFactory.create(inv_product_id=5, item=published_item)
         # create shipping service that is selected in the response cassette
         dhl_shipping = self.get_shipping_service_dhl()
 
