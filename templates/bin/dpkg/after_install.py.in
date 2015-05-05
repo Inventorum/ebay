@@ -161,7 +161,7 @@ if proc.returncode != 0:
     # this error can be ignored as we set the symlink on our own already
     # exit(proc.returncode)
 print '[inv-ebay] ``ebay_worker``: invoke ...'
-proc = subprocess.Popen(['invoke-rc.d', 'com.inventorum.ebay_worker', 'start'],
+proc = subprocess.Popen(['invoke-rc.d', 'com.inventorum.ebay_worker', 'restart'],
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 _out, _err = proc.communicate()
 print '[inv-ebay] %s' % _out
