@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 from inventorum.ebay.apps.orders import tasks
 from inventorum.ebay.apps.orders.models import OrderModel
+from inventorum.ebay.lib.ebay.data.events import EbayEventType
 from inventorum.util.celery import TaskExecutionContext
 
 
@@ -85,7 +86,7 @@ class CoreOrderSyncer(object):
             # if is_shipped was set to true for click and collect orders => send appropriate event
             # note: for now, the event will always be send again if the core state was flipped multiple times
             if order.is_click_and_collect and order.core_status.is_ready_for_pickup:
-                tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.READY_FOR_PICKUP",
+                tasks.schedule_click_and_collect_event(order_id=order.id, event_type=EbayEventType.READY_FOR_PICKUP,
                                                        context=self.get_task_execution_context())
 
         if order.core_status.is_closed != core_order.is_closed:
@@ -95,7 +96,7 @@ class CoreOrderSyncer(object):
             # if it's a regular, non click-and-collect order, nothing needs to be done here
             # note: for now, the event will always be send again if the core state was flipped multiple times
             if order.is_click_and_collect and order.core_status.is_picked_up:
-                tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.PICKEDUP",
+                tasks.schedule_click_and_collect_event(order_id=order.id, event_type=EbayEventType.PICKED_UP,
                                                        context=self.get_task_execution_context())
 
         if order.core_status.is_canceled != core_order.is_canceled:
@@ -103,7 +104,7 @@ class CoreOrderSyncer(object):
             order.core_status.save()
 
             if order.is_click_and_collect and order.core_status.is_pickup_canceled:
-                tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.PICKUP_CANCELED",
+                tasks.schedule_click_and_collect_event(order_id=order.id, event_type=EbayEventType.CANCELED,
                                                        context=self.get_task_execution_context())
             elif not order.is_click_and_collect and order.core_status.is_canceled:
                 log.error("Non-click-and-collect order {} was canceled in core api but regular ebay orders "

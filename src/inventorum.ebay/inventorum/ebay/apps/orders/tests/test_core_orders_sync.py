@@ -12,6 +12,7 @@ from inventorum.ebay.apps.orders.core_orders_sync import CoreOrdersSync, CoreOrd
 from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 from inventorum.ebay.apps.shipping.models import ShippingServiceModel
+from inventorum.ebay.lib.ebay.data.events import EbayEventType
 from inventorum.ebay.tests.testcases import UnitTestCase, EbayAuthenticatedAPITestCase
 from inventorum.util.celery import TaskExecutionContext
 from mock import PropertyMock
@@ -338,7 +339,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertTrue(self.schedule_click_and_collect_event_mock.called)
         self.schedule_click_and_collect_event_mock.assert_called_once_with(order_id=order.id,
-                                                                           event_type="EBAY.ORDER.READY_FOR_PICKUP",
+                                                                           event_type=EbayEventType.READY_FOR_PICKUP,
                                                                            context=self.sync.get_task_execution_context())
 
         # sync again with the same state ####################
@@ -425,7 +426,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertTrue(self.schedule_click_and_collect_event_mock.called)
         self.schedule_click_and_collect_event_mock.assert_called_once_with(order_id=order.id,
-                                                                           event_type="EBAY.ORDER.PICKEDUP",
+                                                                           event_type=EbayEventType.PICKED_UP,
                                                                            context=self.sync.get_task_execution_context())
 
         # sync again with the same state ####################
@@ -512,7 +513,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertTrue(self.schedule_click_and_collect_event_mock.called)
         self.schedule_click_and_collect_event_mock.assert_called_once_with(order_id=order.id,
-                                                                           event_type="EBAY.ORDER.PICKUP_CANCELED",
+                                                                           event_type=EbayEventType.CANCELED,
                                                                            context=self.sync.get_task_execution_context())
 
         # sync again with the same state ########################
