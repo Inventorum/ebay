@@ -110,8 +110,12 @@ class OrderFactory(object):
     """ Responsible for creating order models with proper relations """
 
     @classmethod
-    def create(cls, **kwargs):
+    def create(cls, account, ebay_id, ebay_complete_status, **kwargs):
         """
+        :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :type ebay_id: unicode
+        :type ebay_complete_status: unicode
+
         :rtype: OrderModel
         """
         core_status = kwargs.pop("core_status", None)
@@ -122,7 +126,8 @@ class OrderFactory(object):
         if ebay_status is None:
             ebay_status = OrderStatusModel.objects.create()
 
-        return OrderModel.objects.create(core_status=core_status, ebay_status=ebay_status, **kwargs)
+        return OrderModel.objects.create(account=account, ebay_id=ebay_id, ebay_complete_status=ebay_complete_status,
+                                         core_status=core_status, ebay_status=ebay_status, **kwargs)
 
 
 class OrderStatusModel(BaseModel):
@@ -132,11 +137,13 @@ class OrderStatusModel(BaseModel):
     is_closed = models.BooleanField(default=False)
     is_canceled = models.BooleanField(default=False)
 
+    @property
     def is_ready_for_pickup(self):
-        pass
+        return self.order.is_click_and_collect and self.is_shipped
 
+    @property
     def is_picked_up(self):
-        pass
+        return self.order.is_click_and_collect and self.is_closed
 
     @property
     def order(self):
