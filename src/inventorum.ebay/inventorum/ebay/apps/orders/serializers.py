@@ -81,6 +81,15 @@ class OrderLineItemModelCoreAPIDataSerializer(serializers.ModelSerializer):
     gross_price = MoneyField(source="unit_price")
 
 
+class OrderBasketCoreAPIDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderModel
+        fields = ("items",)
+
+    items = OrderLineItemModelCoreAPIDataSerializer(source="line_items", many=True)
+
+
 class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     """
     Responsible for serializing a `OrderModel` instance into the according data format
@@ -89,12 +98,15 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderModel
-        fields = ("items", "shipment", "customer", "payments")
+        fields = ("basket", "shipment", "customer", "payments")
 
-    items = OrderLineItemModelCoreAPIDataSerializer(source="line_items", many=True)
+    basket = serializers.SerializerMethodField()
     shipment = OrderShipmentCoreAPIDataSerializer(source="selected_shipping")
     customer = serializers.SerializerMethodField()
     payments = serializers.SerializerMethodField()
+
+    def get_basket(self, order):
+        return OrderBasketCoreAPIDataSerializer(order).data
 
     def get_customer(self, order):
         return OrderCustomerCoreAPIDataSerializer(order).data

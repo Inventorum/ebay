@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
-    def test_without_payment_and_shipping(self):
+    def test_complete_order(self):
         shipping_service_dhl = self.get_shipping_service_dhl()
 
         order = OrderModelFactory.create(buyer_first_name="Andreas",
@@ -55,12 +55,14 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
         # TODO jm: Sync with core api
         self.assertDictEqual(serializer.data, {
-            "items": [{
-                "product": 23,
-                "name": "Inventorum T-Shirt [Green, L]",
-                "quantity": 5,
-                "gross_price": "3.99"
-            }],
+            "basket": {
+                "items": [{
+                    "product": 23,
+                    "name": "Inventorum T-Shirt [Green, L]",
+                    "quantity": 5,
+                    "gross_price": "3.99"
+                }]
+            },
             "shipment": {
                 "name": "DHL Paket",
                 "cost": "4.50",
