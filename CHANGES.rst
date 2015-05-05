@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- start and autostart ``com.inventorum.ebay_worker`` on install
 - INV-4111 Added endpoint for ebay sanity check (/inventory/check/)
 - Added Sentry error logger
 - INV-4067 Created cronjob for pulling categories data
