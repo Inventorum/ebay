@@ -14,6 +14,26 @@ class PublishStates(object):
     IN_PROGRESS = 'in_progress'
 
 
+class CoreOrderStates(object):
+    # all is possible with this state
+    DRAFT = 1
+    # temporarily frozen, waiting for money
+    PENDING = 2
+    # end of processing, nothing will happen, no responsibilities
+    CANCELED = 4
+    # frozen, indicator for ``is_paid``, can only be shipped or delivered or refunded
+    CLOSED = 8
+    # end of processing, has been returned
+    REFUNDED = 16
+    # frozen, can only be delivered or refunded
+    SHIPPED = 32
+    # frozen, can only be refunded. end of processing after return time.
+    DELIVERED = 64
+    TEST_PRINT = 128
+    PAID = 256
+    READ = 512
+
+
 class FakeCoreAPIResponse(object):
     """
     Very simple fake object for `requests.models.Request`, which mocks a small subset of the original interface
