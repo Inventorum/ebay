@@ -68,37 +68,46 @@ class CoreOrderSyncer(object):
         :type order: OrderModel
         :type core_order: inventorum.ebay.apps.core_api.models.CoreOrder
         """
-        # Since multiple non click-a-collect status updates can be performed with one call, we do it once in the end
+        # Since multiple non click-and-collect status updates can be performed with one call, we do it once in the end
         regular_ebay_status_update_required = False
 
-        if core_order.is_paid and not order.core_status.is_paid:
-            order.core_status.is_paid = True
+        if order.core_status.is_paid != core_order.is_paid:
+            order.core_status.is_paid = core_order.is_paid
             order.core_status.save()
 
             regular_ebay_status_update_required = not order.is_click_and_collect
-            if order.is_click_and_collect:
+
+        if order.core_status.is_shipped != core_order.is_shipped:
+            order.core_status.is_shipped = core_order.is_shipped
+            order.core_status.save()
+
+            regular_ebay_status_update_required = not order.is_click_and_collect
+            # if is_shipped was set to true for click and collect orders => send appropriate event
+            # note: for now, the event will always be send again if the core state was flipped multiple times
+            if order.is_click_and_collect and order.core_status.is_ready_for_pickup:
                 tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.READY_FOR_PICKUP",
                                                        context=self.get_task_execution_context())
 
-        if core_order.is_shipped and not order.core_status.is_shipped:
-            order.core_status.is_shipped = True
+        if order.core_status.is_closed != core_order.is_closed:
+            order.core_status.is_closed = core_order.is_closed
             order.core_status.save()
 
-            regular_ebay_status_update_required = not order.is_click_and_collect
-            if order.is_click_and_collect:
+            # if it's a regular, non click-and-collect order, nothing needs to be done here
+            # note: for now, the event will always be send again if the core state was flipped multiple times
+            if order.is_click_and_collect and order.core_status.is_picked_up:
                 tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.PICKEDUP",
                                                        context=self.get_task_execution_context())
 
-        if core_order.is_canceled and not order.core_status.is_canceled:
-            order.core_status.is_canceled = True
+        if order.core_status.is_canceled != core_order.is_canceled:
+            order.core_status.is_canceled = core_order.is_canceled
             order.core_status.save()
 
-            if order.is_click_and_collect:
+            if order.is_click_and_collect and order.core_status.is_pickup_canceled:
                 tasks.schedule_click_and_collect_event(order_id=order.id, event_type="EBAY.ORDER.PICKUP_CANCELED",
                                                        context=self.get_task_execution_context())
-            else:
+            elif not order.is_click_and_collect and order.core_status.is_canceled:
                 log.error("Non-click-and-collect order {} was canceled in core api but regular ebay orders "
-                          "cannot be canceled right now.")
+                          "cannot be canceled right now.".format(order))
 
         if regular_ebay_status_update_required:
             tasks.schedule_ebay_order_status_update(order_id=order.id, context=self.get_task_execution_context())

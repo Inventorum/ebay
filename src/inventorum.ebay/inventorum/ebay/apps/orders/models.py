@@ -148,6 +148,10 @@ class OrderStatusModel(BaseModel):
         return self.order.is_click_and_collect and self.is_closed
 
     @property
+    def is_pickup_canceled(self):
+        return self.order.is_click_and_collect and self.is_canceled
+
+    @property
     def order(self):
         """
         :rtype: OrderModel
