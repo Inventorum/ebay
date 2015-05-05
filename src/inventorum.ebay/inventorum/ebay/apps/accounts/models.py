@@ -15,8 +15,8 @@ from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 
 from inventorum.ebay.lib.auth.models import AuthenticableModelMixin
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation
-from inventorum.ebay.lib.ebay.data.items import EbayPaymentType
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -143,10 +143,10 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
         methods = []
 
         if self.payment_method_paypal_enabled:
-            methods.append(EbayPaymentType.PAYPAL)
+            methods.append(BuyerPaymentMethodCodeType.PayPal)
 
         if self.payment_method_bank_transfer_enabled:
-            methods.append(EbayPaymentType.BANK_TRANSFER)
+            methods.append(BuyerPaymentMethodCodeType.MoneyXferAccepted)
 
         return methods
 

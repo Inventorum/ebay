@@ -8,8 +8,8 @@ from decimal import Decimal
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
-from inventorum.ebay.lib.ebay.data.items import EbayPaymentType
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
 from requests.exceptions import HTTPError
 
@@ -125,10 +125,10 @@ class PublishingPreparationService(object):
 
         if self.product.is_click_and_collect and self.core_account.settings.ebay_click_and_collect:
             # Click and collect valid here
-            if EbayPaymentType.PAYPAL not in self.account.ebay_payment_methods:
+            if BuyerPaymentMethodCodeType.PayPal not in self.account.ebay_payment_methods:
                 raise PublishingValidationException(ugettext('Click&Collect requires to use PayPal as payment method!'))
 
-        if EbayPaymentType.PAYPAL in self.account.ebay_payment_methods and \
+        if BuyerPaymentMethodCodeType.PayPal in self.account.ebay_payment_methods and \
                 not self.account.payment_method_paypal_email_address:
             raise PublishingValidationException(ugettext('Missing paypal email addres, however paypal payment method '
                                                          'is enabled!'))
