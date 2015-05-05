@@ -121,11 +121,11 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.schedule_ebay_order_status_update_mock = \
             self.patch("inventorum.ebay.apps.orders.tasks.schedule_ebay_order_status_update")
 
-        self.schedule_click_and_collect_event_mock = \
-            self.patch("inventorum.ebay.apps.orders.tasks.schedule_click_and_collect_event")
+        self.schedule_click_and_collect_status_update_with_event = \
+            self.patch("inventorum.ebay.apps.orders.tasks.schedule_click_and_collect_status_update_with_event")
 
     def reset_mocks(self):
-        self.schedule_click_and_collect_event_mock.reset_mock()
+        self.schedule_click_and_collect_status_update_with_event.reset_mock()
         self.schedule_ebay_order_status_update_mock.reset_mock()
 
     def _get_fresh_order(self, **factory_kwargs):
@@ -181,7 +181,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_canceled, False)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
     def test_without_changes_with_click_and_collect(self):
         order = self._get_fresh_click_and_collect_order()
@@ -196,7 +196,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_canceled, False)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
     def test_core_status_is_paid_changes(self):
         # set is_paid to True ###############################
@@ -215,7 +215,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertTrue(self.schedule_ebay_order_status_update_mock.called)
         self.schedule_ebay_order_status_update_mock.assert_called_with(order_id=order.id,
                                                                        context=self.sync.get_task_execution_context())
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # sync again with the same state ####################
         self.reset_mocks()
@@ -223,7 +223,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # set is_paid back to False #########################
         self.reset_mocks()
@@ -240,7 +240,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertTrue(self.schedule_ebay_order_status_update_mock.called)
         self.schedule_ebay_order_status_update_mock.assert_called_with(order_id=order.id,
                                                                        context=self.sync.get_task_execution_context())
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
     def test_core_status_is_paid_changes_with_click_and_collect(self):
         # set is_paid to True ###############################
@@ -258,7 +258,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
 
         # apart from the state change, there shouldn't be any side effects here for click and collect orders
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # set is_paid back to False #########################
         self.reset_mocks()
@@ -273,7 +273,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_canceled, False)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
     def test_core_status_is_shipped_changes(self):
         # set is_shipped to True ############################
@@ -294,7 +294,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         # although is_paid and is_shipped changed, there should only be one schedule order status update
         self.schedule_ebay_order_status_update_mock.assert_called_once_with(order_id=order.id,
                                                                             context=self.sync.get_task_execution_context())
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # sync again with the same state ####################
         self.reset_mocks()
@@ -302,7 +302,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # set is_shipped back to False #######################
         self.reset_mocks()
@@ -319,7 +319,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertTrue(self.schedule_ebay_order_status_update_mock.called)
         self.schedule_ebay_order_status_update_mock.assert_called_with(order_id=order.id,
                                                                        context=self.sync.get_task_execution_context())
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
     def test_core_status_is_shipped_changes_with_click_and_collect(self):
         # set is_shipped to True ###############################
@@ -337,10 +337,11 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_canceled, False)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertTrue(self.schedule_click_and_collect_event_mock.called)
-        self.schedule_click_and_collect_event_mock.assert_called_once_with(order_id=order.id,
-                                                                           event_type=EbayEventType.READY_FOR_PICKUP,
-                                                                           context=self.sync.get_task_execution_context())
+        self.assertTrue(self.schedule_click_and_collect_status_update_with_event.called)
+        self.schedule_click_and_collect_status_update_with_event.assert_called_once_with(
+            order_id=order.id,
+            event_type=EbayEventType.READY_FOR_PICKUP,
+            context=self.sync.get_task_execution_context())
 
         # sync again with the same state ####################
         self.reset_mocks()
@@ -348,7 +349,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # set is_shipped back to False #########################
         self.reset_mocks()
@@ -357,7 +358,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         order = order.reload()
         self.assertEqual(order.core_status.is_paid,     True)
@@ -382,7 +383,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
 
         # apart from the state change, there shouldn't be any side effects here if it's not click-and-collect
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # sync again with the same state ####################
         self.reset_mocks()
@@ -390,7 +391,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # set is_closed back to False #######################
         self.reset_mocks()
@@ -406,7 +407,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
 
         # apart from the state change, there shouldn't be any side effects here if it's not click-and-collect
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
     def test_core_status_is_closed_changes_with_click_and_collect(self):
         # set is_closed to True ###############################
@@ -424,10 +425,11 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_canceled, False)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertTrue(self.schedule_click_and_collect_event_mock.called)
-        self.schedule_click_and_collect_event_mock.assert_called_once_with(order_id=order.id,
-                                                                           event_type=EbayEventType.PICKED_UP,
-                                                                           context=self.sync.get_task_execution_context())
+        self.assertTrue(self.schedule_click_and_collect_status_update_with_event.called)
+        self.schedule_click_and_collect_status_update_with_event.assert_called_once_with(
+            order_id=order.id,
+            event_type=EbayEventType.PICKED_UP,
+            context=self.sync.get_task_execution_context())
 
         # sync again with the same state ####################
         self.reset_mocks()
@@ -435,7 +437,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # set is_closed back to False #########################
         self.reset_mocks()
@@ -444,7 +446,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         order = order.reload()
         self.assertEqual(order.core_status.is_paid,     True)
@@ -469,7 +471,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
 
         # apart from the state change, there shouldn't be any side effects here if it's not click-and-collect
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # sync again with the same state ######################
         self.reset_mocks()
@@ -477,7 +479,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # set is_canceled back to False #######################
         self.reset_mocks()
@@ -493,7 +495,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
 
         # apart from the state change, there shouldn't be any side effects here if it's not click-and-collect
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
     def test_core_status_is_canceled_changes_with_click_and_collect(self):
         # set is_canceled to True ###############################
@@ -511,10 +513,11 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_pickup_canceled, True)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertTrue(self.schedule_click_and_collect_event_mock.called)
-        self.schedule_click_and_collect_event_mock.assert_called_once_with(order_id=order.id,
-                                                                           event_type=EbayEventType.CANCELED,
-                                                                           context=self.sync.get_task_execution_context())
+        self.assertTrue(self.schedule_click_and_collect_status_update_with_event.called)
+        self.schedule_click_and_collect_status_update_with_event.assert_called_once_with(
+            order_id=order.id,
+            event_type=EbayEventType.CANCELED,
+            context=self.sync.get_task_execution_context())
 
         # sync again with the same state ########################
         self.reset_mocks()
@@ -522,7 +525,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         # set is_canceled back to False #########################
         self.reset_mocks()
@@ -531,7 +534,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.sync(order, core_order)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
-        self.assertFalse(self.schedule_click_and_collect_event_mock.called)
+        self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
         order = order.reload()
         self.assertEqual(order.core_status.is_paid,     True)

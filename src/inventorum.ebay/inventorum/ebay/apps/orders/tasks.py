@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from inventorum.ebay.apps.accounts.models import EbayAccountModel
 from inventorum.ebay.apps.orders.models import OrderModel
-from inventorum.ebay.apps.orders.services import CoreOrderService
+from inventorum.ebay.apps.orders.services import CoreOrderService, EbayOrderStatusUpdateService
 
 from inventorum.util.celery import inventorum_task
 from requests.exceptions import RequestException
@@ -57,22 +57,26 @@ def schedule_core_order_creation(order_id, context):
 
 
 @inventorum_task()
-def send_click_and_collect_event_task(self, order_id, event_type):
+def click_and_collect_status_update_with_event_task(self, order_id, event_type):
     """
     :type self: inventorum.util.celery.InventorumTask
     :type order_id: int
     :type event_type: unicode
     """
-    pass
+    account = EbayAccountModel.objects.get(id=self.context.account_id)
+    order = OrderModel.objects.get(id=order_id)
+
+    service = EbayOrderStatusUpdateService(order=order, account=account)
+    service.status_update_with_click_and_collect_event(event_type=event_type)
 
 
-def schedule_click_and_collect_event(order_id, event_type, context):
+def schedule_click_and_collect_status_update_with_event(order_id, event_type, context):
     """
     :type order_id: int
     :type event_type: unicode
     :type context: inventorum.util.celery.TaskExecutionContext
     """
-    send_click_and_collect_event_task.delay(order_id, event_type, context=context)
+    click_and_collect_status_update_with_event_task.delay(order_id, event_type, context=context)
 
 
 @inventorum_task()
@@ -81,7 +85,11 @@ def ebay_order_status_update_task(self, order_id):
     :type self: inventorum.util.celery.InventorumTask
     :type order_id: int
     """
-    pass
+    account = EbayAccountModel.objects.get(id=self.context.account_id)
+    order = OrderModel.objects.get(id=order_id)
+
+    service = EbayOrderStatusUpdateService(order=order, account=account)
+    service.regular_status_update()
 
 
 def schedule_ebay_order_status_update(order_id, context):

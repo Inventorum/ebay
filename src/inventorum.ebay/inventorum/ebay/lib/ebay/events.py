@@ -29,7 +29,6 @@ class EbayInboundEvents(object):
         """
         self.ebay_token = ebay_token
 
-
     def publish(self, event, raise_exceptions=True):
         """
         :type event: inventorum.ebay.lib.ebay.data.events.EbayEventBase
