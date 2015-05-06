@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
-from inventorum.ebay.lib.db.fields import MoneyField
+from inventorum.ebay.lib.db.fields import MoneyField, TaxRateField
 
 from inventorum.ebay.lib.db.models import BaseModel, MappedInventorumModelQuerySet
 from django.db import models
@@ -39,6 +39,7 @@ class OrderLineItemModel(BaseModel):
     name = models.CharField(max_length=255)
     quantity = models.PositiveIntegerField(verbose_name="Quantity")
     unit_price = MoneyField(verbose_name="Unit price")
+    tax_rate = TaxRateField(verbose_name="Tax rate")
 
     @property
     def inv_product_id(self):
@@ -163,6 +164,9 @@ class OrderStatusModel(BaseModel):
 class OrderableItemModel(models.Model):
     """
     Mixin for item models that can be ordered (either `EbayItemModel` or `EbayItemVariationModel`)
+
+    Required interface
+    - inv_product_id: int
 
     Note jm: We've to inherit here form models, otherwise django won't pick up the generic field.
     See: http://stackoverflow.com/questions/28115239/django-genericrelation-in-model-mixin
