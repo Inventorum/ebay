@@ -1,7 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from decimal import Decimal
 import logging
 from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
+from inventorum.ebay.lib.rest.fields import TaxRateField, MoneyField
 
 from rest_framework import serializers
 
@@ -44,12 +46,13 @@ class CoreProductMetaOverrideMixin(object):
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
-    def __init__(self, id, name, gross_price, quantity, images, variation_count=0, variations=None,
+    def __init__(self, id, name, gross_price, tax_type_id, quantity, images, variation_count=0, variations=None,
                  attributes=None, description=None):
         """
         :type id: int
         :type name: unicode
         :type gross_price: decimal.Decimal
+        :type tax_type_id: int
         :type quantity: decimal.Decimal
         :type images: list of CoreProductImage
         :type variation_count: int
@@ -60,6 +63,7 @@ class CoreProduct(object):
         self.id = id
         self.name = name
         self.gross_price = gross_price
+        self.tax_type_id = tax_type_id
         self.quantity = quantity
         self.images = images
         self.variation_count = variation_count
@@ -127,7 +131,7 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
         name = serializers.CharField(allow_null=True, allow_blank=True)
         description = serializers.CharField(allow_null=True, allow_blank=True)
-        gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+        gross_price = MoneyField()
 
         images = CoreProductImageDeserializer(many=True)
 
@@ -136,7 +140,8 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
 
     id = serializers.IntegerField()
     name = serializers.CharField()
-    gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    gross_price = MoneyField()
+    tax_type = serializers.IntegerField(source="tax_type_id")
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     images = CoreProductImageDeserializer(many=True)
@@ -271,12 +276,45 @@ class CoreAccountDeserializer(POPOSerializer):
 
 
 class CoreInfo(object):
-    def __init__(self, account):
+    def __init__(self, account, tax_types):
+        """
+        :type account: CoreAccount
+        :type tax_types: list[CoreTaxType]
+        """
         self.account = account
+        self.tax_types = tax_types
+
+    def get_tax_rate_for(self, tax_type_id):
+        """
+        :type tax_type_id: int
+        """
+        return next((tax_type.tax_rate for tax_type in self.tax_types if tax_type.id == tax_type_id), None)
+
+
+class CoreTaxType(object):
+
+    class Serializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        id = serializers.IntegerField()
+        tax_rate = serializers.DecimalField(max_digits=13, decimal_places=10)
+
+    def __init__(self, id, tax_rate):
+        """
+        :type id: int
+        :type tax_rate: decimal.Decimal
+        """
+        self.id = id
+        self.tax_rate = tax_rate.quantize(Decimal("0.000"))
+
+CoreTaxType.Serializer.Meta.model = CoreTaxType
 
 
 class CoreInfoDeserializer(POPOSerializer):
     account = CoreAccountDeserializer()
+    tax_types = CoreTaxType.Serializer(many=True)
 
     class Meta:
         model = CoreInfo
@@ -303,7 +341,7 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
 
     class MetaDeserializer(serializers.Serializer):
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
-        gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+        gross_price = MoneyField()
 
     class Meta(POPOSerializer.Meta):
         model = CoreProductDelta
@@ -312,7 +350,7 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
     parent = serializers.IntegerField(allow_null=True, required=False)
     name = serializers.CharField()
     state = serializers.CharField()
-    gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    gross_price = MoneyField()
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     # meta will be removed after meta overwrites
