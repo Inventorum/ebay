@@ -303,14 +303,29 @@ class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin)
             self.assertEqual(last_attempt.type, EbayApiAttemptType.PUBLISH)
 
             response = self.client.post("/products/%s/unpublish" % inv_product_id)
-            log.debug('Got response: %s', response)
+            log.debug('Got response: %s', response.data)
+            self.assertEqual(response.status_code, 200)
+
+            # Trick api to think product was published
+            item = product.items.last()
+            item.publishing_status = EbayItemPublishingStatus.PUBLISHED
+            item.save()
+
+            # Try to unpublish already unpublished product
+            response = self.client.post("/products/%s/unpublish" % inv_product_id)
+            log.debug('Got response: %s', response.data)
             self.assertEqual(response.status_code, 200)
 
             item = product.items.last()
             self.assertEqual(item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
 
-            # Publish & Unpublish = 2
-            self.assertEqual(item.attempts.count(), 2)
-            last_attempt = item.attempts.last()
-            self.assertTrue(last_attempt.success)
-            self.assertEqual(last_attempt.type, EbayApiAttemptType.UNPUBLISH)
+            # Publish & Unpublish & Unpublish = 3
+            self.assertEqual(item.attempts.count(), 3)
+            first_unpublish_attempt = item.attempts.order_by('time_added', 'id')[1]
+            self.assertTrue(first_unpublish_attempt.success)
+            self.assertEqual(first_unpublish_attempt.type, EbayApiAttemptType.UNPUBLISH)
+
+            # Last attempt should be successful cause we got that this item was already unpublished
+            second_unpublish_attempt = item.attempts.order_by('time_added', 'id')[2]
+            self.assertTrue(second_unpublish_attempt.success)
+            self.assertEqual(second_unpublish_attempt.type, EbayApiAttemptType.UNPUBLISH)
