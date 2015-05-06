@@ -19,7 +19,7 @@ class CoreAPIClientException(Exception):
 
 
 class CoreAPIClient(object):
-    API_VERSION = 9
+    API_VERSION = 10
     EBAY_CHANNEL = "ebay"
 
     @property
