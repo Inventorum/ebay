@@ -172,14 +172,14 @@ class CoreAddress(object):
 
         id = serializers.IntegerField()
         address1 = serializers.CharField()
-        address2 = serializers.CharField(allow_null=True)
+        address2 = serializers.CharField(allow_null=True, required=False, allow_blank=True)
         zipcode = serializers.CharField()
         city = serializers.CharField()
         state = serializers.CharField(allow_null=True, required=False, allow_blank=True)
         country = serializers.CharField()
         first_name = serializers.CharField()
         last_name = serializers.CharField()
-        company = serializers.CharField(allow_null=True)
+        company = serializers.CharField(allow_null=True, required=False, allow_blank=True)
 
     # / Serializer #######################
 
