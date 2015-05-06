@@ -49,6 +49,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                                          orderable_item__product__inv_id=23,
                                          name="Inventorum T-Shirt [Green, L]",
                                          unit_price=D("3.99"),
+                                         tax_rate=D("7"),
                                          quantity=5)
 
         serializer = OrderModelCoreAPIDataSerializer(order)
@@ -60,7 +61,8 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                     "product": 23,
                     "name": "Inventorum T-Shirt [Green, L]",
                     "quantity": 5,
-                    "gross_price": "3.99"
+                    "unit_gross_price": "3.99",
+                    "tax_rate": "7.000"
                 }]
             },
             "shipment": {

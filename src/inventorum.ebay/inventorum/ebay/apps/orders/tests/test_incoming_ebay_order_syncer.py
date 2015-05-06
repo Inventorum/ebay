@@ -40,6 +40,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         order_id = "123456789-987654321"
 
         published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         tax_rate=D("7.000"),
                                                          external_id=published_ebay_item_id)
 
         shipping_service_dhl = self.get_shipping_service_dhl()
@@ -147,6 +148,8 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.assertEqual(line_item.name, "Inventorum iPad Stand")
         self.assertEqual(line_item.quantity, 2)
         self.assertEqual(line_item.unit_price, D("3.99"))
+        # tax rate should have been taken from the ebay item model
+        self.assertEqual(line_item.tax_rate, D("7.000"))
 
         # task to create order in core api should have been scheduled
         self.schedule_core_order_creation_mock\
@@ -159,9 +162,12 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         transaction_id = "111111111"
         order_id = "000000000-111111111"
 
+        # we set a different tax rate here to proof that the variation tax rate is taken over the item model
         published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         tax_rate=D("19.000"),
                                                          external_id=published_ebay_item_id)
         published_variation = EbayItemVariationFactory(item=published_item,
+                                                       tax_rate=D("7.000"),
                                                        inv_product_id=23)
         assert published_variation.sku.endswith("23")
         assert published_item.id != published_variation.id
@@ -201,6 +207,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.assertEqual(line_item.orderable_item_id, published_variation.id)
         self.assertIsInstance(line_item.orderable_item, EbayItemVariationModel)
         self.assertEqual(line_item.name, "Inventorum T-Shirt [Black, M]")
+        self.assertEqual(line_item.orderable_item.tax_rate, D("7.000"))
 
         # task to create order in core api should have been scheduled
         self.schedule_core_order_creation_mock\

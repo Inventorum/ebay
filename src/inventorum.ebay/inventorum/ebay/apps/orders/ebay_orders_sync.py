@@ -252,6 +252,7 @@ class IncomingEbayOrderSyncer(object):
         line_item_model.name = orderable_name
         line_item_model.quantity = ebay_transaction.quantity_purchased
         line_item_model.unit_price = ebay_transaction.transaction_price
+        line_item_model.tax_rate = orderable_item.tax_rate
 
         line_item_model.save()
 

@@ -180,6 +180,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertEqual(last_item.postal_code, "13355")
         self.assertEqual(last_item.quantity, 3000)
         self.assertEqual(last_item.gross_price, D("599.99"))
+        self.assertEqual(last_item.tax_rate, D("7"))
         self.assertEqual(last_item.country, 'DE')
         self.assertEqual(last_item.paypal_email_address, 'bartosz@hernas.pl')
         self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.DRAFT)
@@ -361,6 +362,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         first_variation_obj = last_item.variations.first()
         self.assertEqual(first_variation_obj.quantity, 30)
         self.assertEqual(first_variation_obj.gross_price, D("150"))
+        self.assertEqual(first_variation_obj.tax_rate, D("7"))
         self.assertEqual(first_variation_obj.specifics.count(), 3)
         self.assertEqual(first_variation_obj.images.count(), 1)
 

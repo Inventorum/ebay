@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from decimal import Decimal
 
 import factory
 from factory import fuzzy
@@ -65,6 +66,7 @@ class OrderLineItemModelFactory(factory.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: "Order line item {}".format(n))
     unit_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
+    tax_rate = fuzzy.FuzzyChoice([Decimal("0"), Decimal("7"), Decimal("19")])
     quantity = fuzzy.FuzzyInteger(low=1, high=100)
 
     order = factory.SubFactory(OrderModelFactory)

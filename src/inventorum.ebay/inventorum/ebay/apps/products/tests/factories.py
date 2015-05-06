@@ -49,8 +49,9 @@ class EbayItemVariationFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.EbayItemVariationModel
 
-    gross_price = Decimal("1.99")
     inv_product_id = factory.Sequence(lambda n: n)
+    gross_price = Decimal("1.99")
+    tax_rate = Decimal("19")
     quantity = 10
 
 
@@ -76,6 +77,7 @@ class EbayItemFactory(factory.DjangoModelFactory):
     description = "Some product description"
 
     gross_price = Decimal("1.99")
+    tax_rate = Decimal("19")
     quantity = 10
 
     listing_duration = "Days_14"

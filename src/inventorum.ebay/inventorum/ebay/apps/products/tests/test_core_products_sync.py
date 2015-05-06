@@ -330,6 +330,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=5,
             gross_price=D("3.99"),
+            tax_rate=D("7"),
             inv_product_id=1002
         )
 
@@ -343,6 +344,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=3,
             gross_price=D("100.0"),
+            tax_rate=D("7"),
             inv_product_id=1003
         )
         delta_variation_b = CoreProductDeltaFactory(id=variation_b.inv_product_id,
@@ -355,6 +357,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=33,
             gross_price=D("99.99"),
+            tax_rate=D("7"),
             inv_product_id=1004
         )
 
@@ -368,6 +371,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=33,
             gross_price=D("99.99"),
+            tax_rate=D("7"),
             inv_product_id=1005
         )
 
@@ -375,6 +379,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=88,
             gross_price=D("88.88"),
+            tax_rate=D("7"),
             inv_product_id=1006
         )
 
