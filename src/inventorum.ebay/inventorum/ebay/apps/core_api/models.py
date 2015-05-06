@@ -367,7 +367,7 @@ class CoreOrder(object):
 
     class Serializer(POPOSerializer):
 
-        class Meta:
+        class Meta(POPOSerializer.Meta):
             model = None
 
         id = serializers.IntegerField()
