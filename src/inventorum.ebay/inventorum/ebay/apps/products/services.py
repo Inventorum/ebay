@@ -9,8 +9,10 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
 from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
+from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
+from inventorum.util.django.timezone import datetime
 from requests.exceptions import HTTPError
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
@@ -367,22 +369,30 @@ class UnpublishingService(PublishingUnpublishingService):
         """
 
         service = EbayItems(self.user.account.token.ebay_object)
+
+        response = None
         try:
             response = service.unpublish(self.item.external_id)
         except EbayConnectionException as e:
             self.item.set_publishing_status(EbayItemPublishingStatus.PUBLISHED, details=e.serialized_errors)
+            has_error_that_item_was_already_unpublished = \
+                any([err.code == EbayErrorCode.TheAuctionHasBeenClosed for err in e.errors])
+            if not has_error_that_item_was_already_unpublished:
+                EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
+                    exception=e,
+                    item=self.item,
+                    type=EbayApiAttemptType.UNPUBLISH
+                )
 
-            EbayApiAttempt.create_from_ebay_exception_for_item_and_type(
-                exception=e,
-                item=self.item,
-                type=EbayApiAttemptType.UNPUBLISH
-            )
-
-            raise UnpublishingException(e.message, original_exception=e)
+                raise UnpublishingException(e.message, original_exception=e)
 
         self._delete_inventory_for_click_and_collect()
-        
-        self.item.unpublished_at = response.end_time
+
+        if response:
+            self.item.unpublished_at = response.end_time
+        else:
+            self.item.unpublished_at = datetime.now()
+
         self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
         self.item.save()
 

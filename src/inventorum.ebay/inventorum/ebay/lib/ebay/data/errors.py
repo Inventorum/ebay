@@ -7,6 +7,13 @@ from rest_framework.fields import IntegerField
 from rest_framework.serializers import Serializer
 
 
+class EbayErrorCode(object):
+    """
+    Mapping of short message to error code, so we can see directly in code what is it about.
+    """
+    TheAuctionHasBeenClosed = 1047
+
+
 class EbayError(object):
     def __init__(self, code, classification, long_message, severity_code, short_message):
         self.code = code
