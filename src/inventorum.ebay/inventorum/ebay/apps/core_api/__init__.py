@@ -14,6 +14,10 @@ class PublishStates(object):
     IN_PROGRESS = 'in_progress'
 
 
+class CoreChannel(object):
+    EBAY = "ebay"
+
+
 class BinaryCoreOrderStates(object):
     # all is possible with this state
     DRAFT = 1

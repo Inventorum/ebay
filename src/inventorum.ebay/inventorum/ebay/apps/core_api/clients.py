@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
+from inventorum.ebay.apps.core_api import CoreChannel
 from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
     CoreProductDeltaDeserializer, CoreOrder
 from inventorum.ebay.apps.core_api.pager import Pager
@@ -20,7 +21,6 @@ class CoreAPIClientException(Exception):
 
 class CoreAPIClient(object):
     API_VERSION = 10
-    EBAY_CHANNEL = "ebay"
 
     @property
     def default_headers(self):
@@ -330,7 +330,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
                 rest_framework.exceptions.ValidationError
         """
         params = {
-            "channel": self.EBAY_CHANNEL,
+            "channel": CoreChannel.EBAY,
             "start_date": self._encode_datetime(start_date)
         }
 
@@ -368,5 +368,5 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
-        response = self.post('/api/orders/?channel={}'.format(self.EBAY_CHANNEL), data=data)
+        response = self.post('/api/orders/', data=data)
         return response.json()["id"]
