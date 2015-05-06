@@ -5,7 +5,7 @@ from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.accounts.serializers import AddressSerializer
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
-from inventorum.ebay.lib.rest.fields import MoneyField
+from inventorum.ebay.lib.rest.fields import MoneyField, TaxRateField
 
 from rest_framework import serializers
 
@@ -75,10 +75,11 @@ class OrderLineItemModelCoreAPIDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderLineItemModel
-        fields = ("product", "name", "quantity", "gross_price")
+        fields = ("product", "name", "quantity", "unit_gross_price", "tax_rate")
 
     product = serializers.IntegerField(source="orderable_item.inv_product_id")
-    gross_price = MoneyField(source="unit_price")
+    unit_gross_price = MoneyField(source="unit_price")
+    tax_rate = TaxRateField()
 
 
 class OrderBasketCoreAPIDataSerializer(serializers.ModelSerializer):
