@@ -166,7 +166,7 @@ class EbayFeaturesScraper(EbayBatchScraper):
 
 class EbaySpecificsScraper(EbayBatchScraper):
     def get_queryset_with_country(self, country_code):
-        return CategoryModel.objects.filter(ebay_leaf=True, features__item_specifics_enabled=True, country=country_code)
+        return CategoryModel.objects.filter(ebay_leaf=True, country=country_code)
 
     def fetch(self, limited_qs, country_code):
         token = self.ebay_token
