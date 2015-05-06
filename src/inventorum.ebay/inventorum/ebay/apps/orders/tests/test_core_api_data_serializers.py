@@ -56,6 +56,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
         # TODO jm: Sync with core api
         self.assertDictEqual(serializer.data, {
+            "channel": "ebay",
             "basket": {
                 "items": [{
                     "product": 23,

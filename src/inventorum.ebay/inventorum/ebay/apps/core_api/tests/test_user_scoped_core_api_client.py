@@ -239,6 +239,6 @@ class UnitTestUserScopedCoreAPIClient(UnitTestCase):
         inv_id = self.subject.create_order(data)
 
         self.assertEqual(self.client_post_mock.call_count, 1)
-        self.client_post_mock.assert_called_once_with("/api/orders/?channel=ebay", data=data)
+        self.client_post_mock.assert_called_once_with("/api/orders/", data=data)
 
         self.assertEqual(inv_id, created_order_id)

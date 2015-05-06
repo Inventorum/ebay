@@ -19,7 +19,7 @@ from inventorum.util.celery import TaskExecutionContext
 log = logging.getLogger(__name__)
 
 
-class PeriodicEbayOrdersSync(object):
+class EbayOrdersSync(object):
 
     def __init__(self, account):
         """

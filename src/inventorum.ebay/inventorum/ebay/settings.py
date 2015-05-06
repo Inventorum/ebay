@@ -5,6 +5,7 @@ import os
 import logging
 import sys
 from datetime import datetime, timedelta
+from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
 from inventorum.util.celery import TaskExecutionContext
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -99,7 +100,21 @@ CELERYBEAT_SCHEDULE = {
         'task': 'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task',
         'schedule': timedelta(minutes=1),
         'kwargs': {
-            "context": TaskExecutionContext(user_id=None, account_id=None, request_id=None)
+            "context": get_anonymous_task_execution_context()
+        }
+    },
+    'periodic_core_orders_sync_task': {
+        'task': 'inventorum.ebay.apps.orders.tasks.periodic_core_orders_sync_task',
+        'schedule': timedelta(minutes=1),
+        'kwargs': {
+            "context": get_anonymous_task_execution_context()
+        }
+    },
+    'periodic_core_products_sync_task': {
+        'task': 'inventorum.ebay.apps.orders.tasks.periodic_core_products_sync_task',
+        'schedule': timedelta(minutes=1),
+        'kwargs': {
+            "context": get_anonymous_task_execution_context()
         }
     },
 }

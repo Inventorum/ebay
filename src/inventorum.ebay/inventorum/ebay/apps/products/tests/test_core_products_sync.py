@@ -9,17 +9,17 @@ from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
 from datetime import datetime, timedelta
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
-from inventorum.ebay.apps.products.scripts import core_api_sync
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTestHelpers, ApiTest
 from inventorum.ebay.apps.core_api.tests.factories import CoreProductDeltaFactory
 from inventorum.ebay.apps.products.core_products_sync import CoreProductsSync
 
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemVariationModel
+from inventorum.ebay.apps.products.tasks import periodic_core_products_sync_task
 
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
-from inventorum.ebay.lib.celery import celery_test_case
+from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
 from inventorum.ebay.tests.utils import PatchMixin
 from mock import PropertyMock
@@ -29,8 +29,9 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin,
-                                 ShippingServiceTestMixin):
+class IntegrationTestPeriodicCoreProductsSync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin,
+                                              ShippingServiceTestMixin):
+
     @celery_test_case()
     def test_integration(self):
         with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date'],
@@ -76,8 +77,7 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
                 "gross_price": "2.99"
             })
 
-            # run sync script
-            core_api_sync.run()
+            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
             # assert first update of product 1
             ebay_item_1 = ebay_product_1.items.first()
@@ -97,8 +97,8 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
             # product 1: inventory adjustment
             self.adjust_core_inventory(product_1_inv_id, quantity=10, price="2.99")
 
-            # run sync script
-            core_api_sync.run()
+            # run sync task
+            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
             # assert first update of product 1
             self.assertEqual(ebay_item_1.updates.count(), 2)
@@ -116,8 +116,8 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
             self.delete_core_api_product(product_1_inv_id)
             self.delete_core_api_product(product_2_inv_id)
 
-            # run sync script
-            core_api_sync.run()
+            # run sync task
+            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
             with self.assertRaises(EbayProductModel.DoesNotExist):
                 EbayProductModel.objects.get(id=ebay_product_1.id)
@@ -126,9 +126,9 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
                 EbayProductModel.objects.get(id=ebay_product_2.id)
 
 
-class UnitTestCoreAPISyncService(UnitTestCase):
+class UnitTestCoreProductsSync(UnitTestCase):
     def setUp(self):
-        super(UnitTestCoreAPISyncService, self).setUp()
+        super(UnitTestCoreProductsSync, self).setUp()
 
         # account with default user
         self.user = EbayUserFactory.create()

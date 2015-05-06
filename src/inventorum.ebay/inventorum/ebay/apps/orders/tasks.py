@@ -15,7 +15,10 @@ log = logging.getLogger(__name__)
 
 @inventorum_task()
 def periodic_ebay_orders_sync_task(self):
-    from inventorum.ebay.apps.orders.ebay_orders_sync import PeriodicEbayOrdersSync
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    """
+    from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync
 
     start_time = datetime.now()
 
@@ -24,15 +27,36 @@ def periodic_ebay_orders_sync_task(self):
 
     for account in accounts:
         log.info("Running ebay order sync for account {}".format(account))
-        PeriodicEbayOrdersSync(account).run()
+        EbayOrdersSync(account).run()
 
     run_time = datetime.now() - start_time
-    log.info("Finished ebay order sync in {}".format(run_time))
+    log.info("Finished ebay orders sync in {}".format(run_time))
+
+
+@inventorum_task()
+def periodic_core_orders_sync_task(self):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    """
+    from inventorum.ebay.apps.orders.core_orders_sync import CoreOrdersSync
+
+    start_time = datetime.now()
+
+    accounts = EbayAccountModel.objects.ebay_authenticated().all()
+    log.info("Starting ebay order sync for {} accounts".format(accounts.count()))
+
+    for account in accounts:
+        log.info("Running ebay order sync for account {}".format(account))
+        CoreOrdersSync(account).run()
+
+    run_time = datetime.now() - start_time
+    log.info("Finished core orders sync in {}".format(run_time))
 
 
 @inventorum_task(max_retries=5, default_retry_delay=30)
 def core_order_creation_task(self, order_id):
     """
+    :type self: inventorum.util.celery.InventorumTask
     :type order_id: int
     """
     account = EbayAccountModel.objects.get(id=self.context.account_id)

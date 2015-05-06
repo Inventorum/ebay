@@ -10,9 +10,10 @@ from inventorum.ebay.apps.core_api.models import CoreOrder
 from inventorum.ebay.apps.core_api.tests.factories import CoreOrderFactory
 from inventorum.ebay.apps.orders.core_orders_sync import CoreOrdersSync, CoreOrderSyncer
 from inventorum.ebay.apps.orders.models import OrderModel
+from inventorum.ebay.apps.orders.tasks import periodic_core_orders_sync_task
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 from inventorum.ebay.apps.shipping.models import ShippingServiceModel
-from inventorum.ebay.lib.celery import celery_test_case
+from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
 from inventorum.ebay.lib.ebay.data.events import EbayEventType
 from inventorum.ebay.tests.testcases import UnitTestCase, EbayAuthenticatedAPITestCase
 from inventorum.util.celery import TaskExecutionContext
@@ -22,7 +23,7 @@ from mock import PropertyMock
 log = logging.getLogger(__name__)
 
 
-class IntegrationTestCoreOrdersSync(EbayAuthenticatedAPITestCase):
+class IntegrationTestPeriodicCoreOrdersSync(EbayAuthenticatedAPITestCase):
 
     @celery_test_case()
     def smoke_test(self):
@@ -48,8 +49,7 @@ class IntegrationTestCoreOrdersSync(EbayAuthenticatedAPITestCase):
 
         core_api_mock.get_paginated_orders_delta.return_value = iter([[core_order, click_and_collect_core_order]])
 
-        subject = CoreOrdersSync(account=self.account)
-        subject.run()
+        periodic_core_orders_sync_task.delay(context=get_anonymous_task_execution_context())
 
         self.assertTrue(core_api_mock.get_paginated_orders_delta.called)
 
