@@ -5,7 +5,9 @@ import logging
 from random import randint
 
 import factory
-from inventorum.ebay.apps.core_api.models import CoreProductDelta
+from factory import fuzzy
+from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
+from inventorum.ebay.apps.core_api.models import CoreProductDelta, CoreOrder
 
 log = logging.getLogger(__name__)
 
@@ -21,3 +23,12 @@ class CoreProductDeltaFactory(factory.Factory):
     gross_price = D("1.99")
     quantity = 100
     parent = None
+
+
+class CoreOrderFactory(factory.Factory):
+
+    class Meta:
+        model = CoreOrder
+
+    id = fuzzy.FuzzyInteger(low=10000, high=99999)
+    state = BinaryCoreOrderStates.DRAFT | BinaryCoreOrderStates.PENDING

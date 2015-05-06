@@ -26,8 +26,9 @@ log = logging.getLogger(__name__)
 
 
 class EbayServiceException(Exception):
+
     def __init__(self, message=None, original_exception=None):
-        self.message = message
+        super(Exception, self).__init__(message)
         self.original_exception = original_exception
 
 
@@ -68,6 +69,9 @@ class PublishingPreparationService(object):
 
     @cached_property
     def core_product(self):
+        """
+        :rtype: inventorum.ebay.apps.core_api.models.CoreProduct
+        """
         try:
             return self.user.core_api.get_product(self.product.inv_id)
         except HTTPError as e:
@@ -75,6 +79,9 @@ class PublishingPreparationService(object):
 
     @cached_property
     def core_info(self):
+        """
+        :rtype: inventorum.ebay.apps.core_api.models.CoreInfo
+        """
         try:
             return self.user.core_api.get_account_info()
         except HTTPError as e:
@@ -167,6 +174,12 @@ class PublishingPreparationService(object):
         """
         product = EbayProductModel.objects.get(inv_id=self.core_product.id)
 
+        # We should think about adding tax_rate to the product details response :-)
+        tax_rate = self.core_info.get_tax_rate_for(self.core_product.tax_type_id)
+        if tax_rate is None:
+            raise PublishingException(message="Cannot determine tax_rate for core_product.tax_type={}"
+                                      .format(self.core_product.tax_type_id))
+
         item = EbayItemModel.objects.create(
             listing_duration=product.category.features.max_listing_duration,
             product=product,
@@ -174,6 +187,7 @@ class PublishingPreparationService(object):
             name=self.core_product.name,
             description=self.core_product.description,
             gross_price=self.core_product.gross_price,
+            tax_rate=tax_rate,
             category=product.category,
             country=self.core_account.country,
             quantity=self.core_product.quantity,
@@ -213,20 +227,25 @@ class PublishingPreparationService(object):
                 item=item
             )
 
-        for product in self.core_product.variations:
+        for variation in self.core_product.variations:
+            tax_rate = self.core_info.get_tax_rate_for(variation.tax_type_id)
+            if tax_rate is None:
+                raise PublishingException(message="Cannot determine tax_rate for variation with variation.tax_type={}"
+                                          .format(variation.tax_type_id))
             variation_obj = EbayItemVariationModel.objects.create(
-                quantity=product.quantity,
-                gross_price=product.gross_price,
+                quantity=variation.quantity,
+                gross_price=variation.gross_price,
+                tax_rate=tax_rate,
                 item=item,
-                inv_product_id=product.id
+                inv_product_id=variation.id
             )
-            for image in product.images:
+            for image in variation.images:
                 EbayItemImageModel.objects.create(
                     inv_image_id=image.id,
                     url=image.url,
                     variation=variation_obj
                 )
-            for attribute in product.attributes:
+            for attribute in variation.attributes:
                 specific_obj = EbayItemVariationSpecificModel.objects.create(
                     name=attribute.key,
                     variation=variation_obj

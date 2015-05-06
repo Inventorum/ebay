@@ -15,6 +15,7 @@ class TestCoreProductDeserializer(UnitTestCase):
     def test_null_meta_attributes_should_fallback_to_parent(self):
         minimal_core_product_json = {
             "gross_price": "448.68",
+            "tax_type": 1001,
             "quantity": 90,
             "images": [{"id": 2915, "ipad": "http://image/ipad", "ipad_retina": "http://image/ipad_retina"}],
             "meta": {

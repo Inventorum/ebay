@@ -3,9 +3,11 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.accounts.serializers import AddressSerializer
+from inventorum.ebay.apps.core_api import CoreChannel
+from inventorum.ebay.apps.core_api.clients import CoreAPIClient
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
-from inventorum.ebay.lib.rest.fields import MoneyField
+from inventorum.ebay.lib.rest.fields import MoneyField, TaxRateField
 
 from rest_framework import serializers
 
@@ -75,10 +77,20 @@ class OrderLineItemModelCoreAPIDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderLineItemModel
-        fields = ("product", "name", "quantity", "gross_price")
+        fields = ("product", "name", "quantity", "unit_gross_price", "tax_rate")
 
     product = serializers.IntegerField(source="orderable_item.inv_product_id")
-    gross_price = MoneyField(source="unit_price")
+    unit_gross_price = MoneyField(source="unit_price")
+    tax_rate = TaxRateField()
+
+
+class OrderBasketCoreAPIDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderModel
+        fields = ("items",)
+
+    items = OrderLineItemModelCoreAPIDataSerializer(source="line_items", many=True)
 
 
 class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
@@ -89,12 +101,19 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderModel
-        fields = ("items", "shipment", "customer", "payments")
+        fields = ("channel", "basket", "shipment", "customer", "payments")
 
-    items = OrderLineItemModelCoreAPIDataSerializer(source="line_items", many=True)
+    channel = serializers.SerializerMethodField()
+    basket = serializers.SerializerMethodField()
     shipment = OrderShipmentCoreAPIDataSerializer(source="selected_shipping")
     customer = serializers.SerializerMethodField()
     payments = serializers.SerializerMethodField()
+
+    def get_channel(self, order):
+        return CoreChannel.EBAY
+
+    def get_basket(self, order):
+        return OrderBasketCoreAPIDataSerializer(order).data
 
     def get_customer(self, order):
         return OrderCustomerCoreAPIDataSerializer(order).data

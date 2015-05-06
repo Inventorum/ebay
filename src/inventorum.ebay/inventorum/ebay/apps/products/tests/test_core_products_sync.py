@@ -9,17 +9,17 @@ from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
 from datetime import datetime, timedelta
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
-from inventorum.ebay.apps.products.scripts import core_api_sync
 
 from inventorum.ebay.apps.core_api.tests import CoreApiTestHelpers, ApiTest
 from inventorum.ebay.apps.core_api.tests.factories import CoreProductDeltaFactory
-from inventorum.ebay.apps.products.core_api_sync import CoreAPISyncService
+from inventorum.ebay.apps.products.core_products_sync import CoreProductsSync
 
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemVariationModel
+from inventorum.ebay.apps.products.tasks import periodic_core_products_sync_task
 
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
-from inventorum.ebay.lib.celery import celery_test_case
+from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
 from inventorum.ebay.tests.utils import PatchMixin
 from mock import PropertyMock
@@ -29,8 +29,9 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin,
-                                 ShippingServiceTestMixin):
+class IntegrationTestPeriodicCoreProductsSync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin,
+                                              ShippingServiceTestMixin):
+
     @celery_test_case()
     def test_integration(self):
         with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date'],
@@ -76,8 +77,7 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
                 "gross_price": "2.99"
             })
 
-            # run sync script
-            core_api_sync.run()
+            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
             # assert first update of product 1
             ebay_item_1 = ebay_product_1.items.first()
@@ -97,8 +97,8 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
             # product 1: inventory adjustment
             self.adjust_core_inventory(product_1_inv_id, quantity=10, price="2.99")
 
-            # run sync script
-            core_api_sync.run()
+            # run sync task
+            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
             # assert first update of product 1
             self.assertEqual(ebay_item_1.updates.count(), 2)
@@ -116,8 +116,8 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
             self.delete_core_api_product(product_1_inv_id)
             self.delete_core_api_product(product_2_inv_id)
 
-            # run sync script
-            core_api_sync.run()
+            # run sync task
+            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
             with self.assertRaises(EbayProductModel.DoesNotExist):
                 EbayProductModel.objects.get(id=ebay_product_1.id)
@@ -126,9 +126,9 @@ class IntegrationTestCoreAPISync(EbayAuthenticatedAPITestCase, CoreApiTestHelper
                 EbayProductModel.objects.get(id=ebay_product_2.id)
 
 
-class UnitTestCoreAPISyncService(UnitTestCase):
+class UnitTestCoreProductsSync(UnitTestCase):
     def setUp(self):
-        super(UnitTestCoreAPISyncService, self).setUp()
+        super(UnitTestCoreProductsSync, self).setUp()
 
         # account with default user
         self.user = EbayUserFactory.create()
@@ -162,9 +162,9 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         mock.return_value = iter(pages)
 
     def test_basic_logic_with_empty_delta(self):
-        assert self.account.last_core_api_sync is None
+        assert self.account.last_core_products_sync is None
 
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         self.expect_modified([])
         self.expect_deleted([])
@@ -179,28 +179,28 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertFalse(self.schedule_ebay_item_update_mock.called)
         self.assertFalse(self.schedule_ebay_product_deletion_mock.called)
 
-        self.assertIsNotNone(self.account.last_core_api_sync)
-        self.assertTrue(datetime.utcnow() - self.account.last_core_api_sync < timedelta(seconds=1))
+        self.assertIsNotNone(self.account.last_core_products_sync)
+        self.assertTrue(datetime.utcnow() - self.account.last_core_products_sync < timedelta(seconds=1))
 
-        # next sync for the account should start from last_core_api_sync
+        # next sync for the account should start from last_core_products_sync
         self.reset_mocks()
 
         # reload changes from database
         self.account = self.account.reload()
 
-        last_core_api_sync = self.account.last_core_api_sync
+        last_core_products_sync = self.account.last_core_products_sync
 
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
         subject.run()
 
         self.core_api_mock.get_paginated_product_delta_modified.assert_called_once_with(
-            start_date=last_core_api_sync)
+            start_date=last_core_products_sync)
         self.core_api_mock.get_paginated_product_delta_deleted.assert_called_once_with(
-            start_date=last_core_api_sync)
+            start_date=last_core_products_sync)
 
     def test_unmapped_modified_and_deleted(self):
         # unmapped = products not connected to the ebay service
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         self.expect_modified([
             CoreProductDeltaFactory.build(),
@@ -214,7 +214,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertFalse(self.schedule_ebay_product_deletion_mock.called)
 
     def test_unpublished_modified_and_deleted(self):
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         # modified but not published, there should not be any updates
         product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
@@ -242,7 +242,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertEqual([args[0] for args, kwargs in calls], [product_c.id, product_d.id, product_e.id])
 
     def test_published_modified_and_deleted(self):
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         # product a with updated quantity
         product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
@@ -316,7 +316,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
         self.assertEqual([args[0] for args, kwargs in calls], [product_d.id, product_e.id])
 
     def test_published_modified_and_deleted_variations(self):
-        subject = CoreAPISyncService(account=self.account)
+        subject = CoreProductsSync(account=self.account)
 
         # product a is our parent product
         product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
@@ -330,6 +330,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=5,
             gross_price=D("3.99"),
+            tax_rate=D("7"),
             inv_product_id=1002
         )
 
@@ -343,6 +344,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=3,
             gross_price=D("100.0"),
+            tax_rate=D("7"),
             inv_product_id=1003
         )
         delta_variation_b = CoreProductDeltaFactory(id=variation_b.inv_product_id,
@@ -355,6 +357,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=33,
             gross_price=D("99.99"),
+            tax_rate=D("7"),
             inv_product_id=1004
         )
 
@@ -368,6 +371,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=33,
             gross_price=D("99.99"),
+            tax_rate=D("7"),
             inv_product_id=1005
         )
 
@@ -375,6 +379,7 @@ class UnitTestCoreAPISyncService(UnitTestCase):
             item=item_a,
             quantity=88,
             gross_price=D("88.88"),
+            tax_rate=D("7"),
             inv_product_id=1006
         )
 

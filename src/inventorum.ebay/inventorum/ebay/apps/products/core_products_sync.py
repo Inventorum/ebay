@@ -1,20 +1,18 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-
 import logging
-from datetime import datetime
 
+from datetime import datetime
 from inventorum.ebay.apps.products import tasks, EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemUpdateModel, \
     EbayItemVariationModel, EbayItemVariationUpdateModel
 from inventorum.util.celery import TaskExecutionContext
-from inventorum.util.django.middlewares import fallback_uuid
 
 
 log = logging.getLogger(__name__)
 
 
-class CoreAPISyncService(object):
+class CoreProductsSync(object):
 
     def __init__(self, account):
         """
@@ -26,13 +24,13 @@ class CoreAPISyncService(object):
     def run(self):
         current_sync_start = datetime.utcnow()
         # if there was no sync yet, the ebay account creation is taken as starting point
-        last_sync_start = self.account.last_core_api_sync or self.account.time_added
+        last_sync_start = self.account.last_core_products_sync or self.account.time_added
 
         self._sync_core_modifications(modified_since=last_sync_start)
         self._sync_core_deletions(deleted_since=last_sync_start)
         self._sync_variations_modifications()
 
-        self.account.last_core_api_sync = current_sync_start
+        self.account.last_core_products_sync = current_sync_start
         self.account.save()
 
     def _sync_core_modifications(self, modified_since):
@@ -113,7 +111,7 @@ class CoreAPISyncService(object):
     def get_task_execution_context(self):
         return TaskExecutionContext(user_id=self.account.default_user.id,
                                     account_id=self.account.id,
-                                    request_id=fallback_uuid())
+                                    request_id=None)
 
     def _sync_core_deletions(self, deleted_since):
         """

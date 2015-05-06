@@ -1,8 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from datetime import datetime
 
-from inventorum.ebay.apps.accounts.models import EbayUserModel
+from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateModel, EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingSendStateFailedException,\
     PublishingException, UnpublishingService, UnpublishingException, UpdateService, UpdateFailedException, \
@@ -12,6 +13,26 @@ from inventorum.util.celery import inventorum_task
 
 
 log = logging.getLogger(__name__)
+
+
+@inventorum_task()
+def periodic_core_products_sync_task(self):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    """
+    from inventorum.ebay.apps.products.core_products_sync import CoreProductsSync
+
+    start_time = datetime.now()
+
+    accounts = EbayAccountModel.objects.with_published_products().all()
+    log.info("Starting core products sync for {} accounts".format(accounts.count()))
+
+    for account in accounts:
+        log.info("Running core api sync for inv account {}".format(account.inv_id))
+        CoreProductsSync(account).run()
+
+    run_time = datetime.now() - start_time
+    log.info("Finished core products sync in {}".format(run_time))
 
 
 # - Publishing tasks ----------------------------------------------------

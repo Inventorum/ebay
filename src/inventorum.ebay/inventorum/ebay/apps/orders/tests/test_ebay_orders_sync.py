@@ -3,22 +3,169 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from decimal import Decimal as D
+from datetime import datetime, timedelta
 from inventorum.ebay.apps.accounts.models import AddressModel
+from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
+from inventorum.ebay.apps.auth.models import EbayTokenModel
+from inventorum.ebay.apps.core_api.tests import MockedTest, CoreApiTestHelpers
 from inventorum.ebay.apps.orders import CorePaymentMethod
+from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync, IncomingEbayOrderSyncer
+from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+from inventorum.ebay.apps.orders.tasks import periodic_ebay_orders_sync_task
 from inventorum.ebay.apps.products.models import EbayItemVariationModel, EbayItemModel
+from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory, EbayItemVariationFactory
+from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
-from inventorum.ebay.tests.testcases import UnitTestCase
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
-from inventorum.ebay.apps.orders.ebay_orders_sync import IncomingEbayOrderSyncer
-from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
-from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory, EbayItemVariationFactory
-from inventorum.ebay.lib.ebay.data import OrderStatusCodeType, PaymentStatusCodeType, BuyerPaymentMethodCodeType
-from inventorum.ebay.lib.ebay.data.tests.factories import OrderTypeFactory, TransactionTypeFactory, \
-    TransactionTypeWithVariationFactory
+from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
+from inventorum.ebay.lib.ebay.data import EbayParser, OrderStatusCodeType, PaymentStatusCodeType, \
+    BuyerPaymentMethodCodeType
+from inventorum.ebay.lib.ebay.data.tests.factories import OrderTypeFactory, GetOrdersResponseTypeFactory, \
+    TransactionTypeWithVariationFactory, TransactionTypeFactory
+from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
 
 
 log = logging.getLogger(__name__)
+
+
+class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, ShippingServiceTestMixin):
+
+    @celery_test_case()
+    @MockedTest.use_cassette("ebay_orders_sync.yaml", record_mode="new_episodes", match_on=["body"])
+    def test_ebay_orders_sync(self):
+        # ensure constant sync start since we're matching on body with vcr
+        self.account.last_ebay_orders_sync = EbayParser.parse_date("2015-04-25T12:16:11.257939Z")
+        self.account.save()
+
+        # create published item with variations that are included in the response cassette
+        published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         external_id="261869293885")
+        EbayItemVariationFactory.create(inv_product_id=670339, item=published_item)
+
+        # create shipping service that is selected in the response cassette
+        dhl_shipping = self.get_shipping_service_dhl()
+
+        periodic_ebay_orders_sync_task.delay(context=get_anonymous_task_execution_context())
+
+        orders = OrderModel.objects.by_account(self.account)
+        self.assertPostcondition(orders.count(), 5)
+
+        for order in orders:
+            self.assertIsNotNone(order.inv_id)
+            self.assertIsNotNone(order.original_ebay_data)
+
+    @celery_test_case()
+    @MockedTest.use_cassette("ebay_orders_sync_click_and_collect.yaml", record_mode="new_episodes", match_on=["body"])
+    def test_ebay_orders_click_and_collect_sync(self):
+        # ensure constant sync start since we're matching on body with vcr
+        self.account.last_ebay_orders_sync = EbayParser.parse_date("2015-04-25T12:16:11.257939Z")
+        self.account.save()
+
+        # create published item with variations that are included in the response cassette
+        published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         external_id="261869293885")
+        EbayItemVariationFactory.create(inv_product_id=670339, item=published_item)
+        # create shipping service that is selected in the response cassette
+        dhl_shipping = self.get_shipping_service_dhl()
+
+        periodic_ebay_orders_sync_task.delay(context=get_anonymous_task_execution_context())
+
+        orders = OrderModel.objects.by_account(self.account)
+        self.assertPostcondition(orders.count(), 5)
+
+        for order in orders:
+            self.assertIsNotNone(order.inv_id)
+            self.assertIsNotNone(order.original_ebay_data)
+
+        first_order = OrderModel.objects.by_account(self.account).first()
+        self.assertEqual(first_order.selected_shipping.service.external_id, INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID)
+        self.assertTrue(first_order.is_click_and_collect)
+
+
+class UnitTestEbayOrdersSync(UnitTestCase):
+
+    def setUp(self):
+        super(UnitTestEbayOrdersSync, self).setUp()
+
+        # ebay-authenticated account with default user
+        ebay_token = EbayTokenFactory.create()
+        self.account = EbayAccountFactory.create(token=EbayTokenModel.create_from_ebay_token(ebay_token))
+        self.default_user = EbayUserFactory.create(account=self.account)
+
+        self.incoming_ebay_order_sync_mock = \
+            self.patch("inventorum.ebay.apps.orders.ebay_orders_sync.IncomingEbayOrderSyncer.__call__")
+
+        self.ebay_api_get_orders_mock = \
+            self.patch("inventorum.ebay.lib.ebay.orders.EbayOrders.get_orders")
+
+    def expect_ebay_orders(self, orders):
+        """
+        :type orders: list[inventorum.ebay.lib.ebay.data.responses.OrderType]
+        """
+        get_orders_response = GetOrdersResponseTypeFactory.create(
+            pagination_result__total_number_of_entries=len(orders),
+            orders=orders
+        )
+        self.ebay_api_get_orders_mock.return_value = get_orders_response
+
+    def test_basic_logic_with_empty_orders(self):
+        assert self.account.last_ebay_orders_sync is None
+
+        self.expect_ebay_orders([])
+
+        subject = EbayOrdersSync(account=self.account)
+        subject.run()
+
+        self.assertFalse(self.incoming_ebay_order_sync_mock.called)
+        self.assertTrue(self.ebay_api_get_orders_mock.called)
+
+        self.ebay_api_get_orders_mock.assert_called_once_with({
+            "OrderStatus": "Completed",
+            "OrderRole": "Seller",
+            "ModTimeFrom": EbayParser.format_date(self.account.time_added),
+            "Pagination": {
+                "EntriesPerPage": 100
+            }
+        })
+
+        # next sync for the account should start from last_ebay_orders_sync
+        self.ebay_api_get_orders_mock.reset_mock()
+        self.expect_ebay_orders([])
+
+        self.assertIsNotNone(self.account.last_ebay_orders_sync)
+        self.assertTrue(datetime.utcnow() - self.account.last_ebay_orders_sync < timedelta(seconds=1))
+
+        # reload changes from database
+        self.account = self.account.reload()
+
+        last_ebay_orders_sync = self.account.last_ebay_orders_sync
+
+        subject = EbayOrdersSync(account=self.account)
+        subject.run()
+
+        self.ebay_api_get_orders_mock.assert_called_once_with({
+            "OrderStatus": "Completed",
+            "OrderRole": "Seller",
+            "ModTimeFrom": EbayParser.format_date(last_ebay_orders_sync),
+            "Pagination": {
+                "EntriesPerPage": 100
+            }
+        })
+
+    def test_syncs_incoming_ebay_orders(self):
+        order_1 = OrderTypeFactory.create(order_id="1")
+        order_2 = OrderTypeFactory.create(order_id="2")
+
+        self.expect_ebay_orders([order_1, order_2])
+
+        subject = EbayOrdersSync(account=self.account)
+        subject.run()
+
+        self.assertEqual(self.incoming_ebay_order_sync_mock.call_count, 2)
+
+        self.incoming_ebay_order_sync_mock.assert_any_call(order_1)
+        self.incoming_ebay_order_sync_mock.assert_any_call(order_2)
 
 
 class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
@@ -40,6 +187,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         order_id = "123456789-987654321"
 
         published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         tax_rate=D("7.000"),
                                                          external_id=published_ebay_item_id)
 
         shipping_service_dhl = self.get_shipping_service_dhl()
@@ -88,7 +236,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
 
         self.assertEqual(order_model.account, self.account)
         self.assertEqual(order_model.ebay_id, order_id)
-        self.assertEqual(order_model.ebay_status, OrderStatusCodeType.Completed)
+        self.assertEqual(order_model.ebay_complete_status, OrderStatusCodeType.Completed)
         self.assertEqual(order_model.created_in_core_api, False)
 
         self.assertEqual(order_model.buyer_first_name, "John")
@@ -147,6 +295,8 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.assertEqual(line_item.name, "Inventorum iPad Stand")
         self.assertEqual(line_item.quantity, 2)
         self.assertEqual(line_item.unit_price, D("3.99"))
+        # tax rate should have been taken from the ebay item model
+        self.assertEqual(line_item.tax_rate, D("7.000"))
 
         # task to create order in core api should have been scheduled
         self.schedule_core_order_creation_mock\
@@ -159,9 +309,12 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         transaction_id = "111111111"
         order_id = "000000000-111111111"
 
+        # we set a different tax rate here to proof that the variation tax rate is taken over the item model
         published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         tax_rate=D("19.000"),
                                                          external_id=published_ebay_item_id)
         published_variation = EbayItemVariationFactory(item=published_item,
+                                                       tax_rate=D("7.000"),
                                                        inv_product_id=23)
         assert published_variation.sku.endswith("23")
         assert published_item.id != published_variation.id
@@ -201,6 +354,7 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.assertEqual(line_item.orderable_item_id, published_variation.id)
         self.assertIsInstance(line_item.orderable_item, EbayItemVariationModel)
         self.assertEqual(line_item.name, "Inventorum T-Shirt [Black, M]")
+        self.assertEqual(line_item.orderable_item.tax_rate, D("7.000"))
 
         # task to create order in core api should have been scheduled
         self.schedule_core_order_creation_mock\

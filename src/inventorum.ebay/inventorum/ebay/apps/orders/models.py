@@ -4,11 +4,10 @@ import logging
 
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
-from inventorum.ebay.lib.db.fields import MoneyField
+from inventorum.ebay.lib.db.fields import MoneyField, TaxRateField
 
 from inventorum.ebay.lib.db.models import BaseModel, MappedInventorumModelQuerySet
 from django.db import models
@@ -40,6 +39,7 @@ class OrderLineItemModel(BaseModel):
     name = models.CharField(max_length=255)
     quantity = models.PositiveIntegerField(verbose_name="Quantity")
     unit_price = MoneyField(verbose_name="Unit price")
+    tax_rate = TaxRateField(verbose_name="Tax rate")
 
     @property
     def inv_product_id(self):
@@ -59,12 +59,12 @@ class OrderModelQuerySet(MappedInventorumModelQuerySet):
 class OrderModel(BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", verbose_name="Ebay account")
 
-    inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
-
     ebay_id = models.CharField(unique=True, max_length=255, verbose_name="Ebay id")
-    ebay_status = models.CharField(max_length=255, choices=CompleteStatusCodeType.CHOICES,
-                                   verbose_name="Ebay order status")
+    ebay_complete_status = models.CharField(max_length=255, choices=CompleteStatusCodeType.CHOICES,
+                                            verbose_name="Ebay order status")
     original_ebay_data = JSONField(verbose_name="Original ebay data", null=True)
+
+    inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
 
     buyer_first_name = models.CharField(max_length=255, null=True, blank=True)
     buyer_last_name = models.CharField(max_length=255, null=True, blank=True)
@@ -88,6 +88,13 @@ class OrderModel(BaseModel):
     ebay_payment_method = models.CharField(max_length=255, null=True, blank=True)
     ebay_payment_status = models.CharField(max_length=255, null=True, blank=True)
 
+    # represents the status in the core api (presence of related enforced by `OrderFactory`)
+    """:type: OrderStatusModel"""
+    core_status = models.OneToOneField("orders.OrderStatusModel", related_name="core_status_related_order")
+    # represents the status on the ebay side (presence of related enforced by `OrderFactory`)
+    """:type: OrderStatusModel"""
+    ebay_status = models.OneToOneField("orders.OrderStatusModel", related_name="ebay_status_related_order")
+
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()
 
     def __unicode__(self):
@@ -102,9 +109,64 @@ class OrderModel(BaseModel):
         return self.selected_shipping.service.external_id == INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 
 
+class OrderFactory(object):
+    """ Responsible for creating order models with proper relations """
+
+    @classmethod
+    def create(cls, account, ebay_id, ebay_complete_status, **kwargs):
+        """
+        :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :type ebay_id: unicode
+        :type ebay_complete_status: unicode
+
+        :rtype: OrderModel
+        """
+        core_status = kwargs.pop("core_status", None)
+        if core_status is None:
+            core_status = OrderStatusModel.objects.create()
+
+        ebay_status = kwargs.pop("ebay_status", None)
+        if ebay_status is None:
+            ebay_status = OrderStatusModel.objects.create()
+
+        return OrderModel.objects.create(account=account, ebay_id=ebay_id, ebay_complete_status=ebay_complete_status,
+                                         core_status=core_status, ebay_status=ebay_status, **kwargs)
+
+
+class OrderStatusModel(BaseModel):
+
+    is_paid = models.BooleanField(default=False)
+    is_shipped = models.BooleanField(default=False)
+    is_closed = models.BooleanField(default=False)
+    is_canceled = models.BooleanField(default=False)
+
+    @property
+    def is_ready_for_pickup(self):
+        return self.order.is_click_and_collect and self.is_shipped
+
+    @property
+    def is_picked_up(self):
+        return self.order.is_click_and_collect and self.is_closed
+
+    @property
+    def is_pickup_canceled(self):
+        return self.order.is_click_and_collect and self.is_canceled
+
+    @property
+    def order(self):
+        """
+        :rtype: OrderModel
+        """
+        # Note jm: Unfortunately, there is no other way as two one-to-one relations cannot have the same related name
+        return getattr(self, "core_status_related_order", None) or getattr(self, "ebay_status_related_order", None)
+
+
 class OrderableItemModel(models.Model):
     """
     Mixin for item models that can be ordered (either `EbayItemModel` or `EbayItemVariationModel`)
+
+    Required interface
+    - inv_product_id: int
 
     Note jm: We've to inherit here form models, otherwise django won't pick up the generic field.
     See: http://stackoverflow.com/questions/28115239/django-genericrelation-in-model-mixin

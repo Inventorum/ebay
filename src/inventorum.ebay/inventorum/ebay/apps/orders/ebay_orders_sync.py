@@ -4,11 +4,10 @@ import logging
 
 from datetime import datetime
 from django.db import transaction
-from django.utils.functional import cached_property
 from inventorum.ebay.apps.accounts.models import AddressModel
 
 from inventorum.ebay.apps.orders import tasks, CorePaymentMethod
-from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel, OrderFactory
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemVariationModel
 from inventorum.ebay.apps.shipping.models import ShippingServiceModel, ShippingServiceConfigurationModel
 from inventorum.ebay.lib.ebay.data import OrderStatusCodeType, TradingRoleCodeType, EbayParser
@@ -20,7 +19,7 @@ from inventorum.util.celery import TaskExecutionContext
 log = logging.getLogger(__name__)
 
 
-class PeriodicEbayOrdersSync(object):
+class EbayOrdersSync(object):
 
     def __init__(self, account):
         """
@@ -122,12 +121,10 @@ class IncomingEbayOrderSyncer(object):
         """
         :type ebay_order: inventorum.ebay.lib.ebay.data.responses.OrderType
         """
-        model = OrderModel()
-
-        model.account = self.account
-        model.ebay_id = ebay_order.order_id
-        model.ebay_status = ebay_order.order_status
-        model.original_ebay_data = POPOSerializer.extract_original_data(ebay_order)
+        model = OrderFactory.create(account=self.account,
+                                    ebay_id=ebay_order.order_id,
+                                    ebay_complete_status=ebay_order.order_status,
+                                    original_ebay_data=POPOSerializer.extract_original_data(ebay_order))
 
         # extract buyer information
         buyer = ebay_order.transactions[0].buyer
@@ -255,6 +252,7 @@ class IncomingEbayOrderSyncer(object):
         line_item_model.name = orderable_name
         line_item_model.quantity = ebay_transaction.quantity_purchased
         line_item_model.unit_price = ebay_transaction.transaction_price
+        line_item_model.tax_rate = orderable_item.tax_rate
 
         line_item_model.save()
 

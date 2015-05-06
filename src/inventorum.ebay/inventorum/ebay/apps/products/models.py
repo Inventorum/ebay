@@ -11,6 +11,7 @@ from inventorum.ebay.apps.orders.models import OrderableItemModel
 
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
+from inventorum.ebay.lib.db.fields import TaxRateField, MoneyField
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
 
@@ -158,8 +159,11 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     listing_duration = models.CharField(max_length=255)
     description = models.TextField()
     postal_code = models.CharField(max_length=255, null=True, blank=True)
+
     quantity = models.IntegerField(default=0, null=True, blank=True)
-    gross_price = models.DecimalField(decimal_places=10, max_digits=20, null=True, blank=True)
+    gross_price = MoneyField(null=True, blank=True)
+    tax_rate = TaxRateField(null=True, blank=True)
+
     paypal_email_address = models.CharField(max_length=255, null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
     external_id = models.CharField(max_length=255, null=True, blank=True)
@@ -249,10 +253,13 @@ class EbayItemVariationModelQuerySet(BaseQuerySet):
 
 
 class EbayItemVariationModel(OrderableItemModel, BaseModel):
-    quantity = models.IntegerField(default=0)
-    gross_price = models.DecimalField(decimal_places=10, max_digits=20)
-    item = models.ForeignKey(EbayItemModel, related_name="variations")
     inv_product_id = models.IntegerField(verbose_name="Inventorum product id")
+
+    quantity = models.IntegerField(default=0)
+    gross_price = MoneyField()
+    tax_rate = TaxRateField()
+
+    item = models.ForeignKey(EbayItemModel, related_name="variations")
 
     objects = PassThroughManager.for_queryset_class(EbayItemVariationModelQuerySet)()
 

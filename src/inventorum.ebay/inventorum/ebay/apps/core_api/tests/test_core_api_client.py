@@ -28,7 +28,7 @@ class TestCoreAPIClient(UnitTestCase):
             "User-Agent": "inv-ebay/{version}".format(version=expected_version),
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "X-Api-Version": 9
+            "X-Api-Version": 10
         })
 
     def test_url_for(self):

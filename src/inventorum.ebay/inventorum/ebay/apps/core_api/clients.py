@@ -2,13 +2,15 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
+from inventorum.ebay.apps.core_api import CoreChannel
 from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
-    CoreProductDeltaDeserializer
+    CoreProductDeltaDeserializer, CoreOrder
 from inventorum.ebay.apps.core_api.pager import Pager
 import requests
 
 from django.conf import settings
 from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponseDeserializer
+
 
 log = logging.getLogger(__name__)
 
@@ -18,8 +20,7 @@ class CoreAPIClientException(Exception):
 
 
 class CoreAPIClient(object):
-    API_VERSION = 9
-    EBAY_CHANNEL = "ebay"
+    API_VERSION = 10
 
     @property
     def default_headers(self):
@@ -301,9 +302,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         pager = self.paginated_get("/api/products/delta/modified/", limit_per_page=limit_per_page, params=params)
         for page in pager.pages:
             serializer = CoreProductDeltaDeserializer(data=page.data, many=True)
-            # TODO jm: Exception: ListSerializer has no method build, save works here but its ugly :-x
-            serializer.is_valid(raise_exception=True)
-            yield serializer.save()
+            yield serializer.build()
 
     def get_paginated_product_delta_deleted(self, start_date, limit_per_page=10000):
         """
@@ -320,6 +319,25 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         pager = self.paginated_get("/api/products/delta/deleted/", limit_per_page=limit_per_page, params=params)
         for page in pager.pages:
             yield page.data
+
+    def get_paginated_orders_delta(self, start_date, limit_per_page=100):
+        """
+        :type start_date: datetime.datetime
+        :type limit_per_page: int
+
+        :rtype: collections.Iterable[list of ???]
+        :raises requests.exceptions.RequestError
+                rest_framework.exceptions.ValidationError
+        """
+        params = {
+            "channel": CoreChannel.EBAY,
+            "start_date": self._encode_datetime(start_date)
+        }
+
+        pager = self.paginated_get("/api/orders/delta/", limit_per_page=limit_per_page, params=params)
+        for page in pager.pages:
+            serializer = CoreOrder.Serializer(data=page.data, many=True)
+            yield serializer.build()
 
     def post_product_publishing_state(self, inv_product_id, state, details):
         """
@@ -350,5 +368,5 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
-        response = self.post('/api/orders?channel={}'.format(self.EBAY_CHANNEL), data=data)
+        response = self.post('/api/orders/', data=data)
         return response.json()["id"]

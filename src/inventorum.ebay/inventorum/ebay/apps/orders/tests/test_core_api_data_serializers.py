@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-import json
 import logging
 
 from decimal import Decimal as D
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
-from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
-from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 
 from inventorum.ebay.tests.testcases import UnitTestCase
 
@@ -20,7 +16,7 @@ log = logging.getLogger(__name__)
 
 class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
-    def test_without_payment_and_shipping(self):
+    def test_complete_order(self):
         shipping_service_dhl = self.get_shipping_service_dhl()
 
         order = OrderModelFactory.create(buyer_first_name="Andreas",
@@ -53,18 +49,23 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                                          orderable_item__product__inv_id=23,
                                          name="Inventorum T-Shirt [Green, L]",
                                          unit_price=D("3.99"),
+                                         tax_rate=D("7"),
                                          quantity=5)
 
         serializer = OrderModelCoreAPIDataSerializer(order)
 
         # TODO jm: Sync with core api
         self.assertDictEqual(serializer.data, {
-            "items": [{
-                "product": 23,
-                "name": "Inventorum T-Shirt [Green, L]",
-                "quantity": 5,
-                "gross_price": "3.99"
-            }],
+            "channel": "ebay",
+            "basket": {
+                "items": [{
+                    "product": 23,
+                    "name": "Inventorum T-Shirt [Green, L]",
+                    "quantity": 5,
+                    "unit_gross_price": "3.99",
+                    "tax_rate": "7.000"
+                }]
+            },
             "shipment": {
                 "name": "DHL Paket",
                 "cost": "4.50",

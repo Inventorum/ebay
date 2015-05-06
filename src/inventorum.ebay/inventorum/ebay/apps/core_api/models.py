@@ -1,6 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from decimal import Decimal
 import logging
+from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
+from inventorum.ebay.lib.rest.fields import TaxRateField, MoneyField
 
 from rest_framework import serializers
 
@@ -43,12 +46,13 @@ class CoreProductMetaOverrideMixin(object):
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
-    def __init__(self, id, name, gross_price, quantity, images, variation_count=0, variations=None,
+    def __init__(self, id, name, gross_price, tax_type_id, quantity, images, variation_count=0, variations=None,
                  attributes=None, description=None):
         """
         :type id: int
         :type name: unicode
         :type gross_price: decimal.Decimal
+        :type tax_type_id: int
         :type quantity: decimal.Decimal
         :type images: list of CoreProductImage
         :type variation_count: int
@@ -59,6 +63,7 @@ class CoreProduct(object):
         self.id = id
         self.name = name
         self.gross_price = gross_price
+        self.tax_type_id = tax_type_id
         self.quantity = quantity
         self.images = images
         self.variation_count = variation_count
@@ -115,7 +120,7 @@ class CoreProductAttributeSerializer(POPOSerializer):
     key = serializers.CharField()
     values = serializers.ListField(child=serializers.CharField())
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreProductAttribute
         list_serializer_class = CoreProductAttributeListSerializer
 
@@ -126,16 +131,17 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
         name = serializers.CharField(allow_null=True, allow_blank=True)
         description = serializers.CharField(allow_null=True, allow_blank=True)
-        gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+        gross_price = MoneyField()
 
         images = CoreProductImageDeserializer(many=True)
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreProduct
 
     id = serializers.IntegerField()
     name = serializers.CharField()
-    gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    gross_price = MoneyField()
+    tax_type = serializers.IntegerField(source="tax_type_id")
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     images = CoreProductImageDeserializer(many=True)
@@ -156,6 +162,27 @@ class CoreProductDeserializer(CoreBasicProductDeserializer):
 
 
 class CoreAddress(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        id = serializers.IntegerField()
+        address1 = serializers.CharField()
+        address2 = serializers.CharField(allow_null=True)
+        zipcode = serializers.CharField()
+        city = serializers.CharField()
+        state = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+        country = serializers.CharField()
+        first_name = serializers.CharField()
+        last_name = serializers.CharField()
+        company = serializers.CharField(allow_null=True)
+
+    # / Serializer #######################
+
     def __init__(self, id, address1, zipcode, city, country, first_name, last_name, address2="", company="", state=""):
         """
         :type id: int
@@ -163,38 +190,24 @@ class CoreAddress(object):
         :type address2: unicode
         :type zipcode: unicode
         :type city: unicode
-        :type state: unicode
         :type country: unicode
         :type first_name: unicode
         :type last_name: unicode
         :type company: unicode
+        :type state: unicode
         """
         self.id = id
         self.address1 = address1
         self.address2 = address2
         self.zipcode = zipcode
         self.city = city
-        self.state = state
         self.country = country
         self.first_name = first_name
         self.last_name = last_name
         self.company = company
+        self.state = state
 
-
-class CoreAddressDeserializer(POPOSerializer):
-    id = serializers.IntegerField()
-    address1 = serializers.CharField()
-    address2 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    zipcode = serializers.CharField()
-    city = serializers.CharField()
-    state = serializers.CharField(allow_null=True, required=False, allow_blank=True)
-    country = serializers.CharField()
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
-    company = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-
-    class Meta:
-        model = CoreAddress
+CoreAddress.Serializer.Meta.model = CoreAddress
 
 
 class CoreAccountSettings(object):
@@ -209,7 +222,7 @@ class CoreAccountSettings(object):
 class CoreAccountSettingsDeserializer(POPOSerializer):
     ebay_click_and_collect = serializers.BooleanField(default=False, required=False)
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreAccountSettings
 
 
@@ -255,20 +268,53 @@ class CoreAccountDeserializer(POPOSerializer):
     email = serializers.EmailField()
     country = serializers.CharField()
     settings = CoreAccountSettingsDeserializer()
-    billing_address = CoreAddressDeserializer(required=False)
+    billing_address = CoreAddress.Serializer(required=False)
     opening_hours = CoreOpeningHours.Deserializer(required=False, many=True)
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreAccount
 
 
 class CoreInfo(object):
-    def __init__(self, account):
+    def __init__(self, account, tax_types):
+        """
+        :type account: CoreAccount
+        :type tax_types: list[CoreTaxType]
+        """
         self.account = account
+        self.tax_types = tax_types
+
+    def get_tax_rate_for(self, tax_type_id):
+        """
+        :type tax_type_id: int
+        """
+        return next((tax_type.tax_rate for tax_type in self.tax_types if tax_type.id == tax_type_id), None)
+
+
+class CoreTaxType(object):
+
+    class Serializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        id = serializers.IntegerField()
+        tax_rate = serializers.DecimalField(max_digits=13, decimal_places=10)
+
+    def __init__(self, id, tax_rate):
+        """
+        :type id: int
+        :type tax_rate: decimal.Decimal
+        """
+        self.id = id
+        self.tax_rate = tax_rate.quantize(Decimal("0.000"))
+
+CoreTaxType.Serializer.Meta.model = CoreTaxType
 
 
 class CoreInfoDeserializer(POPOSerializer):
     account = CoreAccountDeserializer()
+    tax_types = CoreTaxType.Serializer(many=True)
 
     class Meta:
         model = CoreInfo
@@ -295,16 +341,16 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
 
     class MetaDeserializer(serializers.Serializer):
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
-        gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+        gross_price = MoneyField()
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = CoreProductDelta
 
     id = serializers.IntegerField()
     parent = serializers.IntegerField(allow_null=True, required=False)
     name = serializers.CharField()
     state = serializers.CharField()
-    gross_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    gross_price = MoneyField()
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     # meta will be removed after meta overwrites
@@ -315,3 +361,42 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         return super(CoreProductDeltaDeserializer, self).create(validated_data)
 
 
+class CoreOrder(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        id = serializers.IntegerField()
+        state = serializers.IntegerField()
+
+    # / Serializer #######################
+
+    def __init__(self, id, state):
+        """
+        :type id: int
+        :type state: int
+        """
+        self.id = id
+        self.state = state
+
+    @property
+    def is_paid(self):
+        return self.state & BinaryCoreOrderStates.PAID == BinaryCoreOrderStates.PAID
+
+    @property
+    def is_shipped(self):
+        return self.state & BinaryCoreOrderStates.SHIPPED == BinaryCoreOrderStates.SHIPPED
+
+    @property
+    def is_closed(self):
+        return self.state & BinaryCoreOrderStates.CLOSED == BinaryCoreOrderStates.CLOSED
+
+    @property
+    def is_canceled(self):
+        return self.state & BinaryCoreOrderStates.CANCELED == BinaryCoreOrderStates.CANCELED
+
+CoreOrder.Serializer.Meta.model = CoreOrder
