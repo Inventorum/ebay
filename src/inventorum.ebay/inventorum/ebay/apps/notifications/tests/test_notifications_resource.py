@@ -5,10 +5,10 @@ import logging
 import datetime
 from datetime import timedelta
 from inventorum.ebay.apps.notifications.fixtures import notification_templates
-from inventorum.ebay.apps.notifications.fixtures.notification_templates import compile_notification_template
 from inventorum.ebay.apps.notifications.models import EbayNotificationModel
 
 from inventorum.ebay.apps.notifications import EbayNotificationEventType, EbayNotificationStatus
+from inventorum.ebay.apps.notifications.tests import NotificationTestsMixin
 from inventorum.ebay.tests.testcases import APITestCase
 
 from rest_framework import status
@@ -17,7 +17,7 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class TestNotificationsResource(APITestCase):
+class TestNotificationsResource(APITestCase, NotificationTestsMixin):
 
     NOTIFICATIONS = {
         EbayNotificationEventType.FixedPriceTransaction: notification_templates.fixed_price_transaction_notification_template,
@@ -25,11 +25,6 @@ class TestNotificationsResource(APITestCase):
         EbayNotificationEventType.ItemClosed: notification_templates.item_closed_notification_template,
         EbayNotificationEventType.ItemSuspended: notification_templates.item_suspended_notification_template
     }
-
-    def post_notification(self, event_type, template, timestamp=None, signature=None, **kwargs):
-        data = compile_notification_template(template, timestamp=timestamp, signature=signature, **kwargs)
-        return self.client.post("/notifications/", content_type='text/xml; charset="utf-8"',
-                                SOAPACTION=event_type, data=data)
 
     def test_unhandled(self):
         for event_type, template in self.NOTIFICATIONS.iteritems():

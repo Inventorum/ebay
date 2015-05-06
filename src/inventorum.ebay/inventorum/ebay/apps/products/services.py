@@ -355,6 +355,7 @@ class PublishingService(PublishingUnpublishingService):
 
 
 class UnpublishingService(PublishingUnpublishingService):
+
     def initialize_unpublish_attempt(self):
         """
         :raises PublishingSendStateFailedException
@@ -415,6 +416,9 @@ class UnpublishingService(PublishingUnpublishingService):
         """
         self.send_publishing_status_to_core_api(self.item.publishing_status,
                                                 details=self.item.publishing_status_details)
+
+    def unpublish_model_only(self):
+        self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED)
 
 
 class UpdateFailedException(EbayServiceException):

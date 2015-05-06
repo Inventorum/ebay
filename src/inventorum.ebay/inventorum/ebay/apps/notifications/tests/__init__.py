@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
+import logging
 
-# this is a namespace package
-__import__('pkg_resources').declare_namespace(__name__)
+from inventorum.ebay.apps.notifications.fixtures.notification_templates import compile_notification_template
+
+
+log = logging.getLogger(__name__)
+
+
+class NotificationTestsMixin(object):
+
+    def post_notification(self, event_type, template, timestamp=None, signature=None, **kwargs):
+        data = compile_notification_template(template, timestamp=timestamp, signature=signature, **kwargs)
+        return self.client.post("/notifications/", content_type='text/xml; charset="utf-8"',
+                                SOAPACTION=event_type, data=data)

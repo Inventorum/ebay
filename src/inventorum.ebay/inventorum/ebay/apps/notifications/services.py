@@ -16,6 +16,7 @@ class EbayPlatformNotificationService(object):
 
     # EbayNotificationEventType -> EbayNotificationHandler
     handlers = {
+        EbayNotificationEventType.ItemClosed: handlers.ItemClosedNotificationHandler
     }
 
     @classmethod

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
+from datetime import datetime
+from inventorum.ebay.apps.products import EbayItemPublishingStatus
+from inventorum.ebay.apps.products.models import EbayItemModel
 
 from inventorum.ebay.lib.ebay.data.responses import GetItemTransactionsResponseType, GetItemResponseType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
@@ -74,7 +77,22 @@ class ItemClosedNotificationHandler(EbayNotificationHandler):
         """
         :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponseType
         """
-        pass
+        item_id = payload.item.item_id
+
+        try:
+            item = EbayItemModel.objects.by_ebay_id(item_id).get()
+        except EbayItemModel.DoesNotExist:
+            # wasn't ours, ignore
+            return
+
+        if item.publishing_status == EbayItemPublishingStatus.PUBLISHED:
+            log.info("Unpublishing ebay item {} in response to ItemClosed notification"
+                     .format(item_id, item.publishing_status))
+            item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
+            item.unpublished_at = datetime.now()
+            item.save()
+        else:
+            log.info("Got ItemClosed notification for already unpublished ebay item {}".format(item_id))
 
 
 class ItemSuspendedNotificationHandler(EbayNotificationHandler):
