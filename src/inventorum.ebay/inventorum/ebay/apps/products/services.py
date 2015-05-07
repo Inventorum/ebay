@@ -13,7 +13,7 @@ from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
 from inventorum.util.django.timezone import datetime
-from requests.exceptions import HTTPError
+from requests.exceptions import RequestException
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
@@ -74,7 +74,7 @@ class PublishingPreparationService(object):
         """
         try:
             return self.user.core_api.get_product(self.product.inv_id)
-        except HTTPError as e:
+        except RequestException as e:
             raise PublishingCouldNotGetDataFromCoreAPI(response=e.response)
 
     @cached_property
@@ -84,7 +84,7 @@ class PublishingPreparationService(object):
         """
         try:
             return self.user.core_api.get_account_info()
-        except HTTPError as e:
+        except RequestException as e:
             raise PublishingCouldNotGetDataFromCoreAPI(e.response)
 
     @property
@@ -283,7 +283,7 @@ class PublishingUnpublishingService(object):
         if core_api_state is not None:
             try:
                 self.user.core_api.post_product_publishing_state(self.product.inv_id, core_api_state, details=details)
-            except HTTPError as e:
+            except RequestException as e:
                 log.error(e)
                 raise PublishingSendStateFailedException()
         else:

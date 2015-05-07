@@ -68,8 +68,7 @@ def core_order_creation_task(self, order_id):
         service.create_in_core_api(order)
     except RequestException as e:
         log.error(e)
-        # TODO jm: Overwrite retry to pass context automatically
-        self.retry(kwargs=dict(context=self.context))
+        self.retry(args=(order_id,))
 
 
 def schedule_core_order_creation(order_id, context):

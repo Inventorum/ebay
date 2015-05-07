@@ -51,7 +51,7 @@ def _initialize_ebay_item_publish(self, ebay_item_id):
     try:
         service.initialize_publish_attempt()
     except PublishingSendStateFailedException:
-        self.retry()
+        self.retry(args=(ebay_item_id,))
 
 
 @inventorum_task()
@@ -86,7 +86,7 @@ def _finalize_ebay_item_publish(self, ebay_item_id):
     try:
         service.finalize_publish_attempt()
     except PublishingSendStateFailedException:
-        self.retry()
+        self.retry(args=(ebay_item_id,))
 
 
 def schedule_ebay_item_publish(ebay_item_id, context):
@@ -117,7 +117,7 @@ def _initialize_ebay_item_unpublish(self, ebay_item_id):
     try:
         service.initialize_unpublish_attempt()
     except PublishingSendStateFailedException:
-        self.retry()
+        self.retry(args=(ebay_item_id,))
 
 
 @inventorum_task()
@@ -152,7 +152,7 @@ def _finalize_ebay_item_unpublish(self, ebay_item_id):
     try:
         service.finalize_unpublish_attempt()
     except PublishingSendStateFailedException:
-        self.retry()
+        self.retry(args=(ebay_item_id,))
 
 
 def schedule_ebay_item_unpublish(ebay_item_id, context):
