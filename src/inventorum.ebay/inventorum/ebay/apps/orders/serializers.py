@@ -2,12 +2,11 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.ebay.apps.accounts.models import AddressModel
-from inventorum.ebay.apps.accounts.serializers import AddressSerializer
 from inventorum.ebay.apps.core_api import CoreChannel, BinaryCoreOrderStates
-from inventorum.ebay.apps.core_api.clients import CoreAPIClient
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel, ShippingServiceModel
 from inventorum.ebay.lib.rest.fields import MoneyField, TaxRateField
+from inventorum.ebay.lib.utils import days_to_seconds
 
 from rest_framework import serializers
 
@@ -15,15 +14,43 @@ from rest_framework import serializers
 log = logging.getLogger(__name__)
 
 
+class ShippingServiceCoreAPIDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ShippingServiceModel
+        fields = ("name", "time_min", "time_max")
+
+    name = serializers.CharField(source="description")
+    time_min = serializers.SerializerMethodField()
+    time_max = serializers.SerializerMethodField()
+
+    def get_time_min(self, service):
+        """
+        :type service: ShippingServiceModel
+        :rtype: int | None
+        """
+        if service.shipping_time_min is not None:
+            return days_to_seconds(service.shipping_time_min)
+
+    def get_time_max(self, service):
+        """
+        :type service: ShippingServiceModel
+        :rtype: int | None
+        """
+        if service.shipping_time_max is not None:
+            return days_to_seconds(service.shipping_time_max)
+
+
 class OrderShipmentCoreAPIDataSerializer(serializers.ModelSerializer):
     """
     Responsible for serializing a `ShippingServiceConfigurationModel` instance assigned as shipping to an order
     into the according data format to create/update its representation in the core api
     """
-
     class Meta:
         model = ShippingServiceConfigurationModel
-        fields = ("name", "cost", "external_id")
+        fields = ("service", "name", "cost", "external_id")
+
+    service = ShippingServiceCoreAPIDataSerializer()
 
     name = serializers.CharField(source="service.description")
     cost = MoneyField()

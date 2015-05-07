@@ -75,7 +75,7 @@ class ShippingServiceModel(BaseModel):
             external_id=INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID,
             country=country,
             defaults=dict(
-                description='Inventorum: Click and collect shipping service for {country}'.format(country=country)
+                description="Click & Collect",
             )
         )
         return obj
