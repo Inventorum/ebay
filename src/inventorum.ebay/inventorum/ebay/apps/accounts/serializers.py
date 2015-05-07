@@ -14,6 +14,8 @@ log = logging.getLogger(__name__)
 
 
 class AddressSerializer(serializers.ModelSerializer):
+    country = serializers.CharField()
+
     class Meta:
         model = AddressModel
         fields = ('name', 'street', 'street1', 'city', 'country', 'postal_code', 'region')
