@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from decimal import Decimal as D
+from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
@@ -99,5 +100,6 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
             "payments": [{
                 "payment_amount": "24.45",
                 "payment_method": CorePaymentMethod.PAYPAL
-            }]
+            }],
+            "state": BinaryCoreOrderStates.PENDING
         })
