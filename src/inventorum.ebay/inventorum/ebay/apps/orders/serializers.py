@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.accounts.serializers import AddressSerializer
-from inventorum.ebay.apps.core_api import CoreChannel
+from inventorum.ebay.apps.core_api import CoreChannel, BinaryCoreOrderStates
 from inventorum.ebay.apps.core_api.clients import CoreAPIClient
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
@@ -101,13 +101,14 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderModel
-        fields = ("channel", "basket", "shipment", "customer", "payments")
+        fields = ("channel", "basket", "shipment", "customer", "payments", "state")
 
     channel = serializers.SerializerMethodField()
     basket = serializers.SerializerMethodField()
     shipment = OrderShipmentCoreAPIDataSerializer(source="selected_shipping")
     customer = serializers.SerializerMethodField()
     payments = serializers.SerializerMethodField()
+    state = serializers.SerializerMethodField()
 
     def get_channel(self, order):
         return CoreChannel.EBAY
@@ -120,3 +121,6 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
 
     def get_payments(self, order):
         return [OrderPaymentCoreAPIDataSerializer(order).data]
+
+    def get_state(self, order):
+        return BinaryCoreOrderStates.PENDING

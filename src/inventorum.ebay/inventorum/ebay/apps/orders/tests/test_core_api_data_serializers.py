@@ -3,9 +3,11 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from decimal import Decimal as D
+from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
+from inventorum.ebay.apps.shipping.models import ShippingServiceModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 
 from inventorum.ebay.tests.testcases import UnitTestCase
@@ -17,6 +19,7 @@ log = logging.getLogger(__name__)
 class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
     def test_complete_order(self):
+        # assert regular, non-click and collect order data #############################################################
         shipping_service_dhl = self.get_shipping_service_dhl()
 
         order = OrderModelFactory.create(buyer_first_name="Andreas",
@@ -99,5 +102,6 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
             "payments": [{
                 "payment_amount": "24.45",
                 "payment_method": CorePaymentMethod.PAYPAL
-            }]
+            }],
+            "state": BinaryCoreOrderStates.PENDING
         })
