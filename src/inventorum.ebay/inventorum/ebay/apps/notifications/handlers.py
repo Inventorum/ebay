@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-from datetime import datetime
+
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayItemModel
+from inventorum.ebay.apps.products.services import UnpublishingService
+from inventorum.ebay.apps.products.tasks import schedule_core_api_publishing_status_update
 
 from inventorum.ebay.lib.ebay.data.responses import GetItemTransactionsResponseType, GetItemResponseType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
+from inventorum.util.celery import TaskExecutionContext
 from rest_framework.exceptions import ValidationError
 
 
@@ -85,12 +88,18 @@ class ItemClosedNotificationHandler(EbayNotificationHandler):
             # wasn't ours, ignore
             return
 
-        if item.publishing_status == EbayItemPublishingStatus.PUBLISHED:
+        if item.publishing_status != EbayItemPublishingStatus.UNPUBLISHED:
             log.info("Unpublishing ebay item {} in response to ItemClosed notification"
                      .format(item_id, item.publishing_status))
-            item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
-            item.unpublished_at = datetime.now()
-            item.save()
+            account = item.account
+
+            unpublishing_service = UnpublishingService(item_id, user=account.user)
+            unpublishing_service.unpublish_model_only()
+
+            schedule_core_api_publishing_status_update(ebay_item_id=item.id,
+                                                       context=TaskExecutionContext(account_id=account.id,
+                                                                                    user_id=account.default_user.id,
+                                                                                    request_id=None))
         else:
             log.info("Got ItemClosed notification for already unpublished ebay item {}".format(item_id))
 

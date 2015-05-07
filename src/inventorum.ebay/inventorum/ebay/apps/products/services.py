@@ -420,6 +420,36 @@ class UnpublishingService(PublishingUnpublishingService):
     def unpublish_model_only(self):
         self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED)
 
+class CorePublishingStatusUpdateService(object):
+    """
+    Responsible for updating the core publishing status for a product based on the given source item
+    """
+
+    def __init__(self, source, account):
+        """
+        :type source: EbayItemModel
+        :type account: EbayAccountModel
+        """
+        self.ebay_item = source
+        self.product = source.product
+        self.account = account
+
+    def update_publishing_status(self):
+        """
+        Updates the core publishing status for the corresponding product based on the given source item
+
+        :raises requests.exceptions.RequestException
+        """
+        publishing_status = self.ebay_item.publishing_status
+        details = self.ebay_item.publishing_status_details
+
+        log.info("Updating publishing status for product {product} to '{status}' {details}"
+                 .format(product=self.product, status=publishing_status,
+                         details="({})".format(details) if details else ""))
+
+        core_api_state = EbayItemPublishingStatus.core_api_state(publishing_status)
+        self.account.core_api.post_product_publishing_state(self.product.inv_id, core_api_state, details=details)
+
 
 class UpdateFailedException(EbayServiceException):
     pass

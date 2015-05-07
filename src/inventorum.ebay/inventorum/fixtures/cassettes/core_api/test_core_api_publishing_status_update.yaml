@@ -1,0 +1,90 @@
+interactions:
+- request:
+    body: '{"state": "in_progress", "details": {}, "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['58']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Thu, 07 May 2015 16:07:19 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YqOKV:4D6IHEyXh8r47RhGJ8yJCXRvvTw"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 18:07:19 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['3530964262614263284']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"state": "failed", "details": {"message": "Oops, something went wrong!"},
+      "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['93']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Thu, 07 May 2015 16:07:20 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YqOKW:ATxG_9CbJ4g8Ako50MvXmJ-z9l0"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 18:07:20 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['3530964262614263284']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"state": "published", "details": {}, "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['56']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Thu, 07 May 2015 16:07:20 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YqOKW:ATxG_9CbJ4g8Ako50MvXmJ-z9l0"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 18:07:20 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['3727996746311722484']
+    status: {code: 200, message: OK}
+version: 1
