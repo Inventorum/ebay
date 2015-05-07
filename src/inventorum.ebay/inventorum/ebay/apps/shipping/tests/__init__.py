@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from decimal import Decimal as D
+from inventorum.ebay.apps.shipping.models import ShippingServiceModel
 from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceFactory
 from inventorum.ebay.tests import Countries
 from rest_framework.exceptions import ValidationError
@@ -19,7 +20,9 @@ class ShippingServiceTestMixin(object):
         :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
         """
         return ShippingServiceFactory.create(external_id="DE_DHLPaket",
-                                             description="DHL Paket")
+                                             description="DHL Paket",
+                                             shipping_time_min=1,
+                                             shipping_time_max=3)
 
     def get_shipping_service_hermes(self):
         """
@@ -37,6 +40,9 @@ class ShippingServiceTestMixin(object):
         return ShippingServiceFactory.create(external_id="DE_UPSExpress",
                                              description="UPS Express",
                                              is_international=True)
+
+    def get_shipping_service_click_and_collect(self, country=Countries.DE):
+        return ShippingServiceModel.get_click_and_collect_service(country)
 
     def get_shipping_services(self):
         """
