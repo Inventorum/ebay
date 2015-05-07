@@ -9,7 +9,7 @@ from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, Eb
 from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.apps.core_api.tests import MockedTest, CoreApiTestHelpers
 from inventorum.ebay.apps.orders import CorePaymentMethod
-from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync, IncomingEbayOrderSyncer
+from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync, IncomingEbayOrderSyncer, EbayOrderSyncException
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
 from inventorum.ebay.apps.orders.tasks import periodic_ebay_orders_sync_task
 from inventorum.ebay.apps.products.models import EbayItemVariationModel, EbayItemModel
@@ -166,6 +166,23 @@ class UnitTestEbayOrdersSync(UnitTestCase):
 
         self.incoming_ebay_order_sync_mock.assert_any_call(order_1)
         self.incoming_ebay_order_sync_mock.assert_any_call(order_2)
+
+    def test_sync_error_handling(self):
+        self.assertPrecondition(self.account.last_ebay_orders_sync, None)
+        self.assertPrecondition(OrderModel.objects.count(), 0)
+
+        order_1 = OrderTypeFactory.create(order_id="1")
+        order_2 = OrderTypeFactory.create(order_id="2")
+
+        self.expect_ebay_orders([order_1, order_2])
+
+        self.incoming_ebay_order_sync_mock.side_effect = EbayOrderSyncException("Oops, something went wrong")
+
+        subject = EbayOrdersSync(account=self.account)
+        subject.run()
+
+        # should not update last sync time
+        self.assertIsNone(self.account.last_ebay_orders_sync)
 
 
 class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):

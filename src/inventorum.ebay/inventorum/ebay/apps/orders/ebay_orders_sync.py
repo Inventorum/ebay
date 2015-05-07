@@ -41,16 +41,20 @@ class EbayOrdersSync(object):
         log.info("Received {} completed orders from ebay for account {} since {}"
                  .format(len(orders), self.account, last_sync_start))
 
+        all_order_syncs_succeeded = True
         for order in orders:
             try:
                 self.sync(order)
-            except EbayOrderSyncException as e:
-                # For now, we simply log errors to see how the sync behaves in production
-                # Later, we probably want to or need to create some special error handling for certain cases
-                log.error(unicode(e))
+            except EbayOrderSyncException as exc:
+                log.error("Ebay order sync failed for account {account} and order id {order_id}: {details}"
+                          .format(account=self.account, order_id=order.order_id, details=unicode(exc)))
+                all_order_syncs_succeeded = False
 
-        self.account.last_ebay_orders_sync = current_sync_start
-        self.account.save()
+        # For now, we only update last_ebay_orders_sync time when no order sync failed (naive error handling)
+        # => if any failed, it will just try to sync it again next time
+        if all_order_syncs_succeeded:
+            self.account.last_ebay_orders_sync = current_sync_start
+            self.account.save()
 
     def _get_completed_orders(self, mod_time_from):
         """
@@ -91,6 +95,7 @@ class IncomingEbayOrderSyncer(object):
     def __call__(self, ebay_order):
         """
         :type ebay_order: inventorum.ebay.lib.ebay.data.responses.OrderType
+        :raises EbayOrderSyncException
         """
         if self._skip_incoming_order(ebay_order):
             return
