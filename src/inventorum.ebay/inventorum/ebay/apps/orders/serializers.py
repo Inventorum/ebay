@@ -48,13 +48,13 @@ class OrderShipmentCoreAPIDataSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = ShippingServiceConfigurationModel
-        fields = ("service", "name", "cost", "external_id")
+        fields = ("service", "name", "cost", "external_key")
 
     service = ShippingServiceCoreAPIDataSerializer()
 
     name = serializers.CharField(source="service.description")
     cost = MoneyField()
-    external_id = serializers.CharField(source="service.external_id")
+    external_key = serializers.CharField(source="service.external_id")
 
 
 class OrderCustomerAddressCoreAPIDataSerializer(serializers.ModelSerializer):

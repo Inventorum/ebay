@@ -72,7 +72,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
             "shipment": {
                 "name": "DHL Paket",
                 "cost": "4.50",
-                "external_id": "DE_DHLPaket",
+                "external_key": "DE_DHLPaket",
                 "service": {
                     "name": "DHL Paket",
                     "time_min": 60 * 60 * 24 * 1,
@@ -122,7 +122,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
         self.assertDictEqual(data["shipment"], {
             "name": "Click & Collect",
             "cost": "4.50",
-            "external_id": INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID,
+            "external_key": INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID,
             "service": {
                 "name": "Click & Collect",
                 "time_min": None,

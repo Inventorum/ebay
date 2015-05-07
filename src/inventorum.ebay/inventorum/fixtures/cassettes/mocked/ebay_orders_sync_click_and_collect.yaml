@@ -141,7 +141,7 @@ interactions:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
       T-Shirt[Blau,XL]", "quantity": 1, "unit_gross_price": "1.01", "tax_rate": "19.000"}]},
       "shipment": {"service": {"name": "Click & Collect", "time_min": null, "time_max":
-      null}, "name": "Click & Collect", "cost": "0.00", "external_id": "_inventorum_click_and_collect_service"},
+      null}, "name": "Click & Collect", "cost": "0.00", "external_key": "INV_ClickAndCollect"},
       "customer": {"first_name": "John", "last_name": "Wayne", "email": "michal+ebay+john@inventorum.com",
       "billing_address": {"first_name": "John", "last_name": "Wayne", "address1":
       "Inventorum", "address2": null, "zipcode": "13355", "city": "Berlin", "state":
@@ -153,7 +153,7 @@ interactions:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['896']
+      Content-Length: ['879']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -162,44 +162,44 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11822, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22637, "name": "Inventorum T-Shirt[Blau,XL]",
+    body: {string: !!python/unicode '{"id": 11852, "basket": {"note_internal": null,
+        "note_external": null, "items": [{"id": 22667, "name": "Inventorum T-Shirt[Blau,XL]",
         "discount": null, "original_quantity": "1.00", "price": "0.8487394958", "product":
         670339, "quantity": 1, "tax_rate": "19.000", "gross_price": "1.01", "unit_gross_price":
-        "1.01"}]}, "state": 2, "customer": {"id": 3769, "channel": null, "email":
+        "1.01"}]}, "state": 2, "customer": {"id": 3799, "channel": null, "email":
         "michal+ebay+john@inventorum.com", "title": null, "first_name": "John", "middle_name":
-        null, "last_name": "Wayne", "billing_address": {"id": 6068, "address1": "Inventorum",
+        null, "last_name": "Wayne", "billing_address": {"id": 6128, "address1": "Inventorum",
         "address2": null, "zipcode": "13355", "city": "Berlin", "state": null, "country":
         "DE", "first_name": "John", "last_name": "Wayne", "company": null, "title":
-        null}, "shipping_address": [{"id": 6067, "address1": "Inventorum", "address2":
+        null}, "shipping_address": [{"id": 6127, "address1": "Inventorum", "address2":
         null, "zipcode": "13355", "city": "Berlin", "state": null, "country": "DE",
         "first_name": "John", "last_name": "Wayne", "company": null, "title": null}]},
-        "amount_paid": "5.3000000000", "payments": [{"id": 8816, "payment_method":
-        "4", "payment_amount": "5.3000000000", "date": "07.05.2015 - 14:55", "transaction_id":
+        "amount_paid": "5.3000000000", "payments": [{"id": 8846, "payment_method":
+        "4", "payment_amount": "5.3000000000", "date": "07.05.2015 - 15:44", "transaction_id":
         null, "transaction_duration": null, "paypal_invoice_id": null, "paypal_tab_id":
-        null}], "shipment": {"id": 2122, "name": "Click & Collect", "cost": "0.00",
-        "external_key": null, "service": {"id": 1401, "name": "Click & Collect", "time_max":
-        null, "time_min": null}}, "channel": "ebay"}'}
+        null}], "shipment": {"id": 2152, "name": "Click & Collect", "cost": "0.00",
+        "external_key": "INV_ClickAndCollect", "service": {"id": 1431, "name": "Click
+        & Collect", "time_max": null, "time_min": null}}, "channel": "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Thu, 07 May 2015 12:55:43 GMT']
+      date: ['Thu, 07 May 2015 13:44:47 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YqLL5:DTGvZpd_dYh9MxBe44z41BRtII4"; Domain=app.intern.inventorum.net;
-          expires=Thu, 07-May-2015 14:55:43 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqM6Z:RaGU8Ewk-cbQw3TGBcQX9JcW_II"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:44:47 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['467672091072194036']
+      x-rid: ['822049086750909940']
     status: {code: 201, message: CREATED}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
       T-Shirt[Gelb,XL]", "quantity": 1, "unit_gross_price": "1.03", "tax_rate": "19.000"}]},
       "shipment": {"service": {"name": "Click & Collect", "time_min": null, "time_max":
-      null}, "name": "Click & Collect", "cost": "0.00", "external_id": "_inventorum_click_and_collect_service"},
+      null}, "name": "Click & Collect", "cost": "0.00", "external_key": "INV_ClickAndCollect"},
       "customer": {"first_name": "John", "last_name": "Wayne", "email": "michal+ebay+john@inventorum.com",
       "billing_address": {"first_name": "John", "last_name": "Wayne", "address1":
       "Inventorum", "address2": null, "zipcode": "13355", "city": "Berlin", "state":
@@ -211,7 +211,7 @@ interactions:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['896']
+      Content-Length: ['879']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -220,44 +220,44 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11823, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22638, "name": "Inventorum T-Shirt[Gelb,XL]",
+    body: {string: !!python/unicode '{"id": 11853, "basket": {"note_internal": null,
+        "note_external": null, "items": [{"id": 22668, "name": "Inventorum T-Shirt[Gelb,XL]",
         "discount": null, "original_quantity": "1.00", "price": "0.8655462185", "product":
         670339, "quantity": 1, "tax_rate": "19.000", "gross_price": "1.03", "unit_gross_price":
-        "1.03"}]}, "state": 2, "customer": {"id": 3770, "channel": null, "email":
+        "1.03"}]}, "state": 2, "customer": {"id": 3800, "channel": null, "email":
         "michal+ebay+john@inventorum.com", "title": null, "first_name": "John", "middle_name":
-        null, "last_name": "Wayne", "billing_address": {"id": 6070, "address1": "Inventorum",
+        null, "last_name": "Wayne", "billing_address": {"id": 6130, "address1": "Inventorum",
         "address2": null, "zipcode": "13355", "city": "Berlin", "state": null, "country":
         "DE", "first_name": "John", "last_name": "Wayne", "company": null, "title":
-        null}, "shipping_address": [{"id": 6069, "address1": "Inventorum", "address2":
+        null}, "shipping_address": [{"id": 6129, "address1": "Inventorum", "address2":
         null, "zipcode": "13355", "city": "Berlin", "state": null, "country": "DE",
         "first_name": "John", "last_name": "Wayne", "company": null, "title": null}]},
-        "amount_paid": "6.0300000000", "payments": [{"id": 8817, "payment_method":
-        "4", "payment_amount": "6.0300000000", "date": "07.05.2015 - 14:55", "transaction_id":
+        "amount_paid": "6.0300000000", "payments": [{"id": 8847, "payment_method":
+        "4", "payment_amount": "6.0300000000", "date": "07.05.2015 - 15:44", "transaction_id":
         null, "transaction_duration": null, "paypal_invoice_id": null, "paypal_tab_id":
-        null}], "shipment": {"id": 2123, "name": "Click & Collect", "cost": "0.00",
-        "external_key": null, "service": {"id": 1402, "name": "Click & Collect", "time_max":
-        null, "time_min": null}}, "channel": "ebay"}'}
+        null}], "shipment": {"id": 2153, "name": "Click & Collect", "cost": "0.00",
+        "external_key": "INV_ClickAndCollect", "service": {"id": 1432, "name": "Click
+        & Collect", "time_max": null, "time_min": null}}, "channel": "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Thu, 07 May 2015 12:55:43 GMT']
+      date: ['Thu, 07 May 2015 13:44:47 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YqLL5:DTGvZpd_dYh9MxBe44z41BRtII4"; Domain=app.intern.inventorum.net;
-          expires=Thu, 07-May-2015 14:55:43 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqM6Z:RaGU8Ewk-cbQw3TGBcQX9JcW_II"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:44:47 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['3548134236193613300']
+      x-rid: ['3028812904162452980']
     status: {code: 201, message: CREATED}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
       T-Shirt[Blau,M]", "quantity": 1, "unit_gross_price": "1.00", "tax_rate": "19.000"}]},
       "shipment": {"service": {"name": "Click & Collect", "time_min": null, "time_max":
-      null}, "name": "Click & Collect", "cost": "0.00", "external_id": "_inventorum_click_and_collect_service"},
+      null}, "name": "Click & Collect", "cost": "0.00", "external_key": "INV_ClickAndCollect"},
       "customer": {"first_name": "Ferry", "last_name": "H\u00f6tzel", "email": "info@paydroid.de",
       "billing_address": {"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1":
       "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode": "53604", "city":
@@ -270,7 +270,7 @@ interactions:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['941']
+      Content-Length: ['924']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -279,57 +279,58 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11824, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22639, "name": "Inventorum T-Shirt[Blau,M]",
+    body: {string: !!python/unicode '{"id": 11854, "basket": {"note_internal": null,
+        "note_external": null, "items": [{"id": 22669, "name": "Inventorum T-Shirt[Blau,M]",
         "discount": null, "original_quantity": "1.00", "price": "0.8403361345", "product":
         670339, "quantity": 1, "tax_rate": "19.000", "gross_price": "1.00", "unit_gross_price":
-        "1.00"}]}, "state": 2, "customer": {"id": 3771, "channel": null, "email":
+        "1.00"}]}, "state": 2, "customer": {"id": 3801, "channel": null, "email":
         "info@paydroid.de", "title": null, "first_name": "Ferry", "middle_name": null,
-        "last_name": "H\u00f6tzel", "billing_address": {"id": 6072, "address1": "K\u00f6nigin-Sophie-Str.
+        "last_name": "H\u00f6tzel", "billing_address": {"id": 6132, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
-        null, "title": null}, "shipping_address": [{"id": 6071, "address1": "K\u00f6nigin-Sophie-Str.
+        null, "title": null}, "shipping_address": [{"id": 6131, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
         null, "title": null}]}, "amount_paid": "5.2900000000", "payments": [{"id":
-        8818, "payment_method": "6", "payment_amount": "5.2900000000", "date": "07.05.2015
-        - 14:55", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
-        null, "paypal_tab_id": null}], "shipment": {"id": 2124, "name": "Click & Collect",
-        "cost": "0.00", "external_key": null, "service": {"id": 1403, "name": "Click
-        & Collect", "time_max": null, "time_min": null}}, "channel": "ebay"}'}
+        8848, "payment_method": "6", "payment_amount": "5.2900000000", "date": "07.05.2015
+        - 15:44", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
+        null, "paypal_tab_id": null}], "shipment": {"id": 2154, "name": "Click & Collect",
+        "cost": "0.00", "external_key": "INV_ClickAndCollect", "service": {"id": 1433,
+        "name": "Click & Collect", "time_max": null, "time_min": null}}, "channel":
+        "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Thu, 07 May 2015 12:55:43 GMT']
+      date: ['Thu, 07 May 2015 13:44:48 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YqLL5:DTGvZpd_dYh9MxBe44z41BRtII4"; Domain=app.intern.inventorum.net;
-          expires=Thu, 07-May-2015 14:55:43 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqM6a:FF6k0_8wKrwcwI_wQFXRpOH3VJI"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:44:48 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['3548134236193613300']
+      x-rid: ['3028812904162452980']
     status: {code: 201, message: CREATED}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
       T-Shirt[Gr\u00fcn,L]", "quantity": 1, "unit_gross_price": "1.05", "tax_rate":
       "19.000"}]}, "shipment": {"service": {"name": "Click & Collect", "time_min":
-      null, "time_max": null}, "name": "Click & Collect", "cost": "0.00", "external_id":
-      "_inventorum_click_and_collect_service"}, "customer": {"first_name": "Ferry",
-      "last_name": "H\u00f6tzel", "email": "info@paydroid.de", "billing_address":
-      {"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str.
-      4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
-      "country": "DE"}, "shipping_address": [{"first_name": "Ferry", "last_name":
+      null, "time_max": null}, "name": "Click & Collect", "cost": "0.00", "external_key":
+      "INV_ClickAndCollect"}, "customer": {"first_name": "Ferry", "last_name": "H\u00f6tzel",
+      "email": "info@paydroid.de", "billing_address": {"first_name": "Ferry", "last_name":
       "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode":
-      "53604", "city": "Bad Honnef", "state": null, "country": "DE"}]}, "payments":
-      [{"payment_amount": "1.05", "payment_method": "6"}], "state": 2}'
+      "53604", "city": "Bad Honnef", "state": null, "country": "DE"}, "shipping_address":
+      [{"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str.
+      4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
+      "country": "DE"}]}, "payments": [{"payment_amount": "1.05", "payment_method":
+      "6"}], "state": 2}'
     headers:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['946']
+      Content-Length: ['929']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -338,44 +339,45 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11825, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22640, "name": "Inventorum T-Shirt[Gr\u00fcn,L]",
+    body: {string: !!python/unicode '{"id": 11855, "basket": {"note_internal": null,
+        "note_external": null, "items": [{"id": 22670, "name": "Inventorum T-Shirt[Gr\u00fcn,L]",
         "discount": null, "original_quantity": "1.00", "price": "0.8823529412", "product":
         670339, "quantity": 1, "tax_rate": "19.000", "gross_price": "1.05", "unit_gross_price":
-        "1.05"}]}, "state": 2, "customer": {"id": 3772, "channel": null, "email":
+        "1.05"}]}, "state": 2, "customer": {"id": 3802, "channel": null, "email":
         "info@paydroid.de", "title": null, "first_name": "Ferry", "middle_name": null,
-        "last_name": "H\u00f6tzel", "billing_address": {"id": 6074, "address1": "K\u00f6nigin-Sophie-Str.
+        "last_name": "H\u00f6tzel", "billing_address": {"id": 6134, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
-        null, "title": null}, "shipping_address": [{"id": 6073, "address1": "K\u00f6nigin-Sophie-Str.
+        null, "title": null}, "shipping_address": [{"id": 6133, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
         null, "title": null}]}, "amount_paid": "1.0500000000", "payments": [{"id":
-        8819, "payment_method": "6", "payment_amount": "1.0500000000", "date": "07.05.2015
-        - 14:55", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
-        null, "paypal_tab_id": null}], "shipment": {"id": 2125, "name": "Click & Collect",
-        "cost": "0.00", "external_key": null, "service": {"id": 1404, "name": "Click
-        & Collect", "time_max": null, "time_min": null}}, "channel": "ebay"}'}
+        8849, "payment_method": "6", "payment_amount": "1.0500000000", "date": "07.05.2015
+        - 15:44", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
+        null, "paypal_tab_id": null}], "shipment": {"id": 2155, "name": "Click & Collect",
+        "cost": "0.00", "external_key": "INV_ClickAndCollect", "service": {"id": 1434,
+        "name": "Click & Collect", "time_max": null, "time_min": null}}, "channel":
+        "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Thu, 07 May 2015 12:55:44 GMT']
+      date: ['Thu, 07 May 2015 13:44:48 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YqLL6:VVqeW0EykFRU4_TVlPKhUH0fwmM"; Domain=app.intern.inventorum.net;
-          expires=Thu, 07-May-2015 14:55:44 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqM6a:FF6k0_8wKrwcwI_wQFXRpOH3VJI"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:44:48 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['3548134236193613300']
+      x-rid: ['822049086750909940']
     status: {code: 201, message: CREATED}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
       T-Shirt[Blau,M]", "quantity": 2, "unit_gross_price": "1.00", "tax_rate": "19.000"}]},
       "shipment": {"service": {"name": "Click & Collect", "time_min": null, "time_max":
-      null}, "name": "Click & Collect", "cost": "0.00", "external_id": "_inventorum_click_and_collect_service"},
+      null}, "name": "Click & Collect", "cost": "0.00", "external_key": "INV_ClickAndCollect"},
       "customer": {"first_name": "Ferry", "last_name": "H\u00f6tzel", "email": "info@paydroid.de",
       "billing_address": {"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1":
       "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode": "53604", "city":
@@ -388,7 +390,7 @@ interactions:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['941']
+      Content-Length: ['924']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -397,37 +399,38 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11826, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22641, "name": "Inventorum T-Shirt[Blau,M]",
+    body: {string: !!python/unicode '{"id": 11856, "basket": {"note_internal": null,
+        "note_external": null, "items": [{"id": 22671, "name": "Inventorum T-Shirt[Blau,M]",
         "discount": null, "original_quantity": "2.00", "price": "0.8403361345", "product":
         670339, "quantity": 2, "tax_rate": "19.000", "gross_price": "2.00", "unit_gross_price":
-        "1.00"}]}, "state": 2, "customer": {"id": 3773, "channel": null, "email":
+        "1.00"}]}, "state": 2, "customer": {"id": 3803, "channel": null, "email":
         "info@paydroid.de", "title": null, "first_name": "Ferry", "middle_name": null,
-        "last_name": "H\u00f6tzel", "billing_address": {"id": 6076, "address1": "K\u00f6nigin-Sophie-Str.
+        "last_name": "H\u00f6tzel", "billing_address": {"id": 6136, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
-        null, "title": null}, "shipping_address": [{"id": 6075, "address1": "K\u00f6nigin-Sophie-Str.
+        null, "title": null}, "shipping_address": [{"id": 6135, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
         null, "title": null}]}, "amount_paid": "8.2900000000", "payments": [{"id":
-        8820, "payment_method": "6", "payment_amount": "8.2900000000", "date": "07.05.2015
-        - 14:55", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
-        null, "paypal_tab_id": null}], "shipment": {"id": 2126, "name": "Click & Collect",
-        "cost": "0.00", "external_key": null, "service": {"id": 1405, "name": "Click
-        & Collect", "time_max": null, "time_min": null}}, "channel": "ebay"}'}
+        8850, "payment_method": "6", "payment_amount": "8.2900000000", "date": "07.05.2015
+        - 15:44", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
+        null, "paypal_tab_id": null}], "shipment": {"id": 2156, "name": "Click & Collect",
+        "cost": "0.00", "external_key": "INV_ClickAndCollect", "service": {"id": 1435,
+        "name": "Click & Collect", "time_max": null, "time_min": null}}, "channel":
+        "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Thu, 07 May 2015 12:55:44 GMT']
+      date: ['Thu, 07 May 2015 13:44:48 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YqLL6:VVqeW0EykFRU4_TVlPKhUH0fwmM"; Domain=app.intern.inventorum.net;
-          expires=Thu, 07-May-2015 14:55:44 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqM6a:FF6k0_8wKrwcwI_wQFXRpOH3VJI"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:44:48 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['467672091072194036']
+      x-rid: ['3028812904162452980']
     status: {code: 201, message: CREATED}
 version: 1
