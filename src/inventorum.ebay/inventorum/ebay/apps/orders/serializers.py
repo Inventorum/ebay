@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from django.conf import settings
 from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.core_api import CoreChannel, BinaryCoreOrderStates
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
@@ -115,9 +116,16 @@ class OrderBasketCoreAPIDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderModel
-        fields = ("items",)
+        fields = ("items", "note_external")
 
     items = OrderLineItemModelCoreAPIDataSerializer(source="line_items", many=True)
+    note_external = serializers.SerializerMethodField()
+
+    def get_note_external(self, order):
+        """
+        :type order: OrderModel
+        """
+        return settings.CORE_ORDER_NOTE_TEMPLATE.format(ebay_order_id=order.ebay_id)
 
 
 class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):

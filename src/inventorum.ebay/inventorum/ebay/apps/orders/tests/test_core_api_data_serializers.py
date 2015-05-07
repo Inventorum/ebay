@@ -23,7 +23,8 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
 
         shipping_service_dhl = self.get_shipping_service_dhl()
 
-        order = OrderModelFactory.create(buyer_first_name="Andreas",
+        order = OrderModelFactory.create(ebay_id="9912341245-123456789",
+                                         buyer_first_name="Andreas",
                                          buyer_last_name="Balke",
                                          buyer_email="andi@inventorum.com",
 
@@ -67,7 +68,8 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                     "quantity": 5,
                     "unit_gross_price": "3.99",
                     "tax_rate": "7.000"
-                }]
+                }],
+                "note_external": "Ebay order id: 9912341245-123456789"
             },
             "shipment": {
                 "name": "DHL Paket",
