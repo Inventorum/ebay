@@ -41,18 +41,18 @@ class EbayOrdersSync(object):
         log.info("Received {} completed orders from ebay for account {} since {}"
                  .format(len(orders), self.account, last_sync_start))
 
-        all_order_syncs_succeeded = True
+        there_were_no_sync_errors = True
         for order in orders:
             try:
                 self.sync(order)
             except EbayOrderSyncException as exc:
                 log.error("Ebay order sync failed for account {account} and order id {order_id}: {details}"
                           .format(account=self.account, order_id=order.order_id, details=unicode(exc)))
-                all_order_syncs_succeeded = False
+                there_were_no_sync_errors = False
 
         # For now, we only update last_ebay_orders_sync time when no order sync failed (naive error handling)
         # => if any failed, it will just try to sync it again next time
-        if all_order_syncs_succeeded:
+        if there_were_no_sync_errors:
             self.account.last_ebay_orders_sync = current_sync_start
             self.account.save()
 
