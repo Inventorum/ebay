@@ -44,7 +44,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin)
         product.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("20.00"),
                                          additional_cost=D("3.00"))
 
-    @ApiTest.use_cassette("publish_product_resource_no_category.yaml")
+    @ApiTest.use_cassette("publish_product_resource_no_category.yaml", record_mode='new_episodes')
     def test_publish_no_category(self):
         inv_product_id = StagingTestAccount.Products.SIMPLE_PRODUCT_ID
         assert not EbayProductModel.objects.by_inv_id(inv_product_id).exists()
