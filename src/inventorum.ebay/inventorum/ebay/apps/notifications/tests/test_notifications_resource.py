@@ -69,6 +69,6 @@ class TestNotificationsResource(APITestCase, NotificationTestsMixin):
 
     def test_invalid_payload(self):
         response = self.client.post("/notifications/", content_type='text/xml; charset="utf-8"',
-                                    SOAPACTION=EbayNotificationEventType.FixedPriceTransaction,
+                                    HTTP_SOAPACTION=EbayNotificationEventType.FixedPriceTransaction,
                                     data="""<? echo "Invalid xml"; ?>""")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
