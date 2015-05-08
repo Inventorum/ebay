@@ -13,4 +13,4 @@ class NotificationTestsMixin(object):
     def post_notification(self, event_type, template, timestamp=None, signature=None, **kwargs):
         data = compile_notification_template(template, timestamp=timestamp, signature=signature, **kwargs)
         return self.client.post("/notifications/", content_type='text/xml; charset="utf-8"',
-                                SOAPACTION=event_type, data=data)
+                                SOAPAction=event_type, data=data)

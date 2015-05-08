@@ -23,7 +23,7 @@ class EbayNotification(object):
     class SignatureValidationError(Exception):
         pass
 
-    SOAP_ACTION_HEADER = "SOAPACTION"
+    SOAP_ACTION_HEADER = "SOAPAction"
     TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
     request_headers = None
@@ -49,12 +49,14 @@ class EbayNotification(object):
         self._parse_request_body()
 
     def _parse_request_headers(self):
-        if self.SOAP_ACTION_HEADER not in self.request_headers:
+        lower_case_request_headers = {key.lower(): value for key, value in self.request_headers.iteritems()}
+        soap_action = lower_case_request_headers.get(self.SOAP_ACTION_HEADER.lower(), None)
+        if soap_action is None:
             raise self.ParseError("Required header `{}` not found".format(self.SOAP_ACTION_HEADER))
 
         # header contains a URL that ends with the name of the event that the notification is being sent for
         # e.g. https://developer.ebay.com/notification/FixedPriceTransaction
-        self.event_type = self.request_headers[self.SOAP_ACTION_HEADER].split("/").pop()
+        self.event_type = soap_action.split("/").pop()
 
     def _parse_request_body(self):
         # We can re-use ebaysdk's response parsing here, as notification bodies are valid ebay responses
