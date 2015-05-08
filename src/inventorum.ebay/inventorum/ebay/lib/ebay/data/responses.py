@@ -24,12 +24,12 @@ class UserType(object):
             model = None
 
         Email = serializers.CharField(source="email")
-        UserFirstName = serializers.CharField(source="user_first_name")
-        UserLastName = serializers.CharField(source="user_last_name")
+        UserFirstName = serializers.CharField(source="user_first_name", required=False)
+        UserLastName = serializers.CharField(source="user_last_name", required=False)
 
     # / Deserialization ###############
 
-    def __init__(self, email, user_first_name, user_last_name):
+    def __init__(self, email, user_first_name="", user_last_name=""):
         """
         :type email: unicode
         :type user_first_name: unicode
