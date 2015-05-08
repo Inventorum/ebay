@@ -87,7 +87,6 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(self.published_item.gross_price, D("1.99"))
             self.assertEqual(self.published_item.quantity, 10)
 
-
     def test_update_succeeded_with_variations(self):
         # Note: The recorded cassette has been manually modified to return a successful response
         with MockedTest.use_cassette("test_update_service_success_with_variations.yaml") as cassette:

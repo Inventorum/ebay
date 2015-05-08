@@ -9,6 +9,8 @@ import unittest
 
 from django.conf import settings
 from django.test.testcases import TestCase
+from inventorum.util.celery import TaskExecutionContext
+from inventorum.util.django.middlewares import fallback_uuid
 from rest_framework import test
 
 from inventorum.ebay.tests import StagingTestAccount
@@ -47,6 +49,9 @@ class APITestCase(AssertionMixin, PatchMixin, test.APITestCase):
     def user(self):
         """ :rtype: inventorum.ebay.apps.accounts.models.EbayUserModel """
         return self._user
+
+    def get_task_execution_context(self):
+        return TaskExecutionContext(account_id=self.account.id, user_id=self.user.id, request_id=fallback_uuid())
 
     def authenticate(self, user):
         """

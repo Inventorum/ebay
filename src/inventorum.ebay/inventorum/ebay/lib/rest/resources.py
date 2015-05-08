@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 log = logging.getLogger(__name__)
 
 
-class PublicAPIResource(APIView):
+class PublicAPIResource(GenericAPIView):
     permission_classes = ()
 
 

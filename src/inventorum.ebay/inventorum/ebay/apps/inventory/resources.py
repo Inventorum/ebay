@@ -1,20 +1,23 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
 import logging
+from django.db import transaction
+
 from inventorum.ebay.apps.inventory.serializers import SanityCheckEbaySerializer
 from inventorum.ebay.apps.inventory.services import CoreApiQuantityCheck
-from inventorum.ebay.apps.products.models import EbayItemModel
 from rest_framework.response import Response
-from inventorum.ebay.lib.rest.exceptions import BadRequest
-from inventorum.ebay.lib.rest.resources import APIResource
+from inventorum.ebay.lib.rest.resources import PublicAPIResource
 
 log = logging.getLogger(__name__)
 
 
-class SanityCheckResource(APIResource):
+class SanityCheckResource(PublicAPIResource):
     serializer_class = SanityCheckEbaySerializer
 
+    @transaction.atomic
     def post(self, request):
+        log.info('Sanity check from ebay: request: %s', request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -25,4 +28,6 @@ class SanityCheckResource(APIResource):
                                               request.user.core_api)
         ebay_sanity_check.availabilities = quantity_check.refresh_quantities()
         response_serializer = self.get_serializer(instance=ebay_sanity_check)
-        return Response(data=response_serializer.data)
+        data = response_serializer.data
+        log.info('Sanity check from ebay: response: %s', data)
+        return Response(data=data)

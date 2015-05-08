@@ -67,7 +67,7 @@ class CoreAPIClient(object):
 
         :rtype: requests.models.Response
 
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
         """
         if custom_headers is None:
             custom_headers = {}
@@ -98,7 +98,7 @@ class CoreAPIClient(object):
 
         :rtype: requests.models.Response
 
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
         """
         if params is None:
             params = {}
@@ -137,7 +137,7 @@ class CoreAPIClient(object):
 
         :rtype: requests.models.Response
 
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
         """
         headers = self._get_request_headers(custom_headers)
 
@@ -164,7 +164,7 @@ class CoreAPIClient(object):
 
         :rtype: requests.models.Response
 
-        :raises requests.exceptions.HTTPError
+        :raises requests.exceptions.RequestException
         """
         headers = self._get_request_headers(custom_headers)
 
@@ -194,7 +194,7 @@ class CoreAPIClient(object):
 
         :rtype: Pager
 
-        :raises requests.exceptions.HTTPError, inventorum.ebay.apps.core_api.pager.PagerException
+        :raises requests.exceptions.RequestException, inventorum.ebay.apps.core_api.pager.PagerException
         """
         return Pager(client=self, path=path, limit_per_page=limit_per_page,
                      params=params, custom_headers=custom_headers)

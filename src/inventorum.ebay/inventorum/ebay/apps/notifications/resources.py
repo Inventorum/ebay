@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+
 import logging
 
+from django.db import transaction
 from django.conf import settings
+from rest_framework import status
+from rest_framework.response import Response
+
 from inventorum.ebay.apps.notifications.models import EbayNotificationModel
 from inventorum.ebay.apps.notifications.services import EbayPlatformNotificationService
 from inventorum.ebay.lib.rest.resources import PublicAPIResource
 from inventorum.ebay.lib.ebay.notifications import EbayNotification
-from rest_framework import status
-
-from rest_framework.response import Response
 
 
 log = logging.getLogger(__name__)
@@ -19,6 +21,7 @@ class EbayPlatformNotificationsResource(PublicAPIResource):
     permission_classes = ()
     authentication_classes = ()
 
+    @transaction.atomic
     def post(self, request):
         """
         Public callback action for ebay platform notifications

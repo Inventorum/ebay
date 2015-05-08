@@ -13,7 +13,7 @@ from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
 from inventorum.util.django.timezone import datetime
-from requests.exceptions import HTTPError
+from requests.exceptions import RequestException
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
@@ -74,7 +74,7 @@ class PublishingPreparationService(object):
         """
         try:
             return self.user.core_api.get_product(self.product.inv_id)
-        except HTTPError as e:
+        except RequestException as e:
             raise PublishingCouldNotGetDataFromCoreAPI(response=e.response)
 
     @cached_property
@@ -84,7 +84,7 @@ class PublishingPreparationService(object):
         """
         try:
             return self.user.core_api.get_account_info()
-        except HTTPError as e:
+        except RequestException as e:
             raise PublishingCouldNotGetDataFromCoreAPI(e.response)
 
     @property
@@ -283,7 +283,7 @@ class PublishingUnpublishingService(object):
         if core_api_state is not None:
             try:
                 self.user.core_api.post_product_publishing_state(self.product.inv_id, core_api_state, details=details)
-            except HTTPError as e:
+            except RequestException as e:
                 log.error(e)
                 raise PublishingSendStateFailedException()
         else:
@@ -332,7 +332,7 @@ class PublishingService(PublishingUnpublishingService):
         )
 
     def _add_inventory_for_click_and_collect(self):
-        if not self.product.is_click_and_collect:
+        if not self.item.is_click_and_collect:
             return
 
         api = EbayInventoryManagement(token=self.user.account.token.ebay_object)
@@ -355,6 +355,7 @@ class PublishingService(PublishingUnpublishingService):
 
 
 class UnpublishingService(PublishingUnpublishingService):
+
     def initialize_unpublish_attempt(self):
         """
         :raises PublishingSendStateFailedException
@@ -403,7 +404,7 @@ class UnpublishingService(PublishingUnpublishingService):
         )
 
     def _delete_inventory_for_click_and_collect(self):
-        if not self.product.is_click_and_collect:
+        if not self.item.is_click_and_collect:
             return
 
         api = EbayInventoryManagement(token=self.user.account.token.ebay_object)
@@ -415,6 +416,37 @@ class UnpublishingService(PublishingUnpublishingService):
         """
         self.send_publishing_status_to_core_api(self.item.publishing_status,
                                                 details=self.item.publishing_status_details)
+
+
+class CorePublishingStatusUpdateService(object):
+    """
+    Responsible for updating the core publishing status for a product based on the given source item
+    """
+
+    def __init__(self, source, account):
+        """
+        :type source: EbayItemModel
+        :type account: EbayAccountModel
+        """
+        self.ebay_item = source
+        self.product = source.product
+        self.account = account
+
+    def update_publishing_status(self):
+        """
+        Updates the core publishing status for the corresponding product based on the given source item
+
+        :raises requests.exceptions.RequestException
+        """
+        publishing_status = self.ebay_item.publishing_status
+        details = self.ebay_item.publishing_status_details
+
+        log.info("Updating publishing status for product {product} to '{status}' {details}"
+                 .format(product=self.product, status=publishing_status,
+                         details="({})".format(details) if details else ""))
+
+        core_api_state = EbayItemPublishingStatus.core_api_state(publishing_status)
+        self.account.core_api.post_product_publishing_state(self.product.inv_id, core_api_state, details=details)
 
 
 class UpdateFailedException(EbayServiceException):

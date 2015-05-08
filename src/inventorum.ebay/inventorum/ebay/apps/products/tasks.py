@@ -7,9 +7,10 @@ from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateModel, EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingSendStateFailedException,\
     PublishingException, UnpublishingService, UnpublishingException, UpdateService, UpdateFailedException, \
-    ProductDeletionService
+    ProductDeletionService, CorePublishingStatusUpdateService
 
 from inventorum.util.celery import inventorum_task
+from requests.exceptions import RequestException
 
 
 log = logging.getLogger(__name__)
@@ -51,7 +52,7 @@ def _initialize_ebay_item_publish(self, ebay_item_id):
     try:
         service.initialize_publish_attempt()
     except PublishingSendStateFailedException:
-        self.retry()
+        self.retry(args=(ebay_item_id,))
 
 
 @inventorum_task()
@@ -86,7 +87,7 @@ def _finalize_ebay_item_publish(self, ebay_item_id):
     try:
         service.finalize_publish_attempt()
     except PublishingSendStateFailedException:
-        self.retry()
+        self.retry(args=(ebay_item_id,))
 
 
 def schedule_ebay_item_publish(ebay_item_id, context):
@@ -117,7 +118,7 @@ def _initialize_ebay_item_unpublish(self, ebay_item_id):
     try:
         service.initialize_unpublish_attempt()
     except PublishingSendStateFailedException:
-        self.retry()
+        self.retry(args=(ebay_item_id,))
 
 
 @inventorum_task()
@@ -152,7 +153,7 @@ def _finalize_ebay_item_unpublish(self, ebay_item_id):
     try:
         service.finalize_unpublish_attempt()
     except PublishingSendStateFailedException:
-        self.retry()
+        self.retry(args=(ebay_item_id,))
 
 
 def schedule_ebay_item_unpublish(ebay_item_id, context):
@@ -216,3 +217,31 @@ def schedule_ebay_product_deletion(ebay_product_id, context):
     :type context: inventorum.util.celery.TaskExecutionContext
     """
     ebay_product_deletion.delay(ebay_product_id, context=context)
+
+
+# - Publishing state sync -----------------------------------------------
+
+@inventorum_task(max_retries=5, default_retry_delay=30)
+def core_api_publishing_status_update_task(self, ebay_item_id):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    :type ebay_item_id: int
+    """
+    account = EbayAccountModel.objects.get(id=self.context.account_id)
+    ebay_item = EbayItemModel.objects.get_for_publishing(id=ebay_item_id)
+
+    service = CorePublishingStatusUpdateService(source=ebay_item, account=account)
+
+    try:
+        service.update_publishing_status()
+    except RequestException as exc:
+        log.error(unicode(exc))
+        self.retry(args=(ebay_item_id,))
+
+
+def schedule_core_api_publishing_status_update(ebay_item_id, context):
+    """
+    :type ebay_item_id: int
+    :type context: inventorum.util.celery.TaskExecutionContext
+    """
+    core_api_publishing_status_update_task.delay(ebay_item_id, context=context)

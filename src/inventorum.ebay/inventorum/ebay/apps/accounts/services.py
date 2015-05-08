@@ -25,7 +25,7 @@ class EbayLocationUpdateService(object):
         try:
             return self.user.core_api.get_account_info()
         except HTTPError as e:
-            raise EbayLocationUpdateService(e.response)
+            raise EbayLocationUpdateServiceException(e.response)
 
     @property
     def core_account(self):

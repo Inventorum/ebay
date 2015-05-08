@@ -195,14 +195,11 @@ class IncomingEbayOrderSyncer(object):
             model.selected_shipping = ShippingServiceConfigurationModel.create(service=service_model,
                                                                                cost=selected_shipping.shipping_cost)
             model.save()
-        elif selected_pickup.pickup_method == 'PickUpDropOff':
+        else:
             service_model = ShippingServiceModel.get_click_and_collect_service(self.account.country)
             model.selected_shipping = ShippingServiceConfigurationModel.create(service=service_model,
                                                                                cost=0)
             model.save()
-        else:
-            raise EbayOrderSyncException("We got pickup method that we do not support yet: {pickup_method}"
-                                         .format(pickup_method=selected_pickup.pickup_method))
 
         for ebay_transaction in ebay_order.transactions:
             self._create_order_line_item_model_from_ebay_transaction(model, ebay_transaction)
