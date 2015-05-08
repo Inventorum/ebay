@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
+from django.utils.translation import ugettext
+from inventorum.ebay.apps.orders.tasks import schedule_ebay_orders_sync
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayItemModel
-from inventorum.ebay.apps.products.services import UnpublishingService
 from inventorum.ebay.apps.products.tasks import schedule_core_api_publishing_status_update
 
 from inventorum.ebay.lib.ebay.data.responses import GetItemTransactionsResponseType, GetItemResponseType
@@ -58,9 +59,23 @@ class FixedPriceTransactionNotificationHandler(EbayNotificationHandler):
 
     def handle(self, payload):
         """
-        :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemTransactionsResponse
+        :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemTransactionsResponseType
         """
-        pass
+        item_id = payload.item.item_id
+
+        try:
+            item = EbayItemModel.objects.by_ebay_id(item_id).get()
+        except EbayItemModel.DoesNotExist:
+            # wasn't ours, ignore
+            return
+
+        log.info("Handling FixedPriceTransaction notification for ebay item {}".format(item_id))
+
+        account = item.account
+        schedule_ebay_orders_sync(account_id=account.id,
+                                  context=TaskExecutionContext(account_id=account.id,
+                                                               user_id=account.default_user.id,
+                                                               request_id=None))
 
 
 class ItemSoldNotificationHandler(EbayNotificationHandler):
@@ -70,7 +85,21 @@ class ItemSoldNotificationHandler(EbayNotificationHandler):
         """
         :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponseType
         """
-        pass
+        item_id = payload.item.item_id
+
+        try:
+            item = EbayItemModel.objects.by_ebay_id(item_id).get()
+        except EbayItemModel.DoesNotExist:
+            # wasn't ours, ignore
+            return
+
+        log.info("Handling ItemSold notification for ebay item {}".format(item_id))
+
+        account = item.account
+        schedule_ebay_orders_sync(account_id=account.id,
+                                  context=TaskExecutionContext(account_id=account.id,
+                                                               user_id=account.default_user.id,
+                                                               request_id=None))
 
 
 class ItemClosedNotificationHandler(EbayNotificationHandler):
@@ -89,13 +118,11 @@ class ItemClosedNotificationHandler(EbayNotificationHandler):
             return
 
         if item.publishing_status != EbayItemPublishingStatus.UNPUBLISHED:
-            log.info("Unpublishing ebay item {} in response to ItemClosed notification"
-                     .format(item_id, item.publishing_status))
+            log.info("Handling ItemClosed notification for ebay item {}".format(item_id))
+
+            item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED)
+
             account = item.account
-
-            unpublishing_service = UnpublishingService(item_id, user=account.user)
-            unpublishing_service.unpublish_model_only()
-
             schedule_core_api_publishing_status_update(ebay_item_id=item.id,
                                                        context=TaskExecutionContext(account_id=account.id,
                                                                                     user_id=account.default_user.id,
@@ -111,4 +138,22 @@ class ItemSuspendedNotificationHandler(EbayNotificationHandler):
         """
         :type payload: inventorum.ebay.lib.ebay.data.responses.GetItemResponseType
         """
-        pass
+        item_id = payload.item.item_id
+
+        try:
+            item = EbayItemModel.objects.by_ebay_id(item_id).get()
+        except EbayItemModel.DoesNotExist:
+            # wasn't ours, ignore
+            return
+
+        log.info("Handling ItemSuspended notification for ebay item {}".format(item_id))
+
+        item.set_publishing_status(EbayItemPublishingStatus.FAILED,
+                                   [ugettext("The listing was suspended by ebay. "
+                                             "Further details are available via the ebay website.")])
+
+        account = item.account
+        schedule_core_api_publishing_status_update(ebay_item_id=item.id,
+                                                   context=TaskExecutionContext(account_id=account.id,
+                                                                                user_id=account.default_user.id,
+                                                                                request_id=None))

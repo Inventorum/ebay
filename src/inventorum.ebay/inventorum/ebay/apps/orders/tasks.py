@@ -34,6 +34,26 @@ def periodic_ebay_orders_sync_task(self):
 
 
 @inventorum_task()
+def ebay_orders_sync(self, account_id):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    :type account_id: int
+    """
+    from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync
+
+    account = EbayAccountModel.objects.get(id=account_id)
+    EbayOrdersSync(account).run()
+
+
+def schedule_ebay_orders_sync(account_id, context):
+    """
+    :type account_id: int
+    :type context: inventorum.util.celery.TaskExecutionContext
+    """
+    ebay_orders_sync.delay(account_id=account_id, context=context)
+
+
+@inventorum_task()
 def periodic_core_orders_sync_task(self):
     """
     :type self: inventorum.util.celery.InventorumTask
