@@ -38,35 +38,39 @@ class EbayAuthentication(EbayTrading):
         return token
 
     def _update_notification_settings(self):
-        # TODO: MH: Do we need some more notifications? Disputes, click & collect etc?
-        self.execute('SetNotificationPreferences',
-                     {
-                         'UserDeliveryPreferenceArray':
-                             {'NotificationEnable': [
-                                 {
-                                     'EventType': 'ItemClosed',
-                                     # This notification is sent to all subscribed parties of interest
-                                     # when a listing ends in the following three ways:
-                                     # An auction listing ends without a winning bidder.
-                                     # A fixed-price listing ends with no sales
-                                     # A multiple-quantity, fixed-price listing ends with sales, but
-                                     # with items still available (Quantity > 0)
-                                     'EventEnable': 'Enable'
-                                 },
-                                 {
-                                     'EventType': 'ItemUnsold',
-                                     # This notification is sent to a subscribing seller when an
-                                     # auction listing ends with no winning bidder or when a
-                                     # fixed-price listing ends with no sale(s).
-                                     'EventEnable': 'Enable'
-                                 },
-                                 {
-                                     'EventType': 'FixedPriceTransaction',
-                                     # This notification is sent to a subscribed seller each time a
-                                     # buyer purchases an item (or multiple items in the case of a
-                                     # multi-quantity listing) in a fixed-price listing.
-                                     'EventEnable': 'Enable'
-                                 }
-                             ]}
-                     }
+        self.execute('SetNotificationPreferences', {
+            'UserDeliveryPreferenceArray': {
+                'NotificationEnable': [
+                    {
+                        'EventType': 'FixedPriceTransaction',
+                        # This notification is sent to a subscribed seller each time a
+                        # buyer purchases an item (or multiple items in the case of a
+                        # multi-quantity listing) in a fixed-price listing.
+                        'EventEnable': 'Enable'
+                    },
+                    {
+                        'EventType': 'ItemSold',
+                        # This notification is sent to the subscribed seller each time a seller's single-quantity,
+                        # fixed-price listing ends with a sale. In the case of a multiple-quantity, fixed-price listing,
+                        # the 'FixedPriceTransaction' notification will be sent to the seller instead of 'ItemSold'.
+                        'EventEnable': 'Enable'
+                    },
+                    {
+                        'EventType': 'ItemClosed',
+                        # This notification is sent to all subscribed parties of interest
+                        # when a listing ends in the following three ways:
+                        # An auction listing ends without a winning bidder.
+                        # A fixed-price listing ends with no sales
+                        # A multiple-quantity, fixed-price listing ends with sales, but
+                        # with items still available (Quantity > 0)
+                        'EventEnable': 'Enable'
+                    },
+                    {
+                        'EventType': 'ItemSuspended',
+                        # This notification is sent to the subscribed seller and subscribed potential buyers if eBay
+                        # has administratively ended a listing for whatever reason.
+                        'EventEnable': 'Enable'
+                    },
+                ]}
+            }
         )
