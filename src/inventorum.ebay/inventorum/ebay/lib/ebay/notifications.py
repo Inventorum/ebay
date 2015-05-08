@@ -23,7 +23,7 @@ class EbayNotification(object):
     class SignatureValidationError(Exception):
         pass
 
-    SOAP_ACTION_HEADER = "SOAPAction"
+    SOAP_ACTION_HEADER = "HTTP_SOAPACTION"
     TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
     request_headers = None
@@ -49,8 +49,7 @@ class EbayNotification(object):
         self._parse_request_body()
 
     def _parse_request_headers(self):
-        lower_case_request_headers = {key.lower(): value for key, value in self.request_headers.iteritems()}
-        soap_action = lower_case_request_headers.get(self.SOAP_ACTION_HEADER.lower(), None)
+        soap_action = self.request_headers.get(self.SOAP_ACTION_HEADER, None)
         if soap_action is None:
             raise self.ParseError("Required header `{}` not found".format(self.SOAP_ACTION_HEADER))
 
