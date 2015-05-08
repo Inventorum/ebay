@@ -51,6 +51,7 @@ class ProductResourceMixin(object):
         except RequestException as e:
             if e.response.status_code == 404:
                 raise NotFound("Core API returned 404")
+            raise BadRequest("Core API error: {error}".format(error=e.message))
 
         product, c = EbayProductModel.objects.get_or_create(inv_id=inv_id, account=user.account)
         return product
