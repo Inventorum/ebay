@@ -111,7 +111,7 @@ CELERYBEAT_SCHEDULE = {
         }
     },
     'periodic_core_products_sync_task': {
-        'task': 'inventorum.ebay.apps.orders.tasks.periodic_core_products_sync_task',
+        'task': 'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task',
         'schedule': timedelta(minutes=1),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
