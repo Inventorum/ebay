@@ -1,7 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
 import logging
-from inventorum.ebay.apps.accounts.models import EbayLocationModel
+from django.db import transaction
+
 from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer
 from inventorum.ebay.apps.accounts.services import EbayLocationUpdateService, EbayLocationUpdateServiceException
 from inventorum.ebay.lib.rest.exceptions import BadRequest
@@ -22,6 +24,7 @@ class EbayAccountResource(APIResource, mixins.RetrieveModelMixin, mixins.UpdateM
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
+    @transaction.atomic
     def put(self, request, *args, **kwargs):
         response = self.update(request, *args, **kwargs)
 
