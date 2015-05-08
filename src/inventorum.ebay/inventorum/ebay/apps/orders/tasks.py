@@ -34,6 +34,26 @@ def periodic_ebay_orders_sync_task(self):
 
 
 @inventorum_task()
+def ebay_orders_sync(self, account_id):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    :type account_id: int
+    """
+    from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync
+
+    account = EbayAccountModel.objects.get(id=account_id)
+    EbayOrdersSync(account).run()
+
+
+def schedule_ebay_orders_sync(account_id, context):
+    """
+    :type account_id: int
+    :type context: inventorum.util.celery.TaskExecutionContext
+    """
+    ebay_orders_sync.delay(account_id=account_id, context=context)
+
+
+@inventorum_task()
 def periodic_core_orders_sync_task(self):
     """
     :type self: inventorum.util.celery.InventorumTask
@@ -68,8 +88,7 @@ def core_order_creation_task(self, order_id):
         service.create_in_core_api(order)
     except RequestException as e:
         log.error(e)
-        # TODO jm: Overwrite retry to pass context automatically
-        self.retry(kwargs=dict(context=self.context))
+        self.retry(args=(order_id,))
 
 
 def schedule_core_order_creation(order_id, context):

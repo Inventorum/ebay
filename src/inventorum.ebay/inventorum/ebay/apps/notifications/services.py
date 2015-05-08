@@ -16,6 +16,10 @@ class EbayPlatformNotificationService(object):
 
     # EbayNotificationEventType -> EbayNotificationHandler
     handlers = {
+        EbayNotificationEventType.FixedPriceTransaction: handlers.FixedPriceTransactionNotificationHandler,
+        EbayNotificationEventType.ItemSold: handlers.ItemSoldNotificationHandler,
+        EbayNotificationEventType.ItemClosed: handlers.ItemClosedNotificationHandler,
+        EbayNotificationEventType.ItemSuspended: handlers.ItemSuspendedNotificationHandler,
     }
 
     @classmethod
@@ -25,6 +29,7 @@ class EbayPlatformNotificationService(object):
         """
         handler = cls._get_handler_for_event_type(notification.event_type, notification)
         if handler is None:
+            log.info("Received unhandled ebay notification: {event_type}".format(event_type=notification.event_type))
             notification.set_status(EbayNotificationStatus.UNHANDLED)
             return
 
