@@ -91,7 +91,6 @@ class IncomingEbayOrderSyncer(object):
                                     account_id=self.account.id,
                                     request_id=None)
 
-    @transaction.atomic()
     def __call__(self, ebay_order):
         """
         :type ebay_order: inventorum.ebay.lib.ebay.data.responses.OrderType
@@ -122,6 +121,7 @@ class IncomingEbayOrderSyncer(object):
 
         return False
 
+    @transaction.atomic()
     def _create_order_model_from_ebay_order(self, ebay_order):
         """
         :type ebay_order: inventorum.ebay.lib.ebay.data.responses.OrderType
