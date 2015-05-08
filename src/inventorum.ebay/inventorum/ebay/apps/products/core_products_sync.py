@@ -161,7 +161,11 @@ class CoreProductsSync(object):
                                                    product__inv_id=main_product_id)
 
         if published_item.has_variations:
-            return published_item.variations.get(inv_product_id=core_product_delta.id)
+            try:
+                return published_item.variations.get(inv_product_id=core_product_delta.id)
+            except EbayItemVariationModel.DoesNotExist:
+                # => variation must have been added after publishing, no update needed
+                return None
 
         return published_item
 
