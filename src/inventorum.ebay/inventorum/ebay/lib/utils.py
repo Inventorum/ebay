@@ -11,3 +11,11 @@ def int_or_none(x):
         return int(x)
     except (TypeError, ValueError):
         return None
+
+
+def days_to_seconds(days):
+    """
+    :type days: int
+    :rtype: int
+    """
+    return 60 * 60 * 24 * days

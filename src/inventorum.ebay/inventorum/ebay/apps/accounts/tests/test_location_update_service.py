@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 from decimal import Decimal as D
 
-from inventorum.ebay.apps.accounts.services import EbayLocationUpdateService
+from inventorum.ebay.apps.accounts.services import EbayLocationUpdateService, EbayLocationUpdateServiceException
 from inventorum.ebay.apps.accounts.tests.factories import EbayLocationFactory
 from inventorum.ebay.apps.core_api.tests import ApiTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -44,3 +44,13 @@ class TestLocationUpdateService(EbayAuthenticatedAPITestCase):
 
         # If this didnt raise any exception, everything is ok :-)
         service.update()
+
+    @ApiTest.use_cassette("test_update_ebay_location_failing.yaml")
+    def test_update_failing(self):
+        location = EbayLocationFactory.create(account=self.account, longitude=D("9999.999"))
+
+        service = EbayLocationUpdateService(self.user)
+        with self.assertRaises(EbayLocationUpdateServiceException) as e:
+            service.update()
+
+        self.assertEqual(e.exception.message, u'AddInventoryLocation: Bad Request\n//Longitude: must be less than or equal to 180.00 Value: 9999.999')

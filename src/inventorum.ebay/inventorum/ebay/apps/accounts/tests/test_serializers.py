@@ -2,10 +2,11 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
+import json
 
 from decimal import Decimal as D
-from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayLocationFactory
+from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer, AddressSerializer
+from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayLocationFactory, AddressFactory
 
 from inventorum.ebay.apps.shipping.tests import ShippingServiceConfigurableSerializerTest
 from inventorum.ebay.tests.testcases import UnitTestCase
@@ -15,7 +16,6 @@ log = logging.getLogger(__name__)
 
 
 class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSerializerTest):
-
     # Required interface for ShippingServiceConfigurableSerializerTest
 
     def get_serializer_class(self):
@@ -42,11 +42,11 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
 
         self.assertDictEqual(subject.data, {
             "shipping_services": [{
-                "service": shipping_service.service_id,
-                "external_id": "DE_DHLPaket",
-                "cost": "3.49",
-                "additional_cost": "0.00"
-            }],
+                                      "service": shipping_service.service_id,
+                                      "external_id": "DE_DHLPaket",
+                                      "cost": "3.49",
+                                      "additional_cost": "0.00"
+                                  }],
             'user_id': account.user_id,
             'email': account.email,
             'payment_method_bank_transfer_enabled': False,
@@ -86,3 +86,22 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         # deserialize serialized doesn't change the representation
         data_before = serialized
         self.assertEqual(EbayAccountSerializer(updated_account).data, data_before)
+
+
+    def test_serialize_address(self):
+        address = AddressFactory.create(country=None)
+        subject = AddressSerializer(address)
+
+        # I am doing it to get
+        # TypeError: Country(code=None) is not JSON serializable
+        # As we got Server Error with it
+        data = json.loads(json.dumps(subject.data))
+        self.assertDictEqual(data, {
+            'name': address.name,
+            'street': address.street,
+            'street1': address.street1,
+            'city': address.city,
+            'region': address.region,
+            'country': unicode(address.country),
+            'postal_code': address.postal_code,
+        })

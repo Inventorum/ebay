@@ -25,7 +25,7 @@ class EbayLocationUpdateService(object):
         try:
             return self.user.core_api.get_account_info()
         except HTTPError as e:
-            raise EbayLocationUpdateService(e.response)
+            raise EbayLocationUpdateServiceException(e.response)
 
     @property
     def core_account(self):
@@ -43,7 +43,9 @@ class EbayLocationUpdateService(object):
         try:
             ebay_api.add_location(self.location_ebay_object)
         except EbayConnectionException as e:
-            raise EbayLocationUpdateServiceException(e.message)
+            message = "{message}\n{errors}".format(message=e.message,
+                                                   errors="\n".join([unicode(err) for err in e.errors]))
+            raise EbayLocationUpdateServiceException(message)
 
     def _get_days_as_ebay_objects(self):
         opening_hours = self.core_account.opening_hours

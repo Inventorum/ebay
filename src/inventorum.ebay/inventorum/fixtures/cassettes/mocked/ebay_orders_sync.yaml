@@ -149,20 +149,22 @@ interactions:
     status: {code: 200, message: OK}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
-      T-Shirt[Blau,XL]", "quantity": 1, "unit_gross_price": "1.01", "tax_rate": "19.000"}]},
-      "shipment": {"name": "DHL Paket", "cost": "4.29", "external_id": "DE_DHLPaket"},
-      "customer": {"first_name": "John", "last_name": "Wayne", "email": "michal+ebay+john@inventorum.com",
-      "billing_address": {"first_name": "John", "last_name": "Wayne", "address1":
+      T-Shirt[Blau,XL]", "quantity": 1, "unit_gross_price": "1.01", "tax_rate": "19.000"}],
+      "note_external": "Ebay order id: 261869293885-1616104762016"}, "shipment": {"service":
+      {"name": "DHL Paket", "time_min": 86400, "time_max": 259200}, "name": "DHL Paket",
+      "cost": "4.29", "external_key": "DE_DHLPaket"}, "customer": {"first_name": "John",
+      "last_name": "Wayne", "email": "michal+ebay+john@inventorum.com", "billing_address":
+      {"first_name": "John", "last_name": "Wayne", "address1": "Inventorum", "address2":
+      null, "zipcode": "13355", "city": "Berlin", "state": null, "country": "DE"},
+      "shipping_address": [{"first_name": "John", "last_name": "Wayne", "address1":
       "Inventorum", "address2": null, "zipcode": "13355", "city": "Berlin", "state":
-      null, "country": "DE"}, "shipping_address": [{"first_name": "John", "last_name":
-      "Wayne", "address1": "Inventorum", "address2": null, "zipcode": "13355", "city":
-      "Berlin", "state": null, "country": "DE"}]}, "payments": [{"payment_amount":
-      "5.30", "payment_method": "4"}]}'
+      null, "country": "DE"}]}, "payments": [{"payment_amount": "5.30", "payment_method":
+      "4"}], "state": 2}'
     headers:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['776']
+      Content-Length: ['924']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -171,54 +173,58 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11798, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22598, "name": "Inventorum T-Shirt[Blau,XL]",
-        "discount": null, "original_quantity": "1.00", "price": "0.8487394958", "product":
-        670339, "quantity": 1, "tax_rate": "19.000", "gross_price": "1.01", "unit_gross_price":
-        "1.01"}]}, "state": 0, "customer": {"id": 3745, "channel": null, "email":
-        "michal+ebay+john@inventorum.com", "title": null, "first_name": "John", "middle_name":
-        null, "last_name": "Wayne", "billing_address": {"id": 6027, "address1": "Inventorum",
-        "address2": null, "zipcode": "13355", "city": "Berlin", "state": null, "country":
-        "DE", "first_name": "John", "last_name": "Wayne", "company": null, "title":
-        null}, "shipping_address": [{"id": 6026, "address1": "Inventorum", "address2":
-        null, "zipcode": "13355", "city": "Berlin", "state": null, "country": "DE",
-        "first_name": "John", "last_name": "Wayne", "company": null, "title": null}]},
-        "amount_paid": "5.3000000000", "payments": [{"id": 8792, "payment_method":
-        "4", "payment_amount": "5.3000000000", "date": "06.05.2015 - 16:25", "transaction_id":
-        null, "transaction_duration": null, "paypal_invoice_id": null, "paypal_tab_id":
-        null}], "shipment": {"id": 2105, "name": "DHL Paket", "cost": "4.29", "external_key":
-        null}, "channel": "ebay"}'}
+    body: {string: !!python/unicode '{"id": 11868, "basket": {"note_internal": null,
+        "note_external": "Ebay order id: 261869293885-1616104762016", "items": [{"id":
+        22684, "name": "Inventorum T-Shirt[Blau,XL]", "discount": null, "original_quantity":
+        "1.00", "price": "0.8487394958", "product": 670339, "quantity": 1, "tax_rate":
+        "19.000", "gross_price": "1.01", "unit_gross_price": "1.01"}]}, "state": 2,
+        "customer": {"id": 3814, "channel": null, "email": "michal+ebay+john@inventorum.com",
+        "title": null, "first_name": "John", "middle_name": null, "last_name": "Wayne",
+        "billing_address": {"id": 6158, "address1": "Inventorum", "address2": null,
+        "zipcode": "13355", "city": "Berlin", "state": null, "country": "DE", "first_name":
+        "John", "last_name": "Wayne", "company": null, "title": null}, "shipping_address":
+        [{"id": 6157, "address1": "Inventorum", "address2": null, "zipcode": "13355",
+        "city": "Berlin", "state": null, "country": "DE", "first_name": "John", "last_name":
+        "Wayne", "company": null, "title": null}]}, "amount_paid": "5.3000000000",
+        "payments": [{"id": 8862, "payment_method": "4", "payment_amount": "5.3000000000",
+        "date": "07.05.2015 - 15:56", "transaction_id": null, "transaction_duration":
+        null, "paypal_invoice_id": null, "paypal_tab_id": null}], "shipment": {"id":
+        2167, "name": "DHL Paket", "cost": "4.29", "external_key": "DE_DHLPaket",
+        "service": {"id": 1446, "name": "DHL Paket", "time_max": 259200, "time_min":
+        86400}}, "channel": "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Wed, 06 May 2015 14:25:04 GMT']
+      date: ['Thu, 07 May 2015 13:56:43 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yq0G0:hZII5u44KPtndAa3DbVhLLwpVio"; Domain=app.intern.inventorum.net;
-          expires=Wed, 06-May-2015 16:25:04 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqMI7:VJdFkjxclyULPTT30NFYvvayKjw"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:56:43 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['4154431336028366324']
+      x-rid: ['29697027310413300']
     status: {code: 201, message: CREATED}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
-      T-Shirt[Gelb,XL]", "quantity": 1, "unit_gross_price": "1.03", "tax_rate": "19.000"}]},
-      "shipment": {"name": "DHL Paket", "cost": "5.00", "external_id": "DE_DHLPaket"},
-      "customer": {"first_name": "John", "last_name": "Wayne", "email": "michal+ebay+john@inventorum.com",
-      "billing_address": {"first_name": "John", "last_name": "Wayne", "address1":
+      T-Shirt[Gelb,XL]", "quantity": 1, "unit_gross_price": "1.03", "tax_rate": "19.000"}],
+      "note_external": "Ebay order id: 261869293885-1616104763016"}, "shipment": {"service":
+      {"name": "DHL Paket", "time_min": 86400, "time_max": 259200}, "name": "DHL Paket",
+      "cost": "5.00", "external_key": "DE_DHLPaket"}, "customer": {"first_name": "John",
+      "last_name": "Wayne", "email": "michal+ebay+john@inventorum.com", "billing_address":
+      {"first_name": "John", "last_name": "Wayne", "address1": "Inventorum", "address2":
+      null, "zipcode": "13355", "city": "Berlin", "state": null, "country": "DE"},
+      "shipping_address": [{"first_name": "John", "last_name": "Wayne", "address1":
       "Inventorum", "address2": null, "zipcode": "13355", "city": "Berlin", "state":
-      null, "country": "DE"}, "shipping_address": [{"first_name": "John", "last_name":
-      "Wayne", "address1": "Inventorum", "address2": null, "zipcode": "13355", "city":
-      "Berlin", "state": null, "country": "DE"}]}, "payments": [{"payment_amount":
-      "6.03", "payment_method": "4"}]}'
+      null, "country": "DE"}]}, "payments": [{"payment_amount": "6.03", "payment_method":
+      "4"}], "state": 2}'
     headers:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['776']
+      Content-Length: ['924']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -227,54 +233,58 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11799, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22599, "name": "Inventorum T-Shirt[Gelb,XL]",
-        "discount": null, "original_quantity": "1.00", "price": "0.8655462185", "product":
-        670339, "quantity": 1, "tax_rate": "19.000", "gross_price": "1.03", "unit_gross_price":
-        "1.03"}]}, "state": 0, "customer": {"id": 3746, "channel": null, "email":
-        "michal+ebay+john@inventorum.com", "title": null, "first_name": "John", "middle_name":
-        null, "last_name": "Wayne", "billing_address": {"id": 6029, "address1": "Inventorum",
-        "address2": null, "zipcode": "13355", "city": "Berlin", "state": null, "country":
-        "DE", "first_name": "John", "last_name": "Wayne", "company": null, "title":
-        null}, "shipping_address": [{"id": 6028, "address1": "Inventorum", "address2":
-        null, "zipcode": "13355", "city": "Berlin", "state": null, "country": "DE",
-        "first_name": "John", "last_name": "Wayne", "company": null, "title": null}]},
-        "amount_paid": "6.0300000000", "payments": [{"id": 8793, "payment_method":
-        "4", "payment_amount": "6.0300000000", "date": "06.05.2015 - 16:25", "transaction_id":
-        null, "transaction_duration": null, "paypal_invoice_id": null, "paypal_tab_id":
-        null}], "shipment": {"id": 2106, "name": "DHL Paket", "cost": "5.00", "external_key":
-        null}, "channel": "ebay"}'}
+    body: {string: !!python/unicode '{"id": 11869, "basket": {"note_internal": null,
+        "note_external": "Ebay order id: 261869293885-1616104763016", "items": [{"id":
+        22685, "name": "Inventorum T-Shirt[Gelb,XL]", "discount": null, "original_quantity":
+        "1.00", "price": "0.8655462185", "product": 670339, "quantity": 1, "tax_rate":
+        "19.000", "gross_price": "1.03", "unit_gross_price": "1.03"}]}, "state": 2,
+        "customer": {"id": 3815, "channel": null, "email": "michal+ebay+john@inventorum.com",
+        "title": null, "first_name": "John", "middle_name": null, "last_name": "Wayne",
+        "billing_address": {"id": 6160, "address1": "Inventorum", "address2": null,
+        "zipcode": "13355", "city": "Berlin", "state": null, "country": "DE", "first_name":
+        "John", "last_name": "Wayne", "company": null, "title": null}, "shipping_address":
+        [{"id": 6159, "address1": "Inventorum", "address2": null, "zipcode": "13355",
+        "city": "Berlin", "state": null, "country": "DE", "first_name": "John", "last_name":
+        "Wayne", "company": null, "title": null}]}, "amount_paid": "6.0300000000",
+        "payments": [{"id": 8863, "payment_method": "4", "payment_amount": "6.0300000000",
+        "date": "07.05.2015 - 15:56", "transaction_id": null, "transaction_duration":
+        null, "paypal_invoice_id": null, "paypal_tab_id": null}], "shipment": {"id":
+        2168, "name": "DHL Paket", "cost": "5.00", "external_key": "DE_DHLPaket",
+        "service": {"id": 1447, "name": "DHL Paket", "time_max": 259200, "time_min":
+        86400}}, "channel": "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Wed, 06 May 2015 14:25:04 GMT']
+      date: ['Thu, 07 May 2015 13:56:43 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yq0G0:hZII5u44KPtndAa3DbVhLLwpVio"; Domain=app.intern.inventorum.net;
-          expires=Wed, 06-May-2015 16:25:04 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqMI7:VJdFkjxclyULPTT30NFYvvayKjw"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:56:43 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['1910794296667727348']
+      x-rid: ['29697027310413300']
     status: {code: 201, message: CREATED}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
-      T-Shirt[Blau,M]", "quantity": 1, "unit_gross_price": "1.00", "tax_rate": "19.000"}]},
-      "shipment": {"name": "DHL Paket", "cost": "4.29", "external_id": "DE_DHLPaket"},
-      "customer": {"first_name": "Ferry", "last_name": "H\u00f6tzel", "email": "info@paydroid.de",
-      "billing_address": {"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1":
-      "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode": "53604", "city":
-      "Bad Honnef", "state": null, "country": "DE"}, "shipping_address": [{"first_name":
-      "Ferry", "last_name": "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str. 4",
-      "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null, "country":
-      "DE"}]}, "payments": [{"payment_amount": "5.29", "payment_method": "6"}]}'
+      T-Shirt[Blau,M]", "quantity": 1, "unit_gross_price": "1.00", "tax_rate": "19.000"}],
+      "note_external": "Ebay order id: 261869293885-1616104927016"}, "shipment": {"service":
+      {"name": "DHL Paket", "time_min": 86400, "time_max": 259200}, "name": "DHL Paket",
+      "cost": "4.29", "external_key": "DE_DHLPaket"}, "customer": {"first_name": "Ferry",
+      "last_name": "H\u00f6tzel", "email": "info@paydroid.de", "billing_address":
+      {"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str.
+      4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
+      "country": "DE"}, "shipping_address": [{"first_name": "Ferry", "last_name":
+      "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode":
+      "53604", "city": "Bad Honnef", "state": null, "country": "DE"}]}, "payments":
+      [{"payment_amount": "5.29", "payment_method": "6"}], "state": 2}'
     headers:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['821']
+      Content-Length: ['969']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -283,55 +293,58 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11800, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22600, "name": "Inventorum T-Shirt[Blau,M]",
-        "discount": null, "original_quantity": "1.00", "price": "0.8403361345", "product":
-        670339, "quantity": 1, "tax_rate": "19.000", "gross_price": "1.00", "unit_gross_price":
-        "1.00"}]}, "state": 0, "customer": {"id": 3747, "channel": null, "email":
-        "info@paydroid.de", "title": null, "first_name": "Ferry", "middle_name": null,
-        "last_name": "H\u00f6tzel", "billing_address": {"id": 6031, "address1": "K\u00f6nigin-Sophie-Str.
-        4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
+    body: {string: !!python/unicode '{"id": 11870, "basket": {"note_internal": null,
+        "note_external": "Ebay order id: 261869293885-1616104927016", "items": [{"id":
+        22686, "name": "Inventorum T-Shirt[Blau,M]", "discount": null, "original_quantity":
+        "1.00", "price": "0.8403361345", "product": 670339, "quantity": 1, "tax_rate":
+        "19.000", "gross_price": "1.00", "unit_gross_price": "1.00"}]}, "state": 2,
+        "customer": {"id": 3816, "channel": null, "email": "info@paydroid.de", "title":
+        null, "first_name": "Ferry", "middle_name": null, "last_name": "H\u00f6tzel",
+        "billing_address": {"id": 6162, "address1": "K\u00f6nigin-Sophie-Str. 4",
+        "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
-        null, "title": null}, "shipping_address": [{"id": 6030, "address1": "K\u00f6nigin-Sophie-Str.
+        null, "title": null}, "shipping_address": [{"id": 6161, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
         null, "title": null}]}, "amount_paid": "5.2900000000", "payments": [{"id":
-        8794, "payment_method": "6", "payment_amount": "5.2900000000", "date": "06.05.2015
-        - 16:25", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
-        null, "paypal_tab_id": null}], "shipment": {"id": 2107, "name": "DHL Paket",
-        "cost": "4.29", "external_key": null}, "channel": "ebay"}'}
+        8864, "payment_method": "6", "payment_amount": "5.2900000000", "date": "07.05.2015
+        - 15:56", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
+        null, "paypal_tab_id": null}], "shipment": {"id": 2169, "name": "DHL Paket",
+        "cost": "4.29", "external_key": "DE_DHLPaket", "service": {"id": 1448, "name":
+        "DHL Paket", "time_max": 259200, "time_min": 86400}}, "channel": "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Wed, 06 May 2015 14:25:04 GMT']
+      date: ['Thu, 07 May 2015 13:56:43 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yq0G0:hZII5u44KPtndAa3DbVhLLwpVio"; Domain=app.intern.inventorum.net;
-          expires=Wed, 06-May-2015 16:25:04 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqMI7:VJdFkjxclyULPTT30NFYvvayKjw"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:56:43 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['4154431336028366324']
+      x-rid: ['29697027310413300']
     status: {code: 201, message: CREATED}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
       T-Shirt[Gr\u00fcn,L]", "quantity": 1, "unit_gross_price": "1.05", "tax_rate":
-      "19.000"}]}, "shipment": {"name": "DHL Paket", "cost": "0.00", "external_id":
-      "DE_DHLPaket"}, "customer": {"first_name": "Ferry", "last_name": "H\u00f6tzel",
-      "email": "info@paydroid.de", "billing_address": {"first_name": "Ferry", "last_name":
-      "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode":
-      "53604", "city": "Bad Honnef", "state": null, "country": "DE"}, "shipping_address":
-      [{"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str.
+      "19.000"}], "note_external": "Ebay order id: 261869293885-1616104928016"}, "shipment":
+      {"service": {"name": "DHL Paket", "time_min": 86400, "time_max": 259200}, "name":
+      "DHL Paket", "cost": "0.00", "external_key": "DE_DHLPaket"}, "customer": {"first_name":
+      "Ferry", "last_name": "H\u00f6tzel", "email": "info@paydroid.de", "billing_address":
+      {"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str.
       4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
-      "country": "DE"}]}, "payments": [{"payment_amount": "1.05", "payment_method":
-      "6"}]}'
+      "country": "DE"}, "shipping_address": [{"first_name": "Ferry", "last_name":
+      "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode":
+      "53604", "city": "Bad Honnef", "state": null, "country": "DE"}]}, "payments":
+      [{"payment_amount": "1.05", "payment_method": "6"}], "state": 2}'
     headers:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['826']
+      Content-Length: ['974']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -340,54 +353,58 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11801, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22601, "name": "Inventorum T-Shirt[Gr\u00fcn,L]",
-        "discount": null, "original_quantity": "1.00", "price": "0.8823529412", "product":
-        670339, "quantity": 1, "tax_rate": "19.000", "gross_price": "1.05", "unit_gross_price":
-        "1.05"}]}, "state": 0, "customer": {"id": 3748, "channel": null, "email":
-        "info@paydroid.de", "title": null, "first_name": "Ferry", "middle_name": null,
-        "last_name": "H\u00f6tzel", "billing_address": {"id": 6033, "address1": "K\u00f6nigin-Sophie-Str.
-        4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
+    body: {string: !!python/unicode '{"id": 11871, "basket": {"note_internal": null,
+        "note_external": "Ebay order id: 261869293885-1616104928016", "items": [{"id":
+        22687, "name": "Inventorum T-Shirt[Gr\u00fcn,L]", "discount": null, "original_quantity":
+        "1.00", "price": "0.8823529412", "product": 670339, "quantity": 1, "tax_rate":
+        "19.000", "gross_price": "1.05", "unit_gross_price": "1.05"}]}, "state": 2,
+        "customer": {"id": 3817, "channel": null, "email": "info@paydroid.de", "title":
+        null, "first_name": "Ferry", "middle_name": null, "last_name": "H\u00f6tzel",
+        "billing_address": {"id": 6164, "address1": "K\u00f6nigin-Sophie-Str. 4",
+        "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
-        null, "title": null}, "shipping_address": [{"id": 6032, "address1": "K\u00f6nigin-Sophie-Str.
+        null, "title": null}, "shipping_address": [{"id": 6163, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
         null, "title": null}]}, "amount_paid": "1.0500000000", "payments": [{"id":
-        8795, "payment_method": "6", "payment_amount": "1.0500000000", "date": "06.05.2015
-        - 16:25", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
-        null, "paypal_tab_id": null}], "shipment": {"id": 2108, "name": "DHL Paket",
-        "cost": "0.00", "external_key": null}, "channel": "ebay"}'}
+        8865, "payment_method": "6", "payment_amount": "1.0500000000", "date": "07.05.2015
+        - 15:56", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
+        null, "paypal_tab_id": null}], "shipment": {"id": 2170, "name": "DHL Paket",
+        "cost": "0.00", "external_key": "DE_DHLPaket", "service": {"id": 1449, "name":
+        "DHL Paket", "time_max": 259200, "time_min": 86400}}, "channel": "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Wed, 06 May 2015 14:25:05 GMT']
+      date: ['Thu, 07 May 2015 13:56:44 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yq0G1:dW1aBY2c3Z-MDj7qoQJtCsCFlqo"; Domain=app.intern.inventorum.net;
-          expires=Wed, 06-May-2015 16:25:05 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqMI8:qLxggXZAGJU6W_A7ILQ5TKVSC5Y"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:56:44 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['4154431336028366324']
+      x-rid: ['29697027310413300']
     status: {code: 201, message: CREATED}
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 670339, "name": "Inventorum
-      T-Shirt[Blau,M]", "quantity": 2, "unit_gross_price": "1.00", "tax_rate": "19.000"}]},
-      "shipment": {"name": "DHL Paket", "cost": "6.29", "external_id": "DE_DHLPaket"},
-      "customer": {"first_name": "Ferry", "last_name": "H\u00f6tzel", "email": "info@paydroid.de",
-      "billing_address": {"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1":
-      "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode": "53604", "city":
-      "Bad Honnef", "state": null, "country": "DE"}, "shipping_address": [{"first_name":
-      "Ferry", "last_name": "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str. 4",
-      "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null, "country":
-      "DE"}]}, "payments": [{"payment_amount": "8.29", "payment_method": "6"}]}'
+      T-Shirt[Blau,M]", "quantity": 2, "unit_gross_price": "1.00", "tax_rate": "19.000"}],
+      "note_external": "Ebay order id: 261869293885-1616130054016"}, "shipment": {"service":
+      {"name": "DHL Paket", "time_min": 86400, "time_max": 259200}, "name": "DHL Paket",
+      "cost": "6.29", "external_key": "DE_DHLPaket"}, "customer": {"first_name": "Ferry",
+      "last_name": "H\u00f6tzel", "email": "info@paydroid.de", "billing_address":
+      {"first_name": "Ferry", "last_name": "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str.
+      4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
+      "country": "DE"}, "shipping_address": [{"first_name": "Ferry", "last_name":
+      "H\u00f6tzel", "address1": "K\u00f6nigin-Sophie-Str. 4", "address2": null, "zipcode":
+      "53604", "city": "Bad Honnef", "state": null, "country": "DE"}]}, "payments":
+      [{"payment_amount": "8.29", "payment_method": "6"}], "state": 2}'
     headers:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['821']
+      Content-Length: ['969']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
       X-Api-Version: [10]
@@ -396,36 +413,38 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 11802, "basket": {"note_internal": null,
-        "note_external": null, "items": [{"id": 22602, "name": "Inventorum T-Shirt[Blau,M]",
-        "discount": null, "original_quantity": "2.00", "price": "0.8403361345", "product":
-        670339, "quantity": 2, "tax_rate": "19.000", "gross_price": "2.00", "unit_gross_price":
-        "1.00"}]}, "state": 0, "customer": {"id": 3749, "channel": null, "email":
-        "info@paydroid.de", "title": null, "first_name": "Ferry", "middle_name": null,
-        "last_name": "H\u00f6tzel", "billing_address": {"id": 6035, "address1": "K\u00f6nigin-Sophie-Str.
-        4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
+    body: {string: !!python/unicode '{"id": 11872, "basket": {"note_internal": null,
+        "note_external": "Ebay order id: 261869293885-1616130054016", "items": [{"id":
+        22688, "name": "Inventorum T-Shirt[Blau,M]", "discount": null, "original_quantity":
+        "2.00", "price": "0.8403361345", "product": 670339, "quantity": 2, "tax_rate":
+        "19.000", "gross_price": "2.00", "unit_gross_price": "1.00"}]}, "state": 2,
+        "customer": {"id": 3818, "channel": null, "email": "info@paydroid.de", "title":
+        null, "first_name": "Ferry", "middle_name": null, "last_name": "H\u00f6tzel",
+        "billing_address": {"id": 6166, "address1": "K\u00f6nigin-Sophie-Str. 4",
+        "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
-        null, "title": null}, "shipping_address": [{"id": 6034, "address1": "K\u00f6nigin-Sophie-Str.
+        null, "title": null}, "shipping_address": [{"id": 6165, "address1": "K\u00f6nigin-Sophie-Str.
         4", "address2": null, "zipcode": "53604", "city": "Bad Honnef", "state": null,
         "country": "DE", "first_name": "Ferry", "last_name": "H\u00f6tzel", "company":
         null, "title": null}]}, "amount_paid": "8.2900000000", "payments": [{"id":
-        8796, "payment_method": "6", "payment_amount": "8.2900000000", "date": "06.05.2015
-        - 16:25", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
-        null, "paypal_tab_id": null}], "shipment": {"id": 2109, "name": "DHL Paket",
-        "cost": "6.29", "external_key": null}, "channel": "ebay"}'}
+        8866, "payment_method": "6", "payment_amount": "8.2900000000", "date": "07.05.2015
+        - 15:56", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
+        null, "paypal_tab_id": null}], "shipment": {"id": 2171, "name": "DHL Paket",
+        "cost": "6.29", "external_key": "DE_DHLPaket", "service": {"id": 1450, "name":
+        "DHL Paket", "time_max": 259200, "time_min": 86400}}, "channel": "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Wed, 06 May 2015 14:25:05 GMT']
+      date: ['Thu, 07 May 2015 13:56:44 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Yq0G1:dW1aBY2c3Z-MDj7qoQJtCsCFlqo"; Domain=app.intern.inventorum.net;
-          expires=Wed, 06-May-2015 16:25:05 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YqMI8:qLxggXZAGJU6W_A7ILQ5TKVSC5Y"; Domain=app.intern.inventorum.net;
+          expires=Thu, 07-May-2015 15:56:44 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-processed-version: ['10']
       x-inv-user: ['425']
-      x-rid: ['4154431336028366324']
+      x-rid: ['29697027310413300']
     status: {code: 201, message: CREATED}
 version: 1

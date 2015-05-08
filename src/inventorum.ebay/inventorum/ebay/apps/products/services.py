@@ -332,7 +332,7 @@ class PublishingService(PublishingUnpublishingService):
         )
 
     def _add_inventory_for_click_and_collect(self):
-        if not self.product.is_click_and_collect:
+        if not self.item.is_click_and_collect:
             return
 
         api = EbayInventoryManagement(token=self.user.account.token.ebay_object)
@@ -404,7 +404,7 @@ class UnpublishingService(PublishingUnpublishingService):
         )
 
     def _delete_inventory_for_click_and_collect(self):
-        if not self.product.is_click_and_collect:
+        if not self.item.is_click_and_collect:
             return
 
         api = EbayInventoryManagement(token=self.user.account.token.ebay_object)

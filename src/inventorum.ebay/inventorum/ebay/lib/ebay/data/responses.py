@@ -199,11 +199,11 @@ class ShippingServiceOptionType(object):
             model = None
 
         ShippingService = serializers.CharField(source="shipping_service")
-        ShippingServiceCost = EbayAmountField(source="shipping_cost")
+        ShippingServiceCost = EbayAmountField(source="shipping_cost", required=False)
 
     # / Deserialization ###############
 
-    def __init__(self, shipping_service, shipping_cost):
+    def __init__(self, shipping_service, shipping_cost=None):
         """
         :type shipping_service: unicode
         :type shipping_cost: decimal.Decimal

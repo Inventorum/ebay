@@ -1,13 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from django.conf import settings
 from inventorum.ebay.apps.accounts.models import AddressModel
-from inventorum.ebay.apps.accounts.serializers import AddressSerializer
-from inventorum.ebay.apps.core_api import CoreChannel
-from inventorum.ebay.apps.core_api.clients import CoreAPIClient
+from inventorum.ebay.apps.core_api import CoreChannel, BinaryCoreOrderStates
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel, ShippingServiceModel
 from inventorum.ebay.lib.rest.fields import MoneyField, TaxRateField
+from inventorum.ebay.lib.utils import days_to_seconds
 
 from rest_framework import serializers
 
@@ -15,19 +15,47 @@ from rest_framework import serializers
 log = logging.getLogger(__name__)
 
 
+class ShippingServiceCoreAPIDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ShippingServiceModel
+        fields = ("name", "time_min", "time_max")
+
+    name = serializers.CharField(source="description")
+    time_min = serializers.SerializerMethodField()
+    time_max = serializers.SerializerMethodField()
+
+    def get_time_min(self, service):
+        """
+        :type service: ShippingServiceModel
+        :rtype: int | None
+        """
+        if service.shipping_time_min is not None:
+            return days_to_seconds(service.shipping_time_min)
+
+    def get_time_max(self, service):
+        """
+        :type service: ShippingServiceModel
+        :rtype: int | None
+        """
+        if service.shipping_time_max is not None:
+            return days_to_seconds(service.shipping_time_max)
+
+
 class OrderShipmentCoreAPIDataSerializer(serializers.ModelSerializer):
     """
     Responsible for serializing a `ShippingServiceConfigurationModel` instance assigned as shipping to an order
     into the according data format to create/update its representation in the core api
     """
-
     class Meta:
         model = ShippingServiceConfigurationModel
-        fields = ("name", "cost", "external_id")
+        fields = ("service", "name", "cost", "external_key")
+
+    service = ShippingServiceCoreAPIDataSerializer()
 
     name = serializers.CharField(source="service.description")
     cost = MoneyField()
-    external_id = serializers.CharField(source="service.external_id")
+    external_key = serializers.CharField(source="service.external_id")
 
 
 class OrderCustomerAddressCoreAPIDataSerializer(serializers.ModelSerializer):
@@ -88,9 +116,16 @@ class OrderBasketCoreAPIDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderModel
-        fields = ("items",)
+        fields = ("items", "note_external")
 
     items = OrderLineItemModelCoreAPIDataSerializer(source="line_items", many=True)
+    note_external = serializers.SerializerMethodField()
+
+    def get_note_external(self, order):
+        """
+        :type order: OrderModel
+        """
+        return settings.CORE_ORDER_NOTE_TEMPLATE.format(ebay_order_id=order.ebay_id)
 
 
 class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
@@ -101,13 +136,14 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderModel
-        fields = ("channel", "basket", "shipment", "customer", "payments")
+        fields = ("channel", "basket", "shipment", "customer", "payments", "state")
 
     channel = serializers.SerializerMethodField()
     basket = serializers.SerializerMethodField()
     shipment = OrderShipmentCoreAPIDataSerializer(source="selected_shipping")
     customer = serializers.SerializerMethodField()
     payments = serializers.SerializerMethodField()
+    state = serializers.SerializerMethodField()
 
     def get_channel(self, order):
         return CoreChannel.EBAY
@@ -120,3 +156,6 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
 
     def get_payments(self, order):
         return [OrderPaymentCoreAPIDataSerializer(order).data]
+
+    def get_state(self, order):
+        return BinaryCoreOrderStates.PENDING
