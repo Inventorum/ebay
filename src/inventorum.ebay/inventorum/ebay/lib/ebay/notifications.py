@@ -54,8 +54,8 @@ class EbayNotification(object):
             raise self.ParseError("Required header `{}` not found".format(self.SOAP_ACTION_HEADER))
 
         # header contains a URL that ends with the name of the event that the notification is being sent for
-        # e.g. https://developer.ebay.com/notification/FixedPriceTransaction
-        self.event_type = soap_action.split("/").pop()
+        # e.g. "https://developer.ebay.com/notification/FixedPriceTransaction"
+        self.event_type = soap_action.replace("\"", "").split("/").pop()
 
     def _parse_request_body(self):
         # We can re-use ebaysdk's response parsing here, as notification bodies are valid ebay responses
