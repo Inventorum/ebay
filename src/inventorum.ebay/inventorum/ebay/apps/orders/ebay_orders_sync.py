@@ -185,6 +185,11 @@ class IncomingEbayOrderSyncer(object):
         selected_pickup = ebay_order.pickup_method_selected
         if not selected_pickup:
             selected_shipping = ebay_order.shipping_service_selected
+
+            if selected_shipping.shipping_service is None:
+                raise EbayOrderSyncException("Got completed order without selected shipping service: {}"
+                                             .format(unicode(POPOSerializer.extract_original_data(ebay_order))))
+
             try:
                 service_model = ShippingServiceModel.objects.by_country(self.account.country)\
                     .get(external_id=selected_shipping.shipping_service)
