@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.tasks import schedule_ebay_item_publish, schedule_ebay_item_unpublish
+from requests.exceptions import RequestException
 
 from rest_framework import exceptions, mixins
 from rest_framework.response import Response
@@ -12,7 +13,7 @@ from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer
 from inventorum.ebay.apps.products.services import PublishingValidationException, \
     PublishingCouldNotGetDataFromCoreAPI, PublishingPreparationService
-from inventorum.ebay.lib.rest.exceptions import ApiException, BadRequest
+from inventorum.ebay.lib.rest.exceptions import ApiException, BadRequest, NotFound
 
 from inventorum.ebay.lib.rest.resources import APIResource
 
@@ -22,19 +23,37 @@ log = logging.getLogger(__name__)
 
 class ProductResourceMixin(object):
 
-    def get_or_create_product(self, inv_id, account):
+    def get_or_create_product(self, inv_id, user):
         """
         Returns the product with the given `inv_id` for the given `account`.
         If the account has no product with such id, it is created lazily.
 
         :param inv_id: The global inventorum product id
-        :param account: The account model in the ebay scope
+        :param user: The user model in the ebay scope
 
         :type inv_id: int
-        :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
         :rtype: EbayProductModel
         """
-        product, c = EbayProductModel.objects.get_or_create(inv_id=inv_id, account=account)
+        try:
+            product = EbayProductModel.objects.get(inv_id=inv_id)
+        except EbayProductModel.DoesNotExist:
+            product = self._create_product_with_account_check(inv_id=inv_id, user=user)
+
+        if product.account_id != user.account.id:
+            raise NotFound(ugettext('Accessing product from another account is restricted'))
+
+        return product
+
+    def _create_product_with_account_check(self, inv_id, user):
+        try:
+            core_api = user.core_api.get_product(inv_id)
+        except RequestException as e:
+            if e.response.status_code == 404:
+                raise NotFound("Core API returned 404")
+            raise BadRequest("Core API error: {error}".format(error=e.message))
+
+        product, c = EbayProductModel.objects.get_or_create(inv_id=inv_id, account=user.account)
         return product
 
 
@@ -42,7 +61,7 @@ class EbayProductResource(APIResource, ProductResourceMixin, mixins.RetrieveMode
     serializer_class = EbayProductSerializer
 
     def get_object(self):
-        return self.get_or_create_product(self.kwargs["inv_product_id"], self.request.user.account)
+        return self.get_or_create_product(self.kwargs["inv_product_id"], self.request.user)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
