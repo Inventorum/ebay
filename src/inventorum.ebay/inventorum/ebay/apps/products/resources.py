@@ -74,7 +74,7 @@ class PublishResource(APIResource, ProductResourceMixin):
     serializer_class = EbayProductSerializer
 
     def post(self, request, inv_product_id):
-        product = self.get_or_create_product(inv_product_id, request.user.account)
+        product = self.get_or_create_product(inv_product_id, request.user)
 
         preparation_service = PublishingPreparationService(product, user=request.user)
         try:
