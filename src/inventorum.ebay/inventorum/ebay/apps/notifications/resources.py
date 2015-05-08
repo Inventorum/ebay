@@ -3,6 +3,8 @@ from __future__ import absolute_import, unicode_literals
 
 import logging
 
+import six
+
 from django.db import transaction
 from django.conf import settings
 from rest_framework import status
@@ -29,6 +31,11 @@ class EbayPlatformNotificationsResource(PublicAPIResource):
 
         :type request: rest_framework.request.Request
         """
+        cleaned_request_headers = {unicode(key): unicode(value) for key, value in request.META.iteritems()
+                                   if isinstance(value, six.string_types)}
+        log.info("Received ebay platform notification with request headers {} and request body: {}"
+                 .format(cleaned_request_headers, unicode(request.body, "utf-8")))
+
         try:
             notification = EbayNotification(body=request.body, headers=request.META)
             notification.validate_signature(settings.EBAY_DEVID, settings.EBAY_APPID, settings.EBAY_CERTID)
