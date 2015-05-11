@@ -1,14 +1,14 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-import logging
 import os
 
 from celery import Celery
+from celery.utils.log import get_task_logger
 from django.conf import settings
 from inventorum.util.celery import CeleryBaseMiddleware
 
 
-log = logging.getLogger(__name__)
+log = get_task_logger(__name__)
 
 
 # set the default Django settings module for the 'celery' program.
