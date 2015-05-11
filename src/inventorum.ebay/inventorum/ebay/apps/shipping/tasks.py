@@ -20,9 +20,5 @@ def periodic_ebay_shipping_sync_task(self):
     ebay_token = EbayToken(settings.EBAY_LIVE_TOKEN, expiration_time=settings.EBAY_LIVE_TOKEN_EXPIRATION_DATE)
 
     log.info('Fetching ebay shipping services...')
-
-    try:
-        subject = EbayShippingScraper(ebay_token)
-        subject.scrape()
-    except EbayConnectionException as e:
-        log.exception(e)
+    subject = EbayShippingScraper(ebay_token)
+    subject.scrape()

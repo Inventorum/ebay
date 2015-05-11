@@ -25,11 +25,8 @@ def ebay_categories_sync_task(self):
     :type self: inventorum.util.celery.InventorumTask
     """
     log.info('Syncing ebay categories...')
-    try:
-        service = EbayCategoriesScraper(ebay_token=_get_ebay_token())
-        service.fetch_all()
-    except EbayConnectionException as e:
-        log.exception(e)
+    service = EbayCategoriesScraper(ebay_token=_get_ebay_token())
+    service.fetch_all()
 
 
 @inventorum_task()
@@ -38,11 +35,8 @@ def ebay_category_features_sync_task(self):
     :type self: inventorum.util.celery.InventorumTask
     """
     log.info('Syncing ebay category features...')
-    try:
-        features_service = EbayFeaturesScraper(ebay_token=_get_ebay_token())
-        features_service.fetch_all()
-    except EbayConnectionException as e:
-        log.exception(e)
+    features_service = EbayFeaturesScraper(ebay_token=_get_ebay_token())
+    features_service.fetch_all()
 
 
 @inventorum_task()
@@ -51,11 +45,8 @@ def ebay_category_specifics_sync_task(self):
     :type self: inventorum.util.celery.InventorumTask
     """
     log.info('Syncing ebay category specifics...')
-    try:
-        specifics_service = EbaySpecificsScraper(ebay_token=_get_ebay_token())
-        specifics_service.fetch_all()
-    except EbayConnectionException as e:
-        log.exception(e)
+    specifics_service = EbaySpecificsScraper(ebay_token=_get_ebay_token())
+    specifics_service.fetch_all()
 
 
 @inventorum_task()
