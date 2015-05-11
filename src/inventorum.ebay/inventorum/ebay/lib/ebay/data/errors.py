@@ -40,7 +40,7 @@ class EbayError(object):
 
 
 class EbayErrorDeserializer(POPOSerializer):
-    ErrorCode = EbayNullableDecimalField(source='code')
+    ErrorCode = EbayNullableDecimalField(source='code', max_digits=10, decimal_places=2)
     ErrorClassification = fields.CharField(source='classification')
     LongMessage = fields.CharField(source='long_message')
     SeverityCode = fields.CharField(source='severity_code')

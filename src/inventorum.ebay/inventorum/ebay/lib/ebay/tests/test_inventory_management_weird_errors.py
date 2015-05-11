@@ -15,4 +15,6 @@ class TestInventoryManagementWeirdErrors(EbayAuthenticatedAPITestCase):
         with self.assertRaises(EbayConnectionException) as exc:
             response = api.add_location(location=location)
 
-        self.assertEqual(exc.exception.message, "")
+        self.assertEqual(exc.exception.message, "AddInventoryLocation: Bad Gateway, Class: RequestError, Severity: "
+                                                "Error, Code: 99.99, Gateway Error Failover endpoint : "
+                                                "Selling_Inventory_REST_SVC_V1 - no ready child endpoints")
