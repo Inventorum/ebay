@@ -119,6 +119,9 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 
+# will be used by util.celery.InventorumTask to handle async celery exceptions
+CELERY_MIDDLEWARE = 'inventorum.ebay.celery.CeleryMiddleware'
+
 
 # Others =======================================================================
 
