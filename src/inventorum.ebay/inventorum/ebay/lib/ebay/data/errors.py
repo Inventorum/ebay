@@ -1,6 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.lib.ebay.data import EbayNullableIntegerField
+from inventorum.ebay.lib.ebay.data import EbayNullableIntegerField, EbayNullableDecimalField
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
 from rest_framework.fields import IntegerField
@@ -40,7 +40,7 @@ class EbayError(object):
 
 
 class EbayErrorDeserializer(POPOSerializer):
-    ErrorCode = EbayNullableIntegerField(source='code')
+    ErrorCode = EbayNullableDecimalField(source='code')
     ErrorClassification = fields.CharField(source='classification')
     LongMessage = fields.CharField(source='long_message')
     SeverityCode = fields.CharField(source='severity_code')
