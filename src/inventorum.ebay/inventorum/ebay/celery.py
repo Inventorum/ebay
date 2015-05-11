@@ -49,7 +49,7 @@ class CeleryMiddleware(CeleryBaseMiddleware):
         :type einfo:
         :type context: inventorum.util.celery.TaskExecutionContext
         """
-        log.error(exc, extra={
+        log.error(exc, exc_info=True, extra={
             "task_id": task_id,
             "task_execution_context": context
         })
