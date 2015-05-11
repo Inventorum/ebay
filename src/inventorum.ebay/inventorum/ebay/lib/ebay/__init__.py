@@ -35,10 +35,22 @@ class EbayConnectionException(EbayException):
         self.errors = None
 
         if self.response is not None:
+            self.errors = [EbayError.create_from_data(e) for e in self.get_errors_list()]
+
+    def get_errors_list(self):
+        errors = []
+        try:
             errors = self.response.dict()['Errors']
-            if not isinstance(errors, list):
-                errors = [errors]
-            self.errors = [EbayError.create_from_data(e) for e in errors]
+        except KeyError:
+            # Crazy stuff here because of different response for 500 on Ebay side, which happens often
+            try:
+                errors = self.response.dict()['Envelope']['Body']['Response']['Errors']
+            except KeyError:
+                errors = []
+
+        if not isinstance(errors, list):
+            errors = [errors]
+        return errors
 
     @property
     def serialized_errors(self):

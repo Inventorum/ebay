@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: <?xml version="1.0" encoding="utf-8"?><AddInventoryLocationRequest><Address1>Voltrastr
+      5</Address1><Address2>Gebaude 2</Address2><City>Berlin</City><Country>DE</Country><Hours><Day><DayOfWeek>1</DayOfWeek><Interval><Close>10:00:00</Close><Open>08:00:00</Open></Interval></Day></Hours><Latitude>37.374488</Latitude><LocationID>test_inventorum_location</LocationID><LocationType>STORE</LocationType><Longitude>-122.032876</Longitude><Name>Test
+      location Inventorum</Name><Phone>072 445 78 75</Phone><PickupInstructions>Pick
+      it up as soon as possible</PickupInstructions><PostalCode>13355</PostalCode><Region>Berlin</Region><URL>http://inventorum.com</URL><UTCOffset>+02:00</UTCOffset></AddInventoryLocationRequest>
+    headers:
+      Content-Length: ['711']
+      Content-Type: [application/xml]
+      User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.8 Darwin/14.3.0]
+      X-EBAY-SDK-REQUEST-ID: [8be1e78e-4cbd-4f11-a1b4-fb24f41f3e0c]
+    method: POST
+    uri: https://api.ebay.com/selling/inventory/v1/locations/delta/add
+  response:
+    body: {string: !!python/unicode '<?xml version=''1.0'' encoding=''UTF-8''?><soapenv:Envelope
+        xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Body><Response><Timestamp>Mon
+        May 11 2015 06:17:38 GMT-0700 (GMT-07:00)</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>Gateway
+        Error</ShortMessage><LongMessage>Failover endpoint : Selling_Inventory_REST_SVC_V1
+        - no ready child endpoints</LongMessage><ErrorCode>99.99</ErrorCode><SeverityCode>Error</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><ResponseCode>null</ResponseCode><Version>653</Version></Response></soapenv:Body></soapenv:Envelope>'}
+    headers:
+      accept-encoding: [identity]
+      authorization: [TOKEN AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/]
+      content-type: [application/xml]
+      date: ['Mon, 11 May 2015 13:17:38 GMT']
+      guid: [14d431fa-c450-a793-c602-5f62fcd721ea]
+      host: [api.ebay.com]
+      server: [Synapse-HttpComponents-NIO]
+      transfer-encoding: [chunked]
+      user-agent: [eBaySDK/2.1.1.dev4 Python/2.7.8 Darwin/14.3.0]
+      x-ebay-original-url: ['https://api.ebay.com/selling/inventory/v1/locations/delta/add']
+      x-ebay-request-id: ['14d431fa-c450-a793-c602-5f62fcd721ea!selling.inventory.v1.locations!10.121.60.96!comosesb[]']
+      x-ebay-sdk-request-id: [8be1e78e-4cbd-4f11-a1b4-fb24f41f3e0c]
+      x-ebay-web-tier-ip: [178.19.222.254]
+    status: {code: 502, message: Bad Gateway}
+version: 1
