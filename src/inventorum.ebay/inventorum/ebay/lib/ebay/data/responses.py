@@ -432,6 +432,9 @@ class OrderType(object):
         :type shipping_address: AddressType
         :type shipping_service_selected: ShippingServiceOptionType
         :type pickup_method_selected: PickupMethodSelectedType
+
+        :type shipped_time: datetime.datetime
+        :type paid_time: datetime.datetime
         """
         self.order_id = order_id
         self.order_status = order_status

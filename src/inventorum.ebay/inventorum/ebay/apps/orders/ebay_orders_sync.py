@@ -173,9 +173,17 @@ class IncomingEbayOrderSyncer(object):
         if payment_method is None:
             raise EbayOrderSyncException("Unmapped payment method {} for ebay order with id {}"
                                          .format(ebay_payment_method, ebay_order.order_id))
+
         model.payment_method = payment_method
         model.ebay_payment_method = ebay_payment_method
         model.ebay_payment_status = ebay_order.checkout_status.payment_status
+
+        # ensure initial order status
+        is_paid = payment_method == CorePaymentMethod.PAYPAL
+        model.ebay_status.is_paid = is_paid
+        # although the core order has not been created yet, we also set the core status to paid to reflect
+        # the initial state upon creation
+        model.core_status.is_paid = is_paid
 
         # extract order details
         model.subtotal = ebay_order.subtotal

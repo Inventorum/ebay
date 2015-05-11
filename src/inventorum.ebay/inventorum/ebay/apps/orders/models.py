@@ -108,6 +108,17 @@ class OrderModel(BaseModel):
     def is_click_and_collect(self):
         return self.selected_shipping.service.external_id == INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # since there is a strong connection between the order model and its ebay/core status,
+        # we save these models here as well for convenience and to avoid simple programming errors.
+        if self.core_status:
+            self.core_status.save()
+
+        if self.ebay_status:
+            self.ebay_status.save()
+
+        return super(OrderModel, self).save(force_insert, force_update, using, update_fields)
+
 
 class OrderFactory(object):
     """ Responsible for creating order models with proper relations """
@@ -134,7 +145,6 @@ class OrderFactory(object):
 
 
 class OrderStatusModel(BaseModel):
-
     is_paid = models.BooleanField(default=False)
     is_shipped = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)

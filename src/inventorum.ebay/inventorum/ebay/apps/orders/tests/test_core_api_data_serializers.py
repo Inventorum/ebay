@@ -9,6 +9,7 @@ from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSeriali
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
 from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 
 from inventorum.ebay.tests.testcases import UnitTestCase
 
@@ -48,7 +49,10 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                                          selected_shipping__cost=D("4.50"),
 
                                          payment_method=CorePaymentMethod.PAYPAL,
-                                         payment_amount=D("24.45"))
+                                         payment_amount=D("24.45"),
+
+                                         ebay_status__is_paid=True,
+                                         core_status__is_paid=True)
 
         OrderLineItemModelFactory.create(order=order,
                                          orderable_item__product__inv_id=23,
@@ -110,12 +114,20 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                 "payment_amount": "24.45",
                 "payment_method": CorePaymentMethod.PAYPAL
             }],
-            "state": BinaryCoreOrderStates.PENDING
+            "state": BinaryCoreOrderStates.PENDING | BinaryCoreOrderStates.PAID
         })
 
         # assert click-and-collect order ###############################################################################
 
         order.selected_shipping.service = self.get_shipping_service_click_and_collect()
+
+        # also assert payment with bank transfer and initial order state when order was not paid yet
+        order.ebay_payment_method = BuyerPaymentMethodCodeType.MoneyXferAccepted
+        order.payment_method = CorePaymentMethod.from_ebay_payment_method(BuyerPaymentMethodCodeType.MoneyXferAccepted)
+        order.ebay_status.is_paid = False
+        order.core_status.is_paid = False
+        order.save()
+
         self.assertPrecondition(order.is_click_and_collect, True)
 
         serializer = OrderModelCoreAPIDataSerializer(order)
@@ -131,3 +143,6 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                 "time_max": None
             }
         })
+
+        self.assertEqual(data["payments"][0]["payment_method"], CorePaymentMethod.BANK_TRANSFER)
+        self.assertEqual(data["state"], BinaryCoreOrderStates.PENDING)

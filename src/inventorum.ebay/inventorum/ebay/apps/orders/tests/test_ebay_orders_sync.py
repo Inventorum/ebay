@@ -196,9 +196,9 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.schedule_core_order_creation_mock = \
             self.patch("inventorum.ebay.apps.orders.tasks.schedule_core_order_creation")
 
-    def test_new_incoming_order_for_non_variation_listing(self):
         self.assertPrecondition(OrderModel.objects.count(), 0)
 
+    def test_new_incoming_order_for_non_variation_listing(self):
         published_ebay_item_id = "123456789"
         transaction_id = "987654321"
         order_id = "123456789-987654321"
@@ -320,8 +320,6 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
             .assert_called_once_with(order_model.id, context=sync.get_task_execution_context())
 
     def test_new_incoming_order_for_variation_listing(self):
-        self.assertPrecondition(OrderModel.objects.count(), 0)
-
         published_ebay_item_id = "000000000"
         transaction_id = "111111111"
         order_id = "000000000-111111111"
@@ -376,3 +374,36 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
         # task to create order in core api should have been scheduled
         self.schedule_core_order_creation_mock\
             .assert_called_once_with(order_model.id, context=sync.get_task_execution_context())
+
+    def test_initial_order_state(self):
+        published_ebay_item_id = "123456789"
+        PublishedEbayItemFactory.create(account=self.account,
+                                        external_id=published_ebay_item_id)
+
+        incoming_order = OrderTypeFactory.create(
+            shipping_service_selected__shipping_service=self.get_shipping_service_dhl().external_id,
+            checkout_status__payment_method=BuyerPaymentMethodCodeType.MoneyXferAccepted,
+            transactions=[TransactionTypeFactory.create(item__item_id=published_ebay_item_id)]
+        )
+
+        sync = IncomingEbayOrderSyncer(account=self.account)
+        sync(incoming_order)
+
+        order_model = OrderModel.objects.last()
+        assert isinstance(order_model, OrderModel)
+        self.assertFalse(order_model.core_status.is_paid)
+
+        incoming_order = OrderTypeFactory.create(
+            shipping_service_selected__shipping_service=self.get_shipping_service_dhl().external_id,
+            checkout_status__payment_method=BuyerPaymentMethodCodeType.PayPal,
+            transactions=[TransactionTypeFactory.create(item__item_id=published_ebay_item_id)]
+        )
+
+        sync = IncomingEbayOrderSyncer(account=self.account)
+        sync(incoming_order)
+
+        order_model = OrderModel.objects.last()
+        assert isinstance(order_model, OrderModel)
+
+        self.assertTrue(order_model.ebay_status.is_paid)
+        self.assertTrue(order_model.core_status.is_paid)
