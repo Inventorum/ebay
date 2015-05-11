@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
+from rest_framework.serializers import Serializer
 
 import six
 
@@ -20,9 +21,13 @@ log = logging.getLogger(__name__)
 
 
 class EbayPlatformNotificationsResource(PublicAPIResource):
+    """
+    Resource to handle public ebay platfrom notifications
+    """
     permission_classes = ()
     authentication_classes = ()
-
+    serializer_class = Serializer
+    
     @transaction.atomic
     def post(self, request):
         """
@@ -30,6 +35,9 @@ class EbayPlatformNotificationsResource(PublicAPIResource):
         http://developer.ebay.com/Devzone/guides/ebayfeatures/Notifications/Notifications.html
 
         :type request: rest_framework.request.Request
+
+        ---
+        omit_serializer: true
         """
         cleaned_request_headers = {unicode(key): unicode(value) for key, value in request.META.iteritems()
                                    if isinstance(value, six.string_types)}
