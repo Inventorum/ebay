@@ -131,7 +131,7 @@ class OrderBasketCoreAPIDataSerializer(serializers.ModelSerializer):
 class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     """
     Responsible for serializing a `OrderModel` instance into the according data format
-    to create/update its representation in the core api
+    to create/update its representation in the core api.
     """
     
     class Meta:
@@ -143,7 +143,7 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     shipment = OrderShipmentCoreAPIDataSerializer(source="selected_shipping")
     customer = serializers.SerializerMethodField()
     payments = serializers.SerializerMethodField()
-    state = serializers.SerializerMethodField()
+    state = serializers.SerializerMethodField(method_name="get_initial_state")
 
     def get_channel(self, order):
         return CoreChannel.EBAY
@@ -157,5 +157,16 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     def get_payments(self, order):
         return [OrderPaymentCoreAPIDataSerializer(order).data]
 
-    def get_state(self, order):
-        return BinaryCoreOrderStates.PENDING
+    def get_initial_state(self, order):
+        """
+        Returns the *initial* order state
+
+        :type order: OrderModel
+        :rtype: int
+        """
+        state = BinaryCoreOrderStates.PENDING
+
+        if order.ebay_status.is_paid:
+            state |= BinaryCoreOrderStates.PAID
+
+        return state
