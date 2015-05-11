@@ -165,4 +165,11 @@ class EbayNullableIntegerField(serializers.IntegerField):
         return super(EbayNullableIntegerField, self).to_internal_value(data)
 
 
+class EbayNullableDecimalField(serializers.DecimalField):
+    def to_internal_value(self, data):
+        if data == 'null':
+            return None
+        return super(EbayNullableDecimalField, self).to_internal_value(data)
+
+
 # TODO jm: Move to data/utils.py #######################################################################################

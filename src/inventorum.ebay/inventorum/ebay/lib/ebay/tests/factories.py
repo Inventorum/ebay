@@ -2,9 +2,12 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from datetime import datetime, timedelta
+from decimal import Decimal
 
 import factory
+from inventorum.ebay.apps.accounts.models import EbayLocationModel
 from inventorum.ebay.lib.ebay.data.authorization import EbayToken
+from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayInterval, EbayDay, EbayLocation
 from inventorum.ebay.lib.ebay.data.shipping import EbayShippingService
 
 
@@ -12,7 +15,6 @@ log = logging.getLogger(__name__)
 
 
 class EbayTokenFactory(factory.Factory):
-
     class Meta:
         model = EbayToken
 
@@ -22,7 +24,6 @@ class EbayTokenFactory(factory.Factory):
 
 
 class EbayShippingServiceFactory(factory.Factory):
-
     class Meta:
         model = EbayShippingService
 
@@ -35,3 +36,40 @@ class EbayShippingServiceFactory(factory.Factory):
 
     international = False
     dimensions_required = False
+
+
+class EbayIntervalFactory(factory.Factory):
+    class Meta:
+        model = EbayInterval
+
+    open = '08:00:00'
+    close = '10:00:00'
+
+
+class EbayDayFactory(factory.Factory):
+    class Meta:
+        model = EbayDay
+
+    day_of_week = 1
+    intervals = [EbayIntervalFactory.build()]
+
+
+class EbayLocationFactory(factory.Factory):
+    class Meta:
+        model = EbayLocation
+
+    location_id = "test_inventorum_location"
+    address1 = "Voltrastr 5"
+    address2 = "Gebaude 2"
+    city = "Berlin"
+    country = "DE"
+    latitude = Decimal("37.374488")
+    longitude = Decimal("-122.032876")
+    name = "Test location Inventorum"
+    phone = "072 445 78 75"
+    pickup_instruction = "Pick it up as soon as possible"
+    postal_code = "13355"
+    region = "Berlin"
+    url = "http://inventorum.com"
+    utc_offset = "+02:00"
+    days = [EbayDayFactory.build()]
