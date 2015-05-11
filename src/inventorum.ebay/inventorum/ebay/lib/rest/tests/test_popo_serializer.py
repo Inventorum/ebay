@@ -6,11 +6,11 @@ from decimal import Decimal as D
 from datetime import date
 
 from unittest.case import TestCase
-from django.core.exceptions import ValidationError
 
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 
 log = logging.getLogger(__name__)
