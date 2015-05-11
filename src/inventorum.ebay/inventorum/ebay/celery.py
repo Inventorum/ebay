@@ -1,14 +1,31 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+import logging
 import os
 
-from celery import Celery
+import celery
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from inventorum.util.celery import CeleryBaseMiddleware
 
 
 log = get_task_logger(__name__)
+
+
+class Celery(celery.Celery):
+
+    def on_configure(self):
+        # raven integration (http://raven.readthedocs.org/en/latest/integrations/celery.html)
+        import raven
+        from raven.contrib.celery import register_signal, register_logger_signal
+
+        client = raven.Client()
+
+        # register a custom filter to filter out duplicate logs
+        register_logger_signal(client)
+
+        # hook into the Celery error
+        register_signal(client)
 
 
 # set the default Django settings module for the 'celery' program.
@@ -32,7 +49,7 @@ class CeleryMiddleware(CeleryBaseMiddleware):
         :type einfo:
         :type context: inventorum.util.celery.TaskExecutionContext
         """
-        log.exception(exc, extra={
+        log.error(exc, extra={
             "task_id": task_id,
             "task_execution_context": context
         })
