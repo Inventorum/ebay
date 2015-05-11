@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """Base settings shared by all environments"""
+from __future__ import absolute_import
+
 import os
 import logging
 import sys
 from datetime import datetime, timedelta
+from celery.schedules import crontab
 from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
 from inventorum.util.celery import TaskExecutionContext
 
@@ -113,6 +116,20 @@ CELERYBEAT_SCHEDULE = {
     'periodic_core_products_sync_task': {
         'task': 'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task',
         'schedule': timedelta(seconds=30),
+        'kwargs': {
+            "context": get_anonymous_task_execution_context()
+        }
+    },
+    'periodic_ebay_categories_sync_task': {
+        'task': 'inventorum.ebay.apps.categories.tasks.initialize_periodic_ebay_categories_sync_task',
+        'schedule': crontab(hour=3, minute=0),
+        'kwargs': {
+            "context": get_anonymous_task_execution_context()
+        }
+    },
+    'periodic_ebay_shipping_sync_task': {
+        'task': 'inventorum.ebay.apps.shipping.tasks.periodic_ebay_shipping_sync_task',
+        'schedule': crontab(hour=3, minute=10),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
         }
@@ -237,4 +254,3 @@ if TEST:
             return "notmigrations"
 
     MIGRATION_MODULES = DisableMigrations()
-

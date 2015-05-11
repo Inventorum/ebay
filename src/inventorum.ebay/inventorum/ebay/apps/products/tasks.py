@@ -1,7 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-import logging
+
 from datetime import datetime
+from celery.utils.log import get_task_logger
 
 from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateModel, EbayProductModel
@@ -13,7 +14,7 @@ from inventorum.util.celery import inventorum_task
 from requests.exceptions import RequestException
 
 
-log = logging.getLogger(__name__)
+log = get_task_logger(__name__)
 
 
 @inventorum_task()

@@ -1,1 +1,0 @@
-0 3 * * * www-data ${buildout:directory}/bin/ebay/manage ${buildout:directory}/src/inventorum.ebay/${config:environment}.ini runscript fetch_shipping_services -v3
