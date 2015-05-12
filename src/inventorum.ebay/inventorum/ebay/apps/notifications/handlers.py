@@ -11,6 +11,7 @@ from inventorum.ebay.apps.products.tasks import schedule_core_api_publishing_sta
 from inventorum.ebay.lib.ebay.data.responses import GetItemTransactionsResponseType, GetItemResponseType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.util.celery import TaskExecutionContext
+from inventorum.util.django.middlewares import get_current_request_id
 from rest_framework.exceptions import ValidationError
 
 
@@ -75,7 +76,7 @@ class FixedPriceTransactionNotificationHandler(EbayNotificationHandler):
         schedule_ebay_orders_sync(account_id=account.id,
                                   context=TaskExecutionContext(account_id=account.id,
                                                                user_id=account.default_user.id,
-                                                               request_id=None))
+                                                               request_id=get_current_request_id()))
 
 
 class ItemSoldNotificationHandler(EbayNotificationHandler):
@@ -99,7 +100,7 @@ class ItemSoldNotificationHandler(EbayNotificationHandler):
         schedule_ebay_orders_sync(account_id=account.id,
                                   context=TaskExecutionContext(account_id=account.id,
                                                                user_id=account.default_user.id,
-                                                               request_id=None))
+                                                               request_id=get_current_request_id()))
 
 
 class ItemClosedNotificationHandler(EbayNotificationHandler):
@@ -126,7 +127,7 @@ class ItemClosedNotificationHandler(EbayNotificationHandler):
             schedule_core_api_publishing_status_update(ebay_item_id=item.id,
                                                        context=TaskExecutionContext(account_id=account.id,
                                                                                     user_id=account.default_user.id,
-                                                                                    request_id=None))
+                                                                                    request_id=get_current_request_id()))
         else:
             log.info("Got ItemClosed notification for already unpublished ebay item {}".format(item_id))
 
@@ -156,4 +157,4 @@ class ItemSuspendedNotificationHandler(EbayNotificationHandler):
         schedule_core_api_publishing_status_update(ebay_item_id=item.id,
                                                    context=TaskExecutionContext(account_id=account.id,
                                                                                 user_id=account.default_user.id,
-                                                                                request_id=None))
+                                                                                request_id=get_current_request_id()))

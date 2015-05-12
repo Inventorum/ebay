@@ -7,6 +7,7 @@ from inventorum.ebay.lib.core_api import PaginatedFakeCoreAPIResponse
 from inventorum.ebay.lib.core_api.pager import Pager
 from inventorum.ebay.tests.testcases import UnitTestCase
 from inventorum.ebay.lib.core_api.clients import CoreAPIClient
+from inventorum.util.django.middlewares import get_current_request_id
 from mock import patch
 
 
@@ -27,7 +28,8 @@ class TestCoreAPIClient(UnitTestCase):
             "User-Agent": "inv-ebay/{version}".format(version=expected_version),
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "X-Api-Version": 10
+            "X-Api-Version": 10,
+            "X-Rid": get_current_request_id()
         })
 
     def test_url_for(self):
