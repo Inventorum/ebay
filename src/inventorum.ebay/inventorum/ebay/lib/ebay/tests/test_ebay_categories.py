@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.lib.core_api.tests import EbayTest
+from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from inventorum.ebay.lib.ebay.data.categories import EbayCategory
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature, EbayFeatureDefinition, \

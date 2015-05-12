@@ -6,7 +6,7 @@ import logging
 from inventorum.ebay.tests import StagingTestAccount
 
 from celery.exceptions import MaxRetriesExceededError
-from inventorum.ebay.lib.core_api.tests import ApiTest
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.tasks import schedule_core_api_publishing_status_update
 from inventorum.ebay.apps.products.tests.factories import EbayItemFactory

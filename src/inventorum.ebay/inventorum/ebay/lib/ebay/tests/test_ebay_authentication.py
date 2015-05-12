@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.datetime_safe import datetime
-from inventorum.ebay.lib.core_api.tests import MockedTest
+from inventorum.ebay.tests import MockedTest
 from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
 from inventorum.ebay.tests.testcases import APITestCase
 

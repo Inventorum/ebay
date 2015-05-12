@@ -6,7 +6,7 @@ import logging
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, PaymentMethodModel, \
     DurationModel, CategorySpecificModel
 from inventorum.ebay.apps.categories.services import EbayCategoriesScraper, EbayFeaturesScraper, EbaySpecificsScraper
-from inventorum.ebay.lib.core_api.tests import EbayTest
+from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase

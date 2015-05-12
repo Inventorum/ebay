@@ -8,7 +8,7 @@ from inventorum.ebay.tests import StagingTestAccount
 from ebaysdk.response import Response, ResponseDataObject
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
-from inventorum.ebay.lib.core_api.tests import ApiTest
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \

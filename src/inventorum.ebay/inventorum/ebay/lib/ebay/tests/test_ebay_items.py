@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.lib.core_api.tests import EbayTest
+from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayItemShippingService, EbayPicture
 from inventorum.ebay.lib.ebay.items import EbayItems

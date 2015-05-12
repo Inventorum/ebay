@@ -10,7 +10,7 @@ from django.utils.functional import cached_property
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, \
     DurationFactory
 from inventorum.ebay.lib.core_api import PublishStates
-from inventorum.ebay.lib.core_api.tests import ApiTest
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingPreparationService

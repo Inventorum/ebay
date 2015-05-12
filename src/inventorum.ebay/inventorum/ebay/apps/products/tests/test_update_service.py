@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from decimal import Decimal as D
 import logging
 
-from inventorum.ebay.lib.core_api.tests import MockedTest
+from inventorum.ebay.tests import MockedTest
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
 from inventorum.ebay.apps.products.services import UpdateService, UpdateFailedException
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory, \

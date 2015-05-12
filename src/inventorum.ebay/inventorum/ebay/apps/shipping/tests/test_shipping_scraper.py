@@ -2,9 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.tests import Countries
+from inventorum.ebay.tests import EbayTest, Countries
 
-from inventorum.ebay.lib.core_api.tests import EbayTest
 from inventorum.ebay.apps.shipping.models import ShippingServiceModel
 from inventorum.ebay.apps.shipping.services import EbayShippingScraper
 from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceFactory

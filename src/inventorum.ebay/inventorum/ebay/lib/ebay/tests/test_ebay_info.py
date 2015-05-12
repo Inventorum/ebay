@@ -6,7 +6,7 @@ from pytz import UTC
 
 from django.utils.datetime_safe import datetime
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature, EbayFeatureDefinition
-from inventorum.ebay.lib.core_api.tests import EbayTest
+from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay.info import EbayInfo
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 

@@ -1,6 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.lib.core_api.tests import EbayTest
+from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay.data.orders import CheckoutStatusType, PaymentMethodType
 from inventorum.ebay.lib.ebay.orders import EbayOrders
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -59,5 +59,3 @@ class TestEbayOrders(EbayAuthenticatedAPITestCase):
         self.assertEqual(order.order_status, "Completed")
         self.assertTrue(order.is_paid)
         self.assertTrue(order.is_shipped)
-
-

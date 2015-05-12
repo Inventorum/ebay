@@ -7,7 +7,7 @@ from inventorum.ebay.tests import StagingTestAccount
 
 from django.conf import settings
 from inventorum.ebay.lib.core_api import FakeCoreAPIResponse
-from inventorum.ebay.lib.core_api.tests import CoreApiTest
+from inventorum.ebay.tests import CoreApiTest
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 from inventorum.ebay.tests.testcases import APITestCase, UnitTestCase
