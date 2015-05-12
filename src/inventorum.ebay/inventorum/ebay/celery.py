@@ -18,20 +18,20 @@ class Celery(celery.Celery):
         # raven integration (http://raven.readthedocs.org/en/latest/integrations/celery.html)
         import raven
         from raven.contrib.celery import register_signal, register_logger_signal
+        if hasattr(settings, "RAVEN_CONFIG"):
+            client = raven.Client(settings.RAVEN_CONFIG['dsn'])
 
-        client = raven.Client()
+            # register a custom filter to filter out duplicate logs
+            register_logger_signal(client)
 
-        # register a custom filter to filter out duplicate logs
-        register_logger_signal(client)
-
-        # hook into the Celery error
-        register_signal(client)
+            # hook into the Celery error
+            register_signal(client)
 
 
-@signals.setup_logging.connect
-def setup_logging(**kwargs):
-    # https://github.com/celery/celery/issues/2437
-    pass
+# @signals.setup_logging.connect
+# def setup_logging(**kwargs):
+#     # https://github.com/celery/celery/issues/2437
+#     pass
 
 
 # set the default Django settings module for the 'celery' program.
