@@ -6,12 +6,14 @@ from decimal import Decimal as D
 from inventorum.ebay.tests import StagingTestAccount
 
 from django.conf import settings
+from django.test.client import RequestFactory
 from inventorum.ebay.lib.core_api import FakeCoreAPIResponse
 from inventorum.ebay.tests import CoreApiTest
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 from inventorum.ebay.tests.testcases import APITestCase, UnitTestCase
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
+from inventorum.util.django.middlewares import CrequestMiddleware
 
 
 log = logging.getLogger(__name__)
@@ -29,6 +31,12 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
 
     def test_default_headers(self):
         expected_version = settings.VERSION
+        request_id = 1337
+
+        # set thread-local request id by emulating the request context
+        request_factory = RequestFactory()
+        request = request_factory.get("/", HTTP_X_RID=request_id)
+        CrequestMiddleware().process_request(request)
 
         self.assertEqual(self.subject.default_headers, {
             "User-Agent": "inv-ebay/{version}".format(version=expected_version),
@@ -36,8 +44,12 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
             "Accept": "application/json",
             "X-Api-Version": 10,
             "X-Inv-User": unicode(self.user_id),
-            "X-Inv-Account": unicode(self.account_id)
+            "X-Inv-Account": unicode(self.account_id),
+            "X-Rid": request_id
         })
+
+        # cleanup
+        CrequestMiddleware.del_request()
 
     @CoreApiTest.use_cassette("get_product_simple.yaml")
     def test_get_products_without_ebay_meta(self):

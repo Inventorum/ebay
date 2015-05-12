@@ -18,9 +18,13 @@ if ! $local_flag; then
     bin/supervisorctl shutdown >/dev/null 2>&1||true
     sleep 1
 
-    bin/supervisord
+    # enforce fresh inventorum eggs in case we didn't bump versions
+    rm -rf ${buildout:directory}/eggs/inventorum.*/
+    bin/buildout -vvvvN
 
-    sleep 1
+    bin/supervisord
+    sleep 2
+
     bin/supervisorctl status
 fi
 

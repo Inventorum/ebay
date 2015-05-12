@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 
 import celery
+from celery import signals
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from inventorum.util.celery import CeleryBaseMiddleware
@@ -25,6 +26,12 @@ class Celery(celery.Celery):
 
         # hook into the Celery error
         register_signal(client)
+
+
+@signals.setup_logging.connect
+def setup_logging(**kwargs):
+    # https://github.com/celery/celery/issues/2437
+    pass
 
 
 # set the default Django settings module for the 'celery' program.

@@ -197,7 +197,8 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
 
     def test_task_execution_context(self):
         self.assertEqual(self.sync.get_task_execution_context(),
-                         TaskExecutionContext(user_id=self.default_user.id, account_id=self.account.id,
+                         TaskExecutionContext(user_id=self.default_user.id,
+                                              account_id=self.account.id,
                                               request_id=None))
 
     def test_without_changes(self):

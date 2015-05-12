@@ -7,6 +7,7 @@ from inventorum.ebay.lib.core_api import CoreChannel
 from inventorum.ebay.lib.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
     CoreProductDeltaDeserializer, CoreOrder
 from inventorum.ebay.lib.core_api.pager import Pager
+from inventorum.util.django.middlewares import get_current_request_id
 import requests
 from django.conf import settings
 from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponseDeserializer
@@ -32,7 +33,8 @@ class CoreAPIClient(object):
             "User-Agent": "inv-ebay/{version}".format(version=settings.VERSION),
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "X-Api-Version": self.API_VERSION
+            "X-Api-Version": self.API_VERSION,
+            "X-Rid": get_current_request_id()
         }
 
     @classmethod
