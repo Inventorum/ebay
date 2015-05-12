@@ -178,5 +178,3 @@ class EbaySpecificsScraper(EbayBatchScraper):
         for category_id, specific in specifics.iteritems():
             CategorySpecificModel.create_or_update_from_ebay_data_for_category(specific,
                                                                                categories_ids[specific.category_id])
-
-
