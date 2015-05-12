@@ -2,13 +2,14 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
-from inventorum.ebay.apps.core_api.tests import ApiTest, MockedTest
-import pytz
-from django.utils.datetime_safe import datetime
 
+import pytz
+from inventorum.ebay.tests import MockedTest, StagingTestAccount, Countries
+
+from django.utils.datetime_safe import datetime
 from inventorum.ebay.apps.accounts.models import EbayAccountModel
-from inventorum.ebay.tests import StagingTestAccount, Countries
 from inventorum.ebay.tests.testcases import APITestCase
+
 
 log = logging.getLogger(__name__)
 

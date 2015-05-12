@@ -4,8 +4,7 @@ import logging
 
 from inventorum.ebay.tests.testcases import UnitTestCase
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
-
-from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
+from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 
 
 log = logging.getLogger(__name__)

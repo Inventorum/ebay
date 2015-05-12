@@ -2,26 +2,24 @@
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal as D
 import logging
+from datetime import datetime, timedelta
+
+from inventorum.ebay.tests.utils import PatchMixin
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
-from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
-
-from datetime import datetime, timedelta
+from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
-
-from inventorum.ebay.apps.core_api.tests import CoreApiTestHelpers, ApiTest
-from inventorum.ebay.apps.core_api.tests.factories import CoreProductDeltaFactory
+from inventorum.ebay.lib.core_api.tests import CoreApiTestHelpers
+from inventorum.ebay.lib.core_api.tests.factories import CoreProductDeltaFactory
 from inventorum.ebay.apps.products.core_products_sync import CoreProductsSync
-
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemVariationModel
 from inventorum.ebay.apps.products.tasks import periodic_core_products_sync_task
-
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
-from inventorum.ebay.tests.utils import PatchMixin
 from mock import PropertyMock
 from rest_framework import status
 

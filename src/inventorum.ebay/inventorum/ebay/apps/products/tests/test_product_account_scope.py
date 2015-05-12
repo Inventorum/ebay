@@ -1,6 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 

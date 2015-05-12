@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-
 from decimal import Decimal as D
 from datetime import datetime, timedelta
+
 from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
 from inventorum.ebay.apps.auth.models import EbayTokenModel
-from inventorum.ebay.apps.core_api.tests import MockedTest, CoreApiTestHelpers
+from inventorum.ebay.tests import MockedTest
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync, IncomingEbayOrderSyncer, EbayOrderSyncException
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
@@ -18,6 +18,7 @@ from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
+from inventorum.ebay.lib.core_api.tests import CoreApiTestHelpers
 from inventorum.ebay.lib.ebay.data import EbayParser, OrderStatusCodeType, PaymentStatusCodeType, \
     BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.tests.factories import OrderTypeFactory, GetOrdersResponseTypeFactory, \

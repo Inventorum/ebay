@@ -1,10 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from decimal import Decimal
-from inventorum.ebay.apps.core_api.tests import EbayTest
+from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
-from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation, EbayDay, EbayInterval, \
-    EbayLocationAvailability, EbayAvailability
+from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.tests.factories import EbayLocationFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 

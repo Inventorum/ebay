@@ -1,13 +1,12 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+
 from django.conf import settings
-from inventorum.ebay.apps.core_api import PaginatedFakeCoreAPIResponse
-from inventorum.ebay.apps.core_api.pager import Pager
-
+from inventorum.ebay.lib.core_api import PaginatedFakeCoreAPIResponse
+from inventorum.ebay.lib.core_api.pager import Pager
 from inventorum.ebay.tests.testcases import UnitTestCase
-
-from inventorum.ebay.apps.core_api.clients import CoreAPIClient
+from inventorum.ebay.lib.core_api.clients import CoreAPIClient
 from mock import patch
 
 

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-import json
 
 from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer, EbayLocationSerializer
 from inventorum.ebay.apps.accounts.tests.factories import EbayLocationFactory
-from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from rest_framework import status
 
@@ -33,16 +32,17 @@ class TestEbayAccountResource(EbayAuthenticatedAPITestCase):
         self.assertEqual(put_response.data, self.get_serialized_data_for(self.account))
 
     def test_location_get_put(self):
-        EbayLocationFactory.create(account=self.account)
+        with ApiTest.use_cassette("test_updating_location_endpoint.yaml") as cass:
+            EbayLocationFactory.create(account=self.account)
 
-        get_response = self.request_get_account()
-        self.assertEqual(get_response.status_code, status.HTTP_200_OK)
-        self.assertEqual(get_response.data, self.get_serialized_data_for(self.account))
+            get_response = self.request_get_account()
+            self.assertEqual(get_response.status_code, status.HTTP_200_OK)
+            self.assertEqual(get_response.data, self.get_serialized_data_for(self.account))
 
-        put_response = self.request_put_account(get_response.data)
-        log.debug('Got response: %s', put_response.data)
-        self.assertEqual(put_response.status_code, status.HTTP_200_OK)
-        self.assertEqual(put_response.data, self.get_serialized_data_for(self.account))
+            put_response = self.request_put_account(get_response.data)
+            log.debug('Got response: %s', put_response.data)
+            self.assertEqual(put_response.status_code, status.HTTP_200_OK)
+            self.assertEqual(put_response.data, self.get_serialized_data_for(self.account))
 
     def test_location_save_new(self):
         with ApiTest.use_cassette("test_saving_location_endpoint.yaml") as cass:

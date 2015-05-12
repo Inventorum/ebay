@@ -1,15 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-import unittest
-from inventorum.ebay.apps.core_api.tests import EbayTest, MockedTest
 
+from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayItemShippingService, EbayPicture
 from inventorum.ebay.lib.ebay.items import EbayItems
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from inventorum.util.django.timezone import datetime
-from pytz import UTC
+
 
 log = logging.getLogger(__name__)
 

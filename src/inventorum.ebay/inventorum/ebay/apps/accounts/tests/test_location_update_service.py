@@ -5,7 +5,7 @@ from decimal import Decimal as D
 
 from inventorum.ebay.apps.accounts.services import EbayLocationUpdateService, EbayLocationUpdateServiceException
 from inventorum.ebay.apps.accounts.tests.factories import EbayLocationFactory
-from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 

@@ -3,13 +3,13 @@ from __future__ import absolute_import, unicode_literals
 
 import logging
 from decimal import Decimal as D
-from inventorum.ebay.apps.core_api.tests import ApiTest
+
+from inventorum.ebay.tests import ApiTest, StagingTestAccount
 
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
-from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-
 from django.conf import settings
+
 
 log = logging.getLogger(__name__)
 

@@ -1,22 +1,20 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-import json
-
 from decimal import Decimal as D
+
+from inventorum.ebay.tests import StagingTestAccount
+
 from ebaysdk.response import Response, ResponseDataObject
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
-
-from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
     UnpublishingService, PublishingPreparationService
 from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
-from inventorum.ebay.tests import StagingTestAccount
-from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 log = logging.getLogger(__name__)

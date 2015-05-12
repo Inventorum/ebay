@@ -2,12 +2,13 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
+from pytz import UTC
+
 from django.utils.datetime_safe import datetime
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature, EbayFeatureDefinition
-from inventorum.ebay.apps.core_api.tests import EbayTest
+from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay.info import EbayInfo
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from pytz import UTC
 
 
 log = logging.getLogger(__name__)
