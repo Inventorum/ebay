@@ -1,19 +1,17 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-
 from decimal import Decimal as D
 
-from django.conf import settings
-from inventorum.ebay.apps.core_api import FakeCoreAPIResponse
-from inventorum.ebay.apps.core_api.tests import CoreApiTest
 from inventorum.ebay.tests import StagingTestAccount
+
+from django.conf import settings
+from inventorum.ebay.lib.core_api import FakeCoreAPIResponse
+from inventorum.ebay.lib.core_api.tests import CoreApiTest
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
-
 from inventorum.ebay.tests.testcases import APITestCase, UnitTestCase
-
-from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
+from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 
 
 log = logging.getLogger(__name__)
@@ -168,10 +166,10 @@ class UnitTestUserScopedCoreAPIClient(UnitTestCase):
         self.subject = UserScopedCoreAPIClient(user_id="SOME_USER_ID", account_id="SOME_ACCOUNT_ID")
 
     def mock_core_api_client(self):
-        self.client_get_mock = self.patch("inventorum.ebay.apps.core_api.clients.CoreAPIClient.get")
-        self.client_post_mock = self.patch("inventorum.ebay.apps.core_api.clients.CoreAPIClient.post")
-        self.client_put_mock = self.patch("inventorum.ebay.apps.core_api.clients.CoreAPIClient.put")
-        self.client_delete_mock = self.patch("inventorum.ebay.apps.core_api.clients.CoreAPIClient.delete")
+        self.client_get_mock = self.patch("inventorum.ebay.lib.core_api.clients.CoreAPIClient.get")
+        self.client_post_mock = self.patch("inventorum.ebay.lib.core_api.clients.CoreAPIClient.post")
+        self.client_put_mock = self.patch("inventorum.ebay.lib.core_api.clients.CoreAPIClient.put")
+        self.client_delete_mock = self.patch("inventorum.ebay.lib.core_api.clients.CoreAPIClient.delete")
 
     def test_create_order(self):
         order = OrderModelFactory.create()

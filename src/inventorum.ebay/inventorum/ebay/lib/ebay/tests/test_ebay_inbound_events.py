@@ -4,7 +4,7 @@ from __future__ import absolute_import, unicode_literals
 import json
 from datetime import datetime
 
-from inventorum.ebay.apps.core_api.tests import EbayTest
+from inventorum.ebay.lib.core_api.tests import EbayTest
 from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 from inventorum.ebay.lib.ebay.data.events import EbayEventReadyForPickup, EbayEventPickedUp, EbayEventCanceled, \
     EbayEventReturned, EbayEventReturnedItem

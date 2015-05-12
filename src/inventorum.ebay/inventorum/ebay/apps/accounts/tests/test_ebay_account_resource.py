@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-import json
 
 from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer, EbayLocationSerializer
 from inventorum.ebay.apps.accounts.tests.factories import EbayLocationFactory
-from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.lib.core_api.tests import ApiTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from rest_framework import status
 

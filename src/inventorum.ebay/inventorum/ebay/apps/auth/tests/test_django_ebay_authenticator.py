@@ -1,10 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 
-from django.conf import settings
-
 from inventorum.ebay.apps.auth.models import EbayTokenModel
-from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.lib.core_api.tests import ApiTest
 from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
 from inventorum.util.django.timezone import datetime
 

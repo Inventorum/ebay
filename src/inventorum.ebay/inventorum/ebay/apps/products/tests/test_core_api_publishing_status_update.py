@@ -2,12 +2,14 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
+
+from inventorum.ebay.tests import StagingTestAccount
+
 from celery.exceptions import MaxRetriesExceededError
-from inventorum.ebay.apps.core_api.tests import ApiTest
+from inventorum.ebay.lib.core_api.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.tasks import schedule_core_api_publishing_status_update
 from inventorum.ebay.apps.products.tests.factories import EbayItemFactory
-from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.lib.celery import celery_test_case
 from inventorum.ebay.tests.testcases import APITestCase
 from requests.exceptions import HTTPError

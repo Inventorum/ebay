@@ -1,6 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.apps.core_api.tests import MockedTest, EbayTest
+from inventorum.ebay.lib.core_api.tests import EbayTest
 from inventorum.ebay.lib.ebay.data.orders import CheckoutStatusType, PaymentMethodType
 from inventorum.ebay.lib.ebay.orders import EbayOrders
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase

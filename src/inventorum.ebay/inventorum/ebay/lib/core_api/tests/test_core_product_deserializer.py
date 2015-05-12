@@ -1,9 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.core_api.models import CoreProductDeserializer
-from inventorum.ebay.apps.core_api.tests import CoreApiTest
 
+from inventorum.ebay.lib.core_api.models import CoreProductDeserializer
 from inventorum.ebay.tests.testcases import UnitTestCase
 
 

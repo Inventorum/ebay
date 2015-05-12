@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-
 from decimal import Decimal as D
 from datetime import datetime, timedelta
+
 from inventorum.ebay.apps.accounts.models import AddressModel
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
 from inventorum.ebay.apps.auth.models import EbayTokenModel
-from inventorum.ebay.apps.core_api.tests import MockedTest, CoreApiTestHelpers
+from inventorum.ebay.lib.core_api.tests import MockedTest, CoreApiTestHelpers
 from inventorum.ebay.apps.orders import CorePaymentMethod
 from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync, IncomingEbayOrderSyncer, EbayOrderSyncException
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel

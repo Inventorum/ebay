@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.orders',
     'inventorum.ebay.apps.products',
     'inventorum.ebay.apps.shipping',
+    'inventorum.ebay.lib.core_api',
 
     'mptt',
     'raven.contrib.django.raven_compat',

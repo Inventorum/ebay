@@ -2,13 +2,13 @@
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal as D
 import logging
-from inventorum.ebay.apps.core_api.tests import ApiTest, MockedTest
+
+from inventorum.ebay.lib.core_api.tests import MockedTest
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
 from inventorum.ebay.apps.products.services import UpdateService, UpdateFailedException
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory, \
     EbayItemUpdateFactory, EbayItemVariationUpdateFactory, EbayItemVariationFactory, EbayItemVariationSpecificFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-
 from ebaysdk.response import Response as EbayResponse, ResponseDataObject
 
 

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
-from inventorum.ebay.apps.core_api.models import CoreOrder
 
+from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
+from inventorum.ebay.lib.core_api.models import CoreOrder
 from inventorum.ebay.tests.testcases import UnitTestCase
 
 

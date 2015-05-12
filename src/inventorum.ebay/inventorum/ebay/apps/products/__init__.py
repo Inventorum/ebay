@@ -3,7 +3,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.apps.core_api import PublishStates
+from inventorum.ebay.lib.core_api import PublishStates
 
 
 log = logging.getLogger(__name__)

@@ -4,10 +4,10 @@ import logging
 from datetime import datetime, timedelta
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory, EbayAccountFactory
-from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
-from inventorum.ebay.apps.core_api.clients import UserScopedCoreAPIClient
-from inventorum.ebay.apps.core_api.models import CoreOrder
-from inventorum.ebay.apps.core_api.tests.factories import CoreOrderFactory
+from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
+from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
+from inventorum.ebay.lib.core_api.models import CoreOrder
+from inventorum.ebay.lib.core_api.tests.factories import CoreOrderFactory
 from inventorum.ebay.apps.orders.core_orders_sync import CoreOrdersSync, CoreOrderSyncer
 from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.orders.tasks import periodic_core_orders_sync_task

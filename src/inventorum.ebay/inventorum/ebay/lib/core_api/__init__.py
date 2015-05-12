@@ -1,7 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from inventorum.ebay.apps.core_api.pager import Pager
+
+from inventorum.ebay.lib.core_api.pager import Pager
 
 
 log = logging.getLogger(__name__)

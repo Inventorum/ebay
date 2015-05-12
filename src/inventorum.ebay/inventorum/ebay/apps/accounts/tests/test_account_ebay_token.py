@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.conf import settings
-from inventorum.ebay.apps.core_api.tests import EbayTest
+from inventorum.ebay.lib.core_api.tests import EbayTest
 from inventorum.ebay.lib.ebay.info import EbayInfo
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 

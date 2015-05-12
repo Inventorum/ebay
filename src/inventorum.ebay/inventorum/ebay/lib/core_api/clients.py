@@ -2,12 +2,12 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
-from inventorum.ebay.apps.core_api import CoreChannel
-from inventorum.ebay.apps.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
-    CoreProductDeltaDeserializer, CoreOrder
-from inventorum.ebay.apps.core_api.pager import Pager
-import requests
 
+from inventorum.ebay.lib.core_api import CoreChannel
+from inventorum.ebay.lib.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
+    CoreProductDeltaDeserializer, CoreOrder
+from inventorum.ebay.lib.core_api.pager import Pager
+import requests
 from django.conf import settings
 from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponseDeserializer
 

@@ -1,16 +1,14 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-import unittest
 
-from inventorum.ebay.apps.core_api.tests import EbayTest
-
+from inventorum.ebay.lib.core_api.tests import EbayTest
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from inventorum.ebay.lib.ebay.data.categories import EbayCategory
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature, EbayFeatureDefinition, \
     EbayListingDurationDefinition
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, long_running_test
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 log = logging.getLogger(__name__)
 

@@ -2,11 +2,10 @@
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
 import logging
-from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
-from inventorum.ebay.lib.rest.fields import TaxRateField, MoneyField
 
+from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
+from inventorum.ebay.lib.rest.fields import MoneyField
 from rest_framework import serializers
-
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 
 

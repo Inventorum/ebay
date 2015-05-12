@@ -1,23 +1,22 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-
 import json
 from decimal import Decimal as D
+
+from inventorum.ebay.tests import StagingTestAccount
+
 from django.utils.functional import cached_property
-from inventorum.ebay.apps.categories.models import CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, \
-    CategoryFeaturesFactory, DurationFactory
-from inventorum.ebay.apps.core_api import PublishStates
-from inventorum.ebay.apps.core_api.tests import ApiTest
+    DurationFactory
+from inventorum.ebay.lib.core_api import PublishStates
+from inventorum.ebay.lib.core_api.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingPreparationService
 from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory
-from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case
-
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 

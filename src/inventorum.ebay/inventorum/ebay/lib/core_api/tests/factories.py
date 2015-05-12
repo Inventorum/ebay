@@ -6,8 +6,9 @@ from random import randint
 
 import factory
 from factory import fuzzy
-from inventorum.ebay.apps.core_api import BinaryCoreOrderStates
-from inventorum.ebay.apps.core_api.models import CoreProductDelta, CoreOrder
+from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
+from inventorum.ebay.lib.core_api.models import CoreProductDelta, CoreOrder
+
 
 log = logging.getLogger(__name__)
 
