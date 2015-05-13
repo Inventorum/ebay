@@ -139,9 +139,8 @@ class EbayBatchScraper(object):
         raise NotImplementedError
 
     def fetch_all(self):
-        with atomic():
-            for country_code in settings.EBAY_SUPPORTED_SITES.keys():
-                self._fetch_in_batches(country_code)
+        for country_code in settings.EBAY_SUPPORTED_SITES.keys():
+            self._fetch_in_batches(country_code)
 
     def _fetch_in_batches(self, country_code):
         queryset = self.get_queryset_with_country(country_code)
@@ -160,8 +159,9 @@ class EbayFeaturesScraper(EbayBatchScraper):
 
         ebay = EbayCategories(token)
         for category in limited_qs:
-            feature = ebay.get_features_for_category(category.external_id)
-            CategoryFeaturesModel.create_or_update_from_ebay_data_for_category(feature, category)
+            with atomic():
+                feature = ebay.get_features_for_category(category.external_id)
+                CategoryFeaturesModel.create_or_update_from_ebay_data_for_category(feature, category)
 
 
 class EbaySpecificsScraper(EbayBatchScraper):
@@ -172,9 +172,10 @@ class EbaySpecificsScraper(EbayBatchScraper):
         token = self.ebay_token
         token.site_id = settings.EBAY_SUPPORTED_SITES[country_code]
 
-        ebay = EbayCategories(token)
-        categories_ids = {category.external_id: category for category in limited_qs}
-        specifics = ebay.get_specifics_for_categories(categories_ids.keys())
-        for category_id, specific in specifics.iteritems():
-            CategorySpecificModel.create_or_update_from_ebay_data_for_category(specific,
-                                                                               categories_ids[specific.category_id])
+        with atomic():
+            ebay = EbayCategories(token)
+            categories_ids = {category.external_id: category for category in limited_qs}
+            specifics = ebay.get_specifics_for_categories(categories_ids.keys())
+            for category_id, specific in specifics.iteritems():
+                CategorySpecificModel.create_or_update_from_ebay_data_for_category(specific,
+                                                                                   categories_ids[specific.category_id])

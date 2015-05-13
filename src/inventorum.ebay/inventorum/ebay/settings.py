@@ -143,6 +143,39 @@ CELERY_MIDDLEWARE = 'inventorum.ebay.celery.CeleryMiddleware'
 # https://github.com/celery/celery/issues/2437
 CELERYD_HIJACK_ROOT_LOGGER = False
 
+# Celery queues
+CELERY_ROUTES = {
+    # Fetching
+    'inventorum.ebay.apps.categories.tasks.initialize_periodic_ebay_categories_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_category_specifics_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_category_features_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_categories_sync_task': {'queue': 'fetching'},
+
+    # Syncing
+    'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.ebay_orders_sync': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.periodic_core_orders_sync_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.core_order_creation_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.click_and_collect_status_update_with_event_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.ebay_order_status_update_task': {'queue': 'syncing'},
+
+    'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task': {'queue': 'syncing'},
+
+    # Publishing
+    'inventorum.ebay.apps.products.tasks._initialize_ebay_item_publish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._ebay_item_publish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._finalize_ebay_item_publish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._initialize_ebay_item_unpublish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._ebay_item_unpublish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._finalize_ebay_item_unpublish': {'queue': 'publishing'},
+
+    # Updating
+    'inventorum.ebay.apps.products.tasks.ebay_item_update': {'queue': 'updating'},
+    'inventorum.ebay.apps.products.tasks.ebay_product_deletion': {'queue': 'updating'},
+    'inventorum.ebay.apps.products.tasks.core_api_publishing_status_update_task': {'queue': 'updating'},
+}
+
+
 
 # Others =======================================================================
 

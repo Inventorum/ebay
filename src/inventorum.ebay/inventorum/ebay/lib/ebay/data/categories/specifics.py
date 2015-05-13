@@ -70,13 +70,13 @@ class EbaySpecificsNameRecommendationSerializer(POPOSerializer):
 
 
 class EbayCategorySpecifics(object):
-    def __init__(self, category_id, name_recommendations):
+    def __init__(self, category_id, name_recommendations=None):
         """
         :type category_id: int
         :type name_recommendations: list[EbaySpecificsNameRecommendation]
         """
         self.category_id = category_id
-        self.name_recommendations = name_recommendations
+        self.name_recommendations = name_recommendations or []
 
     @classmethod
     def create_from_data(cls, data):
@@ -86,7 +86,8 @@ class EbayCategorySpecifics(object):
 
 class EbayCategorySpecificsSerializer(POPOSerializer):
     CategoryID = CharField(source='category_id')
-    NameRecommendation = EbaySpecificsNameRecommendationSerializer(many=True, source="name_recommendations")
+    NameRecommendation = EbaySpecificsNameRecommendationSerializer(many=True, source="name_recommendations",
+                                                                   required=False)
 
     class Meta:
         model = EbayCategorySpecifics

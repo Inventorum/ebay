@@ -19,15 +19,55 @@ serverurl=unix:///${os:root-prefix}/var/run/com.inventorum.ebay/supervisor.sock
 
 
 [group:celery]
-programs=celery_worker, celery_beat, flower
+programs=celery_worker_celery, celery_worker_fetching, celery_worker_updating, celery_worker_publishing, celery_worker_syncing, celery_beat, flower
 
-[program:celery_worker]
-command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -l info
-process_name = com.inventorum.ebay.celery_worker
+[program:celery_worker_celery]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -Q celery -l info
+process_name = com.inventorum.ebay.celery_worker_celery
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.log
+stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.celery.log
+autostart=true
+autorestart=true
+
+[program:celery_worker_fetching]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -Q fetching -l info
+process_name = com.inventorum.ebay.celery_worker_fetching
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.fetching.log
+autostart=true
+autorestart=true
+
+[program:celery_worker_updating]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -Q updating -l info
+process_name = com.inventorum.ebay.celery_worker_updating
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.updating.log
+autostart=true
+autorestart=true
+
+[program:celery_worker_publishing]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -Q publishing -l info
+process_name = com.inventorum.ebay.celery_worker_publishing
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.publishing.log
+autostart=true
+autorestart=true
+
+[program:celery_worker_syncing]
+command = ${buildout:directory}/bin/ebay/celery src/inventorum.ebay/production.ini -A inventorum.ebay.celery worker -Q syncing -l info
+process_name = com.inventorum.ebay.celery_worker_syncing
+directory = ${buildout:directory}
+priority = 10
+redirect_stderr = true
+stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.syncing.log
 autostart=true
 autorestart=true
 
