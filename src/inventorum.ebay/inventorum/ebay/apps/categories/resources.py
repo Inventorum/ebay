@@ -4,10 +4,13 @@ import logging
 
 from django.utils.translation import gettext
 from inventorum.ebay.apps.categories.models import CategoryModel
-from inventorum.ebay.apps.categories.serializers import CategoryListResponseSerializer, CategorySpecificsSerializer
+from inventorum.ebay.apps.categories.serializers import CategoryListResponseSerializer, CategorySpecificsSerializer, \
+    RootedCategorySuggestionsSerializer
+from inventorum.ebay.apps.categories.suggestions import CategorySuggestionsService
 
 from inventorum.ebay.lib.rest.exceptions import NotFound
 from inventorum.ebay.lib.rest.resources import APIResource
+from rest_framework.exceptions import ValidationError
 
 from rest_framework.response import Response
 
@@ -16,6 +19,7 @@ log = logging.getLogger(__name__)
 
 
 class CategoryListResponse(object):
+
     def __init__(self, total, data, breadcrumbs):
         self.total = total
         self.data = data
@@ -47,6 +51,21 @@ class CategoryListResource(APIResource):
             breadcrumbs=ancestors
         )
         serializer = self.get_serializer(obj)
+        return Response(data=serializer.data)
+
+
+class CategorySuggestionsResource(APIResource):
+    serializer_class = RootedCategorySuggestionsSerializer
+
+    def get(self, request):
+        query = request.GET.get("query")
+        if not query:
+            raise ValidationError("Missing query parameter")
+
+        service = CategorySuggestionsService(account=self.request.user.account)
+        rooted_suggestions = service.get_suggestions_by_category_root(query)
+
+        serializer = self.get_serializer(rooted_suggestions, many=True)
         return Response(data=serializer.data)
 
 

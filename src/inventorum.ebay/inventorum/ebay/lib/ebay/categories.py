@@ -6,6 +6,7 @@ from inventorum.ebay.lib.ebay import EbayTrading, EbayParallel
 from inventorum.ebay.lib.ebay.data.categories import EbayCategorySerializer, EbayCategory
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature
 from inventorum.ebay.lib.ebay.data.categories.specifics import EbayCategorySpecifics
+from inventorum.ebay.lib.ebay.data.categories.suggestions import GetSuggestedCategoriesResponseType
 
 
 log = logging.getLogger(__name__)
@@ -110,3 +111,13 @@ class EbayCategories(EbayTrading):
             specifics[specific.category_id] = specific
 
         return specifics
+
+    def get_suggested_categories(self, query):
+        """
+        :rtype: GetSuggestedCategoriesResponseType
+        """
+        response = self.execute('GetSuggestedCategories', dict(
+            Query=query
+        ))
+
+        return GetSuggestedCategoriesResponseType.Deserializer(data=response).build()

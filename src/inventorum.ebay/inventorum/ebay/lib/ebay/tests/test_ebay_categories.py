@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 
 class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
+
     @EbayTest.use_cassette("ebay_get_all_categories.yaml")
     def test_getting_categories(self):
         ebay = EbayCategories(self.ebay_token)
@@ -141,3 +142,14 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(len(second_value_recommendations), 10)
         values = [r.value for r in second_value_recommendations]
         self.assertEqual(values, ['kg', '100 g', '10 g', 'L', '100 ml', '10 ml', 'm³', 'm', 'm²', 'Einheit'])
+
+    @EbayTest.use_cassette("ebay_get_category_suggestions.yaml")
+    def test_get_suggested_categories(self):
+        ebay = EbayCategories(self.ebay_token)
+        response = ebay.get_suggested_categories("iPhone")
+
+        self.assertEqual(response.category_count, 10)
+        self.assertEqual(len(response.suggested_categories), 10)
+
+        self.assertEqual(sum([suggested_category.percent_item_found
+                              for suggested_category in response.suggested_categories]), 100)

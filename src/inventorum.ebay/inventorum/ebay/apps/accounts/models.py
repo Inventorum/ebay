@@ -107,12 +107,15 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
     payment_method_paypal_email_address = EmailField(null=True, blank=True)
     payment_method_bank_transfer_enabled = BooleanField(default=True)  # By default enabled
 
-
     objects = PassThroughManager.for_queryset_class(EbayAccountModelQuerySet)()
 
     @property
     def ebay_location_id(self):
         return settings.EBAY_LOCATION_ID_FORMAT.format(self.inv_id)
+
+    @property
+    def site_id(self):
+        return settings.EBAY_SUPPORTED_SITES[self.country]
 
     @property
     def default_user(self):
