@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-from django.conf import settings
+import itertools
+
 from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.lib.ebay.categories import EbayCategories
-from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 
 
 log = logging.getLogger(__name__)
@@ -21,6 +21,18 @@ class CategorySuggestion(object):
         self.percent_item_found = percent_item_found
 
 
+class RootedCategorySuggestions(object):
+
+    def __init__(self, root, suggested_categories):
+        """
+        :type root: CategoryModel
+        :type suggested_categories: list[CategorySuggestion]
+        """
+        self.root = root
+        log.info("{} {}".format(root.name, len(suggested_categories)))
+        self.suggested_categories = suggested_categories
+
+
 class CategorySuggestionsService(object):
 
     def __init__(self, account):
@@ -28,14 +40,13 @@ class CategorySuggestionsService(object):
         :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
         """
         self.account = account
-        self.token = EbayToken(settings.EBAY_LIVE_TOKEN, expiration_time=settings.EBAY_LIVE_TOKEN_EXPIRATION_DATE,
-                               site_id=self.account.site_id)
 
     def get_suggestions(self, query):
         """
         :type query: unicode
+        :rtype: list[CategorySuggestion]
         """
-        ebay_api = EbayCategories(token=self.token)
+        ebay_api = EbayCategories(token=self.account.token.ebay_object)
         response = ebay_api.get_suggested_categories(query)
 
         log.info("Received {} suggestions from ebay for query '{}'".format(response.category_count, query))
@@ -46,6 +57,17 @@ class CategorySuggestionsService(object):
                 suggestions.append(suggestion)
 
         return suggestions
+
+    def get_suggestions_by_category_root(self, query):
+        """
+        :type query: unicode
+        :rtype: list[RootedCategorySuggestions]
+        """
+        suggestions = self.get_suggestions(query)
+        # group suggestions by category root
+        log.info(len(suggestions))
+        return [RootedCategorySuggestions(root, list(suggested_categories))
+                for root, suggested_categories in itertools.groupby(suggestions, lambda sc: sc.category.root)]
 
     def _map_ebay_suggestion_to_internal_suggestion(self, ebay_suggestion):
         """

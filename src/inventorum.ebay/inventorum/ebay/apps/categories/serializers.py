@@ -48,3 +48,14 @@ class CategoryListResponseSerializer(serializers.Serializer):
     total = serializers.IntegerField()
     data = CategorySerializer(many=True)
     breadcrumbs = CategoryBreadcrumbSerializer(many=True)
+
+
+class CategorySuggestionSerializer(serializers.Serializer):
+    percent_item_found = serializers.IntegerField()
+    category = CategorySerializer()
+    breadcrumbs = CategoryBreadcrumbSerializer(source="category.ancestors", many=True)
+
+
+class RootedCategorySuggestionsSerializer(serializers.Serializer):
+    root = CategorySerializer()
+    suggested_categories = CategorySuggestionSerializer(many=True)

@@ -1,0 +1,58 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetSuggestedCategoriesRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Query>Apple</Query></GetSuggestedCategoriesRequest>
+    headers:
+      Content-Length: ['1145']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.5 Darwin/13.4.0]
+      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetSuggestedCategories']
+      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [14fc56f7-a3bc-4962-b1b2-17de935149ef]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetSuggestedCategoriesResponse\
+        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-05-13T14:03:54.119Z</Timestamp><Ack>Success</Ack><Version>921</Version><Build>E921_UNI_API5_17485744_R1</Build><SuggestedCategoryArray><SuggestedCategory><Category><CategoryID>9355</CategoryID><CategoryName>Handys\
+        \ ohne Vertrag</CategoryName><CategoryParentID>15032</CategoryParentID><CategoryParentName>Handys\
+        \ &amp; Kommunikation</CategoryParentName></Category><PercentItemFound>36</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>111422</CategoryID><CategoryName>Apple\
+        \ Notebooks</CategoryName><CategoryParentID>58058</CategoryParentID><CategoryParentID>175672</CategoryParentID><CategoryParentName>Computer,\
+        \ Tablets &amp; Netzwerk</CategoryParentName><CategoryParentName>Notebooks\
+        \ &amp; Netbooks</CategoryParentName></Category><PercentItemFound>28</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>111418</CategoryID><CategoryName>Apple\
+        \ Desktops &amp; All-in-Ones</CategoryName><CategoryParentID>58058</CategoryParentID><CategoryParentID>171957</CategoryParentID><CategoryParentName>Computer,\
+        \ Tablets &amp; Netzwerk</CategoryParentName><CategoryParentName>Desktops\
+        \ &amp; All-in-One-PCs</CategoryParentName></Category><PercentItemFound>14</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>171485</CategoryID><CategoryName>iPads,\
+        \ Tablets &amp; eBook-Reader</CategoryName><CategoryParentID>58058</CategoryParentID><CategoryParentName>Computer,\
+        \ Tablets &amp; Netzwerk</CategoryParentName></Category><PercentItemFound>9</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>178893</CategoryID><CategoryName>Smartwatches</CategoryName><CategoryParentID>15032</CategoryParentID><CategoryParentName>Handys\
+        \ &amp; Kommunikation</CategoryParentName></Category><PercentItemFound>3</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>73839</CategoryID><CategoryName>iPods\
+        \ &amp; MP3-Player</CategoryName><CategoryParentID>293</CategoryParentID><CategoryParentName>TV,\
+        \ Video &amp; Audio</CategoryParentName></Category><PercentItemFound>2</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>33963</CategoryID><CategoryName>Tastaturen\
+        \ &amp; Keypads</CategoryName><CategoryParentID>58058</CategoryParentID><CategoryParentID>3676</CategoryParentID><CategoryParentName>Computer,\
+        \ Tablets &amp; Netzwerk</CategoryParentName><CategoryParentName>Tastaturen,\
+        \ M\xE4use &amp; Pointing</CategoryParentName></Category><PercentItemFound>2</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>162075</CategoryID><CategoryName>Computer-Klassiker</CategoryName><CategoryParentID>58058</CategoryParentID><CategoryParentID>11189</CategoryParentID><CategoryParentName>Computer,\
+        \ Tablets &amp; Netzwerk</CategoryParentName><CategoryParentName>Computer-Klassiker</CategoryParentName></Category><PercentItemFound>2</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>20349</CategoryID><CategoryName>Taschen\
+        \ &amp; Schutzh\xFCllen</CategoryName><CategoryParentID>15032</CategoryParentID><CategoryParentID>9394</CategoryParentID><CategoryParentName>Handys\
+        \ &amp; Kommunikation</CategoryParentName><CategoryParentName>Handy- &amp;\
+        \ PDA-Zubeh\xF6r</CategoryParentName></Category><PercentItemFound>1</PercentItemFound></SuggestedCategory><SuggestedCategory><Category><CategoryID>168058</CategoryID><CategoryName>Internet-TV\
+        \ &amp; Media Streamer</CategoryName><CategoryParentID>293</CategoryParentID><CategoryParentID>14961</CategoryParentID><CategoryParentName>TV,\
+        \ Video &amp; Audio</CategoryParentName><CategoryParentName>TV- &amp; Heim-Audio-Zubeh\xF6\
+        r</CategoryParentName></Category><PercentItemFound>1</PercentItemFound></SuggestedCategory></SuggestedCategoryArray><CategoryCount>10</CategoryCount></GetSuggestedCategoriesResponse>"}
+    headers:
+      connection: [Keep-Alive]
+      content-length: ['3927']
+      content-type: [text/xml]
+      date: ['Wed, 13 May 2015 14:03:53 GMT']
+      guid: [14d4d96b-cef0-a621-f6b0-2ed0eda6dace]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW8ydmtv]
+      x-ebay-api-server-name: [___dm97PWQ3MGYrNTU0MCgyNSgzMSs0MzErMDM5PTY/Mw==]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetSuggestedCategories]
+      x-ebay-esb-guid: ['urn:uuid:98b0827b-2198-4b76-9a3d-c5ec54743a0b']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14d4d96b-cef0-a621-f6b0-2ed0eda6dace!ws.api.dll!10.98.31.107!esbtrading[]']
+    status: {code: 200, message: OK}
+version: 1

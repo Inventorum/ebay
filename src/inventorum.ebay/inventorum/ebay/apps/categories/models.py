@@ -85,6 +85,13 @@ class CategoryModel(MPTTModel):
         return self.is_leaf_node()
 
     @property
+    def root(self):
+        """
+        :rtype: CategoryModel
+        """
+        return self.get_root()
+
+    @property
     def ancestors(self):
         """
         :returns: A queryset for all ancestors of the category *excluding itself*
