@@ -7,6 +7,9 @@ from factory import fuzzy
 from decimal import Decimal as D
 from inventorum.ebay.lib.ebay.data import OrderStatusCodeType, CompleteStatusCodeType, PaymentStatusCodeType, \
     BuyerPaymentMethodCodeType
+from inventorum.ebay.lib.ebay.data.categories import EbayCategory
+from inventorum.ebay.lib.ebay.data.categories.suggestions import SuggestedCategoryType, \
+    GetSuggestedCategoriesResponseType
 from inventorum.ebay.lib.ebay.data.responses import OrderType, UserType, AddressType, TransactionType, \
     CheckoutStatusType, TransactionStatusType, ItemType, ShippingServiceOptionType, VariationType, GetOrdersResponseType, \
     PaginationResultType
@@ -151,3 +154,31 @@ class GetOrdersResponseTypeFactory(factory.Factory):
     @factory.lazy_attribute
     def orders(self):
         return [OrderTypeFactory.create()]
+
+
+class CategoryTypeFactory(factory.Factory):
+
+    class Meta:
+        model = EbayCategory
+
+    name = "Handys"
+    parent_id = "15032"
+    category_id = "48163"
+
+
+class SuggestedCategoryTypeFactory(factory.Factory):
+
+    class Meta:
+        model = SuggestedCategoryType
+
+    category = factory.SubFactory(CategoryTypeFactory)
+    percent_item_found = 50
+
+
+class GetSuggestedCategoriesResponseTypeFactory(factory.Factory):
+
+    class Meta:
+        model = GetSuggestedCategoriesResponseType
+
+    category_count = 0
+    suggested_categories = []

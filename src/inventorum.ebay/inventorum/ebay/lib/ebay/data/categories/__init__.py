@@ -18,7 +18,7 @@ class EbayCategory(object):
     expired = False
     item_specifics_enabled = False
 
-    def __init__(self, name, parent_id, category_id, level, auto_pay_enabled=False, best_offer_enabled=False,
+    def __init__(self, name, parent_id, category_id, level=None, auto_pay_enabled=False, best_offer_enabled=False,
                  item_lot_size_disabled=False, virtual=False, expired=False, leaf=False, b2b_vat_enabled=False,
                  item_specifics_enabled=False):
         self.name = name
@@ -56,7 +56,7 @@ class EbayCategorySerializer(POPOSerializer):
     CategoryName = CharField(source='name')
     CategoryParentID = CharField(source='parent_id')
     CategoryID = CharField(source='category_id')
-    CategoryLevel = IntegerField(source='level')
+    CategoryLevel = IntegerField(source='level', required=False)
     B2BVATEnabled = BooleanField(source='b2b_vat_enabled', required=False)
     BestOfferEnabled = BooleanField(source='best_offer_enabled', required=False)
     AutoPayEnabled = BooleanField(source='auto_pay_enabled', required=False)
