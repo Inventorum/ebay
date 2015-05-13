@@ -29,7 +29,6 @@ class RootedCategorySuggestions(object):
         :type suggested_categories: list[CategorySuggestion]
         """
         self.root = root
-        log.info("{} {}".format(root.name, len(suggested_categories)))
         self.suggested_categories = suggested_categories
 
 
@@ -65,7 +64,6 @@ class CategorySuggestionsService(object):
         """
         suggestions = self.get_suggestions(query)
         # group suggestions by category root
-        log.info(len(suggestions))
         return [RootedCategorySuggestions(root, list(suggested_categories))
                 for root, suggested_categories in itertools.groupby(suggestions, lambda sc: sc.category.root)]
 
