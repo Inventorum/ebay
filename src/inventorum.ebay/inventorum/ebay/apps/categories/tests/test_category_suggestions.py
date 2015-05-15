@@ -84,9 +84,10 @@ class TestCategorySuggestionsResource(EbayAuthenticatedAPITestCase):
         self.assertEqual(len(response.data), 3)
 
         root_group_1 = rooted_suggestions[0]
-        self.assertEqual(root_group_1, {
+
+        self.assertDictEqual(root_group_1, {
             "root": {
-                "id": 1,
+                "id": category_mobiles.id,
                 "name": "Mobile & Communication",
                 "country": "DE",
                 "parent_id": None,
