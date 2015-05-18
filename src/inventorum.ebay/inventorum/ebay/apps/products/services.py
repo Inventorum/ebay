@@ -153,6 +153,10 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(ugettext('Prices needs to be greater or equal than 1'))
 
     def _validate_attributes_in_variations(self):
+        """
+        Ensure that each variation has the same number of attributes and that each variation has at least one attribute.
+        :return:
+        """
         variations = self.core_product.variations
         if not variations:
             return
@@ -162,8 +166,15 @@ class PublishingPreparationService(object):
             for attribute in variation.attributes:
                 specifics_in_variations[attribute.key] += len(attribute.values)
 
-        max_attrs = max(specifics_in_variations.values())
+        # Checks len of attributes or len of variations to make sure that all variations have some attributes.
+        # So a case when 1 variation has no attributes, second variation has one of each kind then it would pass
+        # as max would be 1 instead of 2. Thats why we added `len(variations)` here
+        max_attrs = max(specifics_in_variations.values() + [len(variations)])
         all_variations_has_the_same_attributes = all([a == max_attrs for a in specifics_in_variations.values()])
+
+        if not specifics_in_variations:
+            raise PublishingValidationException(ugettext("Variations need to have at least one attribute"))
+
         if not all_variations_has_the_same_attributes:
             raise PublishingValidationException(ugettext("All variations needs to have exactly the same number of "
                                                          "attributes"))
