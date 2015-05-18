@@ -4,6 +4,7 @@ from __future__ import absolute_import, unicode_literals
 from decimal import Decimal as D
 from django.utils.functional import cached_property
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, DurationFactory
+from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 
 
@@ -26,3 +27,6 @@ class ProductTestMixin(ShippingServiceTestMixin):
                                          additional_cost=D("1.00"))
         product.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("5.00"),
                                          additional_cost=D("3.00"))
+
+    def get_product(self, inv_product_id, account):
+        return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]

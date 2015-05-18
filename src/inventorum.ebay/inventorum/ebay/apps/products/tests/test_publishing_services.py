@@ -21,8 +21,6 @@ log = logging.getLogger(__name__)
 
 
 class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
-    def _get_product(self, inv_product_id, account):
-        return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
 
     def _assign_category(self, product):
         leaf_category = CategoryFactory.create(name="Leaf category", external_id='64540')
@@ -38,7 +36,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test 2")
 
     def test_failed_validation(self):
-        product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
+        product = self.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingPreparationService(product, self.user)
 
@@ -80,7 +78,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
         item.save()
 
-        product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
+        product = self.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingPreparationService(product, self.user)
 
@@ -154,14 +152,14 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         account.payment_method_paypal_email_address = "bartosz@hernas.pl"
         account.save()
 
-        product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
+        product = self.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
             service = PublishingPreparationService(product, self.user)
             # Should not raise anything finally!
             service.validate()
 
     def test_preparation(self):
-        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
+        product = self.get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
 
         with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
             service = PublishingPreparationService(product, self.user)
@@ -214,7 +212,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertEqual(shipping_services[1].additional_cost, D('1.00'))
 
     def test_account_shipping_fallback(self):
-        product = self._get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
+        product = self.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
 
         self.account.shipping_services.create(service=self.get_shipping_service_hermes(),
                                               cost=D("3.00"), additional_cost=D("0.00"))
@@ -234,7 +232,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertEqual(shipping_services[0].additional_cost, D("0.00"))
 
     def test_builder(self):
-        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
+        product = self.get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         with ApiTest.use_cassette("get_product_simple_for_publishing_test_with_shipping.yaml"):
             service = PublishingPreparationService(product, self.user)
 
@@ -294,7 +292,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
     @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml", match_on=['body'])
     def test_publishing(self):
-        product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
+        product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
 
         # 176973 is valid ebay category id
         category, c = CategoryModel.objects.get_or_create(external_id='176973')
@@ -344,7 +342,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertIsNotNone(last_item.unpublished_at)
 
     def test_builder_with_variations(self):
-        product = self._get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS, self.account)
+        product = self.get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS, self.account)
         with ApiTest.use_cassette("get_product_with_variations_for_testing_builder.yaml"):
             self._assign_category(product)
             self._add_specific_to_product(product)
@@ -470,7 +468,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                          })
 
     def test_product_with_invalid_attributes_for_ebay(self):
-        product = self._get_product(StagingTestAccount.Products.WITH_VARIATIONS_INVALID_ATTRS, self.account)
+        product = self.get_product(StagingTestAccount.Products.WITH_VARIATIONS_INVALID_ATTRS, self.account)
         with ApiTest.use_cassette("get_product_with_variations_invalid_attrs_for_testing_builder.yaml"):
             self._assign_category(product)
             self.assign_valid_shipping_services(product)
@@ -486,7 +484,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
     @ApiTest.use_cassette("get_product_for_click_and_collect.yaml")
     def test_builder_for_click_and_collect(self):
-        product = self._get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
+        product = self.get_product(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES, self.account)
         product.is_click_and_collect = True
         product.save()
 
@@ -515,7 +513,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
     @ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml")
     def test_builder_for_click_and_collect(self):
         with ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml") as cass:
-            product = self._get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
+            product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
             product.is_click_and_collect = True
             product.save()
 
