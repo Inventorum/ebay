@@ -10,24 +10,24 @@ interactions:
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
-      X-Rid: [&id001 !!python/long 57768434384758506]
+      X-Rid: [&id001 !!python/long 4528435489480107754]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/665753
+    uri: http://app.intern.inventorum.net/api/products/640449
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
-      date: ['Mon, 18 May 2015 12:17:41 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/665753/']
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
+      location: ['http://app.intern.inventorum.net/api/products/640449/']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:41 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: [Cookie]
       x-inv-account: [Anonymous]
       x-inv-user: [Anonymous]
-      x-rid: ['57768434384758506']
+      x-rid: ['4528435489480107754']
     status: {code: 301, message: MOVED PERMANENTLY}
 - request:
     body: null
@@ -36,7 +36,93 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode application/json]
-      Cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"']
+      Cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"']
+      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode 346]
+      X-Inv-User: [!!python/unicode 425]
+      X-Rid: [*id001]
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/640449/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "iZettle Kartenleseger\u00e4t",
+        "id": 640449, "quantity": "10.00", "reorder_level": "0.00", "safety_stock":
+        "0.00", "price": "54.6218487395", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad.JPEG",
+        "id": 2933, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb.JPEG"},
+        "variation_count": 0, "variations": [], "average_purchase_price": "0", "description":
+        "Mit dem handlichen Chip-Kartenleseger\u00e4t von iZettle k\u00f6nnen Sie
+        bequem Kartenzahlung akzeptieren.  Der Kartenleser erf\u00fcllt die die PCI-DSS-Bestimmungen
+        und ist EMV zugelassen. Damit gew\u00e4hrleisten Sie Ihren Kunden die h\u00f6chsten
+        Sicherheitsstandards.  Der Transaktionsvorgang ist komplett in Ihre INVENTORUM
+        iPad-Kasse integriert. Die Transaktionsgeb\u00fchren bei EC-Kartenzahlungen
+        betragen 0,95% und 2,75% bei allen anderen Kartenzahlungen. F\u00fcr Sie fallen
+        keine weiteren fixen Kosten oder Vertragsbindungen an.", "product_code": "",
+        "ean": null, "categories": [], "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad.JPEG",
+        "id": 2933, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb.JPEG"}],
+        "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
+        "", "supplier": "", "meta": {"shop": {"images": [], "price": "54.6218487395",
+        "gross_price": "65.00", "id": 740, "channel": 5, "name": "", "description":
+        ""}, "ebay": {"images": [], "price": "54.6218487395", "gross_price": "65.00",
+        "id": 741, "channel": 4, "name": "", "description": ""}}, "is_giftcard": false,
+        "gross_price": "65.00", "purchase_price": "0"}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['4528435489480107754']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode application/json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode application/json]
+      User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode 346]
+      X-Inv-User: [!!python/unicode 425]
+      X-Rid: [*id001]
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/665753
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      connection: [keep-alive]
+      content-type: [text/html; charset=utf-8]
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
+      location: ['http://app.intern.inventorum.net/api/products/665753/']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: [Cookie]
+      x-inv-account: [Anonymous]
+      x-inv-user: [Anonymous]
+      x-rid: ['4528435489480107754']
+    status: {code: 301, message: MOVED PERMANENTLY}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode application/json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode application/json]
+      Cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"']
       User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode 346]
@@ -97,15 +183,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Mon, 18 May 2015 12:17:42 GMT']
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzK:YwC5bViYjHcaHD29FgCAvkU8fi8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:42 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['57768434384758506']
+      x-rid: ['4528435489480107754']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -200,15 +286,15 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Mon, 18 May 2015 12:17:42 GMT']
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzK:YwC5bViYjHcaHD29FgCAvkU8fi8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:42 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['57768434384758506']
+      x-rid: ['4528435489480107754']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -229,16 +315,16 @@ interactions:
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
-      date: ['Mon, 18 May 2015 12:17:42 GMT']
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
       location: ['http://app.intern.inventorum.net/api/products/640449/']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzK:YwC5bViYjHcaHD29FgCAvkU8fi8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:42 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: [Cookie]
       x-inv-account: [Anonymous]
       x-inv-user: [Anonymous]
-      x-rid: ['57768434384758506']
+      x-rid: ['4528435489480107754']
     status: {code: 301, message: MOVED PERMANENTLY}
 - request:
     body: null
@@ -247,7 +333,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode application/json]
-      Cookie: ['sn="e30:1YuJzK:YwC5bViYjHcaHD29FgCAvkU8fi8"']
+      Cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"']
       User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode 346]
@@ -286,15 +372,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Mon, 18 May 2015 12:17:42 GMT']
+      date: ['Mon, 18 May 2015 17:06:40 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzK:YwC5bViYjHcaHD29FgCAvkU8fi8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:42 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUy:BAUQCsur140GnPcwCIOmBnOZVMw"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:40 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['57768434384758506']
+      x-rid: ['4528435489480107754']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -389,14 +475,14 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Mon, 18 May 2015 12:17:42 GMT']
+      date: ['Mon, 18 May 2015 17:06:40 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzK:YwC5bViYjHcaHD29FgCAvkU8fi8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:42 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUy:BAUQCsur140GnPcwCIOmBnOZVMw"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:40 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['57768434384758506']
+      x-rid: ['4528435489480107754']
     status: {code: 200, message: OK}
 version: 1

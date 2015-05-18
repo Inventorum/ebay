@@ -105,18 +105,22 @@ class BatchPublishResource(APIResource, ProductResourceMixin):
                                                       context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        products = [d['product'] for d in data]
+        products_ids = [d['product'] for d in data]
+
+        products = []
+        for inv_id in products_ids:
+            products.append(self.get_or_create_product(inv_id, request.user))
 
         errors = {}
         for product in products:
             try:
                 self._publish_product(product, request)
             except exceptions.NotFound as e:
-                errors[product.pk] = "Product %(id)s could not be found" % {'id': product.pk}
+                errors[product.inv_id] = "Product %(id)s could not be found" % {'id': product.pk}
             except ApiException as e:
-                errors[product.pk] = "Core Api returned error: %(error)s" % {'error': e.detail}
+                errors[product.inv_id] = "Core Api returned error: %(error)s" % {'error': e.detail}
             except exceptions.ValidationError as e:
-                errors[product.pk] = e.detail
+                errors[product.inv_id] = e.detail
 
         if errors:
             raise ApiException(errors, key='multiple.errors', status_code=400)
