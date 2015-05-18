@@ -267,7 +267,7 @@ class CoreAccountDeserializer(POPOSerializer):
     email = serializers.EmailField()
     country = serializers.CharField()
     settings = CoreAccountSettingsDeserializer()
-    billing_address = CoreAddress.Serializer(required=False)
+    billing_address = CoreAddress.Serializer(required=False, allow_null=True)
     opening_hours = CoreOpeningHours.Deserializer(required=False, many=True)
 
     class Meta(POPOSerializer.Meta):

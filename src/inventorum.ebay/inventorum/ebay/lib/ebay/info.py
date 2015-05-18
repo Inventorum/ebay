@@ -6,6 +6,7 @@ from inventorum.ebay.lib.ebay.data.user import EbayUser
 
 
 class EbayInfo(EbayTrading):
+
     def get_user(self, user_id=None):
         """
         Get user data, if `user_id` is not specified, get currently authenticated one
