@@ -9,6 +9,7 @@ from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateMo
 from inventorum.ebay.apps.products.services import PublishingService, PublishingSendStateFailedException,\
     PublishingException, UnpublishingService, UnpublishingException, UpdateService, UpdateFailedException, \
     ProductDeletionService, CorePublishingStatusUpdateService
+from inventorum.ebay.lib.utils import preserve_and_reraise_exception
 
 from inventorum.util.celery import inventorum_task
 from requests.exceptions import RequestException
@@ -72,6 +73,11 @@ def _ebay_item_publish(self, ebay_item_id):
     except PublishingException as e:
         log.error("Publishing failed with ebay errors: %s", e.original_exception.errors)
         # no retry, finalize will still be executed to finalize the failed publishing attempt
+    except Exception as e:
+        # We fucked up really bad that this happend, so we want to show Exception in celery but still
+        # we want to mark product as unpublished
+        _finalize_ebay_item_publish.delay(ebay_item_id, context=self.context)
+        preserve_and_reraise_exception()
 
 
 @inventorum_task(max_retries=5, default_retry_delay=30)
