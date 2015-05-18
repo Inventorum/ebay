@@ -12,7 +12,7 @@ from inventorum.ebay.apps.categories.serializers import CategorySerializer, Cate
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayProductSpecificModel
 from inventorum.ebay.apps.shipping.serializers import ShippingServiceConfigurableSerializer
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
-from inventorum.ebay.lib.rest.fields import RelatedModelByIdField
+from inventorum.ebay.lib.rest.fields import RelatedModelByIdField, LazyPrimaryKeyRelatedField
 from rest_framework import serializers
 
 
@@ -120,3 +120,11 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
         to_be_deleted = current_specific_values - set(new_specific_values)
         if to_be_deleted:
             instance.specific_values.filter(id__in=to_be_deleted).delete()
+
+
+class BatchPublishParametersSerializer(serializers.Serializer):
+    def get_product_queryset(self):  # self here is LazyPrimaryKeyRelatedField
+        return EbayProductModel.objects.by_account(self.context['request'].user.account)
+
+    product = LazyPrimaryKeyRelatedField(queryset=get_product_queryset)
+
