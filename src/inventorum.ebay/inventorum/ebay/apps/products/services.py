@@ -166,10 +166,7 @@ class PublishingPreparationService(object):
             for attribute in variation.attributes:
                 specifics_in_variations[attribute.key] += len(attribute.values)
 
-        # Checks len of attributes or len of variations to make sure that all variations have some attributes.
-        # So a case when 1 variation has no attributes, second variation has one of each kind then it would pass
-        # as max would be 1 instead of 2. Thats why we added `len(variations)` here
-        max_attrs = max(specifics_in_variations.values() + [len(variations)])
+        max_attrs = len(variations)
         all_variations_has_the_same_attributes = all([a == max_attrs for a in specifics_in_variations.values()])
 
         if not specifics_in_variations:
