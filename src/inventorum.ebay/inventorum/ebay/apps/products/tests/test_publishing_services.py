@@ -436,15 +436,15 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             'NameValueList': [
                 {
                     'Name': 'color',
-                    'Value': ['Red', 'Blue']
+                    'Value': ['Blue', 'Red']
                 },
                 {
                     'Name': 'material',
-                    'Value': ['Denim', 'Leather']
+                    'Value': ['Leather', 'Denim']
                 },
                 {
                     'Name': 'size',
-                    'Value': ['22', '50']
+                    'Value': ['50', '22']
                 }
             ]
         })

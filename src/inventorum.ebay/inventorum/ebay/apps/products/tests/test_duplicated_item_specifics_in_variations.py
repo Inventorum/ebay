@@ -20,7 +20,7 @@ class TestDuplicatedItemSpecificsInVariation(EbayAuthenticatedAPITestCase):
         data = item.ebay_object.dict()
         self.assertDictEqual(data['Item']['Variations']['VariationSpecificsSet']['NameValueList'][0], {
             'Name': 'Color',
-            'Value': {'Red', 'Blue'}
+            'Value': ['Blue', 'Red']
         })
         self.assertDictEqual(data['Item']['Variations']['VariationSpecificsSet']['NameValueList'][1], {
             'Name': 'Material',

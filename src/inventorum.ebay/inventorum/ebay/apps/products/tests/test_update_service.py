@@ -163,11 +163,11 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
                     'NameValueList': [
                         {
                             'Name': 'Specific 2',
-                            'Value': ['Value 2', 'Value 1']
+                            'Value': ['Value 1', 'Value 2']
                         },
                         {
                             'Name': 'Specific 1',
-                            'Value': ['Value 2', 'Value 1']
+                            'Value': ['Value 1', 'Value 2']
                         }
                     ]}
             })
@@ -181,11 +181,11 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
                     'NameValueList': [
                         {
                             'Name': 'Specific 2',
-                            'Value': ['Value 2', 'Value 1']
+                            'Value': ['Value 1', 'Value 2']
                         },
                         {
                             'Name': 'Specific 1',
-                            'Value': ['Value 2', 'Value 1']
+                            'Value': ['Value 1', 'Value 2']
                         }
                     ]}
             })
