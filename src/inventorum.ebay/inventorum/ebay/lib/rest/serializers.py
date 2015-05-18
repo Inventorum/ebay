@@ -38,7 +38,7 @@ class POPOSerializer(serializers.Serializer):
         for original_name, field in self.fields.iteritems():
             name = field.source
             if name in validated_data:
-                if isinstance(field, POPOSerializer) and name in validated_data:
+                if isinstance(field, POPOSerializer) and validated_data[name] is not None:
                     # Note: We call create directly since the data has already been validated
                     validated_data[name] = field.create(validated_data[name])
                 elif isinstance(field, serializers.ListSerializer) and isinstance(field.child, POPOSerializer):

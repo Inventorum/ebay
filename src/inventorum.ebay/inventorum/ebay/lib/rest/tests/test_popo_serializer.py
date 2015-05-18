@@ -52,7 +52,7 @@ class _CustomerSerializer(POPOSerializer):
     last_name = serializers.CharField()
     BirthDay = serializers.DateField(source="birthday", required=False)
 
-    address = _AddressSerializer(required=False, source="foo_address")
+    address = _AddressSerializer(required=False, allow_null=True, source="foo_address")
 
 
 class _CustomerSerializerWithUndefinedPOPOAttributes(_CustomerSerializer):
@@ -178,6 +178,14 @@ class TestPOPOSerializer(TestCase):
         self.assertEqual(address.street, "Voltastraße 5")
         self.assertEqual(address.zip_code, "1337")
         self.assertEqual(address.city, "Berlin")
+
+        # test nullable references
+        data["address"] = None
+
+        serializer = _CustomerSerializer(data=data)
+        instance = serializer.build()
+        self.assertTrue(instance)
+        self.assertIsNone(instance.foo_address)
 
     def test_serializes_nested_list_popo(self):
         items = [
