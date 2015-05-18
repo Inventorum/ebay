@@ -38,6 +38,13 @@ def ebay_category_features_sync_task(self):
     features_service = EbayFeaturesScraper(ebay_token=_get_ebay_token())
     features_service.fetch_all()
 
+@inventorum_task()
+def ebay_category_specifics_batch_task(self, categories_ids, country_code):
+
+    log.info('Syncing ebay category specifics (country: %s) for ids: %s', country_code, categories_ids)
+    specifics_service = EbaySpecificsScraper(ebay_token=_get_ebay_token())
+    limited_qs = specifics_service.get_queryset_with_country(country_code).filter(id__in=categories_ids)
+    specifics_service.fetch(limited_qs, country_code)
 
 @inventorum_task()
 def ebay_category_specifics_sync_task(self):
@@ -46,7 +53,11 @@ def ebay_category_specifics_sync_task(self):
     """
     log.info('Syncing ebay category specifics...')
     specifics_service = EbaySpecificsScraper(ebay_token=_get_ebay_token())
-    specifics_service.fetch_all()
+    for country_code in settings.EBAY_SUPPORTED_SITES.keys():
+        batches = specifics_service.batch_queryset(specifics_service.get_queryset_with_country(country_code))
+        for limited_qs in batches:
+            ids = limited_qs.values_list('id', flat=True)
+            ebay_category_specifics_batch_task.delay(ids, country_code, context=self.context)
 
 
 @inventorum_task()

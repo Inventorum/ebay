@@ -22,4 +22,4 @@ class TestPeriodicEbayCategoriesSync(UnitTestCase):
 
         self.assertEqual(categories_syncer_mock.call_count, 1)
         self.assertEqual(features_syncer_mock.call_count, 1)
-        self.assertEqual(specifics_syncer_mock.call_count, 1)
+        self.assertEqual(specifics_syncer_mock.call_count, 0)
