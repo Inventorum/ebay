@@ -5,7 +5,7 @@ from inventorum.ebay.apps.products.tests.factories import EbayItemFactory, EbayI
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
-class TestBugWithItemSpecifics(EbayAuthenticatedAPITestCase):
+class TestDuplicatedItemSpecificsInVariation(EbayAuthenticatedAPITestCase):
     def test_doubled_item_specifics(self):
         item = EbayItemFactory.create()
         variation_1 = EbayItemVariationFactory.create(item=item)
@@ -24,5 +24,5 @@ class TestBugWithItemSpecifics(EbayAuthenticatedAPITestCase):
         })
         self.assertDictEqual(data['Item']['Variations']['VariationSpecificsSet']['NameValueList'][1], {
             'Name': 'Material',
-            'Value': 'Denim'
+            'Value': 'Denim'  # here we make sure 'Denim' is not doubled
         })
