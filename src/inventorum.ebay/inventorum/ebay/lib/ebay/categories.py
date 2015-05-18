@@ -106,6 +106,9 @@ class EbayCategories(EbayTrading):
         ))
 
         category_specifics = response['Recommendations']
+        if not isinstance(category_specifics, list):
+            category_specifics = [category_specifics]
+
         specifics = {}
         for i, data in enumerate(category_specifics):
             specific = EbayCategorySpecifics.create_from_data(data)
