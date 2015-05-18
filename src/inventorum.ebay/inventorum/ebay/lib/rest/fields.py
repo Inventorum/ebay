@@ -75,26 +75,7 @@ class InventorumNormalizedDecimalField(serializers.DecimalField):
         # MH: This is what differs from original implementation of DecimalField!
         value = value.normalize()
 
-        sign, digittuple, exponent = value.as_tuple()
-        decimals = abs(exponent)
-        # digittuple doesn't include any leading zeros.
-        digits = len(digittuple)
-        if decimals > digits:
-            # We have leading zeros up to or past the decimal point.  Count
-            # everything past the decimal point as a digit.  We do not count
-            # 0 before the decimal point as a digit since that would mean
-            # we would not allow max_digits = decimal_places.
-            digits = decimals
-        whole_digits = digits - decimals
-
-        if self.max_digits is not None and digits > self.max_digits:
-            self.fail('max_digits', max_digits=self.max_digits)
-        if self.decimal_places is not None and decimals > self.decimal_places:
-            self.fail('max_decimal_places', max_decimal_places=self.decimal_places)
-        if self.max_digits is not None and self.decimal_places is not None and whole_digits > (self.max_digits - self.decimal_places):
-            self.fail('max_whole_digits', max_whole_digits=self.max_digits - self.decimal_places)
-
-        return value
+        return super(InventorumNormalizedDecimalField, self).to_internal_value(value)
 
 
 class MoneyField(InventorumNormalizedDecimalField):
