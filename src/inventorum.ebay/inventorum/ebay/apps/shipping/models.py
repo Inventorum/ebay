@@ -28,6 +28,10 @@ class ShippingServiceModel(BaseModel):
     While a shipping service is not directly associated with shipping costs, it can be configured
     for various purposes through the ``ShippingServiceConfigurationModel``.
     """
+
+    class Meta(BaseModel.Meta):
+        ordering = ('description', 'id')
+
     country = CountryField()
 
     external_id = models.CharField(max_length=255)

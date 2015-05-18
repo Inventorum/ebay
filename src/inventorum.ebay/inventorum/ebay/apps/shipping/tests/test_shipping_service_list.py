@@ -22,13 +22,17 @@ class TestShippingServiceList(EbayAuthenticatedAPITestCase, ShippingServiceTestM
         assert self.account.country == ShippingServiceFactory.country
 
     def test_list(self):
+        # name = UPS Express
+        ups = self.get_shipping_service_ups()
+        # name = DHL Paket
         dhl = self.get_shipping_service_dhl()
+        # name = Hermes Paket
         hermes = self.get_shipping_service_hermes()
 
         response = self.get_shipping_services()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assert_shipping_services_in_response(response, [dhl, hermes])
+        self.assert_shipping_services_in_response(response, [dhl, hermes, ups])
 
     def test_filters_by_country(self):
         dhl_de = ShippingServiceFactory.create(external_id="DE_DHL_Express")
@@ -52,10 +56,11 @@ class TestShippingServiceList(EbayAuthenticatedAPITestCase, ShippingServiceTestM
 
     def assert_shipping_services_in_response(self, response, expected_shipping_services):
         """
+        Asserts that the expected shipping services (in the given order) are in the given response
         :param response: The actual response
         :param expected_shipping_services: The expected shipping services (order is irrelevant)
         :type expected_shipping_services: list[inventorum.ebay.apps.shipping.models.ShippingServiceModel]
         """
         expected_shipping_service_data = ShippingServiceSerializer(expected_shipping_services, many=True).data
         actual_shipping_service_data = response.data
-        self.assertItemsEqual(actual_shipping_service_data, expected_shipping_service_data)
+        self.assertEqual(actual_shipping_service_data, expected_shipping_service_data)
