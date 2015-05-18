@@ -1,7 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+import decimal
 from django.core.exceptions import ValidationError
+from django.utils.encoding import smart_text
 from django.utils.translation import ugettext
 
 from rest_framework import serializers
@@ -44,14 +46,44 @@ class RelatedModelByIdField(serializers.PrimaryKeyRelatedField):
     def to_representation(self, value):
         return self.serializer(value).data
 
+class InventorumNormalizedDecimalField(serializers.DecimalField):
+    def to_internal_value(self, data):
+        """
+        Validates that the input is a decimal number. Returns a Decimal
+        instance. Returns None for empty values. Ensures that there are no more
+        than max_digits in the number, and no more than decimal_places digits
+        after the decimal point.
+        """
+        data = smart_text(data).strip()
+        if len(data) > self.MAX_STRING_LENGTH:
+            self.fail('max_string_length')
 
-class MoneyField(serializers.DecimalField):
+        try:
+            value = decimal.Decimal(data)
+        except decimal.DecimalException:
+            self.fail('invalid')
 
-    def __init__(self, max_digits=10, decimal_places=2, **kwargs):
+        # Check for NaN. It is the only value that isn't equal to itself,
+        # so we can use this to identify NaN values.
+        if value != value:
+            self.fail('invalid')
+
+        # Check for infinity and negative infinity.
+        if value in (decimal.Decimal('Inf'), decimal.Decimal('-Inf')):
+            self.fail('invalid')
+
+        # MH: This is what differs from original implementation of DecimalField!
+        value = value.normalize()
+
+        return super(InventorumNormalizedDecimalField, self).to_internal_value(value)
+
+
+class MoneyField(InventorumNormalizedDecimalField):
+    def __init__(self, max_digits=12, decimal_places=2, **kwargs):
         super(MoneyField, self).__init__(max_digits=max_digits, decimal_places=decimal_places, **kwargs)
 
 
-class TaxRateField(serializers.DecimalField):
+class TaxRateField(InventorumNormalizedDecimalField):
 
-    def __init__(self, max_digits=10, decimal_places=3, **kwargs):
+    def __init__(self, max_digits=13, decimal_places=3, **kwargs):
         super(TaxRateField, self).__init__(max_digits=max_digits, decimal_places=decimal_places, **kwargs)

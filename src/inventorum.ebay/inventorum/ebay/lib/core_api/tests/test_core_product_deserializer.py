@@ -11,7 +11,15 @@ log = logging.getLogger(__name__)
 
 class TestCoreProductDeserializer(UnitTestCase):
 
-    def test_null_meta_attributes_should_fallback_to_parent(self):
+    def test_null_meta_attributes_should_fallback_to_parent_and_decimal_parsing(self):
+        """
+        Test here that null meta attributes fallback to parent and that price is correctly parsed
+        (Price issue was:
+            ValidationError: {'meta': {'gross_price': [u'Ensure that there are no more than 10 digits in total.']}}
+        )
+
+        :return:
+        """
         minimal_core_product_json = {
             "gross_price": "448.68",
             "tax_type": 1001,
@@ -20,7 +28,7 @@ class TestCoreProductDeserializer(UnitTestCase):
             "meta": {
                 "ebay": {
                     "images": [],
-                    "gross_price": "448.68",
+                    "gross_price": "448.6800000000",  # This is how API sends us price, needs to be ensured it works!
                     "id": 520,
                     "channel": 4,
                     "name": None,
