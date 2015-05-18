@@ -100,6 +100,8 @@ class EbayCategories(EbayTrading):
             ViewAllNodes=True,
             CategoryID=categories_ids,
             LevelLimit=7,
+            MaxValuesPerName=2147483647,
+            MaxNames=30,
             DetailLevel='ReturnAll',
         ))
 

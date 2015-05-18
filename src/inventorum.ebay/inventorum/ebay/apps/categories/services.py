@@ -132,6 +132,9 @@ class EbayBatchScraper(object):
     def __init__(self, ebay_token):
         self.ebay_token = ebay_token
 
+    def batch_queryset(self, queryset):
+        return batch_queryset(queryset, batch_size=self.batch_size)
+
     def get_queryset_with_country(self, country_code):
         raise NotImplementedError
 
