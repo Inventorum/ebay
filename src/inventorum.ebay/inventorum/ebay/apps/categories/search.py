@@ -38,9 +38,6 @@ class CategorySearchService(object):
         q = Q(country=self.account.country) & Q(name__icontains=query)
         qs = CategoryModel.objects.leaf_nodes().filter(q)
 
-        # prefetch for performance
-        qs = qs.select_related("root")
-
         if limit is not None:
             qs = qs[:limit]
 
