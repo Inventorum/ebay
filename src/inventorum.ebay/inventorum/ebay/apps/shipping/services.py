@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from django.conf import settings
 from django.db import transaction
-from inventorum.ebay.apps.shipping.models import ShippingServiceModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceModel, ShippingServiceConfigurationModel
 from inventorum.ebay.lib.ebay.details import EbayDetails
 
 
@@ -45,22 +45,35 @@ class EbayShippingScraper(object):
             db_model = ShippingServiceModel.create_or_update_from_ebay_shipping_service(service, country_code)
             scraped_service_pks.append(db_model.pk)
 
-        removed_services = ShippingServiceModel.objects.by_country(country_code).exclude(pk__in=scraped_service_pks)
-        removed_count = removed_services.count()
-
-        removed_services.delete()
+        removed_count = self._remove_all_with_cascade_except(preserve_service_pks=scraped_service_pks,
+                                                             country=country_code)
 
         log.info("Scraped {scraped_count} shipping services for {country}, deleted {removed_count}"
                  .format(country=country_code,
                          scraped_count=ShippingServiceModel.objects.filter(country=country_code).count(),
                          removed_count=removed_count))
 
+    def _remove_all_with_cascade_except(self, preserve_service_pks, country):
+        """
+        :type preserve_service_pks: list[int]
+        :type country: unicode
+        """
+        removed_services = ShippingServiceModel.objects.by_country(country).exclude(pk__in=preserve_service_pks)
+
+        # cascade delete referencing models
+        ShippingServiceConfigurationModel.objects.filter(service__in=removed_services).delete()
+
+        removed_count = removed_services.count()
+        removed_services.delete()
+
+        return removed_count
+
     def _skip(self, service):
         """
         :type service: inventorum.ebay.lib.ebay.details.EbayShippingService
         :rtype: bool
         """
-        return not service.valid_for_selling_flow or service.dimensions_required
+        return not service.valid_for_selling_flow or service.dimensions_required or service.international
 
     def _get_ebay_token_for_country(self, country_code):
         """

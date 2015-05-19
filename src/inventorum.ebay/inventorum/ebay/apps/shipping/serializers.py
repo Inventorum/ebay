@@ -13,7 +13,7 @@ class ShippingServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShippingServiceModel
-        fields = ('id', 'external_id', 'description', 'shipping_time_min', 'shipping_time_max', 'is_international')
+        fields = ('id', 'external_id', 'description', 'shipping_time_min', 'shipping_time_max')
 
 
 class ShippingServiceConfigurationSerializer(serializers.ModelSerializer):
