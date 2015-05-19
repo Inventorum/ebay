@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from django.utils.translation import ugettext
 from inventorum.ebay.lib.ebay.data import EbayNullableIntegerField, EbayNullableDecimalField
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
@@ -37,6 +38,19 @@ class EbayError(object):
 
     def api_dict(self):
         return EbayCoreApiSerializer(instance=self).data
+
+
+class EbayFatalError(EbayError):
+    CODE = -1
+
+    def __init__(self, error_id):
+        super(EbayFatalError, self).__init__(
+            code=self.CODE,
+            classification="ApiError",
+            long_message=ugettext("Something went wrong, please try again later."),
+            severity_code="FatalError",
+            short_message=ugettext("Fatal error (%(error_id)s)") %
+                          {'error_id': error_id})
 
 
 class EbayErrorDeserializer(POPOSerializer):

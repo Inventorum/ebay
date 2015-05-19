@@ -52,5 +52,6 @@ class CeleryMiddleware(CeleryBaseMiddleware):
         """
         log.error(exc, exc_info=True, extra={
             "task_id": task_id,
-            "task_execution_context": context
+            "task_execution_context": context,
+            "rid": context.request_id
         })
