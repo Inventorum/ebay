@@ -2,7 +2,9 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.tests import EbayTest
+from django.conf import settings
+
+from inventorum.ebay.tests import EbayTest, Countries
 from inventorum.ebay.lib.ebay.categories import EbayCategories
 from inventorum.ebay.lib.ebay.data.categories import EbayCategory
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature, EbayFeatureDefinition, \
@@ -153,3 +155,12 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(sum([suggested_category.percent_item_found
                               for suggested_category in response.suggested_categories]), 100)
+
+
+    @EbayTest.use_cassette("ebay_get_specfic_for_category_162499_AT.yaml")
+    def test_specifics_for_one_category(self):
+        token = self.ebay_token
+        token.site_id = settings.EBAY_SUPPORTED_SITES[Countries.AT]
+        ebay = EbayCategories(token)
+        specifics = ebay.get_specifics_for_categories([162499])
+        self.assertEqual(len(specifics), 1)

@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from inventorum.ebay.apps.products.models import EbayProductModel
-from inventorum.ebay.apps.products.serializers import EbayProductSerializer
+from inventorum.ebay.apps.products.serializers import EbayProductSerializer, BatchPublishParametersSerializer
 from inventorum.ebay.apps.products.services import PublishingValidationException, \
     PublishingCouldNotGetDataFromCoreAPI, PublishingPreparationService
 from inventorum.ebay.lib.rest.exceptions import ApiException, BadRequest, NotFound
@@ -57,6 +57,21 @@ class ProductResourceMixin(object):
         return product
 
 
+    def _publish_product(self, product, request):
+        preparation_service = PublishingPreparationService(product, user=request.user)
+        try:
+            preparation_service.validate()
+        except PublishingValidationException as e:
+            raise exceptions.ValidationError(e.message)
+        except PublishingCouldNotGetDataFromCoreAPI as e:
+            if e.response.status_code == status.HTTP_404_NOT_FOUND:
+                raise exceptions.NotFound
+            raise ApiException(e.response.data, key="core.api.error", status_code=e.response.status_code)
+
+        item = preparation_service.create_ebay_item()
+        schedule_ebay_item_publish(ebay_item_id=item.id, context=self.get_task_execution_context())
+
+
 class EbayProductResource(APIResource, ProductResourceMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
     serializer_class = EbayProductSerializer
 
@@ -76,20 +91,41 @@ class PublishResource(APIResource, ProductResourceMixin):
     def post(self, request, inv_product_id):
         product = self.get_or_create_product(inv_product_id, request.user)
 
-        preparation_service = PublishingPreparationService(product, user=request.user)
-        try:
-            preparation_service.validate()
-        except PublishingValidationException as e:
-            raise exceptions.ValidationError(e.message)
-        except PublishingCouldNotGetDataFromCoreAPI as e:
-            if e.response.status_code == status.HTTP_404_NOT_FOUND:
-                raise exceptions.NotFound
-            raise ApiException(e.response.data, key="core.api.error", status_code=e.response.status_code)
-
-        item = preparation_service.create_ebay_item()
-        schedule_ebay_item_publish(ebay_item_id=item.id, context=self.get_task_execution_context())
+        self._publish_product(product, request)
 
         serializer = self.get_serializer(product)
+        return Response(data=serializer.data)
+
+
+class BatchPublishResource(APIResource, ProductResourceMixin):
+    serializer_class = EbayProductSerializer
+
+    def post(self, request):
+        serializer = BatchPublishParametersSerializer(data=request.data, many=True,
+                                                      context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        products_ids = [d['product'] for d in data]
+
+        products = []
+        for inv_id in products_ids:
+            products.append(self.get_or_create_product(inv_id, request.user))
+
+        errors = {}
+        for product in products:
+            try:
+                self._publish_product(product, request)
+            except exceptions.NotFound as e:
+                errors[product.inv_id] = "Product %(id)s could not be found" % {'id': product.pk}
+            except ApiException as e:
+                errors[product.inv_id] = "Core Api returned error: %(error)s" % {'error': e.detail}
+            except exceptions.ValidationError as e:
+                errors[product.inv_id] = e.detail
+
+        if errors:
+            raise ApiException(errors, key='multiple.errors', status_code=400)
+
+        serializer = self.get_serializer(products, many=True)
         return Response(data=serializer.data)
 
 

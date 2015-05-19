@@ -100,10 +100,15 @@ class EbayCategories(EbayTrading):
             ViewAllNodes=True,
             CategoryID=categories_ids,
             LevelLimit=7,
+            MaxValuesPerName=2147483647,
+            MaxNames=30,
             DetailLevel='ReturnAll',
         ))
 
         category_specifics = response['Recommendations']
+        if not isinstance(category_specifics, list):
+            category_specifics = [category_specifics]
+
         specifics = {}
         for i, data in enumerate(category_specifics):
             specific = EbayCategorySpecifics.create_from_data(data)
