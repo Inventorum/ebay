@@ -69,4 +69,5 @@ class TestOrderStatusModel(UnitTestCase):
         self.assertTrue(click_and_collect_order.core_status.is_ready_for_pickup)
 
         click_and_collect_order.ebay_status.is_closed = True
+        click_and_collect_order.ebay_status.is_delivered = True
         self.assertTrue(click_and_collect_order.ebay_status.is_picked_up)
