@@ -56,6 +56,6 @@ class CategorySearchService(object):
         # this boosts the performance as we avoid root lookups for every single category
         roots_by_tree_id = {root.tree_id: root for root in CategoryModel.objects.root_nodes()}
 
-        # group suggestions by category root
+        # group results by their roots
         return [RootedCategorySearchResult(root, list(categories))
                 for root, categories in itertools.groupby(categories, lambda c: roots_by_tree_id[c.tree_id])]
