@@ -123,8 +123,5 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
 
 
 class BatchPublishParametersSerializer(serializers.Serializer):
-    def get_product_queryset(self):  # self here is LazyPrimaryKeyRelatedField
-        return EbayProductModel.objects.by_account(self.context['request'].user.account)
-
-    product = LazyPrimaryKeyRelatedField(queryset=get_product_queryset)
+    product = serializers.IntegerField()
 

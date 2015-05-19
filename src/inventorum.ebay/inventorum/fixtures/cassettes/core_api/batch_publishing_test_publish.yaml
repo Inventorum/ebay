@@ -10,7 +10,7 @@ interactions:
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
-      X-Rid: [&id001 !!python/long 4079201426649900778]
+      X-Rid: [&id001 !!python/long 2508289581627729642]
     method: GET
     uri: http://app.intern.inventorum.net/api/products/665753
   response:
@@ -18,16 +18,16 @@ interactions:
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
-      date: ['Mon, 18 May 2015 12:17:41 GMT']
+      date: ['Mon, 18 May 2015 17:06:38 GMT']
       location: ['http://app.intern.inventorum.net/api/products/665753/']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:41 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUw:CIzElAA5LqpWQfrzDoRtKU5QAMI"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:38 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: [Cookie]
       x-inv-account: [Anonymous]
       x-inv-user: [Anonymous]
-      x-rid: ['4079201426649900778']
+      x-rid: ['2508289581627729642']
     status: {code: 301, message: MOVED PERMANENTLY}
 - request:
     body: null
@@ -36,7 +36,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode application/json]
-      Cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"']
+      Cookie: ['sn="e30:1YuOUw:CIzElAA5LqpWQfrzDoRtKU5QAMI"']
       User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode 346]
@@ -97,15 +97,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Mon, 18 May 2015 12:17:41 GMT']
+      date: ['Mon, 18 May 2015 17:06:38 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:41 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUw:CIzElAA5LqpWQfrzDoRtKU5QAMI"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:38 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['4079201426649900778']
+      x-rid: ['2508289581627729642']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -200,15 +200,15 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Mon, 18 May 2015 12:17:41 GMT']
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:41 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['4079201426649900778']
+      x-rid: ['2508289581627729642']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -229,16 +229,16 @@ interactions:
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
-      date: ['Mon, 18 May 2015 12:17:41 GMT']
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
       location: ['http://app.intern.inventorum.net/api/products/640449/']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:41 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: [Cookie]
       x-inv-account: [Anonymous]
       x-inv-user: [Anonymous]
-      x-rid: ['4079201426649900778']
+      x-rid: ['2508289581627729642']
     status: {code: 301, message: MOVED PERMANENTLY}
 - request:
     body: null
@@ -247,7 +247,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode application/json]
-      Cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"']
+      Cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"']
       User-Agent: [!!python/unicode inv-ebay/0.0.1-dev]
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode 346]
@@ -286,15 +286,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Mon, 18 May 2015 12:17:41 GMT']
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:41 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['4079201426649900778']
+      x-rid: ['2508289581627729642']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -389,14 +389,14 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Mon, 18 May 2015 12:17:41 GMT']
+      date: ['Mon, 18 May 2015 17:06:39 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1YuJzJ:Aqkb7fRGywKVgC5_JSzW1i2fcF8"; Domain=app.intern.inventorum.net;
-          expires=Mon, 18-May-2015 14:17:41 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['4079201426649900778']
+      x-rid: ['2508289581627729642']
     status: {code: 200, message: OK}
 version: 1
