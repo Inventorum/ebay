@@ -148,6 +148,7 @@ class OrderStatusModel(BaseModel):
     is_paid = models.BooleanField(default=False)
     is_shipped = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
+    is_delivered = models.BooleanField(default=False)
     is_canceled = models.BooleanField(default=False)
 
     @property
@@ -156,7 +157,7 @@ class OrderStatusModel(BaseModel):
 
     @property
     def is_picked_up(self):
-        return self.order.is_click_and_collect and self.is_closed
+        return self.order.is_click_and_collect and self.is_delivered
 
     @property
     def is_pickup_canceled(self):

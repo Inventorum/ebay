@@ -90,8 +90,8 @@ class CoreOrderSyncer(object):
                                                                           event_type=EbayEventType.READY_FOR_PICKUP,
                                                                           context=self.get_task_execution_context())
 
-        if order.core_status.is_closed != core_order.is_closed:
-            order.core_status.is_closed = core_order.is_closed
+        if order.core_status.is_delivered != core_order.is_delivered:
+            order.core_status.is_delivered = core_order.is_delivered
             order.core_status.save()
 
             # if it's a regular, non click-and-collect order, nothing needs to be done here
@@ -115,3 +115,8 @@ class CoreOrderSyncer(object):
 
         if regular_ebay_status_update_required:
             tasks.schedule_ebay_order_status_update(order_id=order.id, context=self.get_task_execution_context())
+
+
+        if order.core_status.is_closed != core_order.is_closed:
+            order.core_status.is_closed = core_order.is_closed
+            order.core_status.save()

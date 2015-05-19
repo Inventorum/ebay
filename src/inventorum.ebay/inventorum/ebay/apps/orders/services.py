@@ -69,11 +69,11 @@ class EbayOrderStatusUpdateService(object):
             # update succeeded => update ebay state
             self.order.ebay_status.is_shipped = True
             self.order.ebay_status.save()
-        elif event_type == EbayEventType.PICKED_UP and not self.order.ebay_status.is_closed:
+        elif event_type == EbayEventType.PICKED_UP and not self.order.ebay_status.is_delivered:
             event = EbayEventPickedUp(order_id=self.order.ebay_id)
             inbound_events.publish(event, raise_exceptions=True)
             # update succeeded => update ebay state
-            self.order.ebay_status.is_closed = True
+            self.order.ebay_status.is_delivered = True
             self.order.ebay_status.save()
         elif event_type == EbayEventType.CANCELED and not self.order.ebay_status.is_canceled:
             event = EbayEventCanceled(order_id=self.order.ebay_id,

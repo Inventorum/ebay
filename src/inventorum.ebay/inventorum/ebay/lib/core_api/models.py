@@ -391,6 +391,10 @@ class CoreOrder(object):
         return self.state & BinaryCoreOrderStates.SHIPPED == BinaryCoreOrderStates.SHIPPED
 
     @property
+    def is_delivered(self):
+        return self.state & BinaryCoreOrderStates.DELIVERED == BinaryCoreOrderStates.DELIVERED
+
+    @property
     def is_closed(self):
         return self.state & BinaryCoreOrderStates.CLOSED == BinaryCoreOrderStates.CLOSED
 

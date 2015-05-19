@@ -168,6 +168,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
                               core_status__is_paid=False,
                               core_status__is_shipped=False,
                               core_status__is_closed=False,
+                              core_status__is_delivered=False,
                               core_status__is_canceled=False)
 
         factory_params.update(factory_kwargs)
@@ -212,6 +213,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_shipped,  False)
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
@@ -227,6 +229,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_shipped,  False)
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
@@ -244,6 +247,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_shipped,  False)
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
 
         self.assertTrue(self.schedule_ebay_order_status_update_mock.called)
         self.schedule_ebay_order_status_update_mock.assert_called_with(order_id=order.id,
@@ -269,6 +273,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_shipped,  False)
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
 
         self.assertTrue(self.schedule_ebay_order_status_update_mock.called)
         self.schedule_ebay_order_status_update_mock.assert_called_with(order_id=order.id,
@@ -288,6 +293,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_shipped,  False)
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
 
         # apart from the state change, there shouldn't be any side effects here for click and collect orders
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
@@ -304,6 +310,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_shipped,  False)
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
 
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
@@ -322,6 +329,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_shipped,  True)
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
 
         self.assertTrue(self.schedule_ebay_order_status_update_mock.called)
         # although is_paid and is_shipped changed, there should only be one schedule order status update
@@ -348,6 +356,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_shipped,  False)
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
 
         self.assertTrue(self.schedule_ebay_order_status_update_mock.called)
         self.schedule_ebay_order_status_update_mock.assert_called_with(order_id=order.id,
@@ -400,19 +409,20 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_closed,   False)
         self.assertEqual(order.core_status.is_canceled, False)
 
-    def test_core_status_is_closed_changes(self):
-        # set is_closed to True ############################
+    def test_core_status_is_delivered_changes(self):
+        # set is_delivered to True ############################
         order = self._get_fresh_order(core_status__is_paid=True, core_status__is_shipped=True)
-        core_state = BinaryCoreOrderStates.CLOSED | BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED
+        core_state = BinaryCoreOrderStates.DELIVERED | BinaryCoreOrderStates.CLOSED | BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED
         core_order = self._get_core_order_for(order, with_state=core_state)
 
         self.sync(order, core_order)
 
         order = order.reload()
-        self.assertEqual(order.core_status.is_paid,     True)
-        self.assertEqual(order.core_status.is_shipped,  True)
-        self.assertEqual(order.core_status.is_closed,   True)
-        self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_paid,      True)
+        self.assertEqual(order.core_status.is_shipped,   True)
+        self.assertEqual(order.core_status.is_closed,    True)
+        self.assertEqual(order.core_status.is_delivered, True)
+        self.assertEqual(order.core_status.is_canceled,  False)
 
         # apart from the state change, there shouldn't be any side effects here if it's not click-and-collect
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
@@ -426,7 +436,7 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
-        # set is_closed back to False #######################
+        # set is_delivered back to False #######################
         self.reset_mocks()
         core_order.state = BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED
 
@@ -442,10 +452,10 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
-    def test_core_status_is_closed_changes_with_click_and_collect(self):
-        # set is_closed to True ###############################
+    def test_core_status_is_delivered_changes_with_click_and_collect(self):
+        # set is_delivered to True ###############################
         order = self._get_fresh_click_and_collect_order(core_status__is_paid=True, core_status__is_shipped=True)
-        core_state = BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED | BinaryCoreOrderStates.CLOSED
+        core_state = BinaryCoreOrderStates.DELIVERED | BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED | BinaryCoreOrderStates.CLOSED
         core_order = self._get_core_order_for(order, with_state=core_state)
 
         self.sync(order, core_order)
@@ -454,6 +464,8 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertEqual(order.core_status.is_paid,     True)
         self.assertEqual(order.core_status.is_shipped,  True)
         self.assertEqual(order.core_status.is_closed,   True)
+        self.assertEqual(order.core_status.is_picked_up, True)
+        self.assertEqual(order.core_status.is_delivered, True)
         self.assertEqual(order.core_status.is_picked_up, True)
         self.assertEqual(order.core_status.is_canceled, False)
 
@@ -472,9 +484,9 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         self.assertFalse(self.schedule_ebay_order_status_update_mock.called)
         self.assertFalse(self.schedule_click_and_collect_status_update_with_event.called)
 
-        # set is_closed back to False #########################
+        # set is_delivered back to False #########################
         self.reset_mocks()
-        core_order.state = BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED
+        core_order.state = BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED | BinaryCoreOrderStates.CLOSED
 
         self.sync(order, core_order)
 
@@ -484,9 +496,10 @@ class UnitTestCoreOrderSyncer(UnitTestCase):
         order = order.reload()
         self.assertEqual(order.core_status.is_paid,     True)
         self.assertEqual(order.core_status.is_shipped,  True)
-        self.assertEqual(order.core_status.is_closed,   False)
-        self.assertEqual(order.core_status.is_picked_up, False)
+        self.assertEqual(order.core_status.is_closed,   True)
         self.assertEqual(order.core_status.is_canceled, False)
+        self.assertEqual(order.core_status.is_delivered, False)
+        self.assertEqual(order.core_status.is_picked_up, False)
 
     def test_core_status_is_canceled_changes(self):
         # set is_canceled to True ############################
