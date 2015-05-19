@@ -18,10 +18,10 @@ class EbayErrorCode(object):
 class EbayError(object):
     def __init__(self, code, classification, long_message, severity_code, short_message):
         self.code = code
-        self.classification = classification
-        self.long_message = long_message
-        self.severity_code = severity_code
-        self.short_message = short_message
+        self.classification = unicode(classification)
+        self.long_message = unicode(long_message)
+        self.severity_code = unicode(severity_code)
+        self.short_message = unicode(short_message)
 
     def __unicode__(self):
         return self.long_message
