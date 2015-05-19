@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from django.db.models.expressions import F
 from django.db.models.fields.related import OneToOneField, ManyToManyField, ForeignKey
 from inventorum.ebay.apps.categories import ListingDurations
 
@@ -17,7 +18,12 @@ log = logging.getLogger(__name__)
 
 
 class CategoryTreeManager(TreeManager):
-    pass
+
+    def leaf_nodes(self):
+        """
+        :rtype: django.db.models.query.QuerySet
+        """
+        return self.filter(lft=F('rght')-1)
 
 
 class CategoryModel(MPTTModel):

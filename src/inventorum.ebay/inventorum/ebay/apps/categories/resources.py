@@ -4,8 +4,9 @@ import logging
 
 from django.utils.translation import gettext
 from inventorum.ebay.apps.categories.models import CategoryModel
+from inventorum.ebay.apps.categories.search import CategorySearchService
 from inventorum.ebay.apps.categories.serializers import CategoryListResponseSerializer, CategorySpecificsSerializer, \
-    RootedCategorySuggestionsSerializer
+    RootedCategorySuggestionsSerializer, CategorySearchParameterDeserializer, RootedCategorySearchResultSerializer
 from inventorum.ebay.apps.categories.suggestions import CategorySuggestionsService
 
 from inventorum.ebay.lib.rest.exceptions import NotFound
@@ -51,6 +52,21 @@ class CategoryListResource(APIResource):
             breadcrumbs=ancestors
         )
         serializer = self.get_serializer(obj)
+        return Response(data=serializer.data)
+
+
+class CategorySearchResource(APIResource):
+    serializer_class = RootedCategorySearchResultSerializer
+
+    def get(self, request):
+        parameter_serializer = CategorySearchParameterDeserializer(data=request.GET)
+        parameter_serializer.is_valid(raise_exception=True)
+
+        service = CategorySearchService(account=self.request.user.account)
+        rooted_results = service.search_and_group_results_by_root(query=parameter_serializer.validated_data["query"],
+                                                                  limit=parameter_serializer.validated_data.get("limit"))
+
+        serializer = self.get_serializer(rooted_results, many=True)
         return Response(data=serializer.data)
 
 

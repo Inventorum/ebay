@@ -122,6 +122,7 @@ class TestCategorySuggestionsResource(EbayAuthenticatedAPITestCase):
 
 
 class UnitTestCategorySuggestionsService(UnitTestCase):
+
     def setUp(self):
         super(UnitTestCategorySuggestionsService, self).setUp()
 
