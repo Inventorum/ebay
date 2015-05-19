@@ -4,7 +4,6 @@ from celery.utils.log import get_task_logger
 
 from django.conf import settings
 from inventorum.ebay.apps.shipping.services import EbayShippingScraper
-from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 from inventorum.util.celery import inventorum_task
 

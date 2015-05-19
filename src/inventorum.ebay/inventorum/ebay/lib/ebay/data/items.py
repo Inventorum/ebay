@@ -76,14 +76,10 @@ class EbayItemShippingService(object):
         self.additional_cost = additional_cost
 
     def dict(self):
-        return {
-            'ShippingServiceOptions': {
-                'ShippingServicePriority': 1,
+        return {'ShippingServicePriority': 1,
                 'ShippingServiceAdditionalCost': EbayParser.encode_price(self.additional_cost or 0),
                 'ShippingServiceCost':  EbayParser.encode_price(self.cost),
-                'ShippingService': self.id,
-            }
-        }
+                'ShippingService': self.id}
 
 
 class EbayFixedPriceItem(object):
@@ -150,7 +146,7 @@ class EbayFixedPriceItem(object):
         if self.pictures:
             data['PictureDetails'] = {'PictureURL': [p.url for p in self.pictures]}
         if self.shipping_services:
-            data['ShippingDetails'] = [s.dict() for s in self.shipping_services]
+            data['ShippingDetails'] = {'ShippingServiceOptions': [s.dict() for s in self.shipping_services]}
 
         if self.item_specifics:
             data['ItemSpecifics'] = {

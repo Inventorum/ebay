@@ -271,23 +271,14 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             'PaymentMethods': ['PayPal'],
             'PictureDetails': {'PictureURL': ['http://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae9'
                                               '2/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG']},
-            'ShippingDetails': [
-                {
-                    'ShippingServiceOptions': {
-                        'ShippingService': 'DE_DHLPaket',
-                        'ShippingServiceAdditionalCost': '3.00',
-                        'ShippingServiceCost': '5.00',
-                        'ShippingServicePriority': 1
-                    }
-                },
-                {
-                    'ShippingServiceOptions': {
-                        'ShippingService': 'DE_HermesPaket',
-                        'ShippingServiceAdditionalCost': '1.00',
-                        'ShippingServiceCost': '4.50',
-                        'ShippingServicePriority': 1
-                    }
-                }],
+            'ShippingDetails': {'ShippingServiceOptions': [{'ShippingService': 'DE_DHLPaket',
+                                                            'ShippingServiceAdditionalCost': '3.00',
+                                                            'ShippingServiceCost': '5.00',
+                                                            'ShippingServicePriority': 1},
+                                                           {'ShippingService': 'DE_HermesPaket',
+                                                            'ShippingServiceAdditionalCost': '1.00',
+                                                            'ShippingServiceCost': '4.50',
+                                                            'ShippingServicePriority': 1}]},
         }})
 
     @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml", match_on=['body'])
