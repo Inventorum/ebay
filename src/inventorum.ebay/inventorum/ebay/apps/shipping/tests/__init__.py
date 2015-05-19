@@ -34,12 +34,11 @@ class ShippingServiceTestMixin(object):
 
     def get_shipping_service_ups(self):
         """
-        :returns: Shipping service "DE_UPS_International" (get_or_create)
+        :returns: Shipping service "DE_UPSExpress" (get_or_create)
         :rtype: inventorum.ebay.apps.shipping.models.ShippingServiceModel
         """
         return ShippingServiceFactory.create(external_id="DE_UPSExpress",
-                                             description="UPS Express",
-                                             is_international=True)
+                                             description="UPS Express")
 
     def get_shipping_service_click_and_collect(self, country=Countries.DE):
         return ShippingServiceModel.get_click_and_collect_service(country)

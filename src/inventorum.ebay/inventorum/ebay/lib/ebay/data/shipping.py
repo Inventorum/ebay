@@ -13,6 +13,15 @@ class EbayShippingService(object):
 
     def __init__(self, id, description, valid_for_selling_flow, shipping_time_min, shipping_time_max,
                  international, dimensions_required):
+        """
+        :param id: unicode
+        :param description: unicode
+        :param valid_for_selling_flow: bool
+        :param shipping_time_min: int
+        :param shipping_time_max: int
+        :param international: bool
+        :param dimensions_required: bool
+        """
         self.id = id
         self.description = description
         self.valid_for_selling_flow = valid_for_selling_flow
