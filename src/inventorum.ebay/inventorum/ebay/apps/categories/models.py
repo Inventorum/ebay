@@ -30,7 +30,7 @@ class CategoryModel(MPTTModel):
     """ Represents the ebay category tree model """
 
     country = CountryField()
-    name = CharField(max_length=255)
+    name = CharField(max_length=255, db_index=True)
     external_id = CharField(max_length=255, unique_for_date="deleted_at")  # Ebay documentation says it is string
     external_parent_id = CharField(max_length=255, null=True, blank=True)  # Ebay documentation says it is string
     b2b_vat_enabled = BooleanField(default=False)
