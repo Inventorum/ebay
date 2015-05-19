@@ -56,7 +56,7 @@ def ebay_category_specifics_sync_task(self):
     for country_code in settings.EBAY_SUPPORTED_SITES.keys():
         batches = specifics_service.batch_queryset(specifics_service.get_queryset_with_country(country_code))
         for limited_qs in batches:
-            ids = limited_qs.values_list('id', flat=True)
+            ids = list(limited_qs.values_list('id', flat=True))
             ebay_category_specifics_batch_task.delay(ids, country_code, context=self.context)
 
 
