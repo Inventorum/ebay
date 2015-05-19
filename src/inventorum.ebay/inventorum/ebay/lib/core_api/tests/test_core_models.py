@@ -19,6 +19,7 @@ class TestCoreOrder(UnitTestCase):
         self.assertFalse(core_order.is_shipped)
         self.assertFalse(core_order.is_closed)
         self.assertFalse(core_order.is_canceled)
+        self.assertFalse(core_order.is_delivered)
 
         core_order.state |= BinaryCoreOrderStates.PAID
 
@@ -26,6 +27,7 @@ class TestCoreOrder(UnitTestCase):
         self.assertFalse(core_order.is_shipped)
         self.assertFalse(core_order.is_closed)
         self.assertFalse(core_order.is_canceled)
+        self.assertFalse(core_order.is_delivered)
 
         core_order.state |= BinaryCoreOrderStates.SHIPPED
 
@@ -33,6 +35,7 @@ class TestCoreOrder(UnitTestCase):
         self.assertTrue(core_order.is_shipped)
         self.assertFalse(core_order.is_closed)
         self.assertFalse(core_order.is_closed)
+        self.assertFalse(core_order.is_delivered)
 
         core_order.state |= BinaryCoreOrderStates.CLOSED
 
@@ -40,9 +43,12 @@ class TestCoreOrder(UnitTestCase):
         self.assertTrue(core_order.is_shipped)
         self.assertTrue(core_order.is_closed)
         self.assertFalse(core_order.is_canceled)
+        self.assertFalse(core_order.is_delivered)
 
-        core_order.state = BinaryCoreOrderStates.DRAFT | BinaryCoreOrderStates.PENDING | BinaryCoreOrderStates.CANCELED
+        core_order.state = BinaryCoreOrderStates.DRAFT | BinaryCoreOrderStates.PENDING | BinaryCoreOrderStates.CANCELED \
+                           | BinaryCoreOrderStates.DELIVERED
         self.assertFalse(core_order.is_paid)
         self.assertFalse(core_order.is_shipped)
         self.assertFalse(core_order.is_closed)
         self.assertTrue(core_order.is_canceled)
+        self.assertTrue(core_order.is_delivered)
