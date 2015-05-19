@@ -47,10 +47,12 @@ class EbayItemSpecific(object):
         data = {
             'Name': self.name,
         }
-        if len(self.values) == 1:
-            data['Value'] = self.values[0]
-        elif len(self.values) > 1:
-            data['Value'] = self.values
+        values = list(set(self.values))
+
+        if len(values) == 1:
+            data['Value'] = values[0]
+        elif len(values) > 1:
+            data['Value'] = values
         return data
 
 

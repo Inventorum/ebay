@@ -137,10 +137,10 @@ class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin)
                 {
                     'classification': 'RequestError',
                     'code': 83,
-                    'long_message': 'Die Dauer "120" (in Tagen) ist f\xfcr dieses Angebotsformat nicht verf\xfcgbar, '
-                                    'bzw. ung\xfcltig f\xfcr die Kategorie "176973".',
+                    'long_message': 'Die Dauer "120" (in Tagen) ist für dieses Angebotsformat nicht verfügbar, '
+                                    'bzw. ungültig für die Kategorie "176973".',
                     'severity_code': 'Error',
-                    'short_message': 'Ung\xfcltige Dauer.'
+                    'short_message': 'Ungültige Dauer.'
                 }])
 
             self.assertEqual(item.attempts.count(), 1)

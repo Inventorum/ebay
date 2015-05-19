@@ -1,0 +1,32 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetCategorySpecificsRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><AllFeaturesForCategory>True</AllFeaturesForCategory><CategoryID>162499</CategoryID><DetailLevel>ReturnAll</DetailLevel><ErrorLanguage>de_AT</ErrorLanguage><LevelLimit>7</LevelLimit><MaxNames>30</MaxNames><MaxValuesPerName>2147483647</MaxValuesPerName><ViewAllNodes>True</ViewAllNodes></GetCategorySpecificsRequest>
+    headers:
+      Content-Length: ['1370']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.8 Darwin/14.3.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode GetCategorySpecifics]
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [16]
+      X-EBAY-SDK-REQUEST-ID: [afbbc33e-ea68-4299-8a3b-ff4158b59862]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <GetCategorySpecificsResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-05-18T16:32:49.236Z</Timestamp><Ack>Success</Ack><Version>909</Version><Build>E909_INTL_API6_17403335_R1</Build><Recommendations><CategoryID>162499</CategoryID></Recommendations></GetCategorySpecificsResponse>'}
+    headers:
+      content-length: ['334']
+      content-type: [text/xml]
+      date: ['Mon, 18 May 2015 16:32:48 GMT']
+      guid: [14d67dee-0610-a624-cf73-3393f7938752]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW8xamtyaw==]
+      x-ebay-api-server-name: [___dm97PWQ3MGYrMWZjPygyNSgzMCs3NjUrNDQ1Pz43OzQ=]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetCategorySpecifics]
+      x-ebay-esb-guid: ['urn:uuid:e7bd6d10-a954-4297-9ed3-8a430003dd54']
+      x-ebay-esb-siteid: ['16']
+      x-ebay-request-id: ['14d67dee-0610-a624-cf73-3393f7938752!ws.api.dll!10.98.76.247!esbtrading[]']
+    status: {code: 200, message: OK}
+version: 1

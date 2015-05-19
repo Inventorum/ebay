@@ -6,6 +6,8 @@ from decimal import Decimal as D
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch.dispatcher import receiver
 from django_countries.fields import CountryField
 from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.lib.db.models import BaseModel, BaseQuerySet
@@ -40,8 +42,6 @@ class ShippingServiceModel(BaseModel):
     shipping_time_min = models.IntegerField(null=True, blank=True)
     shipping_time_max = models.IntegerField(null=True, blank=True)
 
-    is_international = models.BooleanField(default=False)
-
     objects = PassThroughManager.for_queryset_class(ShippingServiceQuerySet)()
 
     @classmethod
@@ -54,8 +54,7 @@ class ShippingServiceModel(BaseModel):
         attributes = dict(
             description=ebay_shipping_service.description,
             shipping_time_min=ebay_shipping_service.shipping_time_min,
-            shipping_time_max=ebay_shipping_service.shipping_time_max,
-            is_international=ebay_shipping_service.international
+            shipping_time_max=ebay_shipping_service.shipping_time_max
         )
 
         shipping_service, created = cls.objects.get_or_create(

@@ -25,8 +25,6 @@ class ShippingServiceFactory(factory.DjangoModelFactory):
     shipping_time_min = 1
     shipping_time_max = 3
 
-    is_international = False
-
 
 class ShippingServiceConfigurationFactory(factory.DjangoModelFactory):
 
