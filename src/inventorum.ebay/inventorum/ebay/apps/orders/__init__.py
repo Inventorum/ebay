@@ -43,7 +43,7 @@ class CorePaymentMethod(object):
 
 
 class PickupCode(object):
-    LENGTH = 12  # length of redeem code
+    LENGTH = 6  # length of redeem code
     # for `randint` we need a max value for this length, e.g for length of 6: 10 ^ 6 - 1 == 999999
     MAX_INT = int(math.pow(10, LENGTH) - 1)
     # no leading zeros, we want to start with: 10 ^ (6 - 1) = 100000
