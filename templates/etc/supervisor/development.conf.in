@@ -1,12 +1,12 @@
 [unix_http_server]
-file=${buildout:directory}/var/run/supervisor.sock
+file=${os:root-path}/var/run/com.inventorum.ebay/supervisor.sock
 
 [supervisord]
-logfile = ${buildout:directory}/var/log/supervisor/development.log
+logfile = ${os:root-path}/var/log/com.inventorum.ebay/supervisor.log
 logfile_maxbytes = 50MB
 logfile_backups = 10
 loglevel = info
-pidfile = ${buildout:directory}/var/supervisord.development.pid
+pidfile = ${os:root-path}/var/supervisord.development.pid
 nodaemon = false
 # http://supervisord.org/configuration.html
 environment = LD_LIBRARY_PATH="${buildout:directory}/parts/postgresql/lib"
@@ -15,7 +15,7 @@ environment = LD_LIBRARY_PATH="${buildout:directory}/parts/postgresql/lib"
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 [supervisorctl]
-serverurl=unix:///${buildout:directory}/var/run/supervisor.sock
+serverurl=unix:///${os:root-path}/var/run/com.inventorum.ebay/supervisor.sock
 
 
 [program:postgres]
@@ -32,7 +32,7 @@ process_name = rabbitmq
 directory = ${buildout:directory}/parts/rabbitmq
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${buildout:directory}/var/log/rabbit.development.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/rabbitmq.log
 stopsignal=INT
 
 [group:celery]
@@ -45,7 +45,7 @@ process_name = com.inventorum.ebay.celery_worker_celery
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${buildout:directory}/var/log/celery_worker.celery.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/celery_worker.celery.log
 autostart=true
 autorestart=true
 
@@ -55,7 +55,7 @@ process_name = com.inventorum.ebay.celery_worker_fetching
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${buildout:directory}/var/log/celery_worker.fetching.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/celery_worker.fetching.log
 autostart=true
 autorestart=true
 
@@ -65,7 +65,7 @@ process_name = com.inventorum.ebay.celery_worker_updating
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${buildout:directory}/var/log/celery_worker.updating.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/celery_worker.updating.log
 autostart=true
 autorestart=true
 
@@ -75,7 +75,7 @@ process_name = com.inventorum.ebay.celery_worker_publishing
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${buildout:directory}/var/log/celery_worker.publishing.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/celery_worker.publishing.log
 autostart=true
 autorestart=true
 
@@ -85,7 +85,7 @@ process_name = com.inventorum.ebay.celery_worker_syncing
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${buildout:directory}/var/log/celery_worker.syncing.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/celery_worker.syncing.log
 autostart=true
 autorestart=true
 
@@ -95,7 +95,7 @@ process_name = celery_beat
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${buildout:directory}/var/log/celery_beat.development.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/celery_beat.log
 autostart=false
 autorestart=true
 
@@ -105,7 +105,7 @@ process_name = flower
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${buildout:directory}/var/log/flower.development.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/flower.log
 autostart=true
 autorestart=true
 

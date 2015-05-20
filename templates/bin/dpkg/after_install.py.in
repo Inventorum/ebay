@@ -41,9 +41,8 @@ for tup in links:
         os.symlink(src, dst)
 
 chown_log_files_args = [
-  ('www-data', '/var/log/celery_beat.staging.log'),
-  ('www-data', '/var/log/flower.staging.log'),
-  ('www-data', '-R', '/var/log/com.inventorum.ebay/')
+  ('www-data', '-R', '${os:root-prefix}/var/run/com.inventorum.ebay/'),
+  ('www-data', '-R', '${os:root-prefix}/var/log/com.inventorum.ebay/'),
 ]
 
 for chown_command in chown_log_files_args:

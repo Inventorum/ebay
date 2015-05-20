@@ -77,7 +77,7 @@ process_name = celery_beat
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${os:root-prefix}/var/log/celery_beat.production.log
+stdout_logfile = ${os:root-path}/var/log/com.inventorum.ebay/celery_beat.log
 autostart=true
 autorestart=true
 
@@ -87,6 +87,6 @@ process_name = flower
 directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
-stdout_logfile = ${os:root-prefix}/var/log/flower.production.log
+stdout_logfile = ${os:root-prefix}/var/log/flower.log
 autostart=true
 autorestart=true
