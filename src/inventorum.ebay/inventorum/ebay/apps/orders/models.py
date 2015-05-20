@@ -5,7 +5,7 @@ import logging
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django_extensions.db.fields.json import JSONField
-from inventorum.ebay.apps.orders import CorePaymentMethod
+from inventorum.ebay.apps.orders import CorePaymentMethod, PickupCode
 from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.lib.db.fields import MoneyField, TaxRateField
 
@@ -95,6 +95,9 @@ class OrderModel(BaseModel):
     """:type: OrderStatusModel"""
     ebay_status = models.OneToOneField("orders.OrderStatusModel", related_name="ebay_status_related_order")
 
+    # click and collect related attributes
+    pickup_code = models.CharField(max_length=PickupCode.LENGTH, null=True, blank=True)
+
     objects = PassThroughManager.for_queryset_class(OrderModelQuerySet)()
 
     def __unicode__(self):
@@ -106,7 +109,8 @@ class OrderModel(BaseModel):
 
     @property
     def is_click_and_collect(self):
-        return self.selected_shipping.service.external_id == INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
+        # TODO jm: Introduce bool field is_click_and_collect
+        return self.selected_shipping and self.selected_shipping.service.external_id == INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         # since there is a strong connection between the order model and its ebay/core status,
@@ -117,7 +121,23 @@ class OrderModel(BaseModel):
         if self.ebay_status:
             self.ebay_status.save()
 
+        if self.is_click_and_collect and not self.pickup_code:
+            self.pickup_code = self.generate_unique_pickup_code(account=self.account)
+
         return super(OrderModel, self).save(force_insert, force_update, using, update_fields)
+
+    @classmethod
+    def generate_unique_pickup_code(cls, account):
+        """
+        :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :rtype: unicode
+        """
+        found_unique = False
+        while not found_unique:
+            pickup_code = PickupCode.generate_random()
+            found_unique = not cls.objects.filter(account=account, pickup_code=pickup_code).exists()
+
+        return pickup_code
 
 
 class OrderFactory(object):
