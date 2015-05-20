@@ -57,8 +57,8 @@ class OrderShipmentCoreAPIDataSerializer(serializers.Serializer):
     external_key = serializers.CharField(source="service.external_id")
     tracking_number = serializers.SerializerMethodField()
 
-    def get_tracking_number(self, *args):
-        order = self.context['order']
+    def get_tracking_number(self, shipping_config):
+        order = shipping_config.order
         if order.is_click_and_collect:
             return order.pickup_code
 
@@ -146,23 +146,14 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
         fields = ("channel", "basket", "shipment", "customer", "payments", "state")
 
     channel = serializers.SerializerMethodField()
-    basket = serializers.SerializerMethodField()
-    shipment = serializers.SerializerMethodField()
-    customer = serializers.SerializerMethodField()
+    basket = OrderBasketCoreAPIDataSerializer(source="*")
+    shipment = OrderShipmentCoreAPIDataSerializer(source="selected_shipping")
+    customer = OrderCustomerCoreAPIDataSerializer(source="*")
     payments = serializers.SerializerMethodField()
     state = serializers.SerializerMethodField(method_name="get_initial_state")
 
     def get_channel(self, order):
         return CoreChannel.EBAY
-
-    def get_basket(self, order):
-        return OrderBasketCoreAPIDataSerializer(order).data
-
-    def get_shipment(self, order):
-        return OrderShipmentCoreAPIDataSerializer(order.selected_shipping, context={'order': order}).data
-
-    def get_customer(self, order):
-        return OrderCustomerCoreAPIDataSerializer(order).data
 
     def get_payments(self, order):
         return [OrderPaymentCoreAPIDataSerializer(order).data]
