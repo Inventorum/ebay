@@ -33,7 +33,7 @@ required_eggs = [
     'django-pastedeploy-settings>=1.0rc4dev',
     'django-rest-swagger>=0.2.9',
 
-    'inventorum.util==9.3.7-dev',
+    'inventorum.util==10.0.0',
 
     'mock>=1.0.1',
     'plac>=0.9.1',
