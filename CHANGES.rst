@@ -4,6 +4,9 @@ CHANGES
 
 develop
 =======
+
+2015-05-20 0.1.0
+================
 - start and autostart ``com.inventorum.ebay_worker`` on install
 - INV-4111 Added endpoint for ebay sanity check (/inventory/check/)
 - Added Sentry error logger
