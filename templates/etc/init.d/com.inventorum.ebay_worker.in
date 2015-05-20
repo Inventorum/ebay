@@ -15,7 +15,7 @@ BIN_DIR=${os:root-prefix}/opt/inventorum/ebay/bin
 RUNAS=www-data
 
 mkdir -p ${os:root-prefix}/var/log/com.inventorum.ebay ${os:root-prefix}/var/run/com.inventorum.ebay
-chown $RUNAS:$RUNAS ${os:root-prefix}/var/log/com.inventorum.ebay ${os:root-prefix}/var/run/com.inventorum.ebay
+chown -R $RUNAS:$RUNAS ${os:root-prefix}/var/log/com.inventorum.ebay ${os:root-prefix}/var/run/com.inventorum.ebay
 
 test -x "$BIN_DIR/supervisord" || exit 1
 

@@ -28,6 +28,7 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.celery.log
+stderr_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.celery.log
 autostart=true
 autorestart=true
 
@@ -38,6 +39,7 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.fetching.log
+stderr_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.fetching.log
 autostart=true
 autorestart=true
 
@@ -48,6 +50,7 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.updating.log
+stderr_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.updating.log
 autostart=true
 autorestart=true
 
@@ -58,6 +61,7 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.publishing.log
+stderr_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.publishing.log
 autostart=true
 autorestart=true
 
@@ -68,6 +72,7 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.syncing.log
+stderr_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_worker.syncing.log
 autostart=true
 autorestart=true
 
@@ -78,6 +83,7 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_beat.log
+stderr_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/celery_beat.log
 autostart=true
 autorestart=true
 
@@ -88,5 +94,6 @@ directory = ${buildout:directory}
 priority = 10
 redirect_stderr = true
 stdout_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/flower.log
+stderr_logfile = ${os:root-prefix}/var/log/com.inventorum.ebay/flower.log
 autostart=true
 autorestart=true
