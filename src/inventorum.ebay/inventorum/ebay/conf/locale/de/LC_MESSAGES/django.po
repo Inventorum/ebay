@@ -45,15 +45,15 @@ msgstr ""
 
 #: apps/products/models.py:287
 msgid "size"
-msgstr ""
+msgstr "Größe"
 
 #: apps/products/models.py:288
 msgid "material"
-msgstr ""
+msgstr "Material"
 
 #: apps/products/models.py:289
 msgid "color"
-msgstr ""
+msgstr "Farbe"
 
 #: apps/products/resources.py:44
 msgid "Accessing product from another account is restricted"
