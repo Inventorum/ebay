@@ -4,6 +4,7 @@ from collections import defaultdict
 import logging
 
 from django.db import models
+from django.utils.translation import ugettext
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
@@ -279,12 +280,22 @@ class EbayItemVariationModel(OrderableItemModel, BaseModel):
 
 
 class EbayItemVariationSpecificModel(BaseModel):
+    class TranslatedNames(object):
+        """
+        This class exist only to trigger Django to translate these 3 names that are originaly comming from core api
+        """
+        SIZE = ugettext('size')
+        MATERIAL = ugettext('material')
+        COLOR = ugettext('color')
+
     name = models.CharField(max_length=255)
     variation = models.ForeignKey(EbayItemVariationModel, related_name="specifics")
 
     @property
     def ebay_object(self):
-        return EbayItemSpecific(self.name, list(self.values.all().values_list('value', flat=True)))
+        return EbayItemSpecific(
+            '{name} (*)'.format(name=ugettext(self.name)),
+            list(self.values.all().values_list('value', flat=True)))
 
 
 class EbayItemVariationSpecificValueModel(BaseModel):
