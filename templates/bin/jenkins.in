@@ -16,7 +16,7 @@ export LANG=en_US.UTF-8
 
 if ! $local_flag; then
     bin/supervisorctl shutdown >/dev/null 2>&1||true
-    sleep 1
+    sleep 4
 
     # enforce fresh inventorum eggs in case we didn't bump versions
     rm -rf ${buildout:directory}/eggs/inventorum.*/
