@@ -109,7 +109,6 @@ class OrderModel(BaseModel):
 
     @property
     def is_click_and_collect(self):
-        # TODO jm: Introduce bool field is_click_and_collect
         return self.selected_shipping and self.selected_shipping.service.external_id == INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
