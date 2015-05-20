@@ -149,6 +149,5 @@ if proc.returncode != 0:
 print ""
 print "[inv-ebay] restart you application services::"
 print ""
-print "    service nginx reload"
-print "    service uwsgi reload"
+print "    service com.inventorum.ebay_worker restart"
 print ""
