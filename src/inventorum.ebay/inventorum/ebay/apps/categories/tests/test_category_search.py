@@ -81,22 +81,22 @@ class TestCategorySearchResource(EbayAuthenticatedAPITestCase, CategoryTestMixin
         self.assertEqual(len(results), 2)
 
         rooted_result_1 = results[0]
-        self.assertEqual(rooted_result_1, {"root": {"id": 30,
+        self.assertEqual(rooted_result_1, {"root": {"id": self.category_computers.id,
                                                     "name": "Computer, Tablets & Network",
                                                     "country": "DE",
                                                     "parent_id": None,
                                                     "is_leaf": False,
                                                     "variations_enabled": False},
-                                           "categories": [{"id": 32,
+                                           "categories": [{"id": self.category_apple_desktops.id,
                                                            "name": "Apple Desktops & All-in-Ones",
                                                            "country": "DE",
-                                                           "parent_id": 31,
+                                                           "parent_id": self.category_desktop_computers.id,
                                                            "is_leaf": True,
                                                            "variations_enabled": False},
-                                                          {"id": 34,
+                                                          {"id": self.category_apple_notebooks.id,
                                                            "name": "Apple Notebooks",
                                                            "country": "DE",
-                                                           "parent_id": 33,
+                                                           "parent_id": self.category_notebooks.id,
                                                            "is_leaf": True,
                                                            "variations_enabled": False}]})
 
