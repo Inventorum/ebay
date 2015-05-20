@@ -59,3 +59,13 @@ class CategorySuggestionSerializer(serializers.Serializer):
 class RootedCategorySuggestionsSerializer(serializers.Serializer):
     root = CategorySerializer()
     suggested_categories = CategorySuggestionSerializer(many=True)
+
+
+class CategorySearchParameterDeserializer(serializers.Serializer):
+    query = serializers.CharField()
+    limit = serializers.IntegerField(required=False)
+
+
+class RootedCategorySearchResultSerializer(serializers.Serializer):
+    root = CategorySerializer()
+    categories = CategorySerializer(many=True)
