@@ -384,15 +384,15 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             'VariationSpecifics': {
                 'NameValueList': [
                     {
-                        'Name': 'size',
+                        'Name': 'Größe (*)',
                         'Value': '22'
                     },
                     {
-                        'Name': 'material',
+                        'Name': 'Material (*)',
                         'Value': 'Denim'
                     },
                     {
-                        'Name': 'color',
+                        'Name': 'Farbe (*)',
                         'Value': 'Red'
                     },
                 ]
@@ -408,15 +408,15 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             'VariationSpecifics': {
                 'NameValueList': [
                     {
-                        'Name': 'size',
+                        'Name': 'Größe (*)',
                         'Value': '50'
                     },
                     {
-                        'Name': 'material',
+                        'Name': 'Material (*)',
                         'Value': 'Leather'
                     },
                     {
-                        'Name': 'color',
+                        'Name': 'Farbe (*)',
                         'Value': 'Blue'
                     },
                 ]
@@ -426,15 +426,15 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertEqual(data['Variations']['VariationSpecificsSet'], {
             'NameValueList': [
                 {
-                    'Name': 'color',
+                    'Name': 'Farbe (*)',
                     'Value': ['Blue', 'Red']
                 },
                 {
-                    'Name': 'material',
+                    'Name': 'Material (*)',
                     'Value': ['Leather', 'Denim']
                 },
                 {
-                    'Name': 'size',
+                    'Name': 'Größe (*)',
                     'Value': ['50', '22']
                 }
             ]
@@ -443,7 +443,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         pictures_set = data['Variations']['Pictures']
         self.assertEqual(pictures_set,
                          {
-                             'VariationSpecificName': 'size',
+                             'VariationSpecificName': 'Größe (*)',
                              'VariationSpecificPictureSet': [
                                  {
                                      'PictureURL': [
