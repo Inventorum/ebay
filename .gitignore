@@ -16,9 +16,9 @@
 /.idea/backend.iml
 /.idea/misc.xml
 /.idea/libraries/Buildout_Eggs*.xml
-/.idea/inspectionProfiles/profiles_settings.xml
 /.idea/modules.xml
 /.idea/libraries/
+/.idea/inspectionProfiles/*
 
 .DS_Store
 *.pyc
