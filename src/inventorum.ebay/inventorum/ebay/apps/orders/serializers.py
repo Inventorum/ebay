@@ -42,20 +42,27 @@ class ShippingServiceCoreAPIDataSerializer(serializers.ModelSerializer):
             return days_to_seconds(service.shipping_time_max)
 
 
-class OrderShipmentCoreAPIDataSerializer(serializers.ModelSerializer):
+class OrderShipmentCoreAPIDataSerializer(serializers.Serializer):
     """
     Responsible for serializing a `ShippingServiceConfigurationModel` instance assigned as shipping to an order
     into the according data format to create/update its representation in the core api
     """
     class Meta:
         model = ShippingServiceConfigurationModel
-        fields = ("service", "name", "cost", "external_key")
+        fields = ("service", "name", "cost", "external_key", "tracking_number")
 
     service = ShippingServiceCoreAPIDataSerializer()
-
     name = serializers.CharField(source="service.description")
     cost = MoneyField()
     external_key = serializers.CharField(source="service.external_id")
+    tracking_number = serializers.SerializerMethodField()
+
+    def get_tracking_number(self, shipping_config):
+        order = shipping_config.order
+        if order.is_click_and_collect:
+            return order.pickup_code
+
+        return None
 
 
 class OrderCustomerAddressCoreAPIDataSerializer(serializers.ModelSerializer):
@@ -139,20 +146,14 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
         fields = ("channel", "basket", "shipment", "customer", "payments", "state")
 
     channel = serializers.SerializerMethodField()
-    basket = serializers.SerializerMethodField()
+    basket = OrderBasketCoreAPIDataSerializer(source="*")
     shipment = OrderShipmentCoreAPIDataSerializer(source="selected_shipping")
-    customer = serializers.SerializerMethodField()
+    customer = OrderCustomerCoreAPIDataSerializer(source="*")
     payments = serializers.SerializerMethodField()
     state = serializers.SerializerMethodField(method_name="get_initial_state")
 
     def get_channel(self, order):
         return CoreChannel.EBAY
-
-    def get_basket(self, order):
-        return OrderBasketCoreAPIDataSerializer(order).data
-
-    def get_customer(self, order):
-        return OrderCustomerCoreAPIDataSerializer(order).data
 
     def get_payments(self, order):
         return [OrderPaymentCoreAPIDataSerializer(order).data]

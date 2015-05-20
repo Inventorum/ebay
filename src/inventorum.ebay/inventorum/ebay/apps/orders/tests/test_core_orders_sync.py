@@ -26,7 +26,7 @@ log = logging.getLogger(__name__)
 class IntegrationTestPeriodicCoreOrdersSync(EbayAuthenticatedAPITestCase):
 
     @celery_test_case()
-    def smoke_test(self):
+    def test_smoke(self):
         core_api_mock = self.patch("inventorum.ebay.apps.accounts.models.EbayAccountModel.core_api",
                                    new_callable=PropertyMock(spec_set=UserScopedCoreAPIClient))
 
@@ -44,8 +44,9 @@ class IntegrationTestPeriodicCoreOrdersSync(EbayAuthenticatedAPITestCase):
         core_order = CoreOrderFactory(id=order.inv_id,
                                       state=BinaryCoreOrderStates.PAID | BinaryCoreOrderStates.SHIPPED)
 
+        # core order is ready for pick up
         click_and_collect_core_order = CoreOrderFactory(id=click_and_collect_order.inv_id,
-                                                        state=BinaryCoreOrderStates.SHIPPED | BinaryCoreOrderStates.CLOSED)
+                                                        state=BinaryCoreOrderStates.SHIPPED)
 
         core_api_mock.get_paginated_orders_delta.return_value = iter([[core_order, click_and_collect_core_order]])
 
@@ -53,8 +54,13 @@ class IntegrationTestPeriodicCoreOrdersSync(EbayAuthenticatedAPITestCase):
 
         self.assertTrue(core_api_mock.get_paginated_orders_delta.called)
 
-        self.assertEqual(ebay_events_publish_mock.call_count, 2)
+        self.assertEqual(ebay_events_publish_mock.call_count, 1)
         self.assertEqual(ebay_orders_complete_sale_mock.call_count, 1)
+
+        publish_event_args = ebay_events_publish_mock.call_args[0]
+        event = publish_event_args[0]
+        self.assertEqual(event.order_id, click_and_collect_order.ebay_id)
+        self.assertEqual(event.pickup_id, click_and_collect_order.pickup_code)
 
 
 class UnitTestCoreOrdersSync(UnitTestCase):
