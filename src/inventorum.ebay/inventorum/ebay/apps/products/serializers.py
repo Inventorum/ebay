@@ -58,7 +58,7 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
 
     is_click_and_collect = serializers.BooleanField()
     is_published = serializers.BooleanField(read_only=True)
-    listing_url = serializers.BooleanField(read_only=True)
+    listing_url = serializers.CharField(read_only=True)
     specific_values = EbayProductSpecificSerializer(many=True)
 
     def validate_category(self, category):

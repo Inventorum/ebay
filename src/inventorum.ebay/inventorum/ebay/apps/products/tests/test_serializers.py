@@ -7,7 +7,7 @@ from inventorum.ebay.apps.categories.models import CategoryModel
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 from inventorum.ebay.apps.products.serializers import EbayProductCategorySerializer, EbayProductSerializer
-from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
+from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
 from inventorum.ebay.tests import Countries
 from inventorum.ebay.apps.shipping.tests import ShippingServiceConfigurableSerializerTest
 from inventorum.ebay.tests.testcases import UnitTestCase
@@ -193,3 +193,11 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         category = CategoryModel.objects.get(id=category.id)
         self.assertEqual(category.name, "Some category")
         self.assertEqual(category.country, Countries.DE)
+
+
+    def test_listing_url(self):
+        product = self.get_default_product()
+        PublishedEbayItemFactory.create(product=product)
+
+        subject = EbayProductSerializer(product)
+        self.assertEqual(subject.data['listing_url'], 'http://cgi.ebay.de/ws/eBayISAPI.dll?ViewItem&item=1002')
