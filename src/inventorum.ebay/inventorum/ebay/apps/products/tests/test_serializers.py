@@ -194,7 +194,6 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         self.assertEqual(category.name, "Some category")
         self.assertEqual(category.country, Countries.DE)
 
-
     def test_listing_url(self):
         product = self.get_default_product()
         PublishedEbayItemFactory.create(product=product)
