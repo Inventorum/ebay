@@ -18,6 +18,7 @@ from inventorum.ebay.lib.ebay.data import EbayParser
 
 from inventorum.ebay.lib.ebay.data.items import EbayItemShippingService, EbayFixedPriceItem, EbayPicture,\
     EbayItemSpecific, EbayVariation, EbayReviseFixedPriceItem, EbayReviseFixedPriceVariation
+from inventorum.ebay.lib.utils import translation
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -293,8 +294,11 @@ class EbayItemVariationSpecificModel(BaseModel):
 
     @property
     def ebay_object(self):
+        with translation(str(self.variation.item.account.country).lower()):
+            name = '{name} (*)'.format(name=ugettext(self.name))
+
         return EbayItemSpecific(
-            '{name} (*)'.format(name=ugettext(self.name)),
+            name,
             list(self.values.all().values_list('value', flat=True)))
 
 
