@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import json
 import logging
 from decimal import Decimal as D
 
@@ -78,6 +79,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                 "name": "DHL Paket",
                 "cost": "4.50",
                 "external_key": "DE_DHLPaket",
+                "tracking_number": None,
                 "service": {
                     "name": "DHL Paket",
                     "time_min": 60 * 60 * 24 * 1,
@@ -128,6 +130,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
         order.save()
 
         self.assertPrecondition(order.is_click_and_collect, True)
+        self.assertIsNotNone(order.pickup_code)
 
         serializer = OrderModelCoreAPIDataSerializer(order)
         data = serializer.data
@@ -136,6 +139,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
             "name": "Click & Collect",
             "cost": "4.50",
             "external_key": INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID,
+            "tracking_number": order.pickup_code,
             "service": {
                 "name": "Click & Collect",
                 "time_min": None,

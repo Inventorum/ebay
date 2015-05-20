@@ -64,7 +64,7 @@ class EbayOrderStatusUpdateService(object):
         inbound_events = EbayInboundEvents(self.account.token.ebay_object)
 
         if event_type == EbayEventType.READY_FOR_PICKUP and not self.order.ebay_status.is_shipped:
-            event = EbayEventReadyForPickup(order_id=self.order.ebay_id)
+            event = EbayEventReadyForPickup(order_id=self.order.ebay_id, pickup_id=self.order.pickup_code)
             inbound_events.publish(event, raise_exceptions=True)
             # update succeeded => update ebay state
             self.order.ebay_status.is_shipped = True
