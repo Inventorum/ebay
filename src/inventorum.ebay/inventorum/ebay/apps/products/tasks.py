@@ -149,6 +149,13 @@ def _ebay_item_unpublish(self, ebay_item_id):
     except UnpublishingException as e:
         log.error("Unpublishing failed with ebay errors: %s", e.original_exception.errors)
         # no retry, finalize will still be executed to finalize the failed unpublishing attempt
+    except Exception as e:
+        # We fucked up really bad that this happend, so we want to show Exception in celery but still
+        # we want to mark product as unpublished
+        error = EbayFatalError(self.request.id)
+        ebay_item.set_publishing_status(EbayItemPublishingStatus.PUBLISHED, details=[error.api_dict()])
+        _finalize_ebay_item_publish.delay(ebay_item_id, context=self.context)
+        preserve_and_reraise_exception()
 
 
 @inventorum_task(max_retries=5, default_retry_delay=30)
