@@ -125,7 +125,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
     def test_error_message(self):
         item = self._build_correct_item()
         service = EbayItems(self.ebay_token)
-        
+
         with self.assertRaises(EbayConnectionException) as e:
             response = service.publish(item)
 

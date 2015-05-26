@@ -76,11 +76,12 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(item_update.status, EbayItemUpdateStatus.FAILED)
             self.assertEqual(item_update.status_details, [
                 {
-                "long_message": "Das eBay-Konto f\u00fcr den in dieser Anfrage angegebenen Nutzernamen \"dejoh_dnju7\" wurde aufgehoben. Sie k\u00f6nnen leider nur Informationen f\u00fcr aktuelle Nutzer anfordern.",
-                "code": 841,
-                "severity_code": "Error",
-                "classification": "RequestError",
-                "short_message": "Das eBay-Konto des angeforderten Nutzers wurde aufgehoben."}])
+                    "long_message": "Das eBay-Konto f\u00fcr den in dieser Anfrage angegebenen Nutzernamen \"dejoh_dnju7\" wurde aufgehoben. Sie k\u00f6nnen leider nur Informationen f\u00fcr aktuelle Nutzer anfordern.",
+                    "code": 841,
+                    "severity_code": "Error",
+                    "classification": "RequestError",
+                    "short_message": "Das eBay-Konto des angeforderten Nutzers wurde aufgehoben.",
+                    "parameters": ["dejoh_dnju7"]}])
 
             # ebay item model should *not* have been updated
             self.published_item = self.published_item.reload()

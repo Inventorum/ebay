@@ -330,7 +330,12 @@ class PublishingService(PublishingUnpublishingService):
         self.item.external_id = response.item_id
         self.item.published_at = response.start_time
         self.item.ends_at = response.end_time
-        self.item.set_publishing_status(EbayItemPublishingStatus.PUBLISHED, save=False)
+
+        details = None
+        if response.message:
+            details = {'message': response.message}
+
+        self.item.set_publishing_status(EbayItemPublishingStatus.PUBLISHED, details=details, save=False)
         self.item.save()
 
         EbayApiAttempt.create_from_service_for_item_and_type(
