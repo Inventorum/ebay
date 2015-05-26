@@ -416,7 +416,10 @@ class UnpublishingService(PublishingUnpublishingService):
             return
 
         api = EbayInventoryManagement(token=self.user.account.token.ebay_object)
-        api.delete_inventory(self.item.sku, delete_all=True)
+        try:
+            api.delete_inventory(self.item.sku, delete_all=True)
+        except EbayConnectionException as e:
+            log.exception('Got exception when removing inventory from C&C, item id: %s', self.item.pk)
 
     def finalize_unpublish_attempt(self):
         """
