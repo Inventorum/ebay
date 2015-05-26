@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext
-from inventorum.ebay.lib.ebay.data import EbayNullableIntegerField, EbayNullableDecimalField
+from inventorum.ebay.lib.ebay.data import EbayNullableIntegerField, EbayNullableDecimalField, EbayListSerializer
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
 from rest_framework.fields import IntegerField
@@ -16,12 +16,14 @@ class EbayErrorCode(object):
 
 
 class EbayError(object):
-    def __init__(self, code, classification, long_message, severity_code, short_message):
+    def __init__(self, code, classification, long_message, severity_code, short_message, parameters=None):
         self.code = code
         self.classification = unicode(classification)
         self.long_message = unicode(long_message)
         self.severity_code = unicode(severity_code)
         self.short_message = unicode(short_message)
+        self.parameters = parameters or []
+        self.parameters = [p.get('Value', p) for p in self.parameters]
 
     def __unicode__(self):
         return self.long_message
@@ -59,6 +61,7 @@ class EbayErrorDeserializer(POPOSerializer):
     LongMessage = fields.CharField(source='long_message')
     SeverityCode = fields.CharField(source='severity_code')
     ShortMessage = fields.CharField(source='short_message')
+    ErrorParameters = EbayListSerializer(source='parameters', child=fields.DictField(), required=False)
 
     class Meta:
         model = EbayError
@@ -70,3 +73,4 @@ class EbayCoreApiSerializer(Serializer):
     short_message = fields.CharField()
     severity_code = fields.CharField()
     classification = fields.CharField()
+    parameters = fields.ListField(child=fields.CharField())
