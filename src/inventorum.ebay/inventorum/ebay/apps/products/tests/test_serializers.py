@@ -78,6 +78,7 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
 
         subject = EbayProductSerializer(product)
         self.assertEqual(subject.data, {
+            "id": product.id,
             "inv_id": 1337,
             "listing_url": None,
             "is_published": False,
