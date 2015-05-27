@@ -64,7 +64,8 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         return CategoryFactory.create(name="Some category", parent=some_parent)
 
     def get_default_product(self):
-        product = EbayProductFactory.create(category=self.get_default_category())
+        product = EbayProductFactory.create(inv_id=1337,
+                                            category=self.get_default_category())
         product.shipping_services.create(service=self.get_shipping_service_dhl(),
                                          cost=D("5.00"),
                                          additional_cost=D("0.49"))
@@ -77,7 +78,7 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
 
         subject = EbayProductSerializer(product)
         self.assertEqual(subject.data, {
-            "id": product.id,
+            "inv_id": 1337,
             "listing_url": None,
             "is_published": False,
             "is_click_and_collect": False,
