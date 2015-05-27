@@ -33,12 +33,41 @@ class EbayAuthentication(EbayTrading):
         token = EbayToken(response['eBayAuthToken'], parsed_expiration_time, site_id=self.default_site_id)
 
         self.token = token
-        self._update_notification_settings()
+        self.update_notification_settings()
 
         return token
 
-    def _update_notification_settings(self):
+    def update_notification_settings(self):
         self.execute('SetNotificationPreferences', {
+            "ApplicationDeliveryPreferences": {
+                # "ApplicationURL": 'https://app.inventorum.com/v1/ebay/platform-notifications/',
+                "ApplicationEnable": "Enable",
+                "AlertEnable": "Enable",
+                "DeviceType": "Platform",
+                'DeliveryURLDetails': [
+                    {
+                        'DeliveryURL': 'https://app.inventorum.net/api/channel/ebay/notifications/',
+                        'DeliveryURLName': 'sandbox',
+                        'Status': 'Enable'
+                    },
+                    {
+                        'DeliveryURL': 'https://app.inventorum.com/api/channel/ebay/notifications/',
+                        'DeliveryURLName': 'live',
+                        'Status': 'Enable'
+                    },
+                    {
+                        'DeliveryURL': 'https://app.inventorum.com/v1/ebay/platform-notifications/',
+                        'DeliveryURLName': 'oldlive',
+                        'Status': 'Enable'
+                    },
+                    {
+                        'DeliveryURL': 'mailto:michal+ebayplatform@inventorum.com',
+                        'DeliveryURLName': 'michalemail',
+                        'Status': 'Enable'
+                    }
+                ]
+            },
+            'DeliveryURLName': 'sandbox,live,oldlive,michalemail',
             'UserDeliveryPreferenceArray': {
                 'NotificationEnable': [
                     {
