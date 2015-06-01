@@ -150,6 +150,7 @@ CELERY_ROUTES = {
     'inventorum.ebay.apps.categories.tasks.ebay_category_specifics_sync_task': {'queue': 'fetching'},
     'inventorum.ebay.apps.categories.tasks.ebay_category_features_sync_task': {'queue': 'fetching'},
     'inventorum.ebay.apps.categories.tasks.ebay_categories_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_category_specifics_batch_task': {'queue': 'fetching'},
 
     # Syncing
     'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task': {'queue': 'syncing'},
