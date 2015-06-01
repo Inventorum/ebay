@@ -7,7 +7,8 @@ from random import randint
 import factory
 from factory import fuzzy
 from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
-from inventorum.ebay.lib.core_api.models import CoreProductDelta, CoreOrder, CoreDeltaReturn, CoreDeltaReturnItem
+from inventorum.ebay.lib.core_api.models import CoreProductDelta, CoreOrder, CoreDeltaReturn, CoreDeltaReturnItem, \
+    CoreBasket
 
 
 log = logging.getLogger(__name__)
@@ -26,6 +27,14 @@ class CoreProductDeltaFactory(factory.Factory):
     parent = None
 
 
+class CoreBasketFactory(factory.Factory):
+
+    class Meta:
+        model = CoreBasket
+
+    items = []
+
+
 class CoreOrderFactory(factory.Factory):
 
     class Meta:
@@ -33,6 +42,7 @@ class CoreOrderFactory(factory.Factory):
 
     id = fuzzy.FuzzyInteger(low=10000, high=99999)
     state = BinaryCoreOrderStates.DRAFT | BinaryCoreOrderStates.PENDING
+    basket = factory.SubFactory(CoreBasketFactory)
 
 
 class CoreDeltaReturnItemFactory(factory.Factory):

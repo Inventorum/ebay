@@ -30,7 +30,6 @@ class CoreReturnsSync(object):
 
         core_returns = self._get_core_returns(created_or_updated_since=last_sync_start)
         for core_return in core_returns:
-            log.info(core_return)
             self.sync(core_return)
 
         self.account.last_core_returns_sync = current_sync_start
