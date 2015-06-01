@@ -80,7 +80,7 @@ case "$1" in
 
   restart)
     _stop
-    sleep 6
+    sleep 10
     _start
 	;;
 
