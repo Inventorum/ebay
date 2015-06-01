@@ -76,4 +76,3 @@ class CoreReturnSyncer(object):
             return
 
         log.info("Handling return with `inv_id=%s` for click-and-collect order %s", core_return.id, order)
-
