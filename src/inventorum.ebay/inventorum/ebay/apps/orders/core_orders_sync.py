@@ -116,7 +116,6 @@ class CoreOrderSyncer(object):
         if regular_ebay_status_update_required:
             tasks.schedule_ebay_order_status_update(order_id=order.id, context=self.get_task_execution_context())
 
-
         if order.core_status.is_closed != core_order.is_closed:
             order.core_status.is_closed = core_order.is_closed
             order.core_status.save()

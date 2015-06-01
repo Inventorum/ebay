@@ -403,3 +403,62 @@ class CoreOrder(object):
         return self.state & BinaryCoreOrderStates.CANCELED == BinaryCoreOrderStates.CANCELED
 
 CoreOrder.Serializer.Meta.model = CoreOrder
+
+
+class CoreDeltaReturnItem(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+    id = serializers.IntegerField()
+    basket_item = serializers.IntegerField(source="basket_item_id")
+    name = serializers.CharField()
+    quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+    # / Serializer #######################
+
+    def __init__(self, id, basket_item_id, name, quantity):
+        """
+        :type id: int
+        :type basket_item_id: int
+        :type name: unicode
+        :type quantity: decimal.Decimal
+        """
+        self.id = id
+        self.basket_item_id = basket_item_id
+        self.name = name
+        self.quantity = quantity
+
+CoreDeltaReturnItem.Serializer.Meta.model = CoreDeltaReturnItem
+
+
+class CoreDeltaReturn(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+    id = serializers.IntegerField()
+    order = serializers.IntegerField(source="order_id")
+    items = CoreDeltaReturnItem.Serializer(many=True)
+
+    # / Serializer #######################
+
+    def __init__(self, id, order_id, items):
+        """
+        :type id: int
+        :type order_id: int
+        :type items: list[CoreDeltaReturnItem]
+        """
+        self.id = id
+        self.order_id = order_id
+        self.items = items
+
+CoreDeltaReturn.Serializer.Meta.model = CoreDeltaReturn

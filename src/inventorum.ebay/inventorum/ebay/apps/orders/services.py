@@ -26,9 +26,9 @@ class CoreOrderService(object):
         :type order: inventorum.ebay.apps.orders.models.OrderModel
         """
         data = OrderModelCoreAPIDataSerializer(order).data
-        inv_id = self.account.core_api.create_order(data)
+        core_order = self.account.core_api.create_order(data)
 
-        order.inv_id = inv_id
+        order.inv_id = core_order.id
         order.save()
 
 
