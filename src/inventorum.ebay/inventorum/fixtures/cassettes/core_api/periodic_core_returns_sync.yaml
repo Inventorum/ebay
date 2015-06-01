@@ -1,0 +1,256 @@
+interactions:
+- request:
+    body: '{"channel": "ebay", "basket": {"items": [{"product": 665753, "name": "Order
+      line item 1", "quantity": 5, "unit_gross_price": "16.73", "tax_rate": "0.000"}],
+      "note_external": "Ebay order id: 9912341245-3657632827"}, "shipment": {"service":
+      {"name": "Some ebay description", "time_min": 86400, "time_max": 259200}, "name":
+      "Some ebay description", "cost": "1.25", "external_key": "EbayShippingService_1",
+      "tracking_number": null}, "customer": {"first_name": "John", "last_name": "Wayne",
+      "email": "test@inventorum.com", "billing_address": {"first_name": "bznNkQrThf",
+      "last_name": "", "address1": "eaImXLmmWi", "address2": "LjNGTtDRnb", "zipcode":
+      "WK", "city": "KIFixTbMdJ", "state": "naytKwfcLh", "country": "DE"}, "shipping_address":
+      [{"first_name": "FvfBzrLrSm", "last_name": "", "address1": "BhGuHhSqDK", "address2":
+      "JvyHeLZKtC", "zipcode": "cM", "city": "YePghiJOBq", "state": "nVrxwDozvX",
+      "country": "DE"}]}, "payments": [{"payment_amount": "898.35", "payment_method":
+      "4"}], "state": 10}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['995']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.2-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/orders/
+  response:
+    body: {string: !!python/unicode '{"id": 12289, "basket": {"note_internal": null,
+        "note_external": "Ebay order id: 9912341245-3657632827", "items": [{"id":
+        23561, "name": "Order line item 1", "discount": null, "original_quantity":
+        "5.00", "price": "16.7300000000", "product": 665753, "quantity": 5, "tax_rate":
+        "19.000", "gross_price": "99.55", "unit_gross_price": "19.91"}]}, "state":
+        10, "customer": {"id": 10295, "channel": null, "email": "test@inventorum.com",
+        "title": null, "first_name": "John", "middle_name": null, "last_name": "Wayne",
+        "billing_address": {"country": "DE", "id": 18580, "address1": "eaImXLmmWi",
+        "address2": "LjNGTtDRnb", "zipcode": "WK", "city": "KIFixTbMdJ", "state":
+        "naytKwfcLh", "first_name": "bznNkQrThf", "last_name": "", "company": null,
+        "title": null}, "shipping_address": [{"country": "DE", "id": 18579, "address1":
+        "BhGuHhSqDK", "address2": "JvyHeLZKtC", "zipcode": "cM", "city": "YePghiJOBq",
+        "state": "nVrxwDozvX", "first_name": "FvfBzrLrSm", "last_name": "", "company":
+        null, "title": null}]}, "amount_paid": "898.3500000000", "payments": [{"id":
+        9276, "payment_method": "4", "payment_amount": "898.3500000000", "date": "01.06.2015
+        - 16:14", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
+        null, "paypal_tab_id": null}], "shipment": {"id": 2321, "name": "Some ebay
+        description", "tracking_number": null, "cost": "1.25", "external_key": "EbayShippingService_1",
+        "service": {"id": 1557, "name": "Some ebay description", "time_max": 259200,
+        "time_min": 86400}}, "channel": "ebay"}'}
+    headers:
+      allow: ['GET, POST, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 01 Jun 2015 14:14:46 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YzQUI:952zDKqkWT6JTtoxlvMgaY4gyjk"; Domain=app.intern.inventorum.net;
+          expires=Mon, 01-Jun-2015 16:14:46 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-processed-version: ['10']
+      x-inv-user: ['425']
+      x-rid: ['1858439950999545332']
+    status: {code: 201, message: CREATED}
+- request:
+    body: '{"returnType": 1, "items": [{"item": 23561, "quantity": 4}]}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['60']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.2-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/basket/12289/items/return/
+  response:
+    body: {string: !!python/unicode '{"return_items": [{"id": 1242, "name": "Order
+        line item 1", "price": "66.920000000000", "product": 665753, "quantity": "4.00",
+        "returnmodel": 902}], "date": "01.06.2015 - 16:14", "return_pdf": "https://app.inventorum.net/uploads/returns/346/Inventorum-Test-Account-10.pdf",
+        "return_image": "https://app.inventorum.net/uploads/returns/346/Inventorum-Test-Account-10.png",
+        "return_image_height": 965, "return_image_width": 576, "customer": {"id":
+        10295, "billing_address": {"country": "DE", "id": 18580, "address1": "eaImXLmmWi",
+        "address2": "LjNGTtDRnb", "zipcode": "WK", "city": "KIFixTbMdJ", "state":
+        "naytKwfcLh", "first_name": "bznNkQrThf", "last_name": "", "company": null,
+        "title": null}, "shipping_address": [{"country": "DE", "id": 18579, "address1":
+        "BhGuHhSqDK", "address2": "JvyHeLZKtC", "zipcode": "cM", "city": "YePghiJOBq",
+        "state": "nVrxwDozvX", "first_name": "FvfBzrLrSm", "last_name": "", "company":
+        null, "title": null}], "is_vip": false, "phone_numbers": [], "is_favourite":
+        false, "first_name": "John", "last_name": "Wayne", "middle_name": null, "company":
+        null, "email_marketing_agreed": false, "note": null, "group": null, "email":
+        "test@inventorum.com", "tax_number": null, "title": null, "customer_note":
+        null, "is_confirmed": false, "channel": null, "birthday": null}, "channel":
+        "ebay", "total_price": "66.92", "gross": "79.64", "id": 902, "user": 425,
+        "basket": 12977, "return_printed": null, "return_number": "10", "transaction_id":
+        "", "payment_method": "1"}'}
+    headers:
+      allow: ['GET, POST, PUT, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 01 Jun 2015 14:14:47 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YzQUJ:hbVsVU3esIAWP7xiqP9ax9eVwhE"; Domain=app.intern.inventorum.net;
+          expires=Mon, 01-Jun-2015 16:14:47 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1082131965231556084']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"channel": "ebay", "basket": {"items": [{"product": 665753, "name": "Order
+      line item 2", "quantity": 5, "unit_gross_price": "461.99", "tax_rate": "0.000"}],
+      "note_external": "Ebay order id: 9912341245-8195728487"}, "shipment": {"service":
+      {"name": "Some ebay description", "time_min": 86400, "time_max": 259200}, "name":
+      "Some ebay description", "cost": "6.54", "external_key": "EbayShippingService_2",
+      "tracking_number": null}, "customer": {"first_name": "John", "last_name": "Wayne",
+      "email": "test@inventorum.com", "billing_address": {"first_name": "nfhHLzFAQi",
+      "last_name": "", "address1": "zxzaHDXGvw", "address2": "yJOAhdpcPg", "zipcode":
+      "WR", "city": "NJHJbkdYim", "state": "MYCWaBfJWS", "country": "DE"}, "shipping_address":
+      [{"first_name": "cDjukQbivI", "last_name": "", "address1": "bgPoGqXzfR", "address2":
+      "iHXoJFviyM", "zipcode": "uS", "city": "uqGTVNEAsM", "state": "NsGCUSITpJ",
+      "country": "DE"}]}, "payments": [{"payment_amount": "726.35", "payment_method":
+      "4"}], "state": 10}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['996']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.2-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/orders/
+  response:
+    body: {string: !!python/unicode '{"id": 12290, "basket": {"note_internal": null,
+        "note_external": "Ebay order id: 9912341245-8195728487", "items": [{"id":
+        23562, "name": "Order line item 2", "discount": null, "original_quantity":
+        "5.00", "price": "461.9900000000", "product": 665753, "quantity": 5, "tax_rate":
+        "19.000", "gross_price": "2748.85", "unit_gross_price": "549.77"}]}, "state":
+        10, "customer": {"id": 10296, "channel": null, "email": "test@inventorum.com",
+        "title": null, "first_name": "John", "middle_name": null, "last_name": "Wayne",
+        "billing_address": {"country": "DE", "id": 18582, "address1": "zxzaHDXGvw",
+        "address2": "yJOAhdpcPg", "zipcode": "WR", "city": "NJHJbkdYim", "state":
+        "MYCWaBfJWS", "first_name": "nfhHLzFAQi", "last_name": "", "company": null,
+        "title": null}, "shipping_address": [{"country": "DE", "id": 18581, "address1":
+        "bgPoGqXzfR", "address2": "iHXoJFviyM", "zipcode": "uS", "city": "uqGTVNEAsM",
+        "state": "NsGCUSITpJ", "first_name": "cDjukQbivI", "last_name": "", "company":
+        null, "title": null}]}, "amount_paid": "726.3500000000", "payments": [{"id":
+        9277, "payment_method": "4", "payment_amount": "726.3500000000", "date": "01.06.2015
+        - 16:14", "transaction_id": null, "transaction_duration": null, "paypal_invoice_id":
+        null, "paypal_tab_id": null}], "shipment": {"id": 2322, "name": "Some ebay
+        description", "tracking_number": null, "cost": "6.54", "external_key": "EbayShippingService_2",
+        "service": {"id": 1558, "name": "Some ebay description", "time_max": 259200,
+        "time_min": 86400}}, "channel": "ebay"}'}
+    headers:
+      allow: ['GET, POST, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 01 Jun 2015 14:14:51 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YzQUN:KagzY6ylCkA3VWzEGJafWzlguOo"; Domain=app.intern.inventorum.net;
+          expires=Mon, 01-Jun-2015 16:14:51 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-processed-version: ['10']
+      x-inv-user: ['425']
+      x-rid: ['1858439950999545332']
+    status: {code: 201, message: CREATED}
+- request:
+    body: '{"returnType": 1, "items": [{"item": 23562, "quantity": 4}]}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['60']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.2-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/basket/12290/items/return/
+  response:
+    body: {string: !!python/unicode '{"return_items": [{"id": 1243, "name": "Order
+        line item 2", "price": "1847.960000000000", "product": 665753, "quantity":
+        "4.00", "returnmodel": 903}], "date": "01.06.2015 - 16:14", "return_pdf":
+        "https://app.inventorum.net/uploads/returns/346/Inventorum-Test-Account-11.pdf",
+        "return_image": "https://app.inventorum.net/uploads/returns/346/Inventorum-Test-Account-11.png",
+        "return_image_height": 965, "return_image_width": 576, "customer": {"id":
+        10296, "billing_address": {"country": "DE", "id": 18582, "address1": "zxzaHDXGvw",
+        "address2": "yJOAhdpcPg", "zipcode": "WR", "city": "NJHJbkdYim", "state":
+        "MYCWaBfJWS", "first_name": "nfhHLzFAQi", "last_name": "", "company": null,
+        "title": null}, "shipping_address": [{"country": "DE", "id": 18581, "address1":
+        "bgPoGqXzfR", "address2": "iHXoJFviyM", "zipcode": "uS", "city": "uqGTVNEAsM",
+        "state": "NsGCUSITpJ", "first_name": "cDjukQbivI", "last_name": "", "company":
+        null, "title": null}], "is_vip": false, "phone_numbers": [], "is_favourite":
+        false, "first_name": "John", "last_name": "Wayne", "middle_name": null, "company":
+        null, "email_marketing_agreed": false, "note": null, "group": null, "email":
+        "test@inventorum.com", "tax_number": null, "title": null, "customer_note":
+        null, "is_confirmed": false, "channel": null, "birthday": null}, "channel":
+        "ebay", "total_price": "1847.97", "gross": "2199.08", "id": 903, "user": 425,
+        "basket": 12978, "return_printed": null, "return_number": "11", "transaction_id":
+        "", "payment_method": "1"}'}
+    headers:
+      allow: ['GET, POST, PUT, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 01 Jun 2015 14:14:52 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YzQUO:WrDeobaR_BHpzKca-2GGUD2omCA"; Domain=app.intern.inventorum.net;
+          expires=Mon, 01-Jun-2015 16:14:52 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1082131965231556084']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.2-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/returns/delta/?channel=ebay&limit=100&page=1
+  response:
+    body: {string: !!python/unicode '{"total": 2, "data": [{"id": 902, "order": 12289,
+        "delta_state": "created", "items": [{"id": 1242, "basket_item": 23561, "name":
+        "Order line item 1", "quantity": "4.00"}]}, {"id": 903, "order": 12290, "delta_state":
+        "created", "items": [{"id": 1243, "basket_item": 23562, "name": "Order line
+        item 2", "quantity": "4.00"}]}]}'}
+    headers:
+      allow: ['GET, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Mon, 01 Jun 2015 14:14:52 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1YzQUO:WrDeobaR_BHpzKca-2GGUD2omCA"; Domain=app.intern.inventorum.net;
+          expires=Mon, 01-Jun-2015 16:14:52 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1082131965231556084']
+    status: {code: 200, message: OK}
+version: 1

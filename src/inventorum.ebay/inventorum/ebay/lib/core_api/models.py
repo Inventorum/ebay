@@ -468,10 +468,10 @@ class CoreDeltaReturnItem(object):
         class Meta(POPOSerializer.Meta):
             model = None
 
-    id = serializers.IntegerField()
-    basket_item = serializers.IntegerField(source="basket_item_id")
-    name = serializers.CharField()
-    quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
+        id = serializers.IntegerField()
+        basket_item = serializers.IntegerField(source="basket_item_id")
+        name = serializers.CharField()
+        quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     # / Serializer #######################
 
@@ -499,9 +499,9 @@ class CoreDeltaReturn(object):
         class Meta(POPOSerializer.Meta):
             model = None
 
-    id = serializers.IntegerField()
-    order = serializers.IntegerField(source="order_id")
-    items = CoreDeltaReturnItem.Serializer(many=True)
+        id = serializers.IntegerField()
+        order = serializers.IntegerField(source="order_id")
+        items = CoreDeltaReturnItem.Serializer(many=True)
 
     # / Serializer #######################
 

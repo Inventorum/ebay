@@ -30,6 +30,7 @@ class OrderLineItemModel(BaseModel):
     order = models.ForeignKey("orders.OrderModel", verbose_name="Order", related_name="line_items")
 
     ebay_id = models.CharField(max_length=255, verbose_name="Ebay transaction id")
+    inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
 
     # Generic reference to an orderable item (either `EbayItemModel` or `EbayItemVariationModel`)
     orderable_item_type = models.ForeignKey(ContentType)

@@ -36,6 +36,7 @@ class OrderModelFactory(factory.DjangoModelFactory):
     ebay_status = factory.SubFactory(OrderStatusModelFactory)
     core_status = factory.SubFactory(OrderStatusModelFactory)
 
+    inv_id = None
     ebay_id = fuzzy.FuzzyText(length=10, chars=NUMBER_CHARS, prefix="9912341245-")
     ebay_complete_status = CompleteStatusCodeType.Complete
 
@@ -63,6 +64,7 @@ class OrderLineItemModelFactory(factory.DjangoModelFactory):
         # django_get_or_create = ("ebay_id",)
 
     ebay_id = fuzzy.FuzzyText(length=10, chars=NUMBER_CHARS)
+    inv_id = None
 
     name = factory.Sequence(lambda n: "Order line item {}".format(n))
     unit_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
