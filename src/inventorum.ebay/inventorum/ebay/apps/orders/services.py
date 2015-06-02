@@ -25,11 +25,19 @@ class CoreOrderService(object):
         """
         :type order: inventorum.ebay.apps.orders.models.OrderModel
         """
+        assert order.line_items.count() == 1, "Core order creation for combined ebay orders is not supported"
+
         data = OrderModelCoreAPIDataSerializer(order).data
         core_order = self.account.core_api.create_order(data)
 
         order.inv_id = core_order.id
         order.save()
+
+        order_line_item = order.line_items.first()
+        core_order_line_item = core_order.basket.items[0]
+
+        order_line_item.inv_id = core_order_line_item.id
+        order_line_item.save()
 
 
 class EbayOrderStatusUpdateException(Exception):
