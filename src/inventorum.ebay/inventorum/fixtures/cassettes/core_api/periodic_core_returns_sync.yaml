@@ -235,10 +235,10 @@ interactions:
     uri: http://app.intern.inventorum.net/api/returns/delta/?channel=ebay&limit=100&page=1
   response:
     body: {string: !!python/unicode '{"total": 2, "data": [{"id": 902, "order": 12289,
-        "delta_state": "created", "items": [{"id": 1242, "basket_item": 23561, "name":
-        "Order line item 1", "quantity": "4.00"}]}, {"id": 903, "order": 12290, "delta_state":
-        "created", "items": [{"id": 1243, "basket_item": 23562, "name": "Order line
-        item 2", "quantity": "4.00"}]}]}'}
+        "delta_state": "created", "total_amount": "79.64", "items": [{"id": 1242, "basket_item": 23561, "name":
+        "Order line item 1", "quantity": "4.00", "amount": "79.64"}]}, {"id": 903, "order": 12290, "delta_state":
+        "created", "total_amount": "2199.08", "items": [{"id": 1243, "basket_item": 23562, "name": "Order line
+        item 2", "quantity": "4.00", "amount": "2199.08"}]}]}'}
     headers:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]

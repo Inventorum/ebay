@@ -472,20 +472,23 @@ class CoreDeltaReturnItem(object):
         basket_item = serializers.IntegerField(source="basket_item_id")
         name = serializers.CharField()
         quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
+        amount = MoneyField()
 
     # / Serializer #######################
 
-    def __init__(self, id, basket_item_id, name, quantity):
+    def __init__(self, id, basket_item_id, name, quantity, amount):
         """
         :type id: int
         :type basket_item_id: int
         :type name: unicode
         :type quantity: decimal.Decimal
+        :type amount: decimal.Decimal
         """
         self.id = id
         self.basket_item_id = basket_item_id
         self.name = name
         self.quantity = quantity
+        self.amount = amount
 
 CoreDeltaReturnItem.Serializer.Meta.model = CoreDeltaReturnItem
 
@@ -501,18 +504,21 @@ class CoreDeltaReturn(object):
 
         id = serializers.IntegerField()
         order = serializers.IntegerField(source="order_id")
+        total_amount = MoneyField()
         items = CoreDeltaReturnItem.Serializer(many=True)
 
     # / Serializer #######################
 
-    def __init__(self, id, order_id, items):
+    def __init__(self, id, order_id, total_amount, items):
         """
         :type id: int
         :type order_id: int
+        :type total_amount: decimal.Decimal
         :type items: list[CoreDeltaReturnItem]
         """
         self.id = id
         self.order_id = order_id
+        self.total_amount = total_amount
         self.items = items
 
 CoreDeltaReturn.Serializer.Meta.model = CoreDeltaReturn

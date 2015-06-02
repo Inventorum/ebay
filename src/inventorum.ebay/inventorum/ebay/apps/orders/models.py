@@ -46,6 +46,13 @@ class OrderLineItemModel(BaseModel):
     def inv_product_id(self):
         return self.orderable_item.inv_product_id
 
+    @property
+    def transaction_id(self):
+        """
+        :rtype: unicode
+        """
+        return self.ebay_id
+
 
 class OrderModelQuerySet(MappedInventorumModelQuerySet):
 

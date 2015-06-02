@@ -54,6 +54,7 @@ class CoreDeltaReturnItemFactory(factory.Factory):
     basket_item_id = fuzzy.FuzzyInteger(low=10000, high=99999)
     name = factory.Sequence(lambda n: "Order line item {}".format(n))
     quantity = fuzzy.FuzzyInteger(low=1, high=100)
+    amount = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
 
 
 class CoreDeltaReturnFactory(factory.Factory):
@@ -63,4 +64,6 @@ class CoreDeltaReturnFactory(factory.Factory):
 
     id = fuzzy.FuzzyInteger(low=100, high=99999)
     order_id = fuzzy.FuzzyInteger(low=10000, high=99999)
+    total_amount = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
+
     items = []

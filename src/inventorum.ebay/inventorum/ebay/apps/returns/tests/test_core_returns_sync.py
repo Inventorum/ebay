@@ -7,7 +7,9 @@ from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory, EbayA
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, EbayItemFactory
+from inventorum.ebay.apps.returns import EbayRefundType
 from inventorum.ebay.apps.returns.core_returns_sync import CoreReturnsSync, CoreReturnSyncer
+from inventorum.ebay.apps.returns.models import ReturnModel
 from inventorum.ebay.apps.returns.tasks import periodic_core_returns_sync_task
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case
@@ -15,6 +17,7 @@ from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.tests import StagingTestAccount, ApiTest
 from inventorum.ebay.lib.core_api.tests.factories import CoreDeltaReturnFactory, CoreDeltaReturnItemFactory
+from inventorum.ebay.lib.ebay.data.events import EbayEventReturned
 from inventorum.ebay.tests.testcases import UnitTestCase, EbayAuthenticatedAPITestCase
 from inventorum.util.celery import get_anonymous_task_execution_context, TaskExecutionContext
 from mock import PropertyMock
@@ -25,18 +28,64 @@ log = logging.getLogger(__name__)
 
 class IntegrationTestPeriodicCoreReturnsSync(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin):
 
+    def setUp(self):
+        super(IntegrationTestPeriodicCoreReturnsSync, self).setUp()
+        self.setup_mocks()
+
+    def setup_mocks(self):
+        self.ebay_inbound_events_publish_mock = \
+            self.patch("inventorum.ebay.lib.ebay.events.EbayInboundEvents.publish")
+
+    def reset_mocks(self):
+        self.ebay_inbound_events_publish_mock.reset_mock()
+
     @celery_test_case()
     @ApiTest.use_cassette("periodic_core_returns_sync.yaml", filter_query_parameters=['start_date'], record_mode="never")
     def test_integration(self):
-        product = EbayProductFactory.create(inv_id=StagingTestAccount.Products.IPAD_STAND)
+        product = EbayProductFactory.create(account=self.account, inv_id=StagingTestAccount.Products.IPAD_STAND)
 
-        ebay_order_regular, core_return_id_regular = \
-            self._create_order_with_immediate_core_return(product, is_click_and_collect=False)
+        # non-click-and-collect order should not be handled
+        self._create_order_with_immediate_core_return(product, is_click_and_collect=False)
 
+        # click-and-collect order, should be handled
         ebay_order_click_and_collect, core_return_id_click_and_collect = \
             self._create_order_with_immediate_core_return(product, is_click_and_collect=True)
+        ebay_order_click_and_collect_line_item = ebay_order_click_and_collect.line_items.first()
+
+        returns = ReturnModel.objects.all()
+        self.assertPrecondition(returns.count(), 0)
 
         periodic_core_returns_sync_task.delay(context=get_anonymous_task_execution_context())
+
+        # assert that models have been created
+        self.assertPostcondition(returns.count(), 1)
+        return_model = returns.last()
+
+        self.assertEqual(return_model.items.count(), 1)
+        return_item = return_model.items.first()
+
+        self.assertEqual(return_model.inv_id, core_return_id_click_and_collect)
+        self.assertEqual(return_item.order_line_item, ebay_order_click_and_collect_line_item)
+
+        # assert that correct event has been sent to ebay
+        self.assertTrue(self.ebay_inbound_events_publish_mock.called)
+        first_call_args, first_call_kwargs = self.ebay_inbound_events_publish_mock.call_args_list[0]
+        event = first_call_args[0]
+
+        self.assertIsInstance(event, EbayEventReturned)
+        self.assertEqual(event.payload, {"ebayOrderId": ebay_order_click_and_collect.ebay_id,
+                                         "notifierRefundNote": "",
+                                         "notifierRefundType": "EBAY",
+                                         "notifierTotalRefundAmount": return_model.refund_amount,
+                                         "notifierTotalRefundCurrency": "EUR",
+                                         "refundLineItems": [{"eBayItemId": ebay_order_click_and_collect_line_item.orderable_item.ebay_item_id,
+                                                              "eBayTransactionId": ebay_order_click_and_collect_line_item.transaction_id,
+                                                              "notifierRefundAmount": return_item.refund_amount,
+                                                              "notifierRefundCurrency": "EUR",
+                                                              "notifierRefundQuantity": return_item.refund_quantity}]})
+
+        # assert post condition after ebay sync
+        self.assertPostcondition(return_model.synced_with_ebay, True)
 
     def _create_order_with_immediate_core_return(self, product, is_click_and_collect):
         """
@@ -50,16 +99,22 @@ class IntegrationTestPeriodicCoreReturnsSync(EbayAuthenticatedAPITestCase, Shipp
         if is_click_and_collect:
             order_extra["selected_shipping__service"] = self.get_shipping_service_click_and_collect()
 
-        order = OrderModelFactory.create()
-        OrderLineItemModelFactory.create(order=order,
-                                         orderable_item__product=product,
-                                         quantity=5)
+        order = OrderModelFactory.create(account=self.account, **order_extra)
+        order_line_item = OrderLineItemModelFactory.create(order=order,
+                                                           orderable_item__product=product,
+                                                           quantity=5)
 
         core_order_creation_data = OrderModelCoreAPIDataSerializer(order).data
         # create closed ebay order to be able to make returns
         core_order_creation_data["state"] |= BinaryCoreOrderStates.CLOSED
         core_order = self.account.core_api.create_order(data=core_order_creation_data)
         core_order_line_item = core_order.basket.items[0]
+
+        order.inv_id = core_order.id
+        order.save()
+
+        order_line_item.inv_id = core_order_line_item.id
+        order_line_item.save()
 
         # create return
         return_quantity = int(core_order_line_item.quantity) - 1
@@ -180,10 +235,11 @@ class UnitTestCoreReturnSyncer(UnitTestCase, ShippingServiceTestMixin):
         self.setup_mocks()
 
     def setup_mocks(self):
-        pass
+        self.schedule_ebay_return_event_mock = \
+            self.patch("inventorum.ebay.apps.returns.core_returns_sync.schedule_ebay_return_event")
 
     def reset_mocks(self):
-        pass
+        self.schedule_ebay_return_event_mock.reset_mock()
 
     def create_order(self, ebay_item, quantity, is_click_and_collect):
         """
@@ -230,14 +286,52 @@ class UnitTestCoreReturnSyncer(UnitTestCase, ShippingServiceTestMixin):
         ebay_item = EbayItemFactory()
         order = self.create_order(ebay_item, quantity=5, is_click_and_collect=True)
 
+        returns = ReturnModel.objects.all()
+        self.assertPrecondition(returns.count(), 0)
+
         core_return = self.create_core_return(order, quantity=3)
 
         self.sync(core_return, order)
+
+        self.assertPostcondition(returns.count(), 1)
+
+        return_model = returns.last()
+
+        self.assertEqual(return_model.order, order)
+        self.assertEqual(return_model.inv_id, core_return.id)
+        self.assertEqual(return_model.refund_type, EbayRefundType.EBAY)
+        self.assertEqual(return_model.refund_amount, core_return.total_amount)
+
+        return_item = return_model.items.first()
+        core_return_item = core_return.items[0]
+
+        self.assertEqual(return_item.order_line_item, order.line_items.first())
+        self.assertEqual(return_item.inv_id, core_return_item.id)
+        self.assertEqual(return_item.refund_amount, core_return_item.amount)
+        self.assertEqual(return_item.refund_quantity, core_return_item.quantity)
+
+        self.assertTrue(self.schedule_ebay_return_event_mock.called)
+        self.schedule_ebay_return_event_mock\
+            .assert_called_once_with(return_id=return_model.id, context=self.sync.get_task_execution_context())
+
+        # assert that returns are not handled twice
+        self.reset_mocks()
+
+        self.sync(core_return, order)
+
+        self.assertPostcondition(returns.count(), 1)
+        self.assertFalse(self.schedule_ebay_return_event_mock.called)
 
     def test_does_not_handle_non_click_and_collect_returns(self):
         ebay_item = EbayItemFactory()
         order = self.create_order(ebay_item, quantity=1, is_click_and_collect=False)
 
+        returns = ReturnModel.objects.all()
+        self.assertPrecondition(returns.count(), 0)
+
         core_return = self.create_core_return(order, quantity=1)
 
         self.sync(core_return, order)
+
+        self.assertPostcondition(returns.count(), 0)
+        self.assertFalse(self.schedule_ebay_return_event_mock.called)
