@@ -208,3 +208,7 @@ class OrderableItemModel(models.Model):
     order_line_items = GenericRelation("orders.OrderLineItemModel",
                                        content_type_field="orderable_item_type",
                                        object_id_field="orderable_item_id")
+
+    @property
+    def ebay_item_id(self):
+        raise NotImplementedError
