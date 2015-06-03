@@ -11,7 +11,6 @@ log = logging.getLogger(__name__)
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    variations_enabled = serializers.BooleanField(source="features.variations_enabled")
 
     class Meta:
         model = models.CategoryModel
@@ -19,6 +18,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     # Must be added explicitly as rest framework validates fields and does not recognize fields contributed by mptt
     parent_id = serializers.IntegerField()
+    variations_enabled = serializers.BooleanField(source="features.variations_enabled")
 
 
 class CategoryBreadcrumbSerializer(serializers.ModelSerializer):
@@ -26,6 +26,14 @@ class CategoryBreadcrumbSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CategoryModel
         fields = ("id", "name")
+
+
+class VerboseCategorySerializer(CategorySerializer):
+
+    class Meta(CategorySerializer.Meta):
+        fields = CategorySerializer.Meta.fields + ("breadcrumbs",)
+
+    breadcrumbs = CategoryBreadcrumbSerializer(source="ancestors", many=True)
 
 
 class SpecificValueSerializer(serializers.ModelSerializer):
@@ -52,8 +60,7 @@ class CategoryListResponseSerializer(serializers.Serializer):
 
 class CategorySuggestionSerializer(serializers.Serializer):
     percent_item_found = serializers.IntegerField()
-    category = CategorySerializer()
-    breadcrumbs = CategoryBreadcrumbSerializer(source="category.ancestors", many=True)
+    category = VerboseCategorySerializer()
 
 
 class RootedCategorySuggestionsSerializer(serializers.Serializer):
@@ -68,4 +75,4 @@ class CategorySearchParameterDeserializer(serializers.Serializer):
 
 class RootedCategorySearchResultSerializer(serializers.Serializer):
     root = CategorySerializer()
-    categories = CategorySerializer(many=True)
+    categories = VerboseCategorySerializer(many=True)
