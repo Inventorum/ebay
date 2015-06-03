@@ -92,13 +92,21 @@ class TestCategorySearchResource(EbayAuthenticatedAPITestCase, CategoryTestMixin
                                                            "country": "DE",
                                                            "parent_id": self.category_desktop_computers.id,
                                                            "is_leaf": True,
-                                                           "variations_enabled": False},
+                                                           "variations_enabled": False,
+                                                           "breadcrumbs": [{"id": self.category_computers.id,
+                                                                            "name": "Computer, Tablets & Network"},
+                                                                           {"id": self.category_desktop_computers.id,
+                                                                            "name": "Desktop Computers"}]},
                                                           {"id": self.category_apple_notebooks.id,
                                                            "name": "Apple Notebooks",
                                                            "country": "DE",
                                                            "parent_id": self.category_notebooks.id,
                                                            "is_leaf": True,
-                                                           "variations_enabled": False}]})
+                                                           "variations_enabled": False,
+                                                           "breadcrumbs": [{"id": self.category_computers.id,
+                                                                            "name": "Computer, Tablets & Network"},
+                                                                           {"id": self.category_notebooks.id,
+                                                                            "name": "Notebooks & Netbooks"}]}]})
 
         rooted_result_2 = results[1]
         self.assertEqual(rooted_result_2["root"]["name"], "TV, Video & Audio")

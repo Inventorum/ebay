@@ -103,9 +103,9 @@ class TestCategorySuggestionsResource(EbayAuthenticatedAPITestCase):
                         "country": "DE",
                         "parent_id": category_mobiles.id,
                         "is_leaf": True,
-                        "variations_enabled": False
+                        "variations_enabled": False,
+                        "breadcrumbs": [{"id": category_mobiles.id, "name": "Mobile & Communication"}]
                     },
-                    "breadcrumbs": [{"id": category_mobiles.id, "name": "Mobile & Communication"}]
                 }
             ]
         })
