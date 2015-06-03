@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from celery.utils.log import get_task_logger
 
 from datetime import datetime
-from celery.utils.log import get_task_logger
 from inventorum.ebay.apps.accounts.models import EbayAccountModel
 from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.orders.services import CoreOrderService, EbayOrderStatusUpdateService

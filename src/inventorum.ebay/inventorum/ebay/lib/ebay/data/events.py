@@ -98,11 +98,11 @@ class EbayEventCanceled(EbayEventBase):
 
 
 class EbayEventReturnedItem(object):
-    def __init__(self, item_id, transaction_id, quantity, amount, currency='EUR'):
+    def __init__(self, item_id, transaction_id, refund_quantity, refund_amount, currency='EUR'):
         self.item_id = item_id
         self.transaction_id = transaction_id
-        self.quantity = quantity
-        self.amount = amount
+        self.refund_quantity = refund_quantity
+        self.refund_amount = refund_amount
         self.currency = currency
 
     @property
@@ -110,8 +110,8 @@ class EbayEventReturnedItem(object):
         return {
             'eBayItemId': self.item_id,
             'eBayTransactionId': self.transaction_id,
-            'notifierRefundQuantity': self.quantity,
-            'notifierRefundAmount': self.amount,
+            'notifierRefundQuantity': self.refund_quantity,
+            'notifierRefundAmount': self.refund_amount,
             'notifierRefundCurrency': self.currency,
         }
 
@@ -124,9 +124,9 @@ class EbayEventReturned(EbayEventBase):
 
     type = EbayEventType.RETURNED
 
-    def __init__(self, order_id, total_amount, refund_type, items, refund_id=None, refund_note=None, currency='EUR',
+    def __init__(self, order_id, refund_amount, refund_type, items, refund_id=None, refund_note=None, currency='EUR',
                  seller_id=None):
-        self.total_amount = total_amount
+        self.refund_amount = refund_amount
         self.currency = currency
         self.refund_type = refund_type
         self.refund_note = refund_note
@@ -137,7 +137,7 @@ class EbayEventReturned(EbayEventBase):
     @property
     def payload(self):
         payload = super(EbayEventReturned, self).payload
-        payload['notifierTotalRefundAmount'] = self.total_amount
+        payload['notifierTotalRefundAmount'] = self.refund_amount
         payload['notifierTotalRefundCurrency'] = self.currency
         payload['notifierRefundType'] = self.refund_type
         payload['refundLineItems'] = [i.payload for i in self.items]

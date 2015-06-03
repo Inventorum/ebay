@@ -246,9 +246,9 @@ class UnitTestUserScopedCoreAPIClient(UnitTestCase):
             u'shipment': {u'cost': u'5.0000000000', u'name': u'DE_DHLPaket'},
             u'state': 2})
 
-        inv_id = self.subject.create_order(data)
+        core_order = self.subject.create_order(data)
 
         self.assertEqual(self.client_post_mock.call_count, 1)
         self.client_post_mock.assert_called_once_with("/api/orders/", data=data)
 
-        self.assertEqual(inv_id, created_order_id)
+        self.assertEqual(core_order.id, created_order_id)

@@ -214,6 +214,14 @@ class EbayItemModel(OrderableItemModel, BaseModel):
             is_click_and_collect=self.is_click_and_collect
         )
 
+    @property
+    def ebay_item_id(self):
+        """
+        Required by the `OrderableItemModel` interface
+        :rtype: unicode
+        """
+        return self.external_id
+
     def _build_item_specifics(self):
         specifics = self.specific_values.all()
         specific_dict = defaultdict(list)
@@ -274,6 +282,14 @@ class EbayItemVariationModel(OrderableItemModel, BaseModel):
             specifics=[s.ebay_object for s in self.specifics.all()],
             images=[i.ebay_object for i in self.images.all()]
         )
+
+    @property
+    def ebay_item_id(self):
+        """
+        Required by the `OrderableItemModel` interface
+        :rtype: unicode
+        """
+        return self.item.external_id
 
     @property
     def sku(self):

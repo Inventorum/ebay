@@ -30,6 +30,7 @@ class OrderLineItemModel(BaseModel):
     order = models.ForeignKey("orders.OrderModel", verbose_name="Order", related_name="line_items")
 
     ebay_id = models.CharField(max_length=255, verbose_name="Ebay transaction id")
+    inv_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name="Universal inventorum id")
 
     # Generic reference to an orderable item (either `EbayItemModel` or `EbayItemVariationModel`)
     orderable_item_type = models.ForeignKey(ContentType)
@@ -44,6 +45,13 @@ class OrderLineItemModel(BaseModel):
     @property
     def inv_product_id(self):
         return self.orderable_item.inv_product_id
+
+    @property
+    def transaction_id(self):
+        """
+        :rtype: unicode
+        """
+        return self.ebay_id
 
 
 class OrderModelQuerySet(MappedInventorumModelQuerySet):
@@ -207,3 +215,7 @@ class OrderableItemModel(models.Model):
     order_line_items = GenericRelation("orders.OrderLineItemModel",
                                        content_type_field="orderable_item_type",
                                        object_id_field="orderable_item_id")
+
+    @property
+    def ebay_item_id(self):
+        raise NotImplementedError
