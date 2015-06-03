@@ -3,25 +3,25 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-20 12:03+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2015-06-03 20:25+0200\n"
+"PO-Revision-Date: 2015-06-03 20:47+0100\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.7.7\n"
 
 #: apps/accounts/serializers.py:72 apps/products/serializers.py:86
 msgid "Invalid shipping service"
 msgstr ""
 
-#: apps/auth/services.py:36
+#: apps/auth/services.py:41
 #, python-format
 msgid "Country %(country)s not supported"
 msgstr ""
@@ -43,15 +43,15 @@ msgid ""
 "ebay website."
 msgstr ""
 
-#: apps/products/models.py:287
+#: apps/products/models.py:304
 msgid "size"
 msgstr "Größe"
 
-#: apps/products/models.py:288
+#: apps/products/models.py:305
 msgid "material"
 msgstr "Material"
 
-#: apps/products/models.py:289
+#: apps/products/models.py:306
 msgid "color"
 msgstr "Farbe"
 
@@ -61,7 +61,7 @@ msgstr ""
 
 #: apps/products/resources.py:144
 msgid "Product is not published"
-msgstr ""
+msgstr "Produkt ist nicht veröffentlicht"
 
 #: apps/products/serializers.py:37
 #, python-format
@@ -74,28 +74,32 @@ msgstr ""
 
 #: apps/products/serializers.py:73
 msgid "Invalid category"
-msgstr ""
+msgstr "Ungültige Kategorie"
 
 #: apps/products/services.py:102
 msgid "Product was already published"
-msgstr ""
+msgstr "Produkt ist bereits veröffentlicht"
 
 #: apps/products/services.py:105
 msgid "To publish product we need your billing address"
 msgstr ""
+"Um Produkte bei eBay veröffentlichen zu können, müssen Sie Ihre "
+"Rechnungsadresse angeben"
 
 #: apps/products/services.py:108
 msgid "Neither product or account have configured shipping services"
-msgstr ""
+msgstr "Sie müssen mindestens einen eBay Versandservice konfigurieren"
 
 #: apps/products/services.py:114
 msgid "You need to select category"
-msgstr ""
+msgstr "Sie müssen eine eBay Kategorie auswählen"
 
 #: apps/products/services.py:122 apps/products/validators.py:49
 #, python-format
 msgid "You need to pass all required specifics (missing: %(missing_ids)s)!"
 msgstr ""
+"Sie müssen Werte für alle eBay spezifischen Artikelmerkmalen angeben (Es "
+"fehlen: %(missing_ids)s)"
 
 #: apps/products/services.py:132
 msgid ""
@@ -106,26 +110,28 @@ msgstr ""
 #: apps/products/services.py:138
 msgid "Click&Collect requires to use PayPal as payment method!"
 msgstr ""
+"Um Produkte mit Click & Collect veröffentlichen zu können, muss PayPal als "
+"Zahlungsmethode konfiguriert werden"
 
 #: apps/products/services.py:142
 msgid "Missing paypal email addres, however paypal payment method is enabled!"
-msgstr ""
+msgstr "Sie müssen Ihre PayPal E-Mail Adresse angeben"
 
 #: apps/products/services.py:150
 msgid "Price needs to be greater or equal than 1"
-msgstr ""
+msgstr "Der Mindestpreis für ein Produkt bei eBay ist 1.00€"
 
 #: apps/products/services.py:153
 msgid "Prices needs to be greater or equal than 1"
-msgstr ""
+msgstr "Der Mindestpreis für Produkte bei eBay ist 1.00€"
 
 #: apps/products/services.py:173
 msgid "Variations need to have at least one attribute"
-msgstr ""
+msgstr "Variationen müssen mindestens ein Attribut besitzen"
 
 #: apps/products/services.py:176
 msgid "All variations needs to have exactly the same number of attributes"
-msgstr ""
+msgstr "Alle Variationen müssen für eBay die gleichen Attribute aufweisen"
 
 #: apps/products/validators.py:67
 #, python-format
@@ -141,11 +147,11 @@ msgid ""
 "specific ids: %(wrong_ids)s)"
 msgstr ""
 
-#: lib/ebay/data/errors.py:50
-msgid "Something went wrong, please try again later."
-msgstr ""
-
 #: lib/ebay/data/errors.py:52
+msgid "Something went wrong, please try again later."
+msgstr "Da ist etwas schief gelaufen. Bitte versuchen Sie es erneut."
+
+#: lib/ebay/data/errors.py:54
 #, python-format
 msgid "Fatal error (%(error_id)s)"
 msgstr ""
@@ -154,10 +160,10 @@ msgstr ""
 msgid "id is required"
 msgstr ""
 
-#: settings.py:234
+#: settings.py:244
 msgid "German"
-msgstr ""
+msgstr "Deutsch"
 
-#: settings.py:235
+#: settings.py:245
 msgid "English"
-msgstr ""
+msgstr "Englisch"
