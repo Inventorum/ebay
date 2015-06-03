@@ -37,3 +37,10 @@ class translation():
     def __exit__(self, exc_type, exc_val, exc_tb):
         django_translation.deactivate()
         return True
+
+def cdata(string):
+    """
+    :type string: unicode
+    :rtype: unicode
+    """
+    return "<![CDATA[{}]]>".format(string)
