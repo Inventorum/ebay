@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
+from BeautifulSoup import CData
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.ebay.lib.utils import int_or_none
@@ -135,7 +136,7 @@ class EbayFixedPriceItem(object):
         data = {
             'Title': self.title,
             'SKU': self.sku,
-            'Description': self.description,
+            'Description': str(CData(self.description)),
             'ListingDuration': self.listing_duration,
             'Country': self.country,
             'PostalCode': self.postal_code,

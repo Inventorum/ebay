@@ -252,7 +252,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             'ConditionID': 1000,
             'Country': 'DE',
             'Currency': 'EUR',
-            'Description': 'Some description',
+            'Description': '<![CDATA[Some description]]>',
             'DispatchTimeMax': 3,
             'ListingType': 'FixedPriceItem',
             'PostalCode': '13355',
