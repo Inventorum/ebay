@@ -100,11 +100,11 @@ class TestEbayInboundEvents(EbayAuthenticatedAPITestCase):
         item = EbayEventReturnedItem(
             item_id=123,
             transaction_id=456,
-            quantity=2,
-            amount='22.33'
+            refund_quantity=2,
+            refund_amount='22.33'
         )
         event = EbayEventReturned(order_id='123',
-                                  total_amount='123.44',
+                                  refund_amount='123.44',
                                   refund_type=EbayEventReturned.RefundType.EBAY,
                                   items=[item])
 

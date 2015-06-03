@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
-from inventorum.ebay.lib.core_api.models import CoreOrder
+from inventorum.ebay.lib.core_api.models import CoreOrder, CoreBasket
 from inventorum.ebay.tests.testcases import UnitTestCase
 
 
@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 class TestCoreOrder(UnitTestCase):
 
     def test_state_properties(self):
-        core_order = CoreOrder(id=1, state=(BinaryCoreOrderStates.DRAFT | BinaryCoreOrderStates.PENDING))
+        core_order = CoreOrder(id=1, state=(BinaryCoreOrderStates.DRAFT | BinaryCoreOrderStates.PENDING), basket=CoreBasket(items=[]))
 
         self.assertFalse(core_order.is_paid)
         self.assertFalse(core_order.is_shipped)

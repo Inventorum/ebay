@@ -5,7 +5,7 @@ import logging
 
 from inventorum.ebay.lib.core_api import CoreChannel
 from inventorum.ebay.lib.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
-    CoreProductDeltaDeserializer, CoreOrder
+    CoreProductDeltaDeserializer, CoreOrder, CoreDeltaReturn
 from inventorum.ebay.lib.core_api.pager import Pager
 from inventorum.util.django.middlewares import get_current_request_id
 import requests
@@ -364,11 +364,65 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
         :type data: dict
 
-        :returns: The inventorum order id
-        :rtype: int
+        :returns: The core order
+        :rtype: inventorum.ebay.lib.core_api.models.CoreOrder
 
         :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
         response = self.post('/api/orders/', data=data)
+        json = response.json()
+
+        serializer = CoreOrder.Serializer(data=json)
+        return serializer.build()
+
+    @property
+    def returns(self):
+        """
+        :rtype: CoreReturnsClient
+        """
+        return CoreReturnsClient(core_client=self)
+
+
+class CoreReturnsClient(object):
+
+    def __init__(self, core_client):
+        """
+        :type core_client: UserScopedCoreAPIClient
+        """
+        self.core_client = core_client
+
+    def create(self, order_id, data):
+        """
+        Tries to create a return with the given data
+
+        :type order_id: int
+        :type data: dict
+
+        :returns: The inventorum return id
+        :rtype: int
+
+        :raises requests.exceptions.RequestException
+                rest_framework.exceptions.ValidationError
+        """
+        response = self.core_client.post("/api/basket/{order_id}/items/return/".format(order_id=order_id), data=data)
         return response.json()["id"]
+
+    def get_paginated_delta(self, start_date, limit_per_page=100):
+        """
+        :type start_date: datetime.datetime
+        :type limit_per_page: int
+
+        :rtype: collections.Iterable[list[inventorum.ebay.lib.core_api.models.CoreDeltaReturn]]
+        :raises requests.exceptions.RequestError
+                rest_framework.exceptions.ValidationError
+        """
+        params = {
+            "channel": CoreChannel.EBAY,
+            "start_date": self.core_client._encode_datetime(start_date)
+        }
+
+        pager = self.core_client.paginated_get("/api/returns/delta/", limit_per_page=limit_per_page, params=params)
+        for page in pager.pages:
+            serializer = CoreDeltaReturn.Serializer(data=page.data, many=True)
+            yield serializer.build()

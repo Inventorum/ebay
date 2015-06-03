@@ -101,6 +101,7 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
 
     last_core_products_sync = DateTimeField(null=True, blank=True)
     last_core_orders_sync = DateTimeField(null=True, blank=True)
+    last_core_returns_sync = DateTimeField(null=True, blank=True)
     last_ebay_orders_sync = DateTimeField(null=True, blank=True)
 
     payment_method_paypal_enabled = BooleanField(default=False)

@@ -64,6 +64,11 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreAp
             self.assertIsNotNone(order.inv_id)
             self.assertIsNotNone(order.original_ebay_data)
 
+            self.assertEqual(order.line_items.count(), 1)
+
+            order_line_item = order.line_items.first()
+            self.assertIsNotNone(order_line_item.inv_id)
+
     @celery_test_case()
     @MockedTest.use_cassette("ebay_orders_sync_click_and_collect.yaml", record_mode="new_episodes", match_on=["body"])
     def test_ebay_orders_click_and_collect_sync(self):
