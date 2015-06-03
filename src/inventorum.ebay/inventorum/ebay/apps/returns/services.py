@@ -19,6 +19,10 @@ class EbayReturnService(object):
         self.return_model = return_model
 
     def send_ebay_return_event(self):
+        """
+        Notifies ebay about the return by sending an inbound EBAY.ORDER.RETURNED event.
+        When this method succeeds, the return coming from the core api is considered to be "synced" with ebay.
+        """
         assert not self.return_model.synced_with_ebay, "Return {} already synced with ebay".format(self.return_model)
 
         return_items_for_event = [EbayEventReturnedItem(item_id=return_item.order_line_item.orderable_item.ebay_item_id,

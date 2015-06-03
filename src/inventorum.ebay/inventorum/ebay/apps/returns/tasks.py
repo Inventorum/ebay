@@ -16,19 +16,28 @@ def periodic_core_returns_sync_task(self):
     """
     :type self: inventorum.util.celery.InventorumTask
     """
-    from inventorum.ebay.apps.returns.core_returns_sync import CoreReturnsSync
-
-    start_time = datetime.now()
-
     accounts = EbayAccountModel.objects.ebay_authenticated().all()
-    log.info("Starting core returns sync for {} accounts".format(accounts.count()))
+    log.info("Triggering periodic core returns sync for {} accounts".format(accounts.count()))
 
     for account in accounts:
-        log.info("Running core returns sync for account {}".format(account))
-        CoreReturnsSync(account).run()
+        core_returns_sync_task.delay(account.id, context=self.context)
+
+
+@inventorum_task()
+def core_returns_sync_task(self, account_id):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    """
+    from inventorum.ebay.apps.returns.core_returns_sync import CoreReturnsSync
+    start_time = datetime.now()
+
+    account = EbayAccountModel.objects.get(pk=account_id)
+    log.info("Starting core returns sync for %s", account)
+
+    CoreReturnsSync(account).run()
 
     run_time = datetime.now() - start_time
-    log.info("Finished core returns sync in {}".format(run_time))
+    log.info("Finished core returns sync for %s in %s", account, run_time)
 
 
 @inventorum_task()
