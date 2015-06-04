@@ -360,6 +360,56 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         return super(CoreProductDeltaDeserializer, self).create(validated_data)
 
 
+class CoreBasketItem(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        id = serializers.IntegerField()
+        name = serializers.CharField()
+        quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+    # / Serializer #######################
+
+    def __init__(self, id, name, quantity):
+        """
+        :type id: int
+        :type name: unicode
+        :type quantity: decimal.Decimal
+        """
+        self.id = id
+        self.name = name
+        self.quantity = quantity
+
+CoreBasketItem.Serializer.Meta.model = CoreBasketItem
+
+
+class CoreBasket(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        items = CoreBasketItem.Serializer(many=True)
+
+    # / Serializer #######################
+
+    def __init__(self, items):
+        """
+        :type items: list[CoreBasketItem]
+        """
+        self.items = items
+
+CoreBasket.Serializer.Meta.model = CoreBasket
+
+
 class CoreOrder(object):
 
     # Serializer #########################
@@ -372,15 +422,19 @@ class CoreOrder(object):
         id = serializers.IntegerField()
         state = serializers.IntegerField()
 
+        basket = CoreBasket.Serializer()
+
     # / Serializer #######################
 
-    def __init__(self, id, state):
+    def __init__(self, id, state, basket):
         """
         :type id: int
         :type state: int
+        :type basket: CoreBasket
         """
         self.id = id
         self.state = state
+        self.basket = basket
 
     @property
     def is_paid(self):
@@ -403,3 +457,68 @@ class CoreOrder(object):
         return self.state & BinaryCoreOrderStates.CANCELED == BinaryCoreOrderStates.CANCELED
 
 CoreOrder.Serializer.Meta.model = CoreOrder
+
+
+class CoreDeltaReturnItem(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        id = serializers.IntegerField()
+        basket_item = serializers.IntegerField(source="basket_item_id")
+        name = serializers.CharField()
+        quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
+        amount = MoneyField()
+
+    # / Serializer #######################
+
+    def __init__(self, id, basket_item_id, name, quantity, amount):
+        """
+        :type id: int
+        :type basket_item_id: int
+        :type name: unicode
+        :type quantity: decimal.Decimal
+        :type amount: decimal.Decimal
+        """
+        self.id = id
+        self.basket_item_id = basket_item_id
+        self.name = name
+        self.quantity = quantity
+        self.amount = amount
+
+CoreDeltaReturnItem.Serializer.Meta.model = CoreDeltaReturnItem
+
+
+class CoreDeltaReturn(object):
+
+    # Serializer #########################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        id = serializers.IntegerField()
+        order = serializers.IntegerField(source="order_id")
+        total_amount = MoneyField()
+        items = CoreDeltaReturnItem.Serializer(many=True)
+
+    # / Serializer #######################
+
+    def __init__(self, id, order_id, total_amount, items):
+        """
+        :type id: int
+        :type order_id: int
+        :type total_amount: decimal.Decimal
+        :type items: list[CoreDeltaReturnItem]
+        """
+        self.id = id
+        self.order_id = order_id
+        self.total_amount = total_amount
+        self.items = items
+
+CoreDeltaReturn.Serializer.Meta.model = CoreDeltaReturn

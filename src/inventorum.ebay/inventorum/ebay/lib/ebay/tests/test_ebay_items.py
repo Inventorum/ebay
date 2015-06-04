@@ -25,7 +25,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         return EbayFixedPriceItem(
             sku="test_321",
             title="Inventorum iPad Stand",
-            description="Stand for iPad from Inventorum for your POS Shop",
+            description="<![CDATA[Stand for iPad from Inventorum for your POS Shop]]>",
             listing_duration="Days_120",
             country="DE",
             postal_code="13355",
@@ -119,3 +119,17 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         response = service.unpublish(response.item_id)
 
         self.assertTrue(response.end_time)
+
+
+    @EbayTest.use_cassette("ebay_publish_ipad_stand_correct.yaml")
+    def test_error_message(self):
+        item = self._build_correct_item()
+        service = EbayItems(self.ebay_token)
+
+        with self.assertRaises(EbayConnectionException) as e:
+            response = service.publish(item)
+
+        self.assertTrue(e.exception.ebay_message)
+        self.assertTrue(e.exception.serialized_errors[0]['parameters'])
+        params = e.exception.serialized_errors[0]['parameters']
+        self.assertTrue(params[0].startswith('<div>'), 'Does not starts with <div>: %s' % params[0])

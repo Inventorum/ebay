@@ -25,11 +25,19 @@ class CoreOrderService(object):
         """
         :type order: inventorum.ebay.apps.orders.models.OrderModel
         """
-        data = OrderModelCoreAPIDataSerializer(order).data
-        inv_id = self.account.core_api.create_order(data)
+        assert order.line_items.count() == 1, "Core order creation for combined ebay orders is not supported"
 
-        order.inv_id = inv_id
+        data = OrderModelCoreAPIDataSerializer(order).data
+        core_order = self.account.core_api.create_order(data)
+
+        order.inv_id = core_order.id
         order.save()
+
+        order_line_item = order.line_items.first()
+        core_order_line_item = core_order.basket.items[0]
+
+        order_line_item.inv_id = core_order_line_item.id
+        order_line_item.save()
 
 
 class EbayOrderStatusUpdateException(Exception):
@@ -64,7 +72,7 @@ class EbayOrderStatusUpdateService(object):
         inbound_events = EbayInboundEvents(self.account.token.ebay_object)
 
         if event_type == EbayEventType.READY_FOR_PICKUP and not self.order.ebay_status.is_shipped:
-            event = EbayEventReadyForPickup(order_id=self.order.ebay_id)
+            event = EbayEventReadyForPickup(order_id=self.order.ebay_id, pickup_id=self.order.pickup_code)
             inbound_events.publish(event, raise_exceptions=True)
             # update succeeded => update ebay state
             self.order.ebay_status.is_shipped = True

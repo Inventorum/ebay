@@ -5,11 +5,37 @@ from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 from inventorum.ebay.apps.orders.models import OrderFactory, OrderStatusModel
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 from inventorum.ebay.apps.shipping.models import ShippingServiceModel
+from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceConfigurationFactory
 from inventorum.ebay.lib.ebay.data import CompleteStatusCodeType
 from inventorum.ebay.tests.testcases import UnitTestCase
 
 
 log = logging.getLogger(__name__)
+
+
+class TestOrderModel(UnitTestCase):
+
+    def test_ensures_unique_pickup_code_for_click_and_collect_orders(self):
+        account = EbayAccountFactory.create()
+
+        click_and_collect = ShippingServiceConfigurationFactory\
+            .create(service=ShippingServiceModel.get_click_and_collect_service(country=account.country))
+
+        order = OrderFactory.create(account=account, ebay_id="1234",
+                                    ebay_complete_status=CompleteStatusCodeType.Complete,
+                                    selected_shipping=click_and_collect)
+
+        self.assertPrecondition(order.is_click_and_collect, True)
+
+        self.assertIsNotNone(order.pickup_code)
+        self.assertTrue(order.pickup_code.isdigit())
+        pickup_code = order.pickup_code
+
+        # pickup code should not change
+        order = order.reload()
+        order.save()
+
+        self.assertEqual(order.pickup_code, pickup_code)
 
 
 class TestOrderFactory(UnitTestCase):

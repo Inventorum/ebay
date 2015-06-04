@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
+from BeautifulSoup import CData
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.ebay.lib.utils import int_or_none
@@ -135,7 +136,7 @@ class EbayFixedPriceItem(object):
         data = {
             'Title': self.title,
             'SKU': self.sku,
-            'Description': self.description,
+            'Description': str(CData(self.description)),
             'ListingDuration': self.listing_duration,
             'Country': self.country,
             'PostalCode': self.postal_code,
@@ -218,10 +219,11 @@ class EbayFixedPriceItem(object):
 
 
 class EbayAddItemResponse(object):
-    def __init__(self, item_id, start_time, end_time):
+    def __init__(self, item_id, start_time, end_time, message=None):
         self.item_id = item_id
         self.start_time = start_time
         self.end_time = end_time
+        self.message = message
 
     @classmethod
     def create_from_data(cls, data):
@@ -231,6 +233,7 @@ class EbayAddItemResponse(object):
 
 class EbayAddItemResponseDeserializer(POPOSerializer):
     ItemID = fields.CharField(source='item_id')
+    Message = fields.CharField(source='message', required=False)
     StartTime = fields.DateTimeField(source='start_time')
     EndTime = fields.DateTimeField(source='end_time')
 

@@ -33,9 +33,11 @@ class EbayConnectionException(EbayException):
         self.message = message
         self.response = response
         self.errors = None
+        self.ebay_message = None
 
         if self.response is not None:
             self.errors = [EbayError.create_from_data(e) for e in self.get_errors_list()]
+            self.ebay_message = self.response.dict().get('Message', None)
 
     def get_errors_list(self):
         errors = []

@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'inventorum.ebay.apps.categories',
     'inventorum.ebay.apps.notifications',
     'inventorum.ebay.apps.orders',
+    'inventorum.ebay.apps.returns',
     'inventorum.ebay.apps.products',
     'inventorum.ebay.apps.shipping',
     'inventorum.ebay.lib.core_api',
@@ -114,6 +115,13 @@ CELERYBEAT_SCHEDULE = {
             "context": get_anonymous_task_execution_context()
         }
     },
+    'periodic_core_returns_sync_task': {
+        'task': 'inventorum.ebay.apps.returns.tasks.periodic_core_returns_sync_task',
+        'schedule': timedelta(minutes=1),
+        'kwargs': {
+            "context": get_anonymous_task_execution_context()
+        }
+    },
     'periodic_core_products_sync_task': {
         'task': 'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task',
         'schedule': timedelta(seconds=30),
@@ -150,15 +158,16 @@ CELERY_ROUTES = {
     'inventorum.ebay.apps.categories.tasks.ebay_category_specifics_sync_task': {'queue': 'fetching'},
     'inventorum.ebay.apps.categories.tasks.ebay_category_features_sync_task': {'queue': 'fetching'},
     'inventorum.ebay.apps.categories.tasks.ebay_categories_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_category_specifics_batch_task': {'queue': 'fetching'},
 
     # Syncing
     'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task': {'queue': 'syncing'},
     'inventorum.ebay.apps.orders.tasks.ebay_orders_sync': {'queue': 'syncing'},
     'inventorum.ebay.apps.orders.tasks.periodic_core_orders_sync_task': {'queue': 'syncing'},
     'inventorum.ebay.apps.orders.tasks.core_order_creation_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.returns.tasks.periodic_core_returns_sync_task': {'queue': 'syncing'},
     'inventorum.ebay.apps.orders.tasks.click_and_collect_status_update_with_event_task': {'queue': 'syncing'},
     'inventorum.ebay.apps.orders.tasks.ebay_order_status_update_task': {'queue': 'syncing'},
-
     'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task': {'queue': 'syncing'},
 
     # Publishing

@@ -51,7 +51,7 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
 
     class Meta:
         model = EbayProductModel
-        fields = ('id', 'category', 'is_published', 'listing_url', 'specific_values', 'is_click_and_collect',
+        fields = ('id', 'inv_id', 'category', 'is_published', 'listing_url', 'specific_values', 'is_click_and_collect',
                   'shipping_services')
 
     category = RelatedModelByIdField(serializer=EbayProductCategorySerializer, allow_null=True, required=False)

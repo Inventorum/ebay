@@ -1,6 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 
+import logging
+
 from django.conf import settings
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
@@ -10,6 +12,8 @@ from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
 from inventorum.ebay.lib.ebay.info import EbayInfo
 from requests.exceptions import HTTPError
+
+log = logging.getLogger(__name__)
 
 
 class AuthorizationServiceException(Exception):
@@ -27,6 +31,7 @@ class AuthorizationService(object):
         try:
             return self.user.core_api.get_account_info()
         except HTTPError as e:
+            log.exception('Could not get account info from API')
             raise AuthorizationServiceException('Could not get account info from API')
 
     def assign_token_from_session_id(self, session_id):

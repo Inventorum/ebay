@@ -24,7 +24,7 @@ class ShippingServiceConfigurationSerializer(serializers.ModelSerializer):
 
     external_id = serializers.CharField(source="service.external_id", read_only=True)
     cost = serializers.DecimalField(max_digits=10, decimal_places=2)
-    additional_cost = serializers.DecimalField(max_digits=10, decimal_places=2)
+    additional_cost = serializers.DecimalField(required=False, max_digits=10, decimal_places=2)
 
 
 class ShippingServiceConfigurableSerializer(serializers.Serializer):
