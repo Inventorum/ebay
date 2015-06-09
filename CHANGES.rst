@@ -4,6 +4,10 @@ CHANGES
 
 develop
 =======
+Fix
+...
+- Add missing migration for returns
+
 2015-06-05 0.1.2
 ================
 
