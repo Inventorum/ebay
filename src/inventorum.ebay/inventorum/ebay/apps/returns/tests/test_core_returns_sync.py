@@ -76,11 +76,11 @@ class IntegrationTestPeriodicCoreReturnsSync(EbayAuthenticatedAPITestCase, Shipp
         self.assertEqual(event.payload, {"ebayOrderId": ebay_order_click_and_collect.ebay_id,
                                          "notifierRefundNote": "",
                                          "notifierRefundType": "EBAY",
-                                         "notifierTotalRefundAmount": return_model.refund_amount,
+                                         "notifierTotalRefundAmount": str(return_model.refund_amount),
                                          "notifierTotalRefundCurrency": "EUR",
                                          "refundLineItems": [{"eBayItemId": ebay_order_click_and_collect_line_item.orderable_item.ebay_item_id,
                                                               "eBayTransactionId": ebay_order_click_and_collect_line_item.transaction_id,
-                                                              "notifierRefundAmount": return_item.refund_amount,
+                                                              "notifierRefundAmount": str(return_item.refund_amount),
                                                               "notifierRefundCurrency": "EUR",
                                                               "notifierRefundQuantity": return_item.refund_quantity}]})
 
