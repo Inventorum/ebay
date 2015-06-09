@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- Updated ebay urls to accept new host
 
 2015-06-09 0.1.4
 ================
