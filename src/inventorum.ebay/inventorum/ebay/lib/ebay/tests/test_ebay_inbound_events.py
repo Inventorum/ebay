@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from decimal import Decimal
 
 import json
 from datetime import datetime
@@ -98,13 +99,13 @@ class TestEbayInboundEvents(EbayAuthenticatedAPITestCase):
         api = EbayInboundEvents(self.ebay_token)
 
         item = EbayEventReturnedItem(
-            item_id=123,
-            transaction_id=456,
+            item_id="123",
+            transaction_id="456",
             refund_quantity=2,
-            refund_amount='22.33'
+            refund_amount=Decimal('22.33')
         )
         event = EbayEventReturned(order_id='123',
-                                  refund_amount='123.44',
+                                  refund_amount=Decimal('123.44'),
                                   refund_type=EbayEventReturned.RefundType.EBAY,
                                   items=[item])
 
