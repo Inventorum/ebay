@@ -99,6 +99,13 @@ class EbayEventCanceled(EbayEventBase):
 
 class EbayEventReturnedItem(object):
     def __init__(self, item_id, transaction_id, refund_quantity, refund_amount, currency='EUR'):
+        """
+        :type item_id: unicode
+        :type transaction_id: unicode
+        :type refund_quantity: int
+        :type refund_amount: int
+        :type currency: unicode
+        """
         self.item_id = item_id
         self.transaction_id = transaction_id
         self.refund_quantity = refund_quantity
@@ -111,7 +118,7 @@ class EbayEventReturnedItem(object):
             'eBayItemId': self.item_id,
             'eBayTransactionId': self.transaction_id,
             'notifierRefundQuantity': self.refund_quantity,
-            'notifierRefundAmount': self.refund_amount,
+            'notifierRefundAmount': str(self.refund_amount),
             'notifierRefundCurrency': self.currency,
         }
 
@@ -126,6 +133,16 @@ class EbayEventReturned(EbayEventBase):
 
     def __init__(self, order_id, refund_amount, refund_type, items, refund_id=None, refund_note=None, currency='EUR',
                  seller_id=None):
+        """
+        :type order_id: unicode
+        :type refund_amount: decimal.Decimal
+        :type refund_type:
+        :type items: list[EbayEventReturnedItem]
+        :type refund_id: unicode
+        :type refund_note: unicode
+        :type currency: unicode
+        :type seller_id: unicode
+        """
         self.refund_amount = refund_amount
         self.currency = currency
         self.refund_type = refund_type
@@ -137,7 +154,7 @@ class EbayEventReturned(EbayEventBase):
     @property
     def payload(self):
         payload = super(EbayEventReturned, self).payload
-        payload['notifierTotalRefundAmount'] = self.refund_amount
+        payload['notifierTotalRefundAmount'] = str(self.refund_amount)
         payload['notifierTotalRefundCurrency'] = self.currency
         payload['notifierRefundType'] = self.refund_type
         payload['refundLineItems'] = [i.payload for i in self.items]

@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- Fix "Decimal is not JSON serializable" error
 
 2015-06-05 0.1.3
 ================
