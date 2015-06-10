@@ -4,6 +4,8 @@ CHANGES
 
 develop
 =======
+- create ``production.conf`` and ``staging.conf`` depending on buildouts
+  ``${config:environment}``, which is properly set in packager
 
 2015-06-09 0.1.5
 ================
