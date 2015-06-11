@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- INV-4689 Do not send optional location attributes as "None"
 
 2015-06-09 0.1.4
 ================
