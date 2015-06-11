@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- Adapt core image serializer to the new image format
 
 2015-06-09 0.1.4
 ================

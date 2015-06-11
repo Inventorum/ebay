@@ -197,8 +197,8 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
         last_image = images.last()
         self.assertEqual(last_image.inv_image_id, 2918)
-        self.assertTrue(last_image.url.startswith('https://app.inventorum.net/'),
-                        "Image does not starts with https:// (%s)" % last_image.url)
+        self.assertTrue(last_image.urls.ipad_retina.startswith('https://app.inventorum.net/'),
+                        "Image does not start with https:// (%s)" % last_image.urls.ipad_retina)
 
         shipping_services = last_item.shipping.all()
         self.assertEqual(shipping_services.count(), 2)

@@ -64,7 +64,7 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(len(core_product.images), 1)
         image = core_product.images[0]
         self.assertEqual(image.id, 2914)
-        self.assertTrue(image.url.endswith(
+        self.assertTrue(image.urls.ipad_retina.endswith(
             "/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG"))
 
     @CoreApiTest.use_cassette("get_product_with_ebay_meta.yaml")
