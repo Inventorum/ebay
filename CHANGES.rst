@@ -5,6 +5,12 @@ CHANGES
 develop
 =======
 - INV-4689 Do not send optional location attributes as "None"
+- create ``production.conf`` and ``staging.conf`` depending on buildouts
+  ``${config:environment}``, which is properly set in packager
+
+2015-06-09 0.1.5
+================
+- Updated ebay urls to accept new host
 
 2015-06-09 0.1.4
 ================

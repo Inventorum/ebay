@@ -46,17 +46,22 @@ class EbayAuthentication(EbayTrading):
                 "DeviceType": "Platform",
                 'DeliveryURLDetails': [
                     {
-                        'DeliveryURL': 'https://app.inventorum.net/api/channel/ebay/notifications/',
+                        'DeliveryURL': 'https://ebay-notifications.inventorum.net/api/channel/ebay/notifications/',
                         'DeliveryURLName': 'sandbox',
                         'Status': 'Enable'
                     },
                     {
-                        'DeliveryURL': 'https://app.inventorum.com/api/channel/ebay/notifications/',
+                        'DeliveryURL': 'https://dev-ebay-notifications.inventorum.net/api/channel/ebay/notifications/',
+                        'DeliveryURLName': 'sandbox-dev',
+                        'Status': 'Enable'
+                    },
+                    {
+                        'DeliveryURL': 'https://ebay-notifications.inventorum.com/api/channel/ebay/notifications/',
                         'DeliveryURLName': 'live',
                         'Status': 'Enable'
                     },
                     {
-                        'DeliveryURL': 'https://app.inventorum.com/v1/ebay/platform-notifications/',
+                        'DeliveryURL': 'https://ebay-notifications.inventorum.com/v1/ebay/platform-notifications/',
                         'DeliveryURLName': 'oldlive',
                         'Status': 'Enable'
                     },
