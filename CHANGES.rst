@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- INV-4689 Do not send optional location attributes as "None"
 - create ``production.conf`` and ``staging.conf`` depending on buildouts
   ``${config:environment}``, which is properly set in packager
 
