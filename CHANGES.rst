@@ -4,7 +4,7 @@ CHANGES
 
 develop
 =======
-2015-06-16 0.1.6
+2015-06-16 0.1.6 
 ================
 - add ``rc`` environment for release candidate environment
 - add db configs for ``aero.inventorum.net``
