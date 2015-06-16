@@ -4,6 +4,10 @@ CHANGES
 
 develop
 =======
+2015-06-16 0.1.6
+================
+- add ``rc`` environment for release candidate environment
+- add db configs for ``aero.inventorum.net``
 - INV-4689 Do not send optional location attributes as "None"
 - create ``production.conf`` and ``staging.conf`` depending on buildouts
   ``${config:environment}``, which is properly set in packager
