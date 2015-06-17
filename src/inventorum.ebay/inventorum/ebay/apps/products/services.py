@@ -99,7 +99,10 @@ class PublishingPreparationService(object):
         self._validate_product_existence_in_core_api()
 
         if self.product.is_published:
-            raise PublishingValidationException(ugettext('Product was already published'))
+            raise PublishingValidationException(ugettext('Product is already published'))
+
+        if self.product.is_being_published:
+            raise PublishingValidationException(ugettext("Product is already being published"))
 
         if not self.core_account.billing_address:
             raise PublishingValidationException(ugettext('To publish product we need your billing address'))
@@ -274,8 +277,8 @@ class PublishingUnpublishingService(object):
         :type item: EbayItemModel
         :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
         """
-        self.user = user
         self.item = item
+        self.user = user
 
     @property
     def product(self):
@@ -299,6 +302,7 @@ class PublishingUnpublishingService(object):
 
 
 class PublishingService(PublishingUnpublishingService):
+
     def initialize_publish_attempt(self):
         """
         :raises PublishingSendStateFailedException

@@ -1,8 +1,11 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from django.db import transaction
+from django.db.transaction import atomic
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.tasks import schedule_ebay_item_publish, schedule_ebay_item_unpublish
+from inventorum.ebay.lib.ebay import Ebay
 from requests.exceptions import RequestException
 
 from rest_framework import exceptions, mixins
@@ -12,7 +15,8 @@ from rest_framework import status
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.serializers import EbayProductSerializer, BatchPublishParametersSerializer
 from inventorum.ebay.apps.products.services import PublishingValidationException, \
-    PublishingCouldNotGetDataFromCoreAPI, PublishingPreparationService
+    PublishingCouldNotGetDataFromCoreAPI, PublishingPreparationService, PublishingService, \
+    PublishingSendStateFailedException
 from inventorum.ebay.lib.rest.exceptions import ApiException, BadRequest, NotFound
 
 from inventorum.ebay.lib.rest.resources import APIResource
@@ -56,18 +60,33 @@ class ProductResourceMixin(object):
         product, c = EbayProductModel.objects.get_or_create(inv_id=inv_id, account=user.account)
         return product
 
-    def _publish_product(self, product, request):
-        preparation_service = PublishingPreparationService(product, user=request.user)
-        try:
-            preparation_service.validate()
-        except PublishingValidationException as e:
-            raise exceptions.ValidationError(e.message)
-        except PublishingCouldNotGetDataFromCoreAPI as e:
-            if e.response.status_code == status.HTTP_404_NOT_FOUND:
-                raise exceptions.NotFound
-            raise ApiException(e.response.data, key="core.api.error", status_code=e.response.status_code)
+    def _publish_product(self, product, user):
+        with transaction.atomic():
+            # step 1: obtain database lock to avoid double publishing
+            product = EbayProductModel.objects.select_for_update().get(pk=product.pk)
 
-        item = preparation_service.create_ebay_item()
+            # step 2: validate and prepare publishing attempt
+            preparation_service = PublishingPreparationService(product, user=user)
+            try:
+                preparation_service.validate()
+            except PublishingValidationException as e:
+                raise exceptions.ValidationError(e.message)
+            except PublishingCouldNotGetDataFromCoreAPI as e:
+                if e.response.status_code == status.HTTP_404_NOT_FOUND:
+                    raise exceptions.NotFound
+                raise ApiException(e.response.data, key="core.api.error")
+
+            item = preparation_service.create_ebay_item()
+
+            # step 3: initialize publishing attempt
+            publishing_service = PublishingService(item, user=user)
+            try:
+                publishing_service.initialize_publish_attempt()
+            except PublishingSendStateFailedException as e:
+                raise ApiException(ugettext("Could not initialize publishing attempt"), key="core.api.error")
+
+        # step 4: schedule async ebay item publish
+        # (must be done outside of the transaction to avoid racing conditions with celery)
         schedule_ebay_item_publish(ebay_item_id=item.id, context=self.get_task_execution_context())
 
 
@@ -90,7 +109,7 @@ class PublishResource(APIResource, ProductResourceMixin):
     def post(self, request, inv_product_id):
         product = self.get_or_create_product(inv_product_id, request.user)
 
-        self._publish_product(product, request)
+        self._publish_product(product, user=request.user)
 
         serializer = self.get_serializer(product)
         return Response(data=serializer.data)
@@ -113,7 +132,7 @@ class BatchPublishResource(APIResource, ProductResourceMixin):
         errors = {}
         for product in products:
             try:
-                self._publish_product(product, request)
+                self._publish_product(product, user=request.user)
             except exceptions.NotFound as e:
                 errors[product.inv_id] = "Product %(id)s could not be found" % {'id': product.pk}
             except ApiException as e:

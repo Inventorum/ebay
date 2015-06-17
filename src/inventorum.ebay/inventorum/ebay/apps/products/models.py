@@ -58,6 +58,10 @@ class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
         return self.published_item is not None
 
     @property
+    def is_being_published(self):
+        return self.items.filter(publishing_status=EbayItemPublishingStatus.IN_PROGRESS).exists()
+
+    @property
     def published_item(self):
         try:
             return self.items.get(publishing_status=EbayItemPublishingStatus.PUBLISHED)

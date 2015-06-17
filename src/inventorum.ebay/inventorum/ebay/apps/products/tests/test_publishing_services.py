@@ -73,7 +73,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
-        self.assertEqual(e.exception.message, 'Product was already published')
+        self.assertEqual(e.exception.message, 'Product is already published')
 
         item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
         item.save()

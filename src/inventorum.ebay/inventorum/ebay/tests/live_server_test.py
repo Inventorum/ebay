@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
+from collections import defaultdict
 import json
 
 import os
@@ -80,7 +81,23 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 class ThreadedCoreAPIFake(threading.Thread):
-    _get_responses = dict()
+    GET = "GET"
+    POST = "POST"
+
+    class FakeResponse(object):
+        def __init__(self, status, body=None):
+            self.status = status
+            self.body = body
+
+        @property
+        def has_body(self):
+            return self.body is not None
+
+        @property
+        def json(self):
+            return json.dumps(self.body)
+
+    _responses = defaultdict(dict)
 
     def __init__(self, host, port):
         super(ThreadedCoreAPIFake, self).__init__()
@@ -91,30 +108,44 @@ class ThreadedCoreAPIFake(threading.Thread):
         class CoreAPIFake(BaseHTTPRequestHandler):
 
             def do_GET(s):
+                s._handle(self.GET)
+
+            def do_POST(s):
+                s._handle(self.POST)
+
+            def _handle(s, method):
                 path = s.path
-                if path not in self._get_responses:
-                    log.error("Unexpected GET: %s" % path)
+                if path not in self._responses[method]:
+                    log.error("Unexpected %s: %s" % (method, path))
                     s.send_response(500)
                     return
 
-                response = self._get_responses[path]
+                response = self._responses[method][path]
 
                 sleep(1)
 
-                s.send_response(200)
+                s.send_response(response.status)
                 s.send_header("Content-type", "application/json")
                 s.end_headers()
-                s.wfile.write(response)
+                if response.has_body:
+                    s.wfile.write(response.json)
                 s.wfile.close()
 
         self.server = ThreadedHTTPServer((host, port), CoreAPIFake)
 
-    def whenGET(self, path, respond_with):
+    def whenGET(self, path, status, body=None):
         """
         :type path: unicode
         :type respond_with: dict
         """
-        self._get_responses[path] = json.dumps(respond_with)
+        self._responses[self.GET][path] = self.FakeResponse(status, body)
+
+    def whenPOST(self, path, status, body=None):
+        """
+        :type path: unicode
+        :type respond_with: dict
+        """
+        self._responses[self.POST][path] = self.FakeResponse(status, body)
 
     def run(self, daemon=False):
         log.info('Starting core api fake server on %s:%s', self.host, self.port)
