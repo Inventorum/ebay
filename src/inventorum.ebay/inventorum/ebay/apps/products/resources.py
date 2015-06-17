@@ -56,7 +56,6 @@ class ProductResourceMixin(object):
         product, c = EbayProductModel.objects.get_or_create(inv_id=inv_id, account=user.account)
         return product
 
-
     def _publish_product(self, product, request):
         preparation_service = PublishingPreparationService(product, user=request.user)
         try:

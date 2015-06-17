@@ -7,7 +7,6 @@ import mock
 from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.tests import StagingTestAccount, ApiTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from inventorum.util.tests import celery_test_case
 
 log = logging.getLogger(__name__)
 
