@@ -85,12 +85,12 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
 
         image_1 = core_product.images[0]
         self.assertEqual(image_1.id, 2915)
-        self.assertTrue(image_1.url.endswith(
+        self.assertTrue(image_1.urls.ipad_retina.endswith(
             "/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad_retina.JPEG"))
 
         image_2 = core_product.images[1]
         self.assertEqual(image_2.id, 2916)
-        self.assertTrue(image_2.url.endswith(
+        self.assertTrue(image_2.urls.ipad_retina.endswith(
             "/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad_retina.JPEG"))
 
     @CoreApiTest.use_cassette("get_account_info.yaml")
@@ -127,15 +127,15 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(product.name, "Jeans Valid Attrs")
         self.assertEqual(product.description, "Photo of jeans for sell.")
         self.assertEqual(product.gross_price, D("0.00"))
-        self.assertEqual(product.quantity, D("80"))
+        self.assertEqual(product.quantity, D("3"))
 
         self.assertEqual(product.variation_count, 2)
         self.assertEqual(len(product.variations), 2)
 
         first_variation = product.variations[0]
-        self.assertEqual(first_variation.name, "Red, 22")
+        self.assertEqual(first_variation.name, "Jeans Valid Attrs, Red, 22, Denim")
         self.assertEqual(first_variation.gross_price, D("150"))
-        self.assertEqual(first_variation.quantity, D("30"))
+        self.assertEqual(first_variation.quantity, D("1"))
 
         self.assertEqual(len(first_variation.attributes), 3)
         self.assertEqual(first_variation.attributes[0].key, "color")
@@ -148,12 +148,12 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(first_variation.attributes[2].values, ['22'])
 
         self.assertEqual(len(first_variation.images), 1)
-        self.assertTrue(first_variation.images[0].url.startswith("https://app.inventorum.net/uploads/"))
+        self.assertTrue(first_variation.images[0].urls.ipad_retina.startswith("https://dev-app.inventorum.net/uploads/"))
 
         second_variation = product.variations[1]
-        self.assertEqual(second_variation.name, "Blue, 50")
+        self.assertEqual(second_variation.name, "Jeans Valid Attrs, Blue, 50, Leather")
         self.assertEqual(second_variation.gross_price, D("130"))
-        self.assertEqual(second_variation.quantity, D("50"))
+        self.assertEqual(second_variation.quantity, D("2"))
 
         self.assertEqual(len(second_variation.attributes), 3)
         self.assertEqual(second_variation.attributes[0].key, "color")
@@ -166,7 +166,7 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(second_variation.attributes[2].values, ['50'])
 
         self.assertEqual(len(second_variation.images), 1)
-        self.assertTrue(second_variation.images[0].url.startswith("https://app.inventorum.net/uploads/"))
+        self.assertTrue(second_variation.images[0].urls.ipad_retina.startswith("https://dev-app.inventorum.net/uploads/"))
 
 
 class UnitTestUserScopedCoreAPIClient(UnitTestCase):
