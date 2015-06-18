@@ -209,7 +209,7 @@ class PublishingPreparationService(object):
         for image in self.core_product.images:
             EbayItemImageModel.objects.create(
                 inv_image_id=image.id,
-                url=image.url,
+                url=image.urls.ipad_retina,
                 item=item
             )
 
@@ -252,7 +252,7 @@ class PublishingPreparationService(object):
             for image in variation.images:
                 EbayItemImageModel.objects.create(
                     inv_image_id=image.id,
-                    url=image.url,
+                    url=image.urls.ipad_retina,
                     variation=variation_obj
                 )
             for attribute in variation.attributes:

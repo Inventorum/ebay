@@ -6,8 +6,8 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
-      X-Api-Version: [9]
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.7-dev']
+      X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
     method: GET
@@ -20,13 +20,13 @@ interactions:
       date: ['Sat, 25 Apr 2015 13:56:09 GMT']
       location: ['http://app.intern.inventorum.net/api/products/1225145633542203515/']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Ym0Yz:FS5POQeB1K4W4ttKxoIJpeQbb9w"; Domain=inventorum.net;
-          expires=Sat, 25-Apr-2015 15:56:09 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Z5UOP:HexAZwuq46n_zXH1CHD5HqWH2No"; Domain=app.intern.inventorum.net;
+          expires=Thu, 18-Jun-2015 09:37:45 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: [Cookie]
       x-inv-account: [Anonymous]
       x-inv-user: [Anonymous]
-      x-rid: ['3277918258551383540']
+      x-rid: ['3085107899504584180']
     status: {code: 301, message: MOVED PERMANENTLY}
 - request:
     body: null
@@ -35,9 +35,9 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      Cookie: ['sn="e30:1Ym0Yz:FS5POQeB1K4W4ttKxoIJpeQbb9w"']
-      User-Agent: [!!python/unicode 'inv-ebay/0.0.1-dev']
-      X-Api-Version: [9]
+      Cookie: ['sn="e30:1Z5UOP:HexAZwuq46n_zXH1CHD5HqWH2No"']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.7-dev']
+      X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
     method: GET
@@ -53,37 +53,34 @@ interactions:
         "thumb": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_thumb.JPEG"},
         "variation_count": 0, "variations": [], "average_purchase_price": "1E+3",
         "description": "GIANT FastRoad CoMax Carbon", "product_code": "987654321",
-        "ean": "75678164125", "categories": [], "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad.JPEG",
-        "id": 2915, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad_retina.JPEG",
+        "ean": "75678164125", "categories": [], "images": [], "custom_sale": false,
+        "shipping_services": [], "is_favourite": false, "brand": "", "supplier": "",
+        "meta": {"shop": {"images": [], "price": "1260.4957983193", "gross_price":
+        "1499.99", "id": 733, "channel": 5, "name": "", "description": ""}, "ebay":
+        {"images": [{"new": false, "type": 0, "id": 2915, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_thumb.JPEG"}],
-        "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
-        "", "supplier": "", "meta": {"shop": {"images": [], "price": "1260.4957983193",
-        "gross_price": "1499.99", "id": 733, "channel": 5, "name": "", "description":
-        ""}, "ebay": {"images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad.JPEG",
-        "id": 2915, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_ipad_retina.JPEG",
-        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_thumb.JPEG"},
-        {"ipad": "https://app.inventorum.net/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad.JPEG",
-        "id": 2916, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/565b/9fd7/fb15/0563/2747/a01d/b8f8/565b9fd7fb1505632747a01db8f823c6_thumb.JPEG"}},
+        {"new": false, "type": 0, "id": 2916, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_thumb.JPEG"}],
+        "thumb": "https://app.inventorum.net/uploads/img-hash/ede0/531d/fdd7/b267/d6bc/1662/d548/ede0531dfdd7b267d6bc1662d5483562_thumb.JPEG"}}],
         "price": "1344.5294117647", "gross_price": "1599.99", "id": 732, "channel":
         4, "name": "eBay: FastRoad CoMax", "description": "eBay: GIANT FastRoad CoMax
         Carbon"}}, "is_giftcard": false, "gross_price": "1499.99", "purchase_price":
-        "1E+3"}'}
+        "1E+3", "states": [], "attributes_str": ""}'}
     headers:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Sat, 25 Apr 2015 13:56:09 GMT']
+      date: ['Thu, 18 Jun 2015 07:37:45 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1Ym0Yz:FS5POQeB1K4W4ttKxoIJpeQbb9w"; Domain=app.intern.inventorum.net;
-          expires=Sat, 25-Apr-2015 15:56:09 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Z5UOP:HexAZwuq46n_zXH1CHD5HqWH2No"; Domain=app.intern.inventorum.net;
+          expires=Thu, 18-Jun-2015 09:37:45 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3277918258551383540']
+      x-rid: ['3315635905430611444']
     status: {code: 200, message: OK}
 version: 1

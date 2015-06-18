@@ -53,10 +53,10 @@ interactions:
         "thumb": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"},
         "variation_count": 0, "variations": [], "average_purchase_price": "1500.0000000000",
         "description": "GIANT XtC 27.5\" Advanced Carbon", "product_code": "123456789",
-        "ean": "75678164125", "categories": [], "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad.JPEG",
-        "id": 2914, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG",
+        "ean": "75678164125", "categories": [], "images": [{"new": false, "type": 0, "id": 2914, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"}],
+        "thumb": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"}}],
         "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
         "", "supplier": "", "meta": {}, "is_giftcard": false, "gross_price": "1999.99",
         "purchase_price": "1500.0000000000"}'}

@@ -53,10 +53,10 @@ interactions:
         "thumb": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb.JPEG"},
         "variation_count": 0, "variations": [], "average_purchase_price": "0E-10",
         "description": "Some description", "product_code": "", "ean": null, "categories":
-        [], "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad.JPEG",
-        "id": 2918, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG",
+        [], "images": [{"new": false, "type": 0, "id": 2918, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb.JPEG"}],
+        "thumb": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_thumb.JPEG"}}],
         "custom_sale": false, "shipping_services": [{"id": "DE_HermesPaket", "description":
         "Hermes Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
         "Group3MaxFlatShippingCost", "carrier": "Hermes", "category": "[STANDARD]",
