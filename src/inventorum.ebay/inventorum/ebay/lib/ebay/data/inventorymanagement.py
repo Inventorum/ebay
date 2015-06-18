@@ -34,14 +34,11 @@ class EbayDay(object):
 
 
 class EbayLocation(object):
-    def __init__(self, location_id, address1, address2, city, country, days, latitude, longitude, name, phone,
-                 pickup_instruction,
-                 postal_code, region, url, utc_offset, location_type="STORE"):
+    def __init__(self, location_id, address1, city, country, days, latitude, longitude, name, phone, postal_code,
+                 region, utc_offset, url=None, address2=None, pickup_instruction=None, location_type="STORE"):
         """
-        
         :type location_id: unicode
         :type address1: unicode
-        :type address2: unicode
         :type city: unicode
         :type country: unicode
         :type days: list[EbayDay]
@@ -49,17 +46,16 @@ class EbayLocation(object):
         :type longitude: decimal.Decimal
         :type name: unicode
         :type phone: unicode
-        :type pickup_instruction: unicode
         :type postal_code: unicode
         :type region: unicode
-        :type url: unicode
         :type utc_offset: unicode
+        :type url: unicode | None
+        :type address2: unicode | None
+        :type pickup_instruction: unicode | None
         :type location_type: unicode
-        :return:
         """
         self.location_id = location_id
         self.address1 = address1
-        self.address2 = address2
         self.city = city
         self.country = country
         self.days = days
@@ -67,18 +63,17 @@ class EbayLocation(object):
         self.longitude = longitude
         self.name = name
         self.phone = phone
-        self.pickup_instruction = pickup_instruction
         self.postal_code = postal_code
         self.region = region
-        self.url = url
         self.utc_offset = utc_offset
+        self.url = url
+        self.address2 = address2
+        self.pickup_instruction = pickup_instruction
         self.location_type = location_type
 
-
     def dict(self):
-        return {
+        data = {
             'Address1': self.address1,
-            'Address2': self.address2,
             'City': self.city,
             'Country': self.country,
             'Hours': {'Day': [day.dict() for day in self.days]},
@@ -88,12 +83,21 @@ class EbayLocation(object):
             'LocationType': self.location_type,
             'Name': self.name,
             'Phone': self.phone,
-            'PickupInstructions': self.pickup_instruction,
             'PostalCode': self.postal_code,
             'Region': self.region,
-            'URL': self.url,
             'UTCOffset': self.utc_offset,
         }
+
+        if self.address2 is not None:
+            data['Address2'] = self.address2
+
+        if self.url is not None:
+            data['URL'] = self.url
+
+        if self.pickup_instruction is not None:
+            data['PickupInstructions'] = self.pickup_instruction
+
+        return data
 
 
 class EbayAvailability(object):

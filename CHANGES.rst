@@ -6,6 +6,18 @@ develop
 =======
 - Adapt core image serializer to the new image format
 
+2015-06-16 0.1.6
+================
+- add ``rc`` environment for release candidate environment
+- add db configs for ``aero.inventorum.net``
+- INV-4689 Do not send optional location attributes as "None"
+- create ``production.conf`` and ``staging.conf`` depending on buildouts
+  ``${config:environment}``, which is properly set in packager
+
+2015-06-09 0.1.5
+================
+- Updated ebay urls to accept new host
+
 2015-06-09 0.1.4
 ================
 - Fix "Decimal is not JSON serializable" error

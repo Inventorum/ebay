@@ -8,6 +8,7 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
 class TestEbayInventoryManagement(EbayAuthenticatedAPITestCase):
+
     @EbayTest.use_cassette("ebay_test_inventory_management_all.yaml")
     def test_all(self):
         # Add location first
