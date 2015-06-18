@@ -203,15 +203,13 @@ class OrderableItemModel(models.Model):
     """
     Mixin for item models that can be ordered (either `EbayItemModel` or `EbayItemVariationModel`)
 
-    Required interface
-    - inv_product_id: int
-
     Note jm: We've to inherit here form models, otherwise django won't pick up the generic field.
     See: http://stackoverflow.com/questions/28115239/django-genericrelation-in-model-mixin
     """
     class Meta:
         abstract = True
 
+    inv_product_id = models.IntegerField(verbose_name="Inventorum product id")
     order_line_items = GenericRelation("orders.OrderLineItemModel",
                                        content_type_field="orderable_item_type",
                                        object_id_field="orderable_item_id")

@@ -251,10 +251,6 @@ class EbayItemModel(OrderableItemModel, BaseModel):
         return self.variations.exists()
 
     @property
-    def inv_product_id(self):
-        return self.product.inv_id
-
-    @property
     def sku(self):
         return settings.EBAY_SKU_FORMAT.format(self.product.inv_id)
 
@@ -267,8 +263,6 @@ class EbayItemVariationModelQuerySet(BaseQuerySet):
 
 
 class EbayItemVariationModel(OrderableItemModel, BaseModel):
-    inv_product_id = models.IntegerField(verbose_name="Inventorum product id")
-
     quantity = models.IntegerField(default=0)
     gross_price = MoneyField()
     tax_rate = TaxRateField()
