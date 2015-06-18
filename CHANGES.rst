@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- INV-4695 Use core inv_id in ebay service
 - INV-4631/INV-4457 Avoid double publishing by using database locks in the resource
 
 2015-06-16 0.1.6

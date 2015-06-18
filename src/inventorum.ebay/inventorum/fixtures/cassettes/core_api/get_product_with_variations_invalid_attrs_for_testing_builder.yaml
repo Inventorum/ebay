@@ -92,14 +92,14 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/666407
+    uri: http://app.intern.inventorum.net/api/products/1225147437974515692/
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
       date: ['Thu, 23 Apr 2015 09:03:12 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/666407/']
+      location: ['http://app.intern.inventorum.net/api/products/1225147437974515692/']
       server: [nginx/1.6.2]
       set-cookie: ['sn="e30:1YlD2O:ItCkeL5rFedM2K_hkvv8ZHRRShM"; Domain=app.intern.inventorum.net;
           expires=Thu, 23-Apr-2015 11:03:12 GMT; httponly; Max-Age=7200; Path=/']
@@ -122,10 +122,10 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/666407/
+    uri: http://app.intern.inventorum.net/api/products/1225147437974515692/
   response:
     body: {string: !!python/unicode '{"attributes": {"color": ["Red"], "material":
-        ["Jeans"], "size": ["20"]}, "name": "Invalid Attrs", "id": 666407, "quantity":
+        ["Jeans"], "size": ["20"]}, "name": "Invalid Attrs", "id": 666407, "inv_id": 1225147437974515692, "quantity":
         "70.00", "reorder_level": null, "safety_stock": null, "price": "151.2605042017",
         "tax_type": 1063, "custom_price": false, "ebay_product_id": null, "ebay_url":
         null, "in_shop": false, "shop_url": null, "thumbnail": null, "variation_count":

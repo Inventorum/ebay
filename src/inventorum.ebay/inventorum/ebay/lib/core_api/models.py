@@ -45,8 +45,8 @@ class CoreProductMetaOverrideMixin(object):
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
-    def __init__(self, id, name, gross_price, tax_type_id, quantity, images, variation_count=0, variations=None,
-                 attributes=None, description=None):
+    def __init__(self, id, name, gross_price, tax_type_id, quantity, images, variation_count=0, inv_id=None,
+                 variations=None, attributes=None, description=None):
         """
         :type id: int
         :type name: unicode
@@ -55,6 +55,7 @@ class CoreProduct(object):
         :type quantity: decimal.Decimal
         :type images: list of CoreProductImage
         :type variation_count: int
+        :type inv_id: long
         :type variations: list[CoreProduct] | None
         :type attributes: list[CoreProductAttribute] | None
         :type description: unicode | None
@@ -66,6 +67,7 @@ class CoreProduct(object):
         self.quantity = quantity
         self.images = images
         self.variation_count = variation_count
+        self.inv_id = inv_id
         self.variations = variations or []
         self.attributes = attributes
         self.description = description
@@ -138,6 +140,8 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         model = CoreProduct
 
     id = serializers.IntegerField()
+    inv_id = serializers.IntegerField(required=False, default=None)
+
     name = serializers.CharField()
     gross_price = MoneyField()
     tax_type = serializers.IntegerField(source="tax_type_id")
