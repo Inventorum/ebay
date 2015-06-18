@@ -11,14 +11,14 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/674387
+    uri: http://app.intern.inventorum.net/api/products/1225149600498410675/
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
       date: ['Mon, 18 May 2015 09:38:09 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/674387/']
+      location: ['http://app.intern.inventorum.net/api/products/1225149600498410675/']
       server: [nginx/1.6.2]
       set-cookie: ['sn="e30:1YuHUv:pMmMJD3YsLclLdPEX1j9LR24anI"; Domain=app.intern.inventorum.net;
           expires=Mon, 18-May-2015 11:38:09 GMT; httponly; Max-Age=7200; Path=/']
@@ -41,10 +41,10 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/674387/
+    uri: http://app.intern.inventorum.net/api/products/1225149600498410675/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "Variation but without
-        attributes", "id": 674387, "quantity": "80.00", "reorder_level": null, "safety_stock":
+        attributes", "id": 674387, "inv_id": 1225149600498410675, "quantity": "80.00", "reorder_level": null, "safety_stock":
         null, "price": "25.2100840336", "tax_type": 1063, "custom_price": false, "ebay_product_id":
         null, "ebay_url": null, "in_shop": false, "shop_url": null, "thumbnail": null,
         "variation_count": 2, "variations": [{"id": 674386, "attributes": {}, "quantity":

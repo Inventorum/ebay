@@ -49,7 +49,7 @@ class EbayItemVariationFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.EbayItemVariationModel
 
-    inv_product_id = factory.Sequence(lambda n: n)
+    inv_product_id = factory.Sequence(lambda n: 1225147276579275043L + n)
     gross_price = Decimal("1.99")
     tax_rate = Decimal("19")
     quantity = 10
@@ -71,6 +71,8 @@ class EbayItemFactory(factory.DjangoModelFactory):
 
     account = factory.SubFactory(EbayAccountFactory)
     product = factory.SubFactory(EbayProductFactory)
+    inv_product_id = factory.Sequence(lambda n: 1225147276579271239L + n)
+
     category = factory.SubFactory(CategoryFactory)
 
     name = "Some product listed on ebay"

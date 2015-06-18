@@ -10,7 +10,6 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
-from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
     UnpublishingService, PublishingPreparationService
 from inventorum.ebay.apps.products.tests import ProductTestMixin
@@ -73,7 +72,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
-        self.assertEqual(e.exception.message, 'Product was already published')
+        self.assertEqual(e.exception.message, 'Product is already published')
 
         item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
         item.save()
@@ -171,6 +170,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             service.create_ebay_item()
 
         last_item = product.items.last()
+        self.assertEqual(last_item.inv_product_id, 640416)
         self.assertEqual(last_item.name, "SlowRoad Shipping Details")
         self.assertEqual(last_item.description, "Some description")
         self.assertEqual(last_item.postal_code, "13355")
@@ -248,7 +248,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
         data = ebay_item.dict()
         self.assertEqual(data, {'Item': {
-            'SKU': 'invdev_{0}'.format(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES),
+            'SKU': 'invdev_640416',
             'ConditionID': 1000,
             'Country': 'DE',
             'Currency': 'EUR',
@@ -447,12 +447,12 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                              'VariationSpecificPictureSet': [
                                  {
                                      'PictureURL': [
-                                         'http://dev-app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG'],
+                                         'http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG'],
                                      'VariationSpecificValue': '22'
                                  },
                                  {
                                      'PictureURL': [
-                                         'http://dev-app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG'],
+                                         'http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG'],
                                      'VariationSpecificValue': '50'
                                  }
                              ]

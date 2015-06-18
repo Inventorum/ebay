@@ -55,7 +55,7 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
     def test_get_products_without_ebay_meta(self):
         core_product = self.subject.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID)
 
-        self.assertEqual(core_product.id, StagingTestAccount.Products.SIMPLE_PRODUCT_ID)
+        self.assertEqual(core_product.inv_id, StagingTestAccount.Products.SIMPLE_PRODUCT_ID)
         self.assertEqual(core_product.name, "XtC Advanced 2 LTD")
         self.assertEqual(core_product.description, "GIANT XtC 27.5\" Advanced Carbon")
         self.assertEqual(core_product.gross_price, D("1999.99"))
@@ -71,7 +71,7 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
     def test_get_product_with_ebay_meta(self):
         core_product = self.subject.get_product(StagingTestAccount.Products.PRODUCT_WITH_EBAY_META_ID)
 
-        self.assertEqual(core_product.id, StagingTestAccount.Products.PRODUCT_WITH_EBAY_META_ID)
+        self.assertEqual(core_product.inv_id, StagingTestAccount.Products.PRODUCT_WITH_EBAY_META_ID)
         # non-channeled name: FastRoad CoMax
         self.assertEqual(core_product.name, "eBay: FastRoad CoMax")
         # non-channeled description: GIANT FastRoad CoMax Carbon
@@ -148,7 +148,7 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(first_variation.attributes[2].values, ['22'])
 
         self.assertEqual(len(first_variation.images), 1)
-        self.assertTrue(first_variation.images[0].urls.ipad_retina.startswith("https://dev-app.inventorum.net/uploads/"))
+        self.assertTrue(first_variation.images[0].urls.ipad_retina.startswith("https://app.inventorum.net/uploads/"))
 
         second_variation = product.variations[1]
         self.assertEqual(second_variation.name, "Jeans Valid Attrs, Blue, 50, Leather")
@@ -166,7 +166,7 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(second_variation.attributes[2].values, ['50'])
 
         self.assertEqual(len(second_variation.images), 1)
-        self.assertTrue(second_variation.images[0].urls.ipad_retina.startswith("https://dev-app.inventorum.net/uploads/"))
+        self.assertTrue(second_variation.images[0].urls.ipad_retina.startswith("https://app.inventorum.net/uploads/"))
 
 
 class UnitTestUserScopedCoreAPIClient(UnitTestCase):

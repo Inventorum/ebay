@@ -11,14 +11,14 @@ interactions:
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/463690
+    uri: http://app.intern.inventorum.net/api/products/1225145632417445479/
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
-      date: ['Thu, 18 Jun 2015 07:31:09 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/463690/']
+      date: ['Fri, 17 Apr 2015 14:57:28 GMT']
+      location: ['http://app.intern.inventorum.net/api/products/1225145632417445479/']
       server: [nginx/1.6.2]
       set-cookie: ['sn="e30:1Z5UI1:qzV4JedtzgwaNG1z5lRGlQ6-0AQ"; Domain=app.intern.inventorum.net;
           expires=Thu, 18-Jun-2015 09:31:09 GMT; httponly; Max-Age=7200; Path=/']
@@ -41,22 +41,22 @@ interactions:
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/463690/
+    uri: http://app.intern.inventorum.net/api/products/1225145632417445479/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "XtC Advanced 2 LTD",
-        "id": 463690, "quantity": "1000.00", "reorder_level": "10.00", "safety_stock":
+        "id": 463690, "inv_id": 1225145632417445479, "quantity": "1000.00", "reorder_level": "10.00", "safety_stock":
         "2.00", "price": "1680.6638655462", "tax_type": 1063, "custom_price": false,
         "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
-        "thumbnail": {"ipad": "https://dev-app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad.JPEG",
-        "id": 2914, "ipad_retina": "https://dev-app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG",
-        "thumb_retina": "https://dev-app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb_retina.JPEG",
-        "thumb": "https://dev-app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"},
+        "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad.JPEG",
+        "id": 2914, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"},
         "variation_count": 0, "variations": [], "average_purchase_price": "1.5E+3",
         "description": "GIANT XtC 27.5\" Advanced Carbon", "product_code": "123456789",
-        "ean": "75678164125", "categories": [], "images": [{"new": false, "type": 0, "id": 2914, "urls": {"ipad": "https://dev-app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad.JPEG",
-        "ipad_retina": "https://dev-app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG",
-        "thumb_retina": "https://dev-app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb_retina.JPEG",
-        "thumb": "https://dev-app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"}}], "custom_sale": false,
+        "ean": "75678164125", "categories": [], "images": [{"new": false, "type": 0, "id": 2914, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"}}], "custom_sale": false,
         "shipping_services": [], "is_favourite": false, "brand": "", "supplier": "",
         "meta": {}, "is_giftcard": false, "gross_price": "1999.99", "purchase_price":
         "1.5E+3", "states": [{"channel": "ebay", "details": null, "state": "in_progress"}],

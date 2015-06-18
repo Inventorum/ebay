@@ -99,7 +99,10 @@ class PublishingPreparationService(object):
         self._validate_product_existence_in_core_api()
 
         if self.product.is_published:
-            raise PublishingValidationException(ugettext('Product was already published'))
+            raise PublishingValidationException(ugettext('Product is already published'))
+
+        if self.product.is_being_published:
+            raise PublishingValidationException(ugettext("Product is already being published"))
 
         if not self.core_account.billing_address:
             raise PublishingValidationException(ugettext('To publish product we need your billing address'))
@@ -180,8 +183,6 @@ class PublishingPreparationService(object):
         """
         :rtype: EbayItemModel
         """
-        product = EbayProductModel.objects.get(inv_id=self.core_product.id)
-
         # We should think about adding tax_rate to the product details response :-)
         tax_rate = self.core_info.get_tax_rate_for(self.core_product.tax_type_id)
         if tax_rate is None:
@@ -189,16 +190,17 @@ class PublishingPreparationService(object):
                                       .format(self.core_product.tax_type_id))
 
         item = EbayItemModel.objects.create(
-            listing_duration=product.category.features.max_listing_duration,
-            product=product,
-            account=product.account,
+            product=self.product,
+            inv_product_id=self.core_product.id,
+            account=self.product.account,
             name=self.core_product.name,
             description=self.core_product.description,
             gross_price=self.core_product.gross_price,
             tax_rate=tax_rate,
-            category=product.category,
+            category=self.product.category,
             country=self.core_account.country,
             quantity=self.core_product.quantity,
+            listing_duration=self.product.category.features.max_listing_duration,
             paypal_email_address=self.account.payment_method_paypal_email_address,
             postal_code=self.core_account.billing_address.zipcode,
             is_click_and_collect=self.product.is_click_and_collect
@@ -228,7 +230,7 @@ class PublishingPreparationService(object):
                 item=item
             )
 
-        for specific in product.specific_values.all():
+        for specific in self.product.specific_values.all():
             EbayItemSpecificModel.objects.create(
                 specific=specific.specific,
                 value=specific.value,
@@ -241,11 +243,11 @@ class PublishingPreparationService(object):
                 raise PublishingException(message="Cannot determine tax_rate for variation with variation.tax_type={}"
                                           .format(variation.tax_type_id))
             variation_obj = EbayItemVariationModel.objects.create(
+                inv_product_id=variation.id,
                 quantity=variation.quantity,
                 gross_price=variation.gross_price,
                 tax_rate=tax_rate,
-                item=item,
-                inv_product_id=variation.id
+                item=item
             )
             for image in variation.images:
                 EbayItemImageModel.objects.create(
@@ -274,8 +276,8 @@ class PublishingUnpublishingService(object):
         :type item: EbayItemModel
         :type user: inventorum.ebay.apps.accounts.models.EbayUserModel
         """
-        self.user = user
         self.item = item
+        self.user = user
 
     @property
     def product(self):
@@ -290,7 +292,7 @@ class PublishingUnpublishingService(object):
         core_api_state = EbayItemPublishingStatus.core_api_state(publishing_status)
         if core_api_state is not None:
             try:
-                self.user.core_api.post_product_publishing_state(self.product.inv_id, core_api_state, details=details)
+                self.user.core_api.post_product_publishing_state(self.item.inv_product_id, core_api_state, details=details)
             except RequestException as e:
                 log.error(e)
                 raise PublishingSendStateFailedException()
@@ -299,6 +301,7 @@ class PublishingUnpublishingService(object):
 
 
 class PublishingService(PublishingUnpublishingService):
+
     def initialize_publish_attempt(self):
         """
         :raises PublishingSendStateFailedException
@@ -462,7 +465,7 @@ class CorePublishingStatusUpdateService(object):
                          details="({})".format(details) if details else ""))
 
         core_api_state = EbayItemPublishingStatus.core_api_state(publishing_status)
-        self.account.core_api.post_product_publishing_state(self.product.inv_id, core_api_state, details=details)
+        self.account.core_api.post_product_publishing_state(self.ebay_item.inv_product_id, core_api_state, details=details)
 
 
 class UpdateFailedException(EbayServiceException):

@@ -255,7 +255,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         :raises requests.exceptions.RequestException
                 rest_framework.exceptions.ValidationError
         """
-        response = self.get("/api/products/{product_id}".format(product_id=product_id))
+        response = self.get("/api/products/{product_id}/".format(product_id=product_id))
         json = response.json()
         log.debug('Got json from /api/products/%s/: %s', product_id, json)
         serializer = CoreProductDeserializer(data=json)
