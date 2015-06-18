@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
 from celery.utils.log import get_task_logger
-from django.utils.translation import ugettext
 
 from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
@@ -11,7 +10,7 @@ from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateMo
 from inventorum.ebay.apps.products.services import PublishingService, PublishingSendStateFailedException,\
     PublishingException, UnpublishingService, UnpublishingException, UpdateService, UpdateFailedException, \
     ProductDeletionService, CorePublishingStatusUpdateService
-from inventorum.ebay.lib.ebay.data.errors import EbayError, EbayFatalError
+from inventorum.ebay.lib.ebay.data.errors import EbayFatalError
 from inventorum.ebay.lib.utils import preserve_and_reraise_exception
 
 from inventorum.util.celery import inventorum_task
@@ -107,11 +106,10 @@ def schedule_ebay_item_publish(ebay_item_id, context):
     :type ebay_item_id: int
     :type context: inventorum.util.celery.TaskExecutionContext
     """
-    initialize_publish = _initialize_ebay_item_publish.si(ebay_item_id, context=context)
     publish = _ebay_item_publish.si(ebay_item_id, context=context)
     finalize_publish = _finalize_ebay_item_publish.si(ebay_item_id, context=context)
 
-    (initialize_publish | publish | finalize_publish)()
+    (publish | finalize_publish)()
 
 
 # - Unpublishing tasks --------------------------------------------------
