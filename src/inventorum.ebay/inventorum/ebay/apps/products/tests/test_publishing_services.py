@@ -10,7 +10,6 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
-from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
     UnpublishingService, PublishingPreparationService
 from inventorum.ebay.apps.products.tests import ProductTestMixin
@@ -171,6 +170,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             service.create_ebay_item()
 
         last_item = product.items.last()
+        self.assertEqual(last_item.inv_product_id, 640416)
         self.assertEqual(last_item.name, "SlowRoad Shipping Details")
         self.assertEqual(last_item.description, "Some description")
         self.assertEqual(last_item.postal_code, "13355")
@@ -248,7 +248,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
         data = ebay_item.dict()
         self.assertEqual(data, {'Item': {
-            'SKU': 'invdev_{0}'.format(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES),
+            'SKU': 'invdev_640416',
             'ConditionID': 1000,
             'Country': 'DE',
             'Currency': 'EUR',

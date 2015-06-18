@@ -11,14 +11,14 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/665753
+    uri: http://app.intern.inventorum.net/api/products/1225146588560351744/
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
       date: ['Wed, 29 Apr 2015 16:47:02 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/665753/']
+      location: ['http://app.intern.inventorum.net/api/products/1225146588560351744/']
       server: [nginx/1.6.2]
       set-cookie: ['sn="e30:1YnV8Y:PkVsjr2FQ0BpFSOxQUwWYA2i_2g"; Domain=app.intern.inventorum.net;
           expires=Wed, 29-Apr-2015 18:47:02 GMT; httponly; Max-Age=7200; Path=/']
@@ -41,10 +41,10 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/665753/
+    uri: http://app.intern.inventorum.net/api/products/1225146588560351744/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "INVENTORUM iPad-Stand",
-        "id": 665753, "quantity": "5.00", "reorder_level": "0.00", "safety_stock":
+        "id": 665753, "inv_id": 1225146588560351744, "quantity": "5.00", "reorder_level": "0.00", "safety_stock":
         "0.00", "price": "32.7731092437", "tax_type": 1063, "custom_price": false,
         "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
         "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad.JPEG",

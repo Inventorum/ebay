@@ -15,22 +15,16 @@ log = logging.getLogger(__name__)
 
 
 class TestSanityCheck(EbayAuthenticatedAPITestCase):
-    def test_published_modified_and_deleted(self):
-        # product a with updated quantity
-        product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
-        item_a = PublishedEbayItemFactory.create(account=self.account,
-                                                 product=product_a,
-                                                 gross_price=D("3.99"),
-                                                 quantity=79)
-
 
     def test_sanity_check(self):
         with ApiTest.use_cassette("inventory_sanity_check.yaml") as cassette:
+            SIMPLE_INV_PRODUCT_ID = 463690
+            IPAD_STAND_PRODUCT_ID = 665753
+
             # product a with updated quantity
-            product_a = EbayProductFactory.create(account=self.account,
-                                                  inv_id=StagingTestAccount.Products.SIMPLE_PRODUCT_ID)
             item_a = PublishedEbayItemFactory.create(account=self.account,
-                                                     product=product_a,
+                                                     product__account=self.account,
+                                                     inv_product_id=SIMPLE_INV_PRODUCT_ID,
                                                      gross_price=D("3.99"),
                                                      quantity=79)
 
@@ -40,13 +34,13 @@ class TestSanityCheck(EbayAuthenticatedAPITestCase):
                 "availabilities": [
                     {
                         "LocationID": locationID,
-                        "sku": settings.EBAY_SKU_FORMAT.format(StagingTestAccount.Products.SIMPLE_PRODUCT_ID),
+                        "sku": settings.EBAY_SKU_FORMAT.format(SIMPLE_INV_PRODUCT_ID),
                         "available": "IN_STOCK",
                         "quantity": 2000
                     },
                     {
                         "LocationID": locationID,
-                        "sku": settings.EBAY_SKU_FORMAT.format(StagingTestAccount.Products.IPAD_STAND),
+                        "sku": settings.EBAY_SKU_FORMAT.format(IPAD_STAND_PRODUCT_ID),
                         "available": "IN_STOCK",
                         "quantity": 10
                     }
@@ -61,16 +55,15 @@ class TestSanityCheck(EbayAuthenticatedAPITestCase):
                 "availabilities": [
                     {
                         "LocationID": locationID,
-                        "sku": settings.EBAY_SKU_FORMAT.format(StagingTestAccount.Products.SIMPLE_PRODUCT_ID),
+                        "sku": settings.EBAY_SKU_FORMAT.format(SIMPLE_INV_PRODUCT_ID),
                         "available": "IN_STOCK",
                         "quantity": 1000
                     },
                     {
                         "LocationID": locationID,
-                        "sku": settings.EBAY_SKU_FORMAT.format(StagingTestAccount.Products.IPAD_STAND),
+                        "sku": settings.EBAY_SKU_FORMAT.format(IPAD_STAND_PRODUCT_ID),
                         "available": "OUT_OF_STOCK",
                         "quantity": 0
                     }
                 ],
             })
-

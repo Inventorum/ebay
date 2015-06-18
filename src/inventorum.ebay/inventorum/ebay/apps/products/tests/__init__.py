@@ -28,5 +28,5 @@ class ProductTestMixin(ShippingServiceTestMixin):
         product.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("5.00"),
                                          additional_cost=D("3.00"))
 
-    def get_product(self, inv_product_id, account):
-        return EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=account)[0]
+    def get_product(self, inv_id, account):
+        return EbayProductModel.objects.get_or_create(inv_id=inv_id, account=account)[0]

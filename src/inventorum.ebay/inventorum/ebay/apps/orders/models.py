@@ -209,7 +209,7 @@ class OrderableItemModel(models.Model):
     class Meta:
         abstract = True
 
-    inv_product_id = models.IntegerField(verbose_name="Inventorum product id")
+    inv_product_id = models.BigIntegerField(verbose_name="Inventorum product id")
     order_line_items = GenericRelation("orders.OrderLineItemModel",
                                        content_type_field="orderable_item_type",
                                        object_id_field="orderable_item_id")

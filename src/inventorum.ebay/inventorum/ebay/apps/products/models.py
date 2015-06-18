@@ -145,7 +145,7 @@ class EbayItemModelQuerySet(BaseQuerySet):
         :rtype EbayItemModelQuerySet
         """
         inv_id = EbayItemModel.clean_sku(sku)
-        return self.filter(product__inv_id=inv_id)
+        return self.filter(inv_product_id=inv_id)
 
     def by_account(self, account):
         """
@@ -252,7 +252,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
 
     @property
     def sku(self):
-        return settings.EBAY_SKU_FORMAT.format(self.product.inv_id)
+        return settings.EBAY_SKU_FORMAT.format(self.inv_product_id)
 
 
 class EbayItemVariationModelQuerySet(BaseQuerySet):
