@@ -127,7 +127,7 @@ class IntegrationTestUserScopedCoreAPIClient(APITestCase):
         self.assertEqual(product.name, "Jeans Valid Attrs")
         self.assertEqual(product.description, "Photo of jeans for sell.")
         self.assertEqual(product.gross_price, D("0.00"))
-        self.assertEqual(product.quantity, D("3"))
+        self.assertEqual(product.quantity, D("80.00"))
 
         self.assertEqual(product.variation_count, 2)
         self.assertEqual(len(product.variations), 2)
