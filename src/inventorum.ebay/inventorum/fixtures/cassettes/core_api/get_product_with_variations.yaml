@@ -44,7 +44,7 @@ interactions:
     uri: http://app.intern.inventorum.net/api/products/1225147276579275043/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "Jeans Valid Attrs",
-        "id": 666032, "inv_id": 1225147276579275043, "quantity": "80.00", "reorder_level": null, "safety_stock":
+        "id": 666032, "inv_id": "1225147276579275043", "quantity": "80.00", "reorder_level": null, "safety_stock":
         null, "price": "0E-10", "tax_type": 1062, "custom_price": false, "ebay_product_id":
         null, "ebay_url": null, "in_shop": false, "shop_url": null, "thumbnail": null,
         "variation_count": 2, "variations": [{"id": 666030, "attributes": {"color":
