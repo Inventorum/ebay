@@ -21,8 +21,8 @@ class TestBatchPublish(EbayAuthenticatedAPITestCase, ProductTestMixin):
     def test_validate(self):
         with ApiTest.use_cassette("batch_publishing_test_validate.yaml"):
             response = self.client.post('/products/publish', data=[
-                {'product': self.product_1.inv_id},
-                {'product': StagingTestAccount.Products.PRODUCT_VALID_FOR_PUBLISHING},
+                {'product': str(self.product_1.inv_id)},
+                {'product': str(StagingTestAccount.Products.PRODUCT_VALID_FOR_PUBLISHING)},
             ])
 
         log.debug('Got response: %s', response)
@@ -44,8 +44,8 @@ class TestBatchPublish(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
         with ApiTest.use_cassette("batch_publishing_test_publish.yaml"):
             response = self.client.post('/products/publish', data=[
-                {'product': self.product_1.inv_id},
-                {'product': product_2.inv_id},
+                {'product': str(self.product_1.inv_id)},
+                {'product': str(product_2.inv_id)},
             ])
 
         log.debug('Got response: %s', response)

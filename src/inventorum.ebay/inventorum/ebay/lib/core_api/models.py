@@ -4,7 +4,7 @@ from decimal import Decimal
 import logging
 
 from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
-from inventorum.ebay.lib.rest.fields import MoneyField
+from inventorum.ebay.lib.rest.fields import MoneyField, InvIdField
 from rest_framework import serializers
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 
@@ -158,7 +158,7 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         model = CoreProduct
 
     id = serializers.IntegerField()
-    inv_id = serializers.IntegerField(required=False, default=None)
+    inv_id = InvIdField(required=False, default=None)
 
     name = serializers.CharField()
     gross_price = MoneyField()

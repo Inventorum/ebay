@@ -44,7 +44,7 @@ interactions:
     uri: http://app.intern.inventorum.net/api/products/1225149600498410675/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "Variation but without
-        attributes", "id": 674387, "inv_id": 1225149600498410675, "quantity": "80.00", "reorder_level": null, "safety_stock":
+        attributes", "id": 674387, "inv_id": "1225149600498410675", "quantity": "80.00", "reorder_level": null, "safety_stock":
         null, "price": "25.2100840336", "tax_type": 1063, "custom_price": false, "ebay_product_id":
         null, "ebay_url": null, "in_shop": false, "shop_url": null, "thumbnail": null,
         "variation_count": 2, "variations": [{"id": 674386, "attributes": {}, "quantity":

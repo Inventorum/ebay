@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- Change inv_id in serializers to string format
 - Adapt core image serializer to the new image format
 - INV-4695 Use core inv_id in ebay service
 - INV-4631/INV-4457 Avoid double publishing by using database locks in the resource
