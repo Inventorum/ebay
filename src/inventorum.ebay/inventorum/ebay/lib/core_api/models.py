@@ -158,7 +158,7 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         model = CoreProduct
 
     id = serializers.IntegerField()
-    inv_id = InvIdField(required=False, default=None)
+    inv_id = InvIdField(required=False, allow_null=True, default=None)
 
     name = serializers.CharField()
     gross_price = MoneyField()
