@@ -4,6 +4,9 @@ CHANGES
 
 develop
 =======
+
+2015-06-19 0.1.7
+================
 - Change inv_id in serializers to string format
 - Adapt core image serializer to the new image format
 - INV-4695 Use core inv_id in ebay service
