@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 import decimal
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.utils.translation import ugettext_lazy as _
 from django.db.models.query import QuerySet
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext
@@ -85,9 +86,23 @@ class MoneyField(InventorumNormalizedDecimalField):
 
 
 class TaxRateField(InventorumNormalizedDecimalField):
-
     def __init__(self, max_digits=13, decimal_places=3, **kwargs):
         super(TaxRateField, self).__init__(max_digits=max_digits, decimal_places=decimal_places, **kwargs)
+
+
+class InvIdField(serializers.Field):
+    default_error_messages = {
+        'invalid': _('A valid number is required.'),
+    }
+
+    def to_representation(self, inv_id_as_long):
+        return str(inv_id_as_long)
+
+    def to_internal_value(self, inv_id_as_str):
+        try:
+            return long(inv_id_as_str)
+        except ValueError:
+            self.fail('invalid')
 
 
 class LazyPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):

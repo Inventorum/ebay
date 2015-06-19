@@ -92,14 +92,14 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/666032
+    uri: http://app.intern.inventorum.net/api/products/1225147276579275043/
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
       date: ['Thu, 23 Apr 2015 15:53:55 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/666032/']
+      location: ['http://app.intern.inventorum.net/api/products/1225147276579275043/']
       server: [nginx/1.6.2]
       set-cookie: ['sn="e30:1YlJRr:iKBjzch0OUImfiLQzc4qHzWZOPo"; Domain=app.intern.inventorum.net;
           expires=Thu, 23-Apr-2015 17:53:55 GMT; httponly; Max-Age=7200; Path=/']
@@ -122,43 +122,49 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/666032/
+    uri: http://app.intern.inventorum.net/api/products/1225147276579275043/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "Jeans Valid Attrs",
-        "id": 666032, "quantity": "80.00", "reorder_level": null, "safety_stock":
+        "id": 666032, "inv_id": "1225147276579275043", "quantity": "80.00", "reorder_level": null, "safety_stock":
         null, "price": "0E-10", "tax_type": 1062, "custom_price": false, "ebay_product_id":
         null, "ebay_url": null, "in_shop": false, "shop_url": null, "thumbnail": null,
         "variation_count": 2, "variations": [{"id": 666030, "attributes": {"color":
-        ["Red"], "material": ["Denim"], "size": ["22"]}, "quantity": "30.00", "reorder_level":
+        ["Red"], "material": ["Denim"], "size": ["22"]}, "quantity": "1.00", "reorder_level":
         "20.00", "safety_stock": "20.00", "ean": null, "price": "140.1869158879",
-        "product_code": null, "tax_type": 1062, "name": "Red, 22", "images": [{"ipad":
-        "https://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad.JPEG",
-        "id": 2973, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad_retina.JPEG",
-        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_thumb.JPEG"}],
-        "meta": {"shop": {"images": [], "price": "140.1869158879", "gross_price":
-        "150.00", "id": 960, "channel": 5, "name": null, "description": null}, "ebay":
-        {"images": [], "price": "140.1869158879", "gross_price": "150.00", "id": 961,
-        "channel": 4, "name": null, "description": null}}, "gross_price": "150.00"},
-        {"id": 666031, "attributes": {"color": ["Blue"], "material": ["Leather"],
-        "size": ["50"]}, "quantity": "50.00", "reorder_level": "20.00", "safety_stock":
-        "20.00", "ean": null, "price": "121.4953271028", "product_code": null, "tax_type":
-        1062, "name": "Blue, 50", "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad.JPEG",
-        "id": 2974, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad_retina.JPEG",
-        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_thumb.JPEG"}],
+        "product_code": null, "tax_type": 1062, "name": "Jeans Valid Attrs, Red, 22,
+        Denim", "images": [{"new": false, "type": 0, "id": 2979, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_thumb.JPEG"}}],
+        "meta": {"shop": {"images": [], "price": "140.1869158879",
+        "gross_price": "150.00", "id": 960, "channel": 5, "name": null, "description":
+        null}, "ebay": {"images": [], "price": "140.1869158879", "gross_price": "150.00",
+        "id": 961, "channel": 4, "name": null, "description": null}}, "gross_price":
+        "150.00", "purchase_price": "0", "average_purchase_price": "0", "attributes_str":
+        "Red, 22, Denim"}, {"id": 666031, "attributes": {"color": ["Blue"], "material":
+        ["Leather"], "size": ["50"]}, "quantity": "2.00", "reorder_level": "20.00",
+        "safety_stock": "20.00", "ean": null, "price": "121.4953271028", "product_code":
+        null, "tax_type": 1062, "name": "Jeans Valid Attrs, Blue, 50, Leather", "images":
+        [{"new": false, "type": 0, "id": 2979, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_thumb.JPEG"}}],
         "meta": {"shop": {"images": [], "price": "121.4953271028", "gross_price":
         "130.00", "id": 962, "channel": 5, "name": null, "description": null}, "ebay":
         {"images": [], "price": "121.4953271028", "gross_price": "130.00", "id": 963,
-        "channel": 4, "name": null, "description": null}}, "gross_price": "130.00"}],
-        "average_purchase_price": "0", "description": "Photo of jeans for sell.",
-        "product_code": null, "ean": null, "categories": [], "images": [], "custom_sale":
-        false, "shipping_services": [], "is_favourite": false, "brand": "Test", "supplier":
-        "", "meta": {"shop": {"images": [], "price": "0E-10", "gross_price": "0.00",
-        "id": 958, "channel": 5, "name": null, "description": null}, "ebay": {"images":
-        [], "price": "0E-10", "gross_price": "0.00", "id": 959, "channel": 4, "name":
-        null, "description": null}}, "is_giftcard": false, "gross_price": "0.00",
-        "purchase_price": "0"}'}
+        "channel": 4, "name": null, "description": null}}, "gross_price": "130.00",
+        "purchase_price": "0", "average_purchase_price": "0", "attributes_str": "Blue,
+        50, Leather"}], "average_purchase_price": "0", "description": "Photo of jeans
+        for sell.", "product_code": null, "ean": null, "categories": [], "images": [],
+        "custom_sale": false, "shipping_services": [], "is_favourite": false,
+        "brand": "Test", "supplier": "", "meta": {"shop": {"images": [], "price":
+        "0E-10", "gross_price": "0.00", "id": 958, "channel": 5, "name": null, "description":
+        null}, "ebay": {"images": [], "price": "0E-10", "gross_price": "0.00", "id":
+        959, "channel": 4, "name": null, "description": null}}, "is_giftcard": false,
+        "gross_price": "0.00", "purchase_price": "0", "states": [{"channel": "ebay",
+        "details": [{"long_message": "Das Angebot wurde bereits beendet.", "code":
+        1047, "severity_code": "Error", "classification": "RequestError", "short_message":
+        "Das Angebot wurde beendet."}], "state": "published"}], "attributes_str": ""}'}
     headers:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]

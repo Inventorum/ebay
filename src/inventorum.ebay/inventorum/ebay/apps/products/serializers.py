@@ -12,7 +12,7 @@ from inventorum.ebay.apps.categories.serializers import CategorySerializer, Cate
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayProductSpecificModel
 from inventorum.ebay.apps.shipping.serializers import ShippingServiceConfigurableSerializer
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
-from inventorum.ebay.lib.rest.fields import RelatedModelByIdField, LazyPrimaryKeyRelatedField
+from inventorum.ebay.lib.rest.fields import RelatedModelByIdField, LazyPrimaryKeyRelatedField, InvIdField
 from rest_framework import serializers
 
 
@@ -54,6 +54,7 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
         fields = ('id', 'inv_id', 'category', 'is_published', 'listing_url', 'specific_values', 'is_click_and_collect',
                   'shipping_services')
 
+    inv_id = InvIdField(read_only=True)
     category = RelatedModelByIdField(serializer=EbayProductCategorySerializer, allow_null=True, required=False)
 
     is_click_and_collect = serializers.BooleanField()
@@ -123,5 +124,4 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
 
 
 class BatchPublishParametersSerializer(serializers.Serializer):
-    product = serializers.IntegerField()
-
+    product = InvIdField()
