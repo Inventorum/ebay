@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from datetime import datetime
-from inventorum.ebay.apps.products import tasks, EbayItemPublishingStatus
+from inventorum.ebay.apps.products import tasks
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemUpdateModel, \
     EbayItemVariationModel, EbayItemVariationUpdateModel
 from inventorum.util.celery import TaskExecutionContext
@@ -149,16 +149,18 @@ class CoreProductsSync(object):
                 yield published_item, core_product_delta
 
     def _get_item_or_variation(self, core_product_delta):
-        published_core_product_ids = EbayProductModel.objects.published().by_account(self.account)\
-            .values_list("inv_id", flat=True)
+        # for performance reasons, we only get the ids of published items here to not always have to hit
+        # the database in order to check whether a core product is published to ebay or not
+        published_core_product_ids = EbayItemModel.objects.published().by_account(self.account)\
+            .values_list("inv_product_id", flat=True)
         is_published = lambda core_product_id: core_product_id in published_core_product_ids
 
         main_product_id = core_product_delta.parent or core_product_delta.id
         if not is_published(main_product_id):
             return None
 
-        published_item = EbayItemModel.objects.get(publishing_status=EbayItemPublishingStatus.PUBLISHED,
-                                                   product__inv_id=main_product_id)
+        published_item = EbayItemModel.objects.published().by_account(self.account)\
+            .get(inv_product_id=main_product_id)
 
         if published_item.has_variations:
             try:

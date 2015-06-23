@@ -243,19 +243,21 @@ class UnitTestCoreProductsSync(UnitTestCase):
         subject = CoreProductsSync(account=self.account)
 
         # product a with updated quantity
-        product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
+        product_a = EbayProductFactory.create(account=self.account)
         item_a = PublishedEbayItemFactory.create(account=self.account,
                                                  product=product_a,
+                                                 inv_product_id=1001,
                                                  gross_price=D("3.99"),
                                                  quantity=79)
-        delta_a = CoreProductDeltaFactory(id=product_a.inv_id,
+        delta_a = CoreProductDeltaFactory(id=1001,
                                           gross_price=D("3.99"),
                                           quantity=78)
 
         # product b with updated gross price
-        product_b = EbayProductFactory.create(account=self.account, inv_id=1002)
+        product_b = EbayProductFactory.create(account=self.account)
         item_b = PublishedEbayItemFactory.create(account=self.account,
                                                  product=product_b,
+                                                 inv_product_id=1002,
                                                  gross_price=D("100.00"),
                                                  quantity=3)
         delta_b = CoreProductDeltaFactory(id=1002,
@@ -263,9 +265,10 @@ class UnitTestCoreProductsSync(UnitTestCase):
                                           quantity=3)
 
         # product c with updated gross price and quantity
-        product_c = EbayProductFactory.create(account=self.account, inv_id=1003)
+        product_c = EbayProductFactory.create(account=self.account)
         item_c = PublishedEbayItemFactory.create(account=self.account,
                                                  product=product_c,
+                                                 inv_product_id=1003,
                                                  gross_price=D("99.99"),
                                                  quantity=33)
         delta_c = CoreProductDeltaFactory(id=1003,
@@ -273,12 +276,14 @@ class UnitTestCoreProductsSync(UnitTestCase):
                                           quantity=22)
 
         # product d and e deleted
-        product_d = EbayProductFactory.create(account=self.account, inv_id=1004)
+        product_d = EbayProductFactory.create(account=self.account)
         PublishedEbayItemFactory.create(account=self.account,
-                                        product=product_d)
-        product_e = EbayProductFactory.create(account=self.account, inv_id=1005)
+                                        product=product_d,
+                                        inv_product_id=1004)
+        product_e = EbayProductFactory.create(account=self.account)
         PublishedEbayItemFactory.create(account=self.account,
-                                        product=product_e)
+                                        product=product_e,
+                                        inv_product_id=1005)
 
         assert all([p.is_published for p in [product_a, product_b, product_c, product_d, product_e]])
 
@@ -320,6 +325,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
         product_a = EbayProductFactory.create(account=self.account, inv_id=1001)
         item_a = PublishedEbayItemFactory.create(account=self.account,
                                                  product=product_a,
+                                                 inv_product_id=1001,
                                                  gross_price=None,
                                                  quantity=None)
 
@@ -335,7 +341,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
         delta_variation_a = CoreProductDeltaFactory(id=variation_a.inv_product_id,
                                                     gross_price=D("3.99"),
                                                     quantity=78,
-                                                    parent=product_a.inv_id)
+                                                    parent=item_a.inv_product_id)
 
         # variation b with updated gross price
         variation_b = EbayItemVariationModel.create(
@@ -348,7 +354,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
         delta_variation_b = CoreProductDeltaFactory(id=variation_b.inv_product_id,
                                                     gross_price=D("125.00"),
                                                     quantity=3,
-                                                    parent=product_a.inv_id)
+                                                    parent=item_a.inv_product_id)
 
         # variation c with updated gross price and quantity
         variation_c = EbayItemVariationModel.create(
@@ -362,7 +368,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
         delta_variation_c = CoreProductDeltaFactory(id=variation_c.inv_product_id,
                                                     gross_price=D("111.11"),
                                                     quantity=22,
-                                                    parent=product_a.inv_id)
+                                                    parent=item_a.inv_product_id)
 
         # variation d and e deleted
         variation_d = EbayItemVariationModel.create(
