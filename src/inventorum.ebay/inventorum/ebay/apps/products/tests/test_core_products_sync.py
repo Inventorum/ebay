@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from decimal import Decimal as D
 import logging
 from datetime import datetime, timedelta
+import unittest
 
 from inventorum.ebay.tests.utils import PatchMixin
 
@@ -211,6 +212,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
         self.assertFalse(self.schedule_ebay_item_update_mock.called)
         self.assertFalse(self.schedule_ebay_product_deletion_mock.called)
 
+    @unittest.skip("only products that were published at least once are deleted, see core products sync for details")
     def test_unpublished_modified_and_deleted(self):
         subject = CoreProductsSync(account=self.account)
 
