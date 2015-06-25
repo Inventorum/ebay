@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- Use `product_inv_id` for published product lookup in core products sync
 
 2015-06-19 0.1.7
 ================
