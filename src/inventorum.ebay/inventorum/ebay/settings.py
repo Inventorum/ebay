@@ -14,6 +14,7 @@ from inventorum.util.celery import TaskExecutionContext
 here = os.path.abspath(os.path.dirname(__file__))
 VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()
 
+
 # ==============================================================================
 # Generic Django project settings
 # ==============================================================================
@@ -73,6 +74,7 @@ ALLOWED_HOSTS = [
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
+FIXTURE_DIR = os.path.join(here, "..", 'fixtures')
 
 # ==============================================================================
 # Third party configurations

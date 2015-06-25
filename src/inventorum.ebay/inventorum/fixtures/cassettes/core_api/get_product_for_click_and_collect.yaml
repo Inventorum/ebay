@@ -11,14 +11,14 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/640416
+    uri: http://app.intern.inventorum.net/api/products/1225146152575102591/
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
       date: ['Tue, 28 Apr 2015 17:03:25 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/640416/']
+      location: ['http://app.intern.inventorum.net/api/products/1225146152575102591/']
       server: [nginx/1.6.2]
       set-cookie: ['sn="e30:1Yn8ur:2e-uTd2HPZ040E9UQMgjpkgDawg"; Domain=inventorum.net;
           expires=Tue, 28-Apr-2015 19:03:25 GMT; httponly; Max-Age=7200; Path=/']
@@ -41,10 +41,10 @@ interactions:
       X-Inv-Account: [!!python/unicode 346]
       X-Inv-User: [!!python/unicode 425]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/640416/
+    uri: http://app.intern.inventorum.net/api/products/1225146152575102591/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "SlowRoad Shipping
-        Details", "id": 640416, "quantity": "3000.00", "reorder_level": "200.00",
+        Details", "id": 640416, "inv_id": "1225146152575102591", "quantity": "3000.00", "reorder_level": "200.00",
         "safety_stock": "200.00", "price": "560.7383177570", "tax_type": 1062, "custom_price":
         false, "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url":
         null, "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/3931/c077/30b1/c4ac/2992/ae92/f6f8/3931c07730b1c4ac2992ae92f6f8dfdc_ipad.JPEG",

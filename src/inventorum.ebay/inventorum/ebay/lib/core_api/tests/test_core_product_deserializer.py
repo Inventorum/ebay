@@ -25,7 +25,11 @@ class TestCoreProductDeserializer(UnitTestCase):
             "gross_price": "448.68",
             "tax_type": 1001,
             "quantity": 90,
-            "images": [{"id": 2915, "ipad": "http://image/ipad", "ipad_retina": "http://image/ipad_retina"}],
+            "images": [{"id": 2915,
+                        "urls": {
+                            "ipad": "http://image/ipad",
+                            "ipad_retina": "http://image/ipad_retina"
+                        }}],
             "meta": {
                 "ebay": {
                     "images": [],
@@ -53,4 +57,5 @@ class TestCoreProductDeserializer(UnitTestCase):
         self.assertEqual(core_product.description, "Marvellous bike")
         self.assertEqual(len(core_product.images), 1)
         self.assertEqual(core_product.images[0].id, 2915)
+        self.assertEqual(core_product.images[0].urls.ipad_retina, minimal_core_product_json["images"][0]["urls"]["ipad_retina"])
         self.assertFalse(core_product.is_parent)

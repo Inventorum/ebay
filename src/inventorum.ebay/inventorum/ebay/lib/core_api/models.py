@@ -4,7 +4,7 @@ from decimal import Decimal
 import logging
 
 from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
-from inventorum.ebay.lib.rest.fields import MoneyField
+from inventorum.ebay.lib.rest.fields import MoneyField, InvIdField
 from rest_framework import serializers
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 
@@ -45,16 +45,17 @@ class CoreProductMetaOverrideMixin(object):
 class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
-    def __init__(self, id, name, gross_price, tax_type_id, quantity, images, variation_count=0, variations=None,
-                 attributes=None, description=None):
+    def __init__(self, id, name, gross_price, tax_type_id, quantity, images, variation_count=0, inv_id=None,
+                 variations=None, attributes=None, description=None):
         """
         :type id: int
         :type name: unicode
         :type gross_price: decimal.Decimal
         :type tax_type_id: int
         :type quantity: decimal.Decimal
-        :type images: list of CoreProductImage
+        :type images: list[CoreImage]
         :type variation_count: int
+        :type inv_id: long
         :type variations: list[CoreProduct] | None
         :type attributes: list[CoreProductAttribute] | None
         :type description: unicode | None
@@ -66,6 +67,7 @@ class CoreProduct(object):
         self.quantity = quantity
         self.images = images
         self.variation_count = variation_count
+        self.inv_id = inv_id
         self.variations = variations or []
         self.attributes = attributes
         self.description = description
@@ -75,24 +77,42 @@ class CoreProduct(object):
         return len(self.variations) > 0
 
 
-class CoreProductImage(object):
+class CoreImageURLs(object):
+    """ Represents the image urls of a core image"""
+
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        ipad_retina = serializers.CharField()
+
+    def __init__(self, ipad_retina):
+        self.ipad_retina = ipad_retina
+
+CoreImageURLs.Deserializer.Meta.model = CoreImageURLs
+
+
+class CoreImage(object):
     """ Represents a product image embedded in a core product"""
 
-    def __init__(self, id, url):
+    class Deserializer(POPOSerializer):
+
+        class Meta:
+            model = None
+
+        id = serializers.IntegerField()
+        urls = CoreImageURLs.Deserializer()
+
+    def __init__(self, id, urls):
         """
         :type id: int
-        :type url: unicode
+        :type urls: CoreImageURLs
         """
         self.id = id
-        self.url = url
+        self.urls = urls
 
-
-class CoreProductImageDeserializer(POPOSerializer):
-    class Meta:
-        model = CoreProductImage
-
-    id = serializers.IntegerField()
-    ipad_retina = serializers.CharField(source="url")
+CoreImage.Deserializer.Meta.model = CoreImage
 
 
 class CoreProductAttribute(object):
@@ -132,18 +152,20 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         description = serializers.CharField(allow_null=True, allow_blank=True)
         gross_price = MoneyField()
 
-        images = CoreProductImageDeserializer(many=True)
+        images = CoreImage.Deserializer(many=True)
 
     class Meta(POPOSerializer.Meta):
         model = CoreProduct
 
     id = serializers.IntegerField()
+    inv_id = InvIdField(required=False, allow_null=True, default=None)
+
     name = serializers.CharField()
     gross_price = MoneyField()
     tax_type = serializers.IntegerField(source="tax_type_id")
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
 
-    images = CoreProductImageDeserializer(many=True)
+    images = CoreImage.Deserializer(many=True)
     attributes = CoreProductAttributeSerializer(many=True)
 
     # meta will be removed after meta overwrites
