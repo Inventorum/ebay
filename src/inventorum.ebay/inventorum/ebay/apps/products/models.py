@@ -154,6 +154,12 @@ class EbayItemModelQuerySet(BaseQuerySet):
         """
         return self.filter(account=account)
 
+    def published(self):
+        """
+        :rtype: EbayItemModelQuerySet
+        """
+        return self.filter(publishing_status=EbayItemPublishingStatus.PUBLISHED)
+
 
 class EbayItemModel(OrderableItemModel, BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="items",

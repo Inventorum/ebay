@@ -5,6 +5,10 @@ CHANGES
 develop
 =======
 
+2015-06-25 0.1.8
+================
+- Use `product_inv_id` for published product lookup in core products sync
+
 2015-06-19 0.1.7
 ================
 - Change inv_id in serializers to string format
