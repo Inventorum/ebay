@@ -55,7 +55,7 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                                          core_status__is_paid=True)
 
         OrderLineItemModelFactory.create(order=order,
-                                         orderable_item__product__inv_id=23,
+                                         orderable_item__inv_product_id=23,
                                          name="Inventorum T-Shirt [Green, L]",
                                          unit_price=D("3.99"),
                                          tax_rate=D("7"),

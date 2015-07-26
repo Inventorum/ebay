@@ -12,14 +12,14 @@ interactions:
       X-Inv-User: [!!python/unicode 425]
       X-Rid: [&id001 !!python/long 2508289581627729642]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/665753
+    uri: http://app.intern.inventorum.net/api/products/1225146588560351744/
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
       date: ['Mon, 18 May 2015 17:06:38 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/665753/']
+      location: ['http://app.intern.inventorum.net/api/products/1225146588560351744/']
       server: [nginx/1.6.2]
       set-cookie: ['sn="e30:1YuOUw:CIzElAA5LqpWQfrzDoRtKU5QAMI"; Domain=app.intern.inventorum.net;
           expires=Mon, 18-May-2015 19:06:38 GMT; httponly; Max-Age=7200; Path=/']
@@ -43,10 +43,10 @@ interactions:
       X-Inv-User: [!!python/unicode 425]
       X-Rid: [*id001]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/665753/
+    uri: http://app.intern.inventorum.net/api/products/1225146588560351744/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "INVENTORUM iPad-Stand",
-        "id": 665753, "quantity": "5.00", "reorder_level": "0.00", "safety_stock":
+        "id": 665753, "inv_id": "1225146588560351744", "quantity": "5.00", "reorder_level": "0.00", "safety_stock":
         "0.00", "price": "0.8403361345", "tax_type": 1063, "custom_price": false,
         "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
         "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad.JPEG",
@@ -59,18 +59,18 @@ interactions:
         Neigungswinkel ist dieser ideal, um einfach und schnell Produkte mit der internen
         Kamera des iPads zu scannen.  Kompatibel f\u00fcr iPad 2, 3 und 4, sowie das
         iPad Air und iPad mini.", "product_code": "", "ean": null, "categories": [],
-        "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad.JPEG",
-        "id": 2934, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG",
+        "images": [{"new": false, "type": 0, "id": 2934, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_thumb.JPEG"},
-        {"ipad": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad.JPEG",
-        "id": 2935, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_thumb.JPEG"}},
+        {"new": false, "type": 0, "id": 2935, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_thumb.JPEG"},
-        {"ipad": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad.JPEG",
-        "id": 2936, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_thumb.JPEG"}},
+        {"new": false, "type": 0, "id": 2936, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_thumb.JPEG"}],
+        "thumb": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_thumb.JPEG"}}],
         "custom_sale": false, "shipping_services": [{"id": "DE_HermesPaket", "description":
         "Hermes Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
         "Group3MaxFlatShippingCost", "carrier": "Hermes", "category": "[STANDARD]",
@@ -90,9 +90,9 @@ interactions:
         "enabled": false, "free_above_price": null}], "is_favourite": false, "brand":
         "", "supplier": "", "meta": {"shop": {"images": [], "price": "32.7731092437",
         "gross_price": "39.00", "id": 746, "channel": 5, "name": "", "description":
-        ""}, "ebay": {"images": [], "price": "0.8403361345", "gross_price": "1.00",
+        ""}, "ebay": {"images": [], "price": "32.7731092437", "gross_price": "39.00",
         "id": 747, "channel": 4, "name": "", "description": ""}}, "is_giftcard": false,
-        "gross_price": "1.00", "purchase_price": "3E+1"}'}
+        "gross_price": "39.00", "purchase_price": "3E+1"}'}
     headers:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
@@ -223,14 +223,14 @@ interactions:
       X-Inv-User: [!!python/unicode 425]
       X-Rid: [*id001]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/640449
+    uri: http://app.intern.inventorum.net/api/products/1225146162033178864/
   response:
     body: {string: !!python/unicode ''}
     headers:
       connection: [keep-alive]
       content-type: [text/html; charset=utf-8]
       date: ['Mon, 18 May 2015 17:06:39 GMT']
-      location: ['http://app.intern.inventorum.net/api/products/640449/']
+      location: ['http://app.intern.inventorum.net/api/products/1225146162033178864/']
       server: [nginx/1.6.2]
       set-cookie: ['sn="e30:1YuOUx:_jRqHblbekO7PBMEJ_lP1zubCKo"; Domain=app.intern.inventorum.net;
           expires=Mon, 18-May-2015 19:06:39 GMT; httponly; Max-Age=7200; Path=/']
@@ -254,10 +254,10 @@ interactions:
       X-Inv-User: [!!python/unicode 425]
       X-Rid: [*id001]
     method: GET
-    uri: http://app.intern.inventorum.net/api/products/640449/
+    uri: http://app.intern.inventorum.net/api/products/1225146162033178864/
   response:
     body: {string: !!python/unicode '{"attributes": {}, "name": "iZettle Kartenleseger\u00e4t",
-        "id": 640449, "quantity": "10.00", "reorder_level": "0.00", "safety_stock":
+        "id": 640449, "inv_id": "1225146162033178864", "quantity": "10.00", "reorder_level": "0.00", "safety_stock":
         "0.00", "price": "54.6218487395", "tax_type": 1063, "custom_price": false,
         "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
         "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad.JPEG",
@@ -272,10 +272,10 @@ interactions:
         iPad-Kasse integriert. Die Transaktionsgeb\u00fchren bei EC-Kartenzahlungen
         betragen 0,95% und 2,75% bei allen anderen Kartenzahlungen. F\u00fcr Sie fallen
         keine weiteren fixen Kosten oder Vertragsbindungen an.", "product_code": "",
-        "ean": null, "categories": [], "images": [{"ipad": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad.JPEG",
-        "id": 2933, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad_retina.JPEG",
+        "ean": null, "categories": [], "images": [{"new": false, "type": 0, "id": 2933, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb.JPEG"}],
+        "thumb": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb.JPEG"}}],
         "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
         "", "supplier": "", "meta": {"shop": {"images": [], "price": "54.6218487395",
         "gross_price": "65.00", "id": 740, "channel": 5, "name": "", "description":

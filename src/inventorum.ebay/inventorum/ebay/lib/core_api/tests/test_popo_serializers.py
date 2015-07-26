@@ -17,7 +17,7 @@ class TestCoreProductDeserializer(UnitTestCase):
             "gross_price": "448.68",
             "tax_type": 1001,
             "quantity": 90,
-            "images": [{"id": 2915, "ipad": "http://image/ipad", "ipad_retina": "http://image/ipad_retina"}],
+            "images": [{"id": 2915, "urls": {"ipad": "http://image/ipad", "ipad_retina": "http://image/ipad_retina"}}],
             "meta": {
                 "ebay": {
                     "images": [],
@@ -50,7 +50,7 @@ class TestCoreProductDeserializer(UnitTestCase):
 
         # Update meta
         minimal_core_product_json["meta"]["ebay"] = {
-            "images": [{"id": 9999, "ipad": "http://image/ipad", "ipad_retina": "http://image/ipad_retina"}],
+            "images": [{"id": 9999, "urls": {"ipad": "http://image/ipad", "ipad_retina": "http://image/ipad_retina"}}],
             "gross_price": "500.00",
             "id": 520,
             "channel": 4,

@@ -39,20 +39,17 @@ class IntegrationTestCoreAPIPublishingStatusUpdate(APITestCase):
         self.assertEqual(len(requests), 3)
 
         first_request = requests[0]
-        self.assertTrue(first_request.uri.endswith("/api/products/{}/state/"
-                                                   .format(StagingTestAccount.Products.IPAD_STAND)))
+        self.assertTrue(first_request.uri.endswith("/api/products/665753/state/"))
         self.assertEqual(json.loads(first_request.body), {"state": "in_progress", "details": {}, "channel": "ebay"})
 
         second_request = requests[1]
-        self.assertTrue(second_request.uri.endswith("/api/products/{}/state/"
-                                                    .format(StagingTestAccount.Products.IPAD_STAND)))
+        self.assertTrue(second_request.uri.endswith("/api/products/665753/state/"))
         self.assertEqual(json.loads(second_request.body), {"state": "failed",
                                                            "details": {"message": "Oops, something went wrong!"},
                                                            "channel": "ebay"})
 
         third_request = requests[2]
-        self.assertTrue(third_request.uri.endswith("/api/products/{}/state/"
-                                                   .format(StagingTestAccount.Products.IPAD_STAND)))
+        self.assertTrue(third_request.uri.endswith("/api/products/665753/state/"))
         self.assertEqual(json.loads(third_request.body), {"state": "published", "details": {}, "channel": "ebay"})
 
     @celery_test_case()
@@ -62,7 +59,7 @@ class IntegrationTestCoreAPIPublishingStatusUpdate(APITestCase):
         service_method_mock = self.patch(service_method)
         service_method_mock.side_effect = HTTPError("Failed, should retry")
 
-        source_item = EbayItemFactory(product__inv_id=StagingTestAccount.Products.IPAD_STAND)
+        source_item = EbayItemFactory(inv_product_id=665753)
 
         with self.assertRaises(MaxRetriesExceededError):
             schedule_core_api_publishing_status_update(source_item.id, context=self.get_task_execution_context())
