@@ -49,18 +49,19 @@ class EbayItemVariationFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.EbayItemVariationModel
 
-    inv_product_id = factory.Sequence(lambda n: n)
+    inv_product_id = factory.Sequence(lambda n: 2000 + n)
     gross_price = Decimal("1.99")
     tax_rate = Decimal("19")
     quantity = 10
 
 
-class EbayProductFactory(MappedInventorumModelFactory):
+class EbayProductFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = models.EbayProductModel
 
     account = factory.SubFactory(EbayAccountFactory)
+    inv_id = factory.Sequence(lambda n: 1225147276579271239L + n)
 
 
 # TODO: Shipping services etc.
@@ -71,6 +72,8 @@ class EbayItemFactory(factory.DjangoModelFactory):
 
     account = factory.SubFactory(EbayAccountFactory)
     product = factory.SubFactory(EbayProductFactory)
+    inv_product_id = factory.Sequence(lambda n: 1000 + n)
+
     category = factory.SubFactory(CategoryFactory)
 
     name = "Some product listed on ebay"

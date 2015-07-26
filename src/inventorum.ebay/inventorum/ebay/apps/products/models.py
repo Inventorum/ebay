@@ -58,6 +58,10 @@ class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
         return self.published_item is not None
 
     @property
+    def is_being_published(self):
+        return self.items.filter(publishing_status=EbayItemPublishingStatus.IN_PROGRESS).exists()
+
+    @property
     def published_item(self):
         try:
             return self.items.get(publishing_status=EbayItemPublishingStatus.PUBLISHED)
@@ -141,7 +145,7 @@ class EbayItemModelQuerySet(BaseQuerySet):
         :rtype EbayItemModelQuerySet
         """
         inv_id = EbayItemModel.clean_sku(sku)
-        return self.filter(product__inv_id=inv_id)
+        return self.filter(inv_product_id=inv_id)
 
     def by_account(self, account):
         """
@@ -149,6 +153,12 @@ class EbayItemModelQuerySet(BaseQuerySet):
         :rtype EbayItemModelQuerySet
         """
         return self.filter(account=account)
+
+    def published(self):
+        """
+        :rtype: EbayItemModelQuerySet
+        """
+        return self.filter(publishing_status=EbayItemPublishingStatus.PUBLISHED)
 
 
 class EbayItemModel(OrderableItemModel, BaseModel):
@@ -247,12 +257,8 @@ class EbayItemModel(OrderableItemModel, BaseModel):
         return self.variations.exists()
 
     @property
-    def inv_product_id(self):
-        return self.product.inv_id
-
-    @property
     def sku(self):
-        return settings.EBAY_SKU_FORMAT.format(self.product.inv_id)
+        return settings.EBAY_SKU_FORMAT.format(self.inv_product_id)
 
 
 class EbayItemVariationModelQuerySet(BaseQuerySet):
@@ -263,8 +269,6 @@ class EbayItemVariationModelQuerySet(BaseQuerySet):
 
 
 class EbayItemVariationModel(OrderableItemModel, BaseModel):
-    inv_product_id = models.IntegerField(verbose_name="Inventorum product id")
-
     quantity = models.IntegerField(default=0)
     gross_price = MoneyField()
     tax_rate = TaxRateField()

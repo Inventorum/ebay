@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from datetime import datetime
-from inventorum.ebay.apps.products import tasks, EbayItemPublishingStatus
+from inventorum.ebay.apps.products import tasks
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemUpdateModel, \
     EbayItemVariationModel, EbayItemVariationUpdateModel
 from inventorum.util.celery import TaskExecutionContext
@@ -117,15 +117,21 @@ class CoreProductsSync(object):
         """
         :type deleted_since: datetime
         """
-        deletions_ids = self._get_deletions_ids_of_ebay_products(deleted_since=deleted_since)
+        # unfortunately, we don't get the inv_id here but the core product id
+        deleted_core_product_ids = self._get_deleted_core_product_ids(deleted_since=deleted_since)
+        # thus, we need to go through the EbayItemModel, which stores the core product id
+        # for now, this means that only products are deleted, that have been published once (which is not a big deal)
+        mapped_ebay_product_ids = EbayItemModel.objects.by_account(self.account)\
+            .filter(inv_product_id__in=deleted_core_product_ids).values_list("product_id", flat=True)
 
-        for ebay_product in EbayProductModel.objects.by_account(self.account).filter(inv_id__in=deletions_ids):
+        for ebay_product_id in set(mapped_ebay_product_ids):
+            ebay_product = EbayProductModel.objects.get(pk=ebay_product_id)
             ebay_product.deleted_in_core_api = True
             ebay_product.save()
 
             tasks.schedule_ebay_product_deletion(ebay_product.id, context=self.get_task_execution_context())
 
-        deleted_variations = EbayItemVariationModel.objects.filter(inv_product_id__in=deletions_ids)
+        deleted_variations = EbayItemVariationModel.objects.filter(inv_product_id__in=deleted_core_product_ids)
         for deleted_variation in deleted_variations:
             item = self._get_update_item_for_variation(deleted_variation)
             EbayItemVariationUpdateModel.objects.create(variation=deleted_variation, update_item=item, is_deleted=True)
@@ -149,16 +155,18 @@ class CoreProductsSync(object):
                 yield published_item, core_product_delta
 
     def _get_item_or_variation(self, core_product_delta):
-        published_core_product_ids = EbayProductModel.objects.published().by_account(self.account)\
-            .values_list("inv_id", flat=True)
+        # for performance reasons, we only get the ids of published items here to not always have to hit
+        # the database in order to check whether a core product is published to ebay or not
+        published_core_product_ids = EbayItemModel.objects.published().by_account(self.account)\
+            .values_list("inv_product_id", flat=True)
         is_published = lambda core_product_id: core_product_id in published_core_product_ids
 
         main_product_id = core_product_delta.parent or core_product_delta.id
         if not is_published(main_product_id):
             return None
 
-        published_item = EbayItemModel.objects.get(publishing_status=EbayItemPublishingStatus.PUBLISHED,
-                                                   product__inv_id=main_product_id)
+        published_item = EbayItemModel.objects.published().by_account(self.account)\
+            .get(inv_product_id=main_product_id)
 
         if published_item.has_variations:
             try:
@@ -169,12 +177,12 @@ class CoreProductsSync(object):
 
         return published_item
 
-    def _get_deletions_ids_of_ebay_products(self, deleted_since):
+    def _get_deleted_core_product_ids(self, deleted_since):
         """
-        Returns the mapped ebay products of core products that have been deleted since the given datetime
+        Returns the deleted core product ids
 
         :type deleted_since: datetime
-        :rtype: collections.Iterable[EbayProductModel]
+        :rtype: collections.Iterable[int]
         """
         deleted_core_product_ids = list()
 

@@ -39,6 +39,7 @@ class EbayVariation(object):
             }
         }
 
+
 class EbayItemSpecific(object):
     def __init__(self, name, values):
         self.name = name

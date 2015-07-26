@@ -43,7 +43,7 @@ class MappedInventorumModel(BaseModel):
     class Meta:
         abstract = True
 
-    inv_id = models.IntegerField(unique=True, verbose_name="Universal inventorum id")
+    inv_id = models.BigIntegerField(unique=True, verbose_name="Universal inventorum id")
 
     objects = PassThroughManager.for_queryset_class(MappedInventorumModelQuerySet)()
 

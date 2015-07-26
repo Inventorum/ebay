@@ -10,7 +10,6 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
 from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
-from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
     UnpublishingService, PublishingPreparationService
 from inventorum.ebay.apps.products.tests import ProductTestMixin
@@ -73,7 +72,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         with self.assertRaises(PublishingValidationException) as e:
             service.validate()
 
-        self.assertEqual(e.exception.message, 'Product was already published')
+        self.assertEqual(e.exception.message, 'Product is already published')
 
         item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
         item.save()
@@ -171,6 +170,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             service.create_ebay_item()
 
         last_item = product.items.last()
+        self.assertEqual(last_item.inv_product_id, 640416)
         self.assertEqual(last_item.name, "SlowRoad Shipping Details")
         self.assertEqual(last_item.description, "Some description")
         self.assertEqual(last_item.postal_code, "13355")
@@ -198,7 +198,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         last_image = images.last()
         self.assertEqual(last_image.inv_image_id, 2918)
         self.assertTrue(last_image.url.startswith('https://app.inventorum.net/'),
-                        "Image does not starts with https:// (%s)" % last_image.url)
+                        "Image does not start with https:// (%s)" % last_image.url)
 
         shipping_services = last_item.shipping.all()
         self.assertEqual(shipping_services.count(), 2)
@@ -248,7 +248,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
         data = ebay_item.dict()
         self.assertEqual(data, {'Item': {
-            'SKU': 'invdev_{0}'.format(StagingTestAccount.Products.PRODUCT_WITH_SHIPPING_SERVICES),
+            'SKU': 'invdev_640416',
             'ConditionID': 1000,
             'Country': 'DE',
             'Currency': 'EUR',
@@ -347,7 +347,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertEqual(last_item.variations.count(), 2)
 
         first_variation_obj = last_item.variations.first()
-        self.assertEqual(first_variation_obj.quantity, 30)
+        self.assertEqual(first_variation_obj.quantity, 1)
         self.assertEqual(first_variation_obj.gross_price, D("150"))
         self.assertEqual(first_variation_obj.tax_rate, D("7"))
         self.assertEqual(first_variation_obj.specifics.count(), 3)
@@ -378,7 +378,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         first_variation = variations_data[0]
 
         self.assertEqual(first_variation, {
-            'Quantity': 30,
+            'Quantity': 1,
             'StartPrice': '150.00',
             'SKU': 'invdev_666030',
             'VariationSpecifics': {
@@ -402,7 +402,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         second_variation = variations_data[1]
 
         self.assertEqual(second_variation, {
-            'Quantity': 50,
+            'Quantity': 2,
             'StartPrice': '130.00',
             'SKU': 'invdev_666031',
             'VariationSpecifics': {
@@ -447,12 +447,12 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                              'VariationSpecificPictureSet': [
                                  {
                                      'PictureURL': [
-                                         'http://app.inventorum.net/uploads/img-hash/5c3e/ad51/fe29/ab83/df38/febd/4f3d/5c3ead51fe29ab83df38febd4f3d9c79_ipad_retina.JPEG'],
+                                         'http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG'],
                                      'VariationSpecificValue': '22'
                                  },
                                  {
                                      'PictureURL': [
-                                         'http://app.inventorum.net/uploads/img-hash/848d/489a/a390/cfc5/8bd1/d6d2/092b/848d489aa390cfc58bd1d6d2092b2d3e_ipad_retina.JPEG'],
+                                         'http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG'],
                                      'VariationSpecificValue': '50'
                                  }
                              ]
@@ -471,7 +471,6 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
             self.assertEqual(exc.exception.message,
                              "All variations needs to have exactly the same number of attributes")
-
 
     @ApiTest.use_cassette("get_product_for_click_and_collect.yaml")
     def test_builder_for_click_and_collect(self):
@@ -500,8 +499,6 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertIn('EligibleForPickupInStore', item_data['PickupInStoreDetails'])
         self.assertEqual(item_data['PickupInStoreDetails']['EligibleForPickupInStore'], True)
 
-
-    @ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml")
     def test_builder_for_click_and_collect(self):
         with ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml") as cass:
             product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
