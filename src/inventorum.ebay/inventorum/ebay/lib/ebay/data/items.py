@@ -87,7 +87,7 @@ class EbayItemShippingService(object):
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price, sku,
                  paypal_email_address, payment_methods, category_id, shipping_services, pictures=None,
-                 item_specifics=None, variations=None, is_click_and_collect=False):
+                 item_specifics=None, variations=None, ean=None, is_click_and_collect=False):
         """
         :type title: unicode
         :type description: unicode
@@ -96,7 +96,6 @@ class EbayFixedPriceItem(object):
         :type postal_code: unicode
         :type quantity: int
         :type start_price: decimal.Decimal
-        :type sku: unicode
         :type paypal_email_address: unicode
         :type payment_methods: list[unicode]
         :type category_id: unicode
@@ -104,6 +103,8 @@ class EbayFixedPriceItem(object):
         :type pictures: list[EbayPicture]
         :type item_specifics: list[EbayItemSpecific]
         :type variations: list[EbayVariation]
+        :type sku: unicode
+        :type ean: unicode | None
         :type is_click_and_collect: bool
         """
 
@@ -131,6 +132,7 @@ class EbayFixedPriceItem(object):
         self.item_specifics = item_specifics or []
         self.variations = variations or []
         self.sku = sku
+        self.ean = ean
         self.is_click_and_collect = is_click_and_collect
 
     def dict(self):
@@ -170,6 +172,11 @@ class EbayFixedPriceItem(object):
                 'EligibleForPickupInStore': True
             }
             data['AutoPay'] = True
+
+        if self.ean:
+            data['ProductListingDetails'] = {
+                'EAN': self.ean
+            }
 
         # Static data
         data.update(**self._static_data)

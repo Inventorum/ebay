@@ -14,6 +14,7 @@ class TestCoreProductDeserializer(UnitTestCase):
 
     def test_meta_overwrite(self):
         minimal_core_product_json = {
+            "ean": None,
             "gross_price": "448.68",
             "tax_type": 1001,
             "quantity": 90,
@@ -41,6 +42,7 @@ class TestCoreProductDeserializer(UnitTestCase):
 
         core_product = subject.build()
         # None in meta should be ignored
+        self.assertEqual(core_product.ean, None)
         self.assertEqual(core_product.name, "Felt Brougham")
         self.assertEqual(core_product.description, "Marvellous bike")
         self.assertEqual(len(core_product.images), 1)

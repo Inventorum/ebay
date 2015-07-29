@@ -20,7 +20,6 @@ log = logging.getLogger(__name__)
 
 
 class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
-
     def _assign_category(self, product):
         leaf_category = CategoryFactory.create(name="Leaf category", external_id='64540')
 
@@ -281,6 +280,49 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                                                             'ShippingServicePriority': 1}]},
         }})
 
+    @ApiTest.use_cassette("get_product_with_ean_for_publishing.yaml")
+    def test_builder_with_ean(self):
+        product = self.get_product(StagingTestAccount.Products.PRODUCT_WITH_EAN, self.account)
+        self.assign_valid_shipping_services(product)
+        self.assign_product_to_valid_category(product)
+
+        preparation_service = PublishingPreparationService(product, self.user)
+        preparation_service.validate()
+
+        ebay_item = preparation_service.create_ebay_item()
+        self.assertEqual(ebay_item.ean, "75678164125")
+
+        data = ebay_item.ebay_object.dict()["Item"]
+
+        self.assertTrue("ProductListingDetails" in data)
+        self.assertTrue("EAN" in data["ProductListingDetails"])
+        self.assertEqual(data["ProductListingDetails"]["EAN"], "75678164125")
+
+    def test_ean_validation(self):
+        product = self.get_product(StagingTestAccount.Products.PRODUCT_WITHOUT_EAN, self.account)
+        self.assign_valid_shipping_services(product)
+
+        # prove that the product is valid for publishing if category does not require EAN
+        category = CategoryFactory.create(features__ean_required=False)
+        product.category = category
+        product.save()
+
+        with ApiTest.use_cassette("get_product_without_ean_for_publishing.yaml"):
+            preparation_service = PublishingPreparationService(product, self.user)
+            # no raise means it's valid
+            preparation_service.validate()
+
+        category.features.ean_required = True
+        category.features.save()
+
+        with ApiTest.use_cassette("get_product_without_ean_for_publishing.yaml"):
+            preparation_service = PublishingPreparationService(product, self.user)
+            with self.assertRaises(PublishingValidationException) as exc:
+                preparation_service.validate()
+
+        self.assertEqual(exc.exception.message,
+                         "The selected category requires a valid EAN")
+
     @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml", match_on=['body'])
     def test_publishing(self):
         product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
@@ -375,7 +417,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         variations_data = data['Variations']['Variation']
         self.assertEqual(len(variations_data), 2)
 
-        first_variation = variations_data[0]
+        first_variation = variations_data[1]
 
         self.assertEqual(first_variation, {
             'Quantity': 1,
@@ -399,7 +441,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
             }
         })
 
-        second_variation = variations_data[1]
+        second_variation = variations_data[0]
 
         self.assertEqual(second_variation, {
             'Quantity': 2,
@@ -447,13 +489,13 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
                              'VariationSpecificPictureSet': [
                                  {
                                      'PictureURL': [
-                                         'http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG'],
-                                     'VariationSpecificValue': '22'
+                                         'http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG'],
+                                     'VariationSpecificValue': '50'
                                  },
                                  {
                                      'PictureURL': [
-                                         'http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG'],
-                                     'VariationSpecificValue': '50'
+                                         'http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG'],
+                                     'VariationSpecificValue': '22'
                                  }
                              ]
                          })

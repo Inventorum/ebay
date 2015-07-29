@@ -46,7 +46,7 @@ class CoreProduct(object):
     """ Represents a core product from the inventorum api """
 
     def __init__(self, id, name, gross_price, tax_type_id, quantity, images, variation_count=0, inv_id=None,
-                 variations=None, attributes=None, description=None):
+                 variations=None, attributes=None, description=None, ean=None):
         """
         :type id: int
         :type name: unicode
@@ -59,6 +59,7 @@ class CoreProduct(object):
         :type variations: list[CoreProduct] | None
         :type attributes: list[CoreProductAttribute] | None
         :type description: unicode | None
+        :type ean: unicode | None
         """
         self.id = id
         self.name = name
@@ -71,6 +72,7 @@ class CoreProduct(object):
         self.variations = variations or []
         self.attributes = attributes
         self.description = description
+        self.ean = ean
 
     @property
     def is_parent(self):
@@ -180,6 +182,7 @@ class CoreProductDeserializer(CoreBasicProductDeserializer):
     variations = CoreBasicProductDeserializer(many=True, required=False)
     variation_count = serializers.IntegerField()
     description = serializers.CharField(allow_blank=True)
+    ean = serializers.CharField(allow_blank=True, allow_null=True)
 
 
 class CoreAddress(object):

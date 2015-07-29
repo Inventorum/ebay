@@ -116,6 +116,9 @@ class PublishingPreparationService(object):
         if not self.product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
 
+        if self.product.category.features.ean_required and not self.core_product.ean:
+            raise PublishingValidationException(ugettext('The selected category requires a valid EAN'))
+
         specific_values_ids = set(sv.specific.pk for sv in self.product.specific_values.all())
         required_ones = set(self.product.category.specifics.required().values_list('id', flat=True))
 
@@ -194,6 +197,7 @@ class PublishingPreparationService(object):
             inv_product_id=self.core_product.id,
             account=self.product.account,
             name=self.core_product.name,
+            ean=self.core_product.ean,
             description=self.core_product.description,
             gross_price=self.core_product.gross_price,
             tax_rate=tax_rate,
