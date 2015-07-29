@@ -499,7 +499,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin):
         self.assertIn('EligibleForPickupInStore', item_data['PickupInStoreDetails'])
         self.assertEqual(item_data['PickupInStoreDetails']['EligibleForPickupInStore'], True)
 
-    def test_builder_for_click_and_collect(self):
+    def test_publish_for_click_and_collect(self):
         with ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml") as cass:
             product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
             product.is_click_and_collect = True
