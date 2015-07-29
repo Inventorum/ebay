@@ -92,7 +92,9 @@ class TestCategorySuggestionsResource(EbayAuthenticatedAPITestCase):
                 "country": "DE",
                 "parent_id": None,
                 "is_leaf": False,
-                "variations_enabled": False
+                "variations_enabled": False,
+                "ean_enabled": False,
+                "ean_required": False
             },
             "suggested_categories": [
                 {
@@ -104,6 +106,8 @@ class TestCategorySuggestionsResource(EbayAuthenticatedAPITestCase):
                         "parent_id": category_mobiles.id,
                         "is_leaf": True,
                         "variations_enabled": False,
+                        "ean_enabled": False,
+                        "ean_required": False,
                         "breadcrumbs": [{"id": category_mobiles.id, "name": "Mobile & Communication"}]
                     },
                 }

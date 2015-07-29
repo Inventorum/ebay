@@ -7,6 +7,7 @@ from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeatur
     DurationModel, CategorySpecificModel
 from inventorum.ebay.apps.categories.services import EbayCategoriesScraper, EbayFeaturesScraper, EbaySpecificsScraper
 from inventorum.ebay.tests import EbayTest
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.models import EbayProductModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
@@ -14,7 +15,8 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 log = logging.getLogger(__name__)
 
 
-class TestScrappingCategories(EbayAuthenticatedAPITestCase):
+class TestEbayCategoryScrapers(EbayAuthenticatedAPITestCase):
+
     def test_it(self):
         # Create first one to prove categories scrapper removes them
         category_to_be_deleted = CategoryModel.objects.create(
@@ -73,7 +75,6 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         product = EbayProductModel.objects.get(pk=product.pk)
         self.assertIsNone(product.category)
 
-
     @EbayTest.use_cassette("ebay_test_scraper_features.yaml")
     def test_features(self):
         with EbayTest.use_cassette("ebay_get_leaf_categories.yaml"):
@@ -98,10 +99,32 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
         last_feature = leaf_categories.last().features
         self.assertEqual(last_feature.item_specifics_enabled, True)
         self.assertEqual(last_feature.variations_enabled, False)
+        self.assertEqual(last_feature.ean_enabled, False)
+        self.assertEqual(last_feature.ean_required, False)
 
         # Models should not be duplicated!
         self.assertEqual(PaymentMethodModel.objects.count(), 10)
         self.assertEqual(DurationModel.objects.count(), 5)
+
+    @EbayTest.use_cassette("ebay_test_scraper_features_ean.yaml")
+    def test_features_ean(self):
+        common_category_attrs = dict(ebay_leaf=True, features=None)
+
+        category_ean_disabled = CategoryFactory.create(external_id=17145, name="EAN disabled", **common_category_attrs)
+        category_ean_enabled = CategoryFactory.create(external_id=147915, name="EAN enabled", **common_category_attrs)
+        category_ean_required = CategoryFactory.create(external_id=163769, name="EAN required", **common_category_attrs)
+
+        features_service = EbayFeaturesScraper(self.ebay_token)
+        features_service.fetch_all()
+
+        self.assertFalse(category_ean_disabled.features.ean_enabled)
+        self.assertFalse(category_ean_disabled.features.ean_required)
+
+        self.assertTrue(category_ean_enabled.features.ean_enabled)
+        self.assertFalse(category_ean_enabled.features.ean_required)
+
+        self.assertTrue(category_ean_required.features.ean_enabled)
+        self.assertTrue(category_ean_required.features.ean_required)
 
     @EbayTest.use_cassette("ebay_test_scraper_specifics.yaml")
     def test_specifics(self):
@@ -109,7 +132,6 @@ class TestScrappingCategories(EbayAuthenticatedAPITestCase):
             # First root node of ebay has 2012 children
             service = EbayCategoriesScraper(self.ebay_token, only_leaf=True, limit=20)
             service.fetch_all()
-
 
         leaf_categories = CategoryModel.objects.filter(ebay_leaf=True)
         self.assertGreater(leaf_categories.count(), 0)

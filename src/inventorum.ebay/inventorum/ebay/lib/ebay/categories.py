@@ -51,42 +51,12 @@ class EbayCategories(EbayTrading):
             CategoryID=category_id,
             LevelLimit=7,
             DetailLevel='ReturnAll',
-            FeatureID=['ListingDurations', 'PaymentMethods', 'ItemSpecificsEnabled', 'VariationsEnabled']
+            FeatureID=['ListingDurations', 'PaymentMethods', 'ItemSpecificsEnabled', 'VariationsEnabled', 'EANEnabled']
             # If you input specific category features with FeatureID fields and set DetailLevel to ReturnAll,
             # eBay returns just the requested feature settings for the specified category, regardless of the
             # site defaults.
         ))
         return EbayFeature.create_from_data(data)
-
-    def get_features_for_categories(self, categories_ids):
-        """
-        Returns features per category
-        :param categories_ids:
-        :return: List of feature per category
-        :rtype: [inventorum.ebay.lib.ebay.data.EbayFeature]
-        """
-        for category_id in categories_ids:
-            self.parallel_api.execute('GetCategoryFeatures', dict(
-                AllFeaturesForCategory=True,
-                ViewAllNodes=True,
-                CategoryID=category_id,
-                LevelLimit=7,
-                DetailLevel='ReturnAll',
-                FeatureID=['ListingDurations', 'PaymentMethods', 'ItemSpecificsEnabled']
-                # If you input specific category features with FeatureID fields and set DetailLevel to ReturnAll,
-                # eBay returns just the requested feature settings for the specified category, regardless of the
-                # site defaults.
-            ))
-
-        category_features = self.parallel_api.wait_and_validate()
-        features = {}
-        for i, response in enumerate(category_features):
-            data = response.response.dict()
-            feature = EbayFeature.create_from_data(data)
-            log.debug('Parsing %d category: %s', i, data)
-            features[feature.details.category_id] = feature
-
-        return features
 
     def get_specifics_for_categories(self, categories_ids):
         """

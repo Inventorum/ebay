@@ -14,11 +14,13 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CategoryModel
-        fields = ("id", "name", "country", "parent_id", "is_leaf", "variations_enabled")
+        fields = ("id", "name", "country", "parent_id", "is_leaf", "variations_enabled", "ean_enabled", "ean_required")
 
     # Must be added explicitly as rest framework validates fields and does not recognize fields contributed by mptt
     parent_id = serializers.IntegerField()
     variations_enabled = serializers.BooleanField(source="features.variations_enabled")
+    ean_enabled = serializers.BooleanField(source="features.ean_enabled")
+    ean_required = serializers.BooleanField(source="features.ean_required")
 
 
 class CategoryBreadcrumbSerializer(serializers.ModelSerializer):
