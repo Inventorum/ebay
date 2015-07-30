@@ -76,8 +76,11 @@ class CoreProduct(object):
 
     @property
     def is_parent(self):
-        return len(self.variations) > 0
+        return self.has_variations
 
+    @property
+    def has_variations(self):
+        return len(self.variations) > 0
 
 class CoreImageURLs(object):
     """ Represents the image urls of a core image"""
@@ -170,6 +173,8 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
     images = CoreImage.Deserializer(many=True)
     attributes = CoreProductAttributeSerializer(many=True)
 
+    ean = serializers.CharField(allow_blank=True, allow_null=True)
+
     # meta will be removed after meta overwrites
     meta = serializers.DictField(child=MetaDeserializer())
 
@@ -182,7 +187,6 @@ class CoreProductDeserializer(CoreBasicProductDeserializer):
     variations = CoreBasicProductDeserializer(many=True, required=False)
     variation_count = serializers.IntegerField()
     description = serializers.CharField(allow_blank=True)
-    ean = serializers.CharField(allow_blank=True, allow_null=True)
 
 
 class CoreAddress(object):

@@ -9,19 +9,21 @@ from rest_framework import fields
 
 
 class EbayVariation(object):
-    def __init__(self, sku, gross_price, quantity, specifics, images):
+    def __init__(self, sku, gross_price, quantity, specifics, images, ean=None):
         """
         :type sku: unicode
         :type gross_price: decimal.Decimal
         :type quantity: int
         :type specifics: list[EbayItemSpecific]
         :type images: list[EbayPicture]
+        :type ean: unicode | None
         """
         self.sku = sku
         self.gross_price = gross_price
         self.quantity = quantity
         self.specifics = specifics
         self.images = images
+        self.ean = ean
 
     def get_specific_values_by_name(self, name):
         for specific in self.specifics:
@@ -30,7 +32,7 @@ class EbayVariation(object):
         return None
 
     def dict(self):
-        return {
+        data = {
             'SKU': self.sku,
             'Quantity': self.quantity,
             'StartPrice': EbayParser.encode_price(self.gross_price),
@@ -38,6 +40,13 @@ class EbayVariation(object):
                 'NameValueList': [s.dict() for s in self.specifics]
             }
         }
+
+        if self.ean:
+            data["VariationProductListingDetails"] = {
+                "EAN": self.ean
+            }
+
+        return data
 
 
 class EbayItemSpecific(object):

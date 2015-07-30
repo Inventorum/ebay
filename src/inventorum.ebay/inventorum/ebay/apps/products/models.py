@@ -284,6 +284,7 @@ class EbayItemVariationModel(OrderableItemModel, BaseModel):
     def ebay_object(self):
         return EbayVariation(
             sku=self.sku,
+            ean=self.ean,
             gross_price=self.gross_price,
             quantity=self.quantity,
             specifics=[s.ebay_object for s in self.specifics.all()],
