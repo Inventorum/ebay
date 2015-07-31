@@ -159,11 +159,10 @@ class CategoryFeaturesModel(BaseModel):
         feature.payment_methods = payment_methods_db
         feature.item_specifics_enabled = data.details.item_specifics_enabled
         feature.variations_enabled = data.details.variations_enabled
-        feature.ean_enabled = data.details.ean_enabled in [ProductIdentiferEnabledCodeType.Enabled,
-                                                           ProductIdentiferEnabledCodeType.Required]
-        feature.ean_required = data.details.ean_enabled == ProductIdentiferEnabledCodeType.Required
-
+        feature.ean_enabled = data.details.is_ean_enabled
+        feature.ean_required = data.details.is_ean_required
         feature.save()
+
         return feature
 
 

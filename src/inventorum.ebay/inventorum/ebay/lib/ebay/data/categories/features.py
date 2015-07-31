@@ -65,6 +65,14 @@ class EbayFeatureDetails(object):
         self.ean_enabled = ean_enabled or ProductIdentiferEnabledCodeType.Disabled
 
     @property
+    def is_ean_enabled(self):
+        return self.ean_enabled in [ProductIdentiferEnabledCodeType.Enabled, ProductIdentiferEnabledCodeType.Required]
+
+    @property
+    def is_ean_required(self):
+        return self.ean_enabled == ProductIdentiferEnabledCodeType.Required
+
+    @property
     def durations_dict(self):
         if self.durations is None:
             return None
