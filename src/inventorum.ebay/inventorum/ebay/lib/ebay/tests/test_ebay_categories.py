@@ -6,6 +6,7 @@ from django.conf import settings
 
 from inventorum.ebay.tests import EbayTest, Countries
 from inventorum.ebay.lib.ebay.categories import EbayCategories
+from inventorum.ebay.lib.ebay.data import ProductIdentiferEnabledCodeType
 from inventorum.ebay.lib.ebay.data.categories import EbayCategory
 from inventorum.ebay.lib.ebay.data.categories.features import EbayFeature, EbayFeatureDefinition, \
     EbayListingDurationDefinition
@@ -42,8 +43,8 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
     @EbayTest.use_cassette('ebay_check_features_downloading.yaml')
     def test_ebay_categories_features(self):
         ebay = EbayCategories(self.ebay_token)
-        features = {cat_id: ebay.get_features_for_category(cat_id) for cat_id in ['353', '64540']}
-        self.assertEqual(len(features), 2)
+        features = {cat_id: ebay.get_features_for_category(cat_id) for cat_id in ['353', '64540', '163769']}
+        self.assertEqual(len(features), 3)
         feature = features['353']
 
         self.assertIsInstance(feature, EbayFeature)
@@ -71,6 +72,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertTrue(feature.details.item_specifics_enabled)
         self.assertFalse(feature.details.variations_enabled)
         self.assertEqual(feature.payment_methods, payment_methods)
+        self.assertEqual(feature.details.ean_enabled, ProductIdentiferEnabledCodeType.Disabled)
 
         second_feature = features['64540']
 
@@ -85,6 +87,7 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertTrue(second_feature.details.item_specifics_enabled)
         self.assertFalse(second_feature.details.variations_enabled)
         self.assertEqual(second_feature.payment_methods, payment_methods)
+        self.assertEqual(feature.details.ean_enabled, ProductIdentiferEnabledCodeType.Disabled)
 
         feature_definition = feature.definition
         self.assertIsInstance(feature_definition, EbayFeatureDefinition)
@@ -101,6 +104,9 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(feature.get_duration_list_by_type('FixedPriceItem'), ['Days_3', 'Days_5', 'Days_7', 'Days_10',
                                                                                'Days_30'])
+
+        third_feature = features['163769']
+        self.assertEqual(third_feature.details.ean_enabled, ProductIdentiferEnabledCodeType.Required)
 
     @EbayTest.use_cassette("ebay_get_categories_specifics.yaml")
     def test_ebay_category_specifics(self):

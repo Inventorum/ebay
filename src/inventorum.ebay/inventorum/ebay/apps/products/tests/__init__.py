@@ -12,6 +12,9 @@ class ProductTestMixin(ShippingServiceTestMixin):
 
     @cached_property
     def valid_category(self):
+        """
+        :rtype: inventorum.ebay.apps.categories.models.CategoryModel
+        """
         category = CategoryFactory.create(external_id='176973')
         category.features.durations.clear()
         category.features.durations.add(DurationFactory.create(value='Days_30'))
@@ -20,7 +23,6 @@ class ProductTestMixin(ShippingServiceTestMixin):
     def assign_product_to_valid_category(self, product):
         product.category = self.valid_category
         product.save()
-
 
     def assign_valid_shipping_services(self, product):
         product.shipping_services.create(service=self.get_shipping_service_hermes(), cost="4.50",

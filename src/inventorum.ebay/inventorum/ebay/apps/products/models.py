@@ -49,6 +49,10 @@ class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
                                  on_delete=models.SET_NULL)
     external_item_id = models.CharField(max_length=255, null=True, blank=True)
     is_click_and_collect = models.BooleanField(default=False)
+
+    # this means that the product has and cannot have a ean, e.g. when it was self-made
+    ean_does_not_apply = models.BooleanField(default=False, verbose_name=ugettext("Product has and cannot have EAN"))
+
     deleted_in_core_api = models.BooleanField(default=False)
 
     objects = PassThroughManager.for_queryset_class(EbayProductModelQuerySet)()
@@ -167,6 +171,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     product = models.ForeignKey("products.EbayProductModel", related_name="items")
     category = models.ForeignKey("categories.CategoryModel", related_name="items")
 
+    ean = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
     listing_duration = models.CharField(max_length=255)
     description = models.TextField()
@@ -208,6 +213,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
         return EbayFixedPriceItem(
             title=self.name,
             sku=self.sku,
+            ean=self.ean,
             description=self.description,
             listing_duration=self.listing_duration,
             country=unicode(self.country),
@@ -269,6 +275,7 @@ class EbayItemVariationModelQuerySet(BaseQuerySet):
 
 
 class EbayItemVariationModel(OrderableItemModel, BaseModel):
+    ean = models.CharField(max_length=255, null=True, blank=True)
     quantity = models.IntegerField(default=0)
     gross_price = MoneyField()
     tax_rate = TaxRateField()
@@ -281,6 +288,7 @@ class EbayItemVariationModel(OrderableItemModel, BaseModel):
     def ebay_object(self):
         return EbayVariation(
             sku=self.sku,
+            ean=self.ean,
             gross_price=self.gross_price,
             quantity=self.quantity,
             specifics=[s.ebay_object for s in self.specifics.all()],

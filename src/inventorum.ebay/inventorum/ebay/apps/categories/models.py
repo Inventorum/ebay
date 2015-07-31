@@ -8,6 +8,7 @@ from inventorum.ebay.apps.categories import ListingDurations
 from django.db.models.fields import CharField, BooleanField, URLField, TextField, IntegerField
 from django_countries.fields import CountryField
 from inventorum.ebay.lib.db.models import BaseModel, BaseQuerySet
+from inventorum.ebay.lib.ebay.data import ProductIdentiferEnabledCodeType
 from inventorum.util.django.model_utils import PassThroughManager
 from mptt.fields import TreeForeignKey
 from mptt.managers import TreeManager
@@ -44,6 +45,7 @@ class CategoryModel(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['name']
+
 
     @classmethod
     def create_or_update_from_ebay_category(cls, data, country_code):
@@ -120,6 +122,8 @@ class CategoryFeaturesModel(BaseModel):
     payment_methods = ManyToManyField(PaymentMethodModel, related_name="features")
     item_specifics_enabled = BooleanField(default=False)
     variations_enabled = BooleanField(default=False)
+    ean_enabled = BooleanField(default=False)
+    ean_required = BooleanField(default=False)
 
     @property
     def max_listing_duration(self):
@@ -150,13 +154,16 @@ class CategoryFeaturesModel(BaseModel):
             payment, c = PaymentMethodModel.objects.get_or_create(value=payment_method)
             payment_methods_db.append(payment)
 
-        features, c = cls.objects.get_or_create(category=category)
-        features.durations = durations_db
-        features.payment_methods = payment_methods_db
-        features.item_specifics_enabled = data.details.item_specifics_enabled
-        features.variations_enabled = data.details.variations_enabled
-        features.save()
-        return features
+        feature, c = cls.objects.get_or_create(category=category)
+        feature.durations = durations_db
+        feature.payment_methods = payment_methods_db
+        feature.item_specifics_enabled = data.details.item_specifics_enabled
+        feature.variations_enabled = data.details.variations_enabled
+        feature.ean_enabled = data.details.is_ean_enabled
+        feature.ean_required = data.details.is_ean_required
+        feature.save()
+
+        return feature
 
 
 class CategorySpecificQuerySet(BaseQuerySet):

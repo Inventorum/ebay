@@ -48,6 +48,7 @@ class RelatedModelByIdField(serializers.PrimaryKeyRelatedField):
     def to_representation(self, value):
         return self.serializer(value).data
 
+
 class InventorumNormalizedDecimalField(serializers.DecimalField):
     def to_internal_value(self, data):
         """

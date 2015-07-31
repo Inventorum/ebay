@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 
 
 class TestEbayItems(EbayAuthenticatedAPITestCase):
+
     def _build_wrong_item(self):
         """
         Build item for ebay with missing photos, wrong category_id (not leaf), wrong duration (120 is not supported in
