@@ -8,7 +8,7 @@ from decimal import Decimal
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
-from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants
 from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
@@ -189,7 +189,7 @@ class PublishingPreparationService(object):
 
         :raises: PublishingValidationException
         """
-        if not self.product.category.features.ean_required:
+        if not self.product.category.features.ean_required or self.product.ean_does_not_apply:
             return
 
         # no variations => core product is expected to have EAN
@@ -210,12 +210,22 @@ class PublishingPreparationService(object):
             raise PublishingException(message="Cannot determine tax_rate for core_product.tax_type={}"
                                       .format(self.core_product.tax_type_id))
 
+        # ean applies unless product has and cannot have a ean, e.g. when they are self-made
+        ean_applies = not self.product.ean_does_not_apply
+
+        if ean_applies and not self.core_product.has_variations:
+            ean = self.core_product.ean
+        elif not self.core_product.has_variations:
+            ean = EbayConstants.ProductIdentifierUnavailableText
+        else:
+            ean = None
+
         item = EbayItemModel.objects.create(
             product=self.product,
             inv_product_id=self.core_product.id,
             account=self.product.account,
             name=self.core_product.name,
-            ean=self.core_product.ean,
+            ean=ean,
             description=self.core_product.description,
             gross_price=self.core_product.gross_price,
             tax_rate=tax_rate,
@@ -266,7 +276,7 @@ class PublishingPreparationService(object):
                                           .format(variation.tax_type_id))
             variation_obj = EbayItemVariationModel.objects.create(
                 inv_product_id=variation.id,
-                ean=variation.ean,
+                ean=variation.ean if ean_applies else EbayConstants.ProductIdentifierUnavailableText,
                 quantity=variation.quantity,
                 gross_price=variation.gross_price,
                 tax_rate=tax_rate,

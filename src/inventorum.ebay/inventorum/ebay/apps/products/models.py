@@ -49,6 +49,10 @@ class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
                                  on_delete=models.SET_NULL)
     external_item_id = models.CharField(max_length=255, null=True, blank=True)
     is_click_and_collect = models.BooleanField(default=False)
+
+    # this means that the product has and cannot have a ean, e.g. when it was self-made
+    ean_does_not_apply = models.BooleanField(default=False, verbose_name=ugettext("Product has and cannot have EAN"))
+
     deleted_in_core_api = models.BooleanField(default=False)
 
     objects = PassThroughManager.for_queryset_class(EbayProductModelQuerySet)()

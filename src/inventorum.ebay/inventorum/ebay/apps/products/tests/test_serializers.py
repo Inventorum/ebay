@@ -84,6 +84,7 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
             "inv_id": "1225146588560351744",
             "listing_url": None,
             "is_published": False,
+            "ean_does_not_apply": False,
             "is_click_and_collect": False,
             "category": {
                 "id": category.id,

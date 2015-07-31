@@ -9,6 +9,10 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 
+class EbayConstants(object):
+    ProductIdentifierUnavailableText = "Does not apply"
+
+
 class CompleteStatusCodeType(object):
     """
     Provides consts for the ebay `CompleteStatusCodeType`
