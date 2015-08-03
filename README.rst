@@ -67,6 +67,33 @@ To generate migrations:
     bin/ebay/manage src/inventorum.ebay/development.ini makemigrations <app_name>
 
 
+Working with Translations
+.........................
+
+Create new translation for a new language:
+
+    - Create a new folder in the translations directory with the language code
+    - Define the new language in the settings/__init__.py
+
+Create or update translation files for only one language::
+
+    cd src/inventorum.ebay/inventorum/ebay
+    ../../../../bin/ebay/manage ../../development.ini makemessages -l en
+
+Create or update translation files for all languages::
+
+    cd src/inventorum.ebay/inventorum/ebay
+    ../../../../bin/ebay/manage ../../development.ini makemessages -a
+
+Edit the generated translation-file::
+
+    open conf/locale/de/LC_MESSAGES/django.po
+
+To apply the translation the files must be compiled with the following command::
+
+    ../../../../bin/ebay/manage ../../development.ini compilemessages
+
+
 Known issues
 ------------
 
