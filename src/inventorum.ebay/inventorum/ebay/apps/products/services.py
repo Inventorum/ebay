@@ -8,7 +8,7 @@ from decimal import Decimal
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
-from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants
 from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
@@ -116,6 +116,8 @@ class PublishingPreparationService(object):
         if not self.product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
 
+        self._validate_ean()
+
         specific_values_ids = set(sv.specific.pk for sv in self.product.specific_values.all())
         required_ones = set(self.product.category.specifics.required().values_list('id', flat=True))
 
@@ -179,6 +181,25 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(ugettext("All variations needs to have exactly the same number of "
                                                          "attributes"))
 
+    def _validate_ean(self):
+        """
+        Since the GTIN mandate, some ebay categories require a valid EAN code for item.
+        This method is responsible for validating the EAN for these categories. In case
+        of variations, it validates whether each variation has a EAN.
+
+        :raises: PublishingValidationException
+        """
+        if not self.product.category.features.ean_required or self.product.ean_does_not_apply:
+            return
+
+        # no variations => core product is expected to have EAN
+        if not self.core_product.has_variations and not self.core_product.ean:
+            raise PublishingValidationException(ugettext("The selected category requires a valid EAN"))
+        # variations => every variation is expected to have EAN
+        elif self.core_product.variations and not all(v.ean for v in self.core_product.variations):
+            raise PublishingValidationException(
+                ugettext("The selected category requires each variation to have a valid EAN"))
+
     def create_ebay_item(self):
         """
         :rtype: EbayItemModel
@@ -189,11 +210,22 @@ class PublishingPreparationService(object):
             raise PublishingException(message="Cannot determine tax_rate for core_product.tax_type={}"
                                       .format(self.core_product.tax_type_id))
 
+        # ean applies unless product has and cannot have a ean, e.g. when they are self-made
+        ean_applies = not self.product.ean_does_not_apply
+
+        if ean_applies and not self.core_product.has_variations:
+            ean = self.core_product.ean
+        elif not self.core_product.has_variations:
+            ean = EbayConstants.ProductIdentifierUnavailableText
+        else:
+            ean = None
+
         item = EbayItemModel.objects.create(
             product=self.product,
             inv_product_id=self.core_product.id,
             account=self.product.account,
             name=self.core_product.name,
+            ean=ean,
             description=self.core_product.description,
             gross_price=self.core_product.gross_price,
             tax_rate=tax_rate,
@@ -244,17 +276,20 @@ class PublishingPreparationService(object):
                                           .format(variation.tax_type_id))
             variation_obj = EbayItemVariationModel.objects.create(
                 inv_product_id=variation.id,
+                ean=variation.ean if ean_applies else EbayConstants.ProductIdentifierUnavailableText,
                 quantity=variation.quantity,
                 gross_price=variation.gross_price,
                 tax_rate=tax_rate,
                 item=item
             )
+
             for image in variation.images:
                 EbayItemImageModel.objects.create(
                     inv_image_id=image.id,
                     url=image.urls.ipad_retina,
                     variation=variation_obj
                 )
+
             for attribute in variation.attributes:
                 specific_obj = EbayItemVariationSpecificModel.objects.create(
                     name=attribute.key,

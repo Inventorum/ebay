@@ -22,6 +22,7 @@ class TestCoreProductDeserializer(UnitTestCase):
         :return:
         """
         minimal_core_product_json = {
+            "ean": "1234566790123",
             "gross_price": "448.68",
             "tax_type": 1001,
             "quantity": 90,

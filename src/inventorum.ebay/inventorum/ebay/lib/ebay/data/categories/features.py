@@ -1,6 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from inventorum.ebay.lib.ebay.data import EbayBooleanField, EbayListSerializer
+from inventorum.ebay.lib.ebay.data import EbayBooleanField, EbayListSerializer, ProductIdentiferEnabledCodeType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework.fields import IntegerField, ListField, CharField, BooleanField
 
@@ -24,19 +24,53 @@ class EbayListingDurationSerializer(POPOSerializer):
 
 
 class EbayFeatureDetails(object):
-    item_specifics_enabled = None
-    durations = None
-    category_id = None
-    payment_methods = None
-    variations_enabled = None
+
+    # Deserializer #####################################################################################################
+
+    class Deserializer(POPOSerializer):
+        CategoryID = CharField(source="category_id", required=False)
+        ListingDuration = EbayListingDurationSerializer(many=True, source="durations", required=False)
+        PaymentMethod = ListField(child=CharField(), source="payment_methods", required=False)
+        ItemSpecificsEnabled = EbayBooleanField(source='item_specifics_enabled')
+        VariationsEnabled = EbayBooleanField(source='variations_enabled')
+        EANEnabled = CharField(source="ean_enabled", required=False)
+
+        class Meta:
+            model = None
+
+        def to_internal_value(self, data):
+            fields_to_fallback_to_site_defaults = ['ItemSpecificsEnabled', 'PaymentMethod', 'ItemSpecificsEnabled']
+            for name in fields_to_fallback_to_site_defaults:
+                if name not in data:
+                    data[name] = self.context['site_defaults'][name]
+            return super(EbayFeatureDetails.Deserializer, self).to_internal_value(data)
+
+    # / Deserializer ###################################################################################################
 
     def __init__(self, item_specifics_enabled, variations_enabled=False, durations=None, category_id=None,
-                 payment_methods=None):
+                 payment_methods=None, ean_enabled=None):
+        """
+        :type item_specifics_enabled: bool
+        :type variations_enabled: bool
+        :type durations: list[EbayListingDuration]
+        :type category_id: unicode
+        :type payment_methods: list[unicode]
+        :type ean_enabled: unicode | None
+        """
         self.item_specifics_enabled = item_specifics_enabled
         self.durations = durations
         self.category_id = category_id
         self.payment_methods = payment_methods
         self.variations_enabled = variations_enabled
+        self.ean_enabled = ean_enabled or ProductIdentiferEnabledCodeType.Disabled
+
+    @property
+    def is_ean_enabled(self):
+        return self.ean_enabled in [ProductIdentiferEnabledCodeType.Enabled, ProductIdentiferEnabledCodeType.Required]
+
+    @property
+    def is_ean_required(self):
+        return self.ean_enabled == ProductIdentiferEnabledCodeType.Required
 
     @property
     def durations_dict(self):
@@ -53,26 +87,10 @@ class EbayFeatureDetails(object):
         :rtype: EbayFeatureDetails
         :type data: dict
         """
-        serializer = EbayFeatureDetailsSerializer(data=data, context={'site_defaults': site_defaults})
+        serializer = EbayFeatureDetails.Deserializer(data=data, context={'site_defaults': site_defaults})
         return serializer.build()
 
-
-class EbayFeatureDetailsSerializer(POPOSerializer):
-    CategoryID = CharField(source="category_id", required=False)
-    ListingDuration = EbayListingDurationSerializer(many=True, source="durations", required=False)
-    PaymentMethod = ListField(child=CharField(), source="payment_methods", required=False)
-    ItemSpecificsEnabled = EbayBooleanField(source='item_specifics_enabled')
-    VariationsEnabled = EbayBooleanField(source='variations_enabled')
-
-    class Meta:
-        model = EbayFeatureDetails
-
-    def to_internal_value(self, data):
-        fields_to_fallback_to_site_defaults = ['ItemSpecificsEnabled', 'PaymentMethod', 'ItemSpecificsEnabled']
-        for name in fields_to_fallback_to_site_defaults:
-            if name not in data:
-                data[name] = self.context['site_defaults'][name]
-        return super(EbayFeatureDetailsSerializer, self).to_internal_value(data)
+EbayFeatureDetails.Deserializer.Meta.model = EbayFeatureDetails
 
 
 class EbayListingDurationDefinition(object):

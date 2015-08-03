@@ -23,12 +23,14 @@ class CategoryFeaturesFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.CategoryFeaturesModel
 
+    ean_enabled = False
+    ean_required = False
+
     @factory.post_generation
     def durations(self, create, extracted, **kwargs):
         if not create:
             # Simple build, do nothing.
             return
-
 
         if extracted:
             # A list of groups were passed in, use them

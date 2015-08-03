@@ -2,6 +2,13 @@
 CHANGES
 =======
 
+develop
+=======
+2015-08-03 0.1.9
+================
+- INV-4966 Send EAN if needed and validate EAN availability for particular categories
+  due to new ebay GTIN mandate
+
 2015-06-25 0.1.8
 ================
 - Use `product_inv_id` for published product lookup in core products sync

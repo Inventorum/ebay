@@ -9,6 +9,10 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 
+class EbayConstants(object):
+    ProductIdentifierUnavailableText = "Does not apply"
+
+
 class CompleteStatusCodeType(object):
     """
     Provides consts for the ebay `CompleteStatusCodeType`
@@ -71,6 +75,16 @@ class TradingRoleCodeType(object):
     """
 
     Seller = "Seller"
+
+
+class ProductIdentiferEnabledCodeType(unicode):
+    """
+    Provides consts for the ebay `ProductIdentiferEnabledCodeType`
+    http://developer.ebay.com/devzone/xml/docs/reference/ebay/types/ProductIdentiferEnabledCodeType.html
+    """
+    Disabled = "Disabled"
+    Enabled = "Enabled"
+    Required = "Required"
 
 
 # TODO jm: Move to data/utils.py #######################################################################################
