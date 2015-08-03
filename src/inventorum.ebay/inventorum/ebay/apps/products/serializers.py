@@ -52,12 +52,13 @@ class EbayProductSerializer(ShippingServiceConfigurableSerializer, serializers.M
     class Meta:
         model = EbayProductModel
         fields = ('id', 'inv_id', 'category', 'is_published', 'listing_url', 'specific_values', 'is_click_and_collect',
-                  'shipping_services')
+                  'shipping_services', 'ean_does_not_apply')
 
     inv_id = InvIdField(read_only=True)
     category = RelatedModelByIdField(serializer=EbayProductCategorySerializer, allow_null=True, required=False)
 
     is_click_and_collect = serializers.BooleanField()
+    ean_does_not_apply = serializers.BooleanField()
     is_published = serializers.BooleanField(read_only=True)
     listing_url = serializers.CharField(read_only=True)
     specific_values = EbayProductSpecificSerializer(many=True)

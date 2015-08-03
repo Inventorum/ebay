@@ -2,10 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.db import transaction
-from django.db.transaction import atomic
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.tasks import schedule_ebay_item_publish, schedule_ebay_item_unpublish
-from inventorum.ebay.lib.ebay import Ebay
 from requests.exceptions import RequestException
 
 from rest_framework import exceptions, mixins

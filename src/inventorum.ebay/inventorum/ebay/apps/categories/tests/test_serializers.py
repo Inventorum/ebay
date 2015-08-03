@@ -29,6 +29,8 @@ class TestCategorySerializers(UnitTestCase):
             "parent_id": None,
             "is_leaf": False,
             "variations_enabled": False,
+            "ean_enabled": False,
+            "ean_required": False
         })
 
     def test_serialization_of_leaf(self):
@@ -46,7 +48,27 @@ class TestCategorySerializers(UnitTestCase):
             "parent_id": parent.id,
             "is_leaf": True,
             "variations_enabled": False,
+            "ean_enabled": False,
+            "ean_required": False
         })
+
+    def test_ean_enabled_and_required(self):
+        category = CategoryFactory.create(name="Some category",
+                                          country=Countries.AT,
+                                          features__ean_enabled=True)
+
+        self.assertPrecondition(category.features.ean_enabled, True)
+        self.assertPrecondition(category.features.ean_required, False)
+
+        subject = serializers.CategorySerializer(category)
+        self.assertTrue(subject.data["ean_enabled"])
+        self.assertFalse(subject.data["ean_required"])
+
+        category.features.ean_required = True
+
+        subject = serializers.CategorySerializer(category)
+        self.assertTrue(subject.data["ean_enabled"])
+        self.assertTrue(subject.data["ean_required"])
 
 
 class TestCategoryBreadcrumbSerializer(UnitTestCase):
@@ -63,6 +85,7 @@ class TestCategoryBreadcrumbSerializer(UnitTestCase):
 
 
 class TestCategorySpecificsSerializer(UnitTestCase):
+
     def test_serialization(self):
         category = CategoryFactory.create(name="Some category")
 

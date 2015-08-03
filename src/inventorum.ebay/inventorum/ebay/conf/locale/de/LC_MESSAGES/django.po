@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-03 20:25+0200\n"
-"PO-Revision-Date: 2015-06-03 20:47+0100\n"
+"POT-Creation-Date: 2015-08-03 15:22+0200\n"
+"PO-Revision-Date: 2015-08-03 15:24+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "X-Generator: Poedit 1.7.7\n"
 
-#: apps/accounts/serializers.py:72 apps/products/serializers.py:86
+#: apps/accounts/serializers.py:72 apps/products/serializers.py:88
 msgid "Invalid shipping service"
 msgstr ""
 
@@ -43,23 +43,31 @@ msgid ""
 "ebay website."
 msgstr ""
 
-#: apps/products/models.py:304
+#: apps/products/models.py:54
+msgid "Product has and cannot have EAN"
+msgstr ""
+
+#: apps/products/models.py:316
 msgid "size"
 msgstr "Größe"
 
-#: apps/products/models.py:305
+#: apps/products/models.py:317
 msgid "material"
 msgstr "Material"
 
-#: apps/products/models.py:306
+#: apps/products/models.py:318
 msgid "color"
 msgstr "Farbe"
 
-#: apps/products/resources.py:44
+#: apps/products/resources.py:46
 msgid "Accessing product from another account is restricted"
 msgstr ""
 
-#: apps/products/resources.py:144
+#: apps/products/resources.py:84
+msgid "Could not initialize publishing attempt"
+msgstr ""
+
+#: apps/products/resources.py:160
 msgid "Product is not published"
 msgstr "Produkt ist nicht veröffentlicht"
 
@@ -68,70 +76,87 @@ msgstr "Produkt ist nicht veröffentlicht"
 msgid "This item specific does not accept custom values (wrong: `%(value)s`)"
 msgstr ""
 
-#: apps/products/serializers.py:69
+#: apps/products/serializers.py:71
 msgid "Given category is not a leaf"
 msgstr ""
 
-#: apps/products/serializers.py:73
+#: apps/products/serializers.py:75
 msgid "Invalid category"
 msgstr "Ungültige Kategorie"
 
 #: apps/products/services.py:102
-msgid "Product was already published"
+#, fuzzy
+#| msgid "Product was already published"
+msgid "Product is already published"
 msgstr "Produkt ist bereits veröffentlicht"
 
 #: apps/products/services.py:105
+#, fuzzy
+#| msgid "Product was already published"
+msgid "Product is already being published"
+msgstr "Produkt ist bereits veröffentlicht"
+
+#: apps/products/services.py:108
 msgid "To publish product we need your billing address"
 msgstr ""
 "Um Produkte bei eBay veröffentlichen zu können, müssen Sie Ihre "
 "Rechnungsadresse angeben"
 
-#: apps/products/services.py:108
+#: apps/products/services.py:111
 msgid "Neither product or account have configured shipping services"
 msgstr "Sie müssen mindestens einen eBay Versandservice konfigurieren"
 
-#: apps/products/services.py:114
+#: apps/products/services.py:117
 msgid "You need to select category"
 msgstr "Sie müssen eine eBay Kategorie auswählen"
 
-#: apps/products/services.py:122 apps/products/validators.py:49
+#: apps/products/services.py:127 apps/products/validators.py:49
 #, python-format
 msgid "You need to pass all required specifics (missing: %(missing_ids)s)!"
 msgstr ""
 "Sie müssen Werte für alle eBay spezifischen Artikelmerkmalen angeben (Es "
 "fehlen: %(missing_ids)s)"
 
-#: apps/products/services.py:132
+#: apps/products/services.py:137
 msgid ""
 "You cannot publish product with Click & Collect, because you don't have it "
 "enabled for your account!"
 msgstr ""
 
-#: apps/products/services.py:138
+#: apps/products/services.py:143
 msgid "Click&Collect requires to use PayPal as payment method!"
 msgstr ""
 "Um Produkte mit Click & Collect veröffentlichen zu können, muss PayPal als "
 "Zahlungsmethode konfiguriert werden"
 
-#: apps/products/services.py:142
+#: apps/products/services.py:147
 msgid "Missing paypal email addres, however paypal payment method is enabled!"
 msgstr "Sie müssen Ihre PayPal E-Mail Adresse angeben"
 
-#: apps/products/services.py:150
+#: apps/products/services.py:155
 msgid "Price needs to be greater or equal than 1"
 msgstr "Der Mindestpreis für ein Produkt bei eBay ist 1.00€"
 
-#: apps/products/services.py:153
+#: apps/products/services.py:158
 msgid "Prices needs to be greater or equal than 1"
 msgstr "Der Mindestpreis für Produkte bei eBay ist 1.00€"
 
-#: apps/products/services.py:173
+#: apps/products/services.py:178
 msgid "Variations need to have at least one attribute"
 msgstr "Variationen müssen mindestens ein Attribut besitzen"
 
-#: apps/products/services.py:176
+#: apps/products/services.py:181
 msgid "All variations needs to have exactly the same number of attributes"
 msgstr "Alle Variationen müssen für eBay die gleichen Attribute aufweisen"
+
+#: apps/products/services.py:197
+msgid "The selected category requires a valid EAN"
+msgstr "Die ausgewählte eBay Kategorie erfordert eine valide EAN"
+
+#: apps/products/services.py:201
+msgid "The selected category requires each variation to have a valid EAN"
+msgstr ""
+"Die ausgewählte eBay Kategorie erfordert eine valide EAN für jede Variation"
 
 #: apps/products/validators.py:67
 #, python-format
@@ -156,14 +181,18 @@ msgstr "Da ist etwas schief gelaufen. Bitte versuchen Sie es erneut."
 msgid "Fatal error (%(error_id)s)"
 msgstr ""
 
-#: lib/rest/fields.py:43
+#: lib/rest/fields.py:44
 msgid "id is required"
 msgstr ""
 
-#: settings.py:244
+#: lib/rest/fields.py:96
+msgid "A valid number is required."
+msgstr ""
+
+#: settings.py:246
 msgid "German"
 msgstr "Deutsch"
 
-#: settings.py:245
+#: settings.py:247
 msgid "English"
 msgstr "Englisch"

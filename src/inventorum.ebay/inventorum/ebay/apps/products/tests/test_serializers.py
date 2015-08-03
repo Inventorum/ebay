@@ -16,7 +16,7 @@ from inventorum.ebay.tests.testcases import UnitTestCase
 log = logging.getLogger(__name__)
 
 
-class TestEbayCategorySerializer(UnitTestCase):
+class TestEbayProductCategorySerializer(UnitTestCase):
 
     def test_serialize(self):
         root_category = CategoryFactory.create(name="Root category")
@@ -40,6 +40,8 @@ class TestEbayCategorySerializer(UnitTestCase):
             "parent_id": level_2_category.id,
             "is_leaf": True,
             "variations_enabled": False,
+            "ean_enabled": False,
+            "ean_required": False,
             "breadcrumb": [
                 {"id": root_category.id, "name": "Root category"},
                 {"id": level_2_category.id, "name": "Level 2 category"}
@@ -82,6 +84,7 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
             "inv_id": "1225146588560351744",
             "listing_url": None,
             "is_published": False,
+            "ean_does_not_apply": False,
             "is_click_and_collect": False,
             "category": {
                 "id": category.id,
@@ -90,6 +93,8 @@ class TestEbayProductSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
                 "parent_id": category.parent_id,
                 "is_leaf": True,
                 "variations_enabled": False,
+                "ean_enabled": False,
+                "ean_required": False,
                 "breadcrumb": [{"id": category.parent_id, "name": "Some parent"}],
                 "specifics": []
             },

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from decimal import Decimal as D
+from decimal import Decimal as D, Decimal
 import logging
 from random import randint
 
@@ -8,10 +8,44 @@ import factory
 from factory import fuzzy
 from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
 from inventorum.ebay.lib.core_api.models import CoreProductDelta, CoreOrder, CoreDeltaReturn, CoreDeltaReturnItem, \
-    CoreBasket
+    CoreBasket, CoreProduct, CoreProductAttribute, CoreInfo, CoreTaxType
 
 
 log = logging.getLogger(__name__)
+
+
+NUMBER_CHARS = [str(i) for i in range(10)]
+
+
+class CoreProductFactory(factory.Factory):
+
+    class Meta:
+        model = CoreProduct
+
+    id = fuzzy.FuzzyInteger(low=1000, high=99999)
+    name = factory.Sequence(lambda n: "Test Product {0}".format(n))
+    gross_price = fuzzy.FuzzyDecimal(low=0, high=1000, precision=2)
+    tax_type_id = fuzzy.FuzzyInteger(low=50000, high=999999)
+    quantity = fuzzy.FuzzyInteger(low=0, high=10000)
+    ean = fuzzy.FuzzyText(length=12, chars=NUMBER_CHARS)
+    images = None
+
+
+class CoreProductAttributeFactory(factory.Factory):
+
+    class Meta:
+        model = CoreProductAttribute
+
+    key = "color"
+    values = factory.LazyAttribute(lambda o: ["red"])
+
+
+class CoreProductVariationFactory(CoreProductFactory):
+
+    class Meta:
+        model = CoreProduct
+
+    name = factory.Sequence(lambda n: "Test Variation {0}".format(n))
 
 
 class CoreProductDeltaFactory(factory.Factory):
@@ -19,11 +53,11 @@ class CoreProductDeltaFactory(factory.Factory):
     class Meta:
         model = CoreProductDelta
 
-    id = factory.LazyAttribute(lambda m: randint(999, 99999))
-    name = "Some product"
+    id = fuzzy.FuzzyInteger(low=1000, high=99999)
+    name = factory.Sequence(lambda n: "Test Delta Product {0}".format(n))
+    gross_price = fuzzy.FuzzyDecimal(low=0, high=1000, precision=2)
+    quantity = fuzzy.FuzzyInteger(low=0, high=10000)
     state = "updated"
-    gross_price = D("1.99")
-    quantity = 100
     parent = None
 
 
@@ -67,3 +101,12 @@ class CoreDeltaReturnFactory(factory.Factory):
     total_amount = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
 
     items = []
+
+
+class CoreInfoFactory(factory.Factory):
+
+    class Meta:
+        model = CoreInfo
+
+    account = None
+    tax_types = CoreTaxType(1, Decimal("19.00"))
