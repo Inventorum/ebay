@@ -2,10 +2,12 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 from BeautifulSoup import CData
+from inventorum.ebay.lib.db.fields import MoneyField
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.ebay.lib.utils import int_or_none
 from rest_framework import fields
+from rest_framework.fields import ListField, CharField
 
 
 class EbayVariation(object):
@@ -65,6 +67,16 @@ class EbayItemSpecific(object):
         elif len(values) > 1:
             data['Value'] = values
         return data
+
+
+class EbayPayment(object):
+    def __init__(self, method):
+        self.method = method
+
+    def dict(self):
+        return {
+            'PaymentMethod': self.method
+        }
 
 
 class EbayPicture(object):
@@ -365,38 +377,57 @@ class EbayGetItemResponse(object):
         return EbayReviseFixedPriceItemResponse()
 
 
-class EbayGetItemsResponseDeserializer(POPOSerializer):
-    Items = EbayItemSerializer(many=True)
+class EbayPaymentSerializer(POPOSerializer):
+    PaymentMethod = fields.CharField(source='method')
+
+    class Meta:
+        model = EbayPayment
+
+
+class EbayItemShippingSerializer(POPOSerializer):
+    ShippingServiceAdditionalCost = fields.DecimalField(source='id', max_digits=5, decimal_places=2)
+    ShippingServiceCost = fields.DecimalField(source='cost', max_digits=5, decimal_places=2)
+
+    class Meta:
+        model = EbayItemShippingService
+
+
+class EbayItemPictureSerializer(POPOSerializer):
+    PictureUrl = fields.CharField(source='url')
+
+    class Meta:
+        model = EbayPicture
+
+
+class EbayItemSpecificationsSerializer(POPOSerializer):
+    ItemSpecific = fields.CharField(source='name')
+    Value = ListField(child=CharField(), source="values")
+
+    class Meta:
+        model = EbayItemSpecific
+
+
+class EbayItemVariationSerializer(POPOSerializer):
+    SKU = fields.CharField(source='sku')
+    StartPrice = fields.DecimalField(source='gross_price', max_digits=4, decimal_places=2)
+    # foo = MoneyField()
+    Quantity = fields.IntegerField(source='quantity')
+    ItemSpecifics = EbayItemSpecificationsSerializer(many=True)
+    EbayPictures = EbayItemPictureSerializer(many=True)
+    EAN = fields.CharField(source='ean')
+
+    class Meta:
+        model = EbayVariation
 
 
 class EbayItemSerializer(POPOSerializer):
-    """
-       :type title: unicode
-       :type description: unicode
-       :type listing_duration: unicode
-       :type country: unicode
-       :type postal_code: unicode
-       :type quantity: int
-       :type start_price: decimal.Decimal
-       :type paypal_email_address: unicode
-       :type payment_methods: list[unicode]
-       :type category_id: unicode
-       :type shipping_services: list[EbayShippingService]
-       :type pictures: list[EbayPicture]
-       :type item_specifics: list[EbayItemSpecific]
-       :type variations: list[EbayVariation]
-       :type sku: unicode
-       :type ean: unicode | None
-       :type is_click_and_collect: bool
-       """
-
     Title = fields.CharField(source='title')
-    Description = fields.CharField(source='description')    # not existing in response
+    Description = fields.CharField(source='description')  # not existing in response?
     ListingDuration = fields.CharField(source='listing_duration')
     Country = fields.CharField(source='country')
     PostalCode = fields.CharField(source='postal_code')
     Quantity = fields.IntegerField(source='quantity')
-    StartPrice = fields.DecimalField(source='start_price')
+    StartPrice = fields.DecimalField(source='start_price', max_digits=5, decimal_places=5)
     PaypalEmailAddress = fields.CharField(source='paypal_email_address')
     PaymentMethods = EbayPaymentSerializer(many=True)
     CategoryId = fields.CharField(source='category_id')
@@ -412,25 +443,10 @@ class EbayItemSerializer(POPOSerializer):
         model = EbayFixedPriceItem
 
 
-class EbayPaymentSerializer(POPOSerializer):
-    PaymentMethod = fields.CharField(source='payment_method')
+class EbayGetItemsResponseDeserializer(POPOSerializer):
+    Items = EbayItemSerializer(many=True)
+
+    class Meta:
+        model = EbayGetItemResponse
 
 
-class EbayItemShippingSerializer(POPOSerializer):
-    ShippingServiceAdditionalCost = fields.DecimalField(source='shipping_service',
-                                                        required='shipping_service_additional_cost')
-    ShippingServiceCost = fields.DecimalField(source='cost')
-
-
-class EbayItemPictureSerializer(POPOSerializer):
-    PictureUrl = fields.CharField(source='picture_url')
-
-
-class EbayItemSpecificationsSerializer(POPOSerializer):
-    ItemSpecific = fields.CharField()
-    # @TODO
-
-
-class EbayItemVariationSerializer(POPOSerializer):
-    Variation = fields.CharField()
-    #@TODO
