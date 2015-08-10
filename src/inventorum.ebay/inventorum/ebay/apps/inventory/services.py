@@ -3,13 +3,14 @@ from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext as _
 
 import logging
-from inventorum.ebay.apps.inventory.models import EbayItemForQuantityCheck
 from inventorum.ebay.apps.products.models import EbayItemModel
 
 log = logging.getLogger(__name__)
 
+
 class CoreApiQuantityCheckBadLocation(Exception):
     pass
+
 
 class CoreApiQuantityCheck(object):
     def __init__(self, data, location_id, core_api_client):

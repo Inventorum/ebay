@@ -6,7 +6,6 @@ from pipes import quote
 import subprocess
 
 from inventorum.util.paste import boostrap_from_config
-
 import plac
 
 log = logging.getLogger(__name__)

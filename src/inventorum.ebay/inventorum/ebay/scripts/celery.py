@@ -31,5 +31,4 @@ def run():
         from celery.bin.celery import main
         main(sys.argv)
 
-
     plac.call(_run)

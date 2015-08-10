@@ -1,11 +1,10 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-
 from datetime import datetime
+
 from django.db import transaction
 from inventorum.ebay.apps.accounts.models import AddressModel
-
 from inventorum.ebay.apps.orders import tasks, CorePaymentMethod
 from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel, OrderFactory
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemVariationModel

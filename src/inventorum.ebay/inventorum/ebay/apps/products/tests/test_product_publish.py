@@ -5,7 +5,6 @@ import json
 from decimal import Decimal as D
 
 from inventorum.ebay.tests import StagingTestAccount
-
 from django.utils.functional import cached_property
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, \
     DurationFactory
@@ -18,7 +17,6 @@ from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFac
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-
 
 log = logging.getLogger(__name__)
 

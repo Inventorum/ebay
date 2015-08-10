@@ -35,3 +35,16 @@ class EbayItems(EbayTrading):
         """
         response = self.execute('ReviseFixedPriceItem', revise_fixed_price_item.dict())
         return EbayReviseFixedPriceItemResponse.create_from_data(response)
+
+    def get_items(self):
+        """
+        Get List of Items, published on ebay.
+        :return: getItem response
+        """
+        response = self.execute('GetSellerList', {
+            'DetailLevel': 'ReturnAll'
+        })
+        # get only some items, need to get all (paging)
+        return EbayReviseFixedPriceItemResponse.create_from_data(response)
+
+        # ask for offset and limit(number)
