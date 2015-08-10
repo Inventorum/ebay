@@ -6,7 +6,6 @@ from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpubli
 
 
 class EbayItems(EbayTrading):
-
     def publish(self, item):
         """
         Publish item to ebay
@@ -39,12 +38,22 @@ class EbayItems(EbayTrading):
     def get_items(self):
         """
         Get List of Items, published on ebay.
+        <GranularityLevel>Fine</GranularityLevel>
+        <StartTimeFrom>2015-07-12T21:59:59.005Z</StartTimeFrom>
+        <StartTimeTo>2015-08-10T21:59:59.005Z</StartTimeTo>
+        <Pagination>
+            <EntriesPerPage>2</EntriesPerPage>
+        </Pagination>
         :return: getItem response
         """
         response = self.execute('GetSellerList', {
-            'DetailLevel': 'ReturnAll'
+            'GranularityLevel': 'Fine',
+            'StartTimeFrom': '2015-07-12T21:59:59.005Z',
+            'StartTimeTo': '2015-08-10T21:59:59.005Z',
+            'Pagination': {'EntriesPerPage': '2'}
         })
         # get only some items, need to get all (paging)
-        return EbayReviseFixedPriceItemResponse.create_from_data(response)
+        return response;
+        # return EbayReviseFixedPriceItemResponse.create_from_data(response)
 
         # ask for offset and limit(number)
