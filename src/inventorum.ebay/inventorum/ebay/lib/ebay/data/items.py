@@ -385,12 +385,6 @@ class EbayItemShippingSerializer(POPOSerializer):
         model = EbayItemShippingService
 
 
-class EbayPictureURLField(fields.CharField):
-    def to_internal_value(self, data):
-        url = super(EbayPictureURLField, self).to_internal_value(data)
-        return EbayPicture(url=url)
-
-
 class EbayItemPictureSerializer(POPOSerializer):
     class Meta:
         model = EbayPicture
@@ -442,7 +436,7 @@ class EbayItemSerializer(POPOSerializer):
     PayPalEmailAddress = fields.EmailField(source='paypal_email_address')
     PaymentMethods = fields.CharField(source='payment_methods')
     CategoryId = fields.CharField(source='category_id', required=False)
-    # ShippingDetails = EbayItemShippingSerializer(many=True) todo: write serializer with fields
+    # ShippingDetails = EbayItemShippingSerializer(many=True)
     PictureDetails = EbayItemPictureSerializer(source='pictures')
     # ItemSpecifics = EbayItemSpecificationsSerializer(many=True, required=False)
     # Variations = EbayItemVariationSerializer(many=True, required=False)
