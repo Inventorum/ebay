@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse, \
-    EbayReviseFixedPriceItemResponse
+    EbayReviseFixedPriceItemResponse, EbayGetItemResponse
 
 
 class EbayItems(EbayTrading):
@@ -50,10 +50,10 @@ class EbayItems(EbayTrading):
             'GranularityLevel': 'Fine',
             'StartTimeFrom': '2015-07-12T21:59:59.005Z',
             'StartTimeTo': '2015-08-10T21:59:59.005Z',
-            'Pagination': {'EntriesPerPage': '2'}
+            'Pagination': {'EntriesPerPage': '100'}
         })
-        # get only some items, need to get all (paging)
-        return response;
-        # return EbayReviseFixedPriceItemResponse.create_from_data(response)
+        # get only some items, need to get all (paging over start and )
+        # return response
+        return EbayGetItemResponse.create_from_data(data=response)
 
         # ask for offset and limit(number)
