@@ -50,7 +50,7 @@ class EbayItems(EbayTrading):
             'GranularityLevel': 'Fine',
             'StartTimeFrom': '2015-07-12T21:59:59.005Z',
             'StartTimeTo': '2015-08-10T21:59:59.005Z',
-            'Pagination': {'EntriesPerPage': '2'}
+            'Pagination': {'EntriesPerPage': '100'}
         })
         # get only some items, need to get all (paging over start and )
         # return response

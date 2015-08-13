@@ -389,7 +389,7 @@ class EbayShippingServiceOption(object):
         class Meta(POPOSerializer.Meta):
             model = None
 
-        ShippingService = fields.CharField(source="shipping_service")
+        ShippingService = fields.CharField(source='shipping_service')
 
     #################################################
 
@@ -416,6 +416,45 @@ class EbayShippingDetails(object):
         self.shipping_service_options = shipping_service_options
 
 EbayShippingDetails.Serializer.Meta.model = EbayShippingDetails
+
+
+class EbayEligibleForPickupInStore(object):
+
+    #################################################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        EligibleForPickupInStore = fields.BooleanField(source='is_eligible_for_pick_up')
+
+    #################################################
+
+    def __init__(self, is_eligible_for_pick_up):
+        self.is_eligible_for_pick_up = is_eligible_for_pick_up
+
+EbayEligibleForPickupInStore.Serializer.Meta.model = EbayEligibleForPickupInStore
+
+
+class EbayPickupInStoreDetails(object):
+
+    #################################################
+
+    class Serializer(POPOSerializer):
+
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        PickupInStoreDetails = EbayEligibleForPickupInStore.Serializer(many=True, source='pick_up_in_stores')
+        # EligibleForPickupInStore = fields.BooleanField(source='is_eligible_for_pick_up')
+
+    #################################################
+
+    def __init__(self, pick_up_in_stores):
+        self.pick_up_in_stores = pick_up_in_stores
+
+EbayPickupInStoreDetails.Serializer.Meta.model = EbayPickupInStoreDetails
 
 
 class EbayItemPictureSerializer(POPOSerializer):
@@ -472,11 +511,11 @@ class EbayItemSerializer(POPOSerializer):
     CategoryId = fields.CharField(source='category_id', required=False)
     ShippingDetails = EbayShippingDetails.Serializer(source='shipping_details')
     PictureDetails = EbayItemPictureSerializer(source='pictures')
-    # ItemSpecifics = EbayItemSpecificationsSerializer(many=True, required=False)
-    # Variations = EbayItemVariationSerializer(many=True, required=False)
+    ItemSpecifics = EbayItemSpecificationsSerializer(source='item_specifics', many=True, required=False)
+    Variations = EbayItemVariationSerializer(source='variations', many=True, required=False)
     SKU = fields.CharField(source='sku')
     EAN = fields.CharField(source='ean', required=False)
-    # IsClickAndCollect = fields.BooleanField(source='is_click_and_collect', required=False)
+    PickupInStoreDetails = EbayPickupInStoreDetails.Serializer(source='is_click_and_collect', required=False)
 
     class Meta:
         model = EbayFixedPriceItem
