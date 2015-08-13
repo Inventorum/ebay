@@ -26,7 +26,7 @@ class TestForSerializeEbayItems(EbayAuthenticatedAPITestCase):
         self.assertEqual(response.items[0].variations, []) # Test Data would be nice
         self.assertEqual(response.items[0].item_specifics, []) # Test Data would be nice
 
-        self.assertEqual(response.items[0].is_click_and_collect[0].is_eligible_for_pick_up, 'True')
+        self.assertEqual(response.items[0].pick_up.is_eligible_for_pick_up, True)
 
 # {'Ack': 'Success',
 # 'Timestamp': '2015-08-13T12:11:16.452Z',

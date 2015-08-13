@@ -121,7 +121,8 @@ class EbayItemShippingService(object):
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price, sku,
                  paypal_email_address, payment_methods, category_id=None, shipping_services=(), pictures=None,
-                 item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None):
+                 item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
+                 pick_up=None):
         """
         :type title: unicode
         :type description: unicode
@@ -142,6 +143,7 @@ class EbayFixedPriceItem(object):
         :type is_click_and_collect: bool
 
         :type shipping_details: EbayShippingDetails
+        :type pick_Up: EbayPickupInStoreDetails
         """
 
         if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
@@ -171,6 +173,7 @@ class EbayFixedPriceItem(object):
         self.ean = ean
         self.is_click_and_collect = is_click_and_collect
         self.shipping_details = shipping_details
+        self.pick_up = pick_up
 
     def dict(self):
         data = {
@@ -418,7 +421,7 @@ class EbayShippingDetails(object):
 EbayShippingDetails.Serializer.Meta.model = EbayShippingDetails
 
 
-class EbayEligibleForPickupInStore(object):
+class EbayPickupInStoreDetails(object):
 
     #################################################
 
@@ -433,26 +436,6 @@ class EbayEligibleForPickupInStore(object):
 
     def __init__(self, is_eligible_for_pick_up):
         self.is_eligible_for_pick_up = is_eligible_for_pick_up
-
-EbayEligibleForPickupInStore.Serializer.Meta.model = EbayEligibleForPickupInStore
-
-
-class EbayPickupInStoreDetails(object):
-
-    #################################################
-
-    class Serializer(POPOSerializer):
-
-        class Meta(POPOSerializer.Meta):
-            model = None
-
-        PickupInStoreDetails = EbayEligibleForPickupInStore.Serializer(many=True, source='pick_up_in_stores')
-        # EligibleForPickupInStore = fields.BooleanField(source='is_eligible_for_pick_up')
-
-    #################################################
-
-    def __init__(self, pick_up_in_stores):
-        self.pick_up_in_stores = pick_up_in_stores
 
 EbayPickupInStoreDetails.Serializer.Meta.model = EbayPickupInStoreDetails
 
@@ -515,7 +498,7 @@ class EbayItemSerializer(POPOSerializer):
     Variations = EbayItemVariationSerializer(source='variations', many=True, required=False)
     SKU = fields.CharField(source='sku')
     EAN = fields.CharField(source='ean', required=False)
-    PickupInStoreDetails = EbayPickupInStoreDetails.Serializer(source='is_click_and_collect', required=False)
+    PickupInStoreDetails = EbayPickupInStoreDetails.Serializer(source='pick_up', required=False)
 
     class Meta:
         model = EbayFixedPriceItem
