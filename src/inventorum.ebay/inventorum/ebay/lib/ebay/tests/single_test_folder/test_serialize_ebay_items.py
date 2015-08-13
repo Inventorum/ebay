@@ -7,7 +7,8 @@ log = logging.getLogger(__name__)
 
 
 class TestForSerializeEbayItems(EbayAuthenticatedAPITestCase):
-    # @EbayTest.use_cassette("full_test_for_serialize_get_items_from_ebay.yaml")
+
+    @EbayTest.use_cassette("full_test_for_serialize_get_items_from_ebay.yaml")
     def test_response_from_ebay(self):
         items = EbayItems(self.ebay_token)
         response = items.get_items()
@@ -15,12 +16,12 @@ class TestForSerializeEbayItems(EbayAuthenticatedAPITestCase):
         log.debug(response)
         self.assertEqual(response.items[0].sku, 'invrc_677218')
         self.assertEqual(response.items[0].paypal_email_address, 'bartosz@hernas.pl')
-        a = response.items[0].pictures[1]
-        b = response.items[0].pictures[1]
 
         self.assertEqual(response.items[0].pictures[0].url,
                          'http://i.ebayimg.com/00/s/MTIwMFgxNjAw/z/usoAAOSwgQ9VpN-D/$_1.JPG?set_id=880000500F')
 
+        self.assertEqual(response.items[0].shipping_details.shipping_service_options[0].shipping_service,
+                         "DE_UPSStandard")
 
 # {'Ack': 'Success',
 # 'Timestamp': '2015-08-13T12:11:16.452Z',
