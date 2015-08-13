@@ -2,12 +2,19 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 from BeautifulSoup import CData
+from IPython.parallel.client.map import Map
 from inventorum.ebay.lib.db.fields import MoneyField
-from inventorum.ebay.lib.ebay.data import EbayParser
-from inventorum.ebay.lib.rest.serializers import POPOSerializer
+from inventorum.ebay.lib.ebay.data import EbayParser, EbayListSerializer
+from inventorum.ebay.lib.rest.serializers import POPOSerializer, POPOListSerializer
 from inventorum.ebay.lib.utils import int_or_none
 from rest_framework import fields
 from rest_framework.fields import ListField, CharField, DictField
+
+
+class EbayShippingOption(object):
+    def __init__(self, shipping_service):
+        self.shipping_service = shipping_service
+
 
 
 class EbayPriceModel(object):
@@ -105,8 +112,8 @@ class EbayPicture(object):
 
 
 class EbayItemShippingService(object):
-    def __init__(self, id, cost, additional_cost=None):
-        self.id = id
+    def __init__(self, shipping_id, cost, additional_cost=None):
+        self.shipping_id = shipping_id
         self.cost = cost
         self.additional_cost = additional_cost
 
@@ -114,7 +121,7 @@ class EbayItemShippingService(object):
         return {'ShippingServicePriority': 1,
                 'ShippingServiceAdditionalCost': EbayParser.encode_price(self.additional_cost or 0),
                 'ShippingServiceCost': EbayParser.encode_price(self.cost),
-                'ShippingService': self.id}
+                'ShippingService': self.shipping_id}
 
 
 class EbayFixedPriceItem(object):
@@ -377,23 +384,58 @@ class EbayReviseFixedPriceItemResponseDeserializer(POPOSerializer):
     ItemID = fields.CharField(source='item_id')
 
 
-class EbayItemShippingSerializer(POPOSerializer):
-    ShippingServiceAdditionalCost = fields.DecimalField(source='id', max_digits=5, decimal_places=2)
-    ShippingServiceCost = fields.DecimalField(source='cost', max_digits=5, decimal_places=2)
+class EbayShippingServiceOptionSerializer(POPOSerializer):
 
-    class Meta:
-        model = EbayItemShippingService
+    class Meta(POPOSerializer.Meta):
+        model = EbayShippingOption
+        # model = EbayItemShippingService
+
+    ShippingService = fields.CharField(source="shipping_id")
+
+
+class ShippingDetails(object):
+
+    def __init__(self, options=None):
+        self.options = options
+
+
+class EbayItemShippingSerializer(POPOSerializer):
+    # data['ShippingDetails'] = {'ShippingServiceOptions': [s.dict() for s in self.shipping_services]}
+    # 'ShippingServicePriority': 1,
+    #            'ShippingServiceAdditionalCost': EbayParser.encode_price(self.additional_cost or 0),
+    #            'ShippingServiceCost': EbayParser.encode_price(self.cost),
+    #            'ShippingService': self.id}
+
+    # 'NameValueList': [s.dict() for s in self.specifics]
+
+    # def create(self, validated_data):
+    #     a = validated_data
+    #    return map(self.Meta.model, validated_data['id'])
+
+    class Meta(POPOSerializer.Meta):
+        model = ShippingDetails
+
+    ShippingServiceOptions = EbayShippingServiceOptionSerializer(many=True, source='options')
+
+#    def to_internal_value(self, data):
+#        shipping_data = []
+#        for shipping in data['ShippingServiceOptions']:
+#            shipping_data.append({'cost': (shipping['ShippingServiceCost']),
+#                                  'shipping_id': (shipping['ShippingService'])})
+# shipping_data.append(shipping['ShippingServiceAdditionalCost']) needs to come from ShippingServiceCostOverrideList'
+
+#        return shipping_data
 
 
 class EbayItemPictureSerializer(POPOSerializer):
     class Meta:
         model = EbayPicture
 
-    def create(self, validated_data):
-        return map(self.Meta.model, validated_data['urls'])
-
     def to_internal_value(self, data):
         return {'urls': data.get('PictureURL', [])}
+
+    def create(self, validated_data):
+        return map(self.Meta.model, validated_data['urls'])
 
 
 class EbayItemSpecificationsSerializer(POPOSerializer):
@@ -436,7 +478,7 @@ class EbayItemSerializer(POPOSerializer):
     PayPalEmailAddress = fields.EmailField(source='paypal_email_address')
     PaymentMethods = fields.CharField(source='payment_methods')
     CategoryId = fields.CharField(source='category_id', required=False)
-    # ShippingDetails = EbayItemShippingSerializer(many=True)
+    # ShippingDetails = EbayItemShippingSerializer(source='shipping_services')
     PictureDetails = EbayItemPictureSerializer(source='pictures')
     # ItemSpecifics = EbayItemSpecificationsSerializer(many=True, required=False)
     # Variations = EbayItemVariationSerializer(many=True, required=False)
@@ -469,13 +511,3 @@ class EbayGetItemsResponseDeserializer(POPOSerializer):
 
     class Meta:
         model = EbayGetItemResponse
-
-
-
-
-
-
-
-
-
-

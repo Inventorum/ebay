@@ -18,6 +18,11 @@ class POPOListSerializer(serializers.ListSerializer):
 
         return self.save()
 
+    def to_internal_value(self, data):
+        if isinstance(data, dict):
+            data = [data]
+        return super(POPOListSerializer, self).to_internal_value(data)
+
 
 class POPOSerializer(serializers.Serializer):
     """ Serializer for Plain Old Python Objects (POPO) """
