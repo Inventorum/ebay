@@ -9,6 +9,8 @@ from inventorum.ebay.lib.rest.serializers import POPOSerializer, POPOListSeriali
 from inventorum.ebay.lib.utils import int_or_none
 from rest_framework import fields
 from rest_framework.fields import ListField, CharField, DictField
+from django.conf import settings
+
 
 
 class EbayPriceModel(object):
@@ -461,7 +463,7 @@ class EbayItemSpecificationsSerializer(POPOSerializer):
 
 
 class EbayItemVariationSerializer(POPOSerializer):
-    SKU = fields.CharField(source='sku')
+    SKU = fields.CharField(source='sku', default='')
     StartPrice = fields.DecimalField(source='gross_price', max_digits=4, decimal_places=2)
     # foo = MoneyField()
     Quantity = fields.IntegerField(source='quantity')
@@ -496,7 +498,7 @@ class EbayItemSerializer(POPOSerializer):
     PictureDetails = EbayItemPictureSerializer(source='pictures')
     ItemSpecifics = EbayItemSpecificationsSerializer(source='item_specifics', many=True, required=False)
     Variations = EbayItemVariationSerializer(source='variations', many=True, required=False)
-    SKU = fields.CharField(source='sku')
+    SKU = fields.CharField(source='sku', default='')
     EAN = fields.CharField(source='ean', required=False)
     PickupInStoreDetails = EbayPickupInStoreDetails.Serializer(source='pick_up', required=False)
 
@@ -525,3 +527,4 @@ class EbayGetItemsResponseDeserializer(POPOSerializer):
 
     class Meta:
         model = EbayGetItemResponse
+

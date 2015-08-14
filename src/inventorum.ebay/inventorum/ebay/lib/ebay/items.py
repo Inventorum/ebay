@@ -40,7 +40,7 @@ class EbayItems(EbayTrading):
         Get List of Items, published on ebay.
         <GranularityLevel>Fine</GranularityLevel>
         <StartTimeFrom>2015-07-12T21:59:59.005Z</StartTimeFrom>
-        <StartTimeTo>2015-08-10T21:59:59.005Z</StartTimeTo>
+        <StartTimeTo>2015-08-14T17:16:59.005Z</StartTimeTo>
         <Pagination>
             <EntriesPerPage>2</EntriesPerPage>
         </Pagination>
@@ -49,8 +49,9 @@ class EbayItems(EbayTrading):
         response = self.execute('GetSellerList', {
             'GranularityLevel': 'Fine',
             'StartTimeFrom': '2015-07-12T21:59:59.005Z',
-            'StartTimeTo': '2015-08-10T21:59:59.005Z',
-            'Pagination': {'EntriesPerPage': '100'}
+            'StartTimeTo': '2015-08-14T14:59:55.000Z',
+            'IncludeVariations': 'True',
+            'Pagination': {'EntriesPerPage': '50'}
         })
         # get only some items, need to get all (paging over start and )
         # return response
