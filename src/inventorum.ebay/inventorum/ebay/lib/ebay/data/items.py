@@ -551,18 +551,83 @@ class EbayItemVariationSerializer(POPOSerializer):
         model = EbayVariation
 
 
-class EbayVariations(object):
+class EbayVariationPictureSet(object):
     #################################################
 
     class Serializer(POPOSerializer):
         class Meta(POPOSerializer.Meta):
             model = None
 
+        PictureURL = fields.CharField(source='picture_url')
+        VariationSpecificValue = fields.CharField(source='variantion_specific_value')
+
+    #################################################
+
+    def __init__(self, picture_url, variantion_specific_value):
+        self.picture_url = picture_url
+        self.variantion_specific_value = variantion_specific_value
+
+EbayVariationPictureSet.Serializer.Meta.model = EbayVariationPictureSet
+
+
+class EbayVariationPicture(object):
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        VariationSpecificPictureSet = EbayVariationPictureSet.Serializer(many=True, source='values')
+
+    #################################################
+
+    def __init__(self, name, values):
+        self.name = name
+        self.values = values
+
+
+EbayVariationPicture.Serializer.Meta.model = EbayVariationPicture
+
+
+class EbayVariations(object):
+    # 'Variations':
+    #   {'Pictures':
+    #       {'VariationSpecificPictureSet': [
+    #           {'PictureURL': 'http://i.ebayimg.com/00/s/OTAwWDE2MDA=/z/E8QAAOSwPcVV0acl/$_1.JPG?set_id=880000500F',
+    #           'VariationSpecificValue': 'Green'},
+    #       {'PictureURL': 'http://i.ebayimg.com/00/s/OTAwWDE2MDA=/z/PjQAAOSwu4BV0ZxG/$_1.JPG?set_id=880000500F',
+    #       'VariationSpecificValue': 'Blue'}],
+    #       'VariationSpecificName': 'Farbe (*)'},
+    #   'Variation': [
+    #      {'SKU': 'invproduction_2811436', 'VariationSpecifics': {
+    #          'NameValueList': [{'Name': 'Farbe (*)', 'Value': 'Green'}, {'Name': u'Gr\xf6\xdfe (*)', 'Value': 'M'}]},
+    #       'StartPrice': {'_currencyID': 'EUR', 'value': '1.0'},
+    #       'SellingStatus': {'QuantitySold': '0', 'QuantitySoldByPickupInStore': '0'},
+    #       'VariationProductListingDetails': None, 'Quantity': '3'}, {'SKU': 'invproduction_2811437',
+    #                                                                  'VariationSpecifics': {'NameValueList': [
+    #                                                                      {'Name': 'Farbe (*)', 'Value': 'Blue'},
+    #                                                                      {'Name': u'Gr\xf6\xdfe (*)', 'Value': 'S'}]},
+    #                                                                  'StartPrice': {'_currencyID': 'EUR',
+    #                                                                                 'value': '1.0'},
+    #                                                                  'SellingStatus': {'QuantitySold': '0',
+    #                                                                                    'QuantitySoldByPickupInStore': '0'},
+    #                                                                  'VariationProductListingDetails': None,
+    #                                                                  'Quantity': '1'}], 'VariationSpecificsSet': {
+    #      'NameValueList': [{'Name': 'Farbe (*)', 'Value': ['Blue', 'Green']},
+    #                        {'Name': u'Gr\xf6\xdfe (*)', 'Value': ['S', 'M']}]}},
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        Pictures = EbayVariationPicture.Serializer(many=True, source='pictures', required=False)
         Variation = EbayItemVariationSerializer(many=True, source='variation')
 
     #################################################
 
-    def __init__(self, variation):
+    def __init__(self, variation, pictures=None):
+        self.pictures = pictures
         self.variations = variation
 
 
@@ -612,12 +677,6 @@ class EbayGetItemResponse(object):
         if not data['Ack'] == 'Success':
             return None
 
-        serializer = EbayGetItemsResponseDeserializer(data=data['ItemArray'])
+        serializer = EbayItemSerializer(data=data['Item'])
         return serializer.build()
 
-
-class EbayGetItemsResponseDeserializer(POPOSerializer):
-    Item = EbayItemSerializer(many=True, source='items')
-
-    class Meta:
-        model = EbayGetItemResponse

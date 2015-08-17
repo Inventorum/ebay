@@ -60,6 +60,7 @@ class EbayItems(EbayTrading):
     def get_items(self, item_id):
         """
         Get List of item details, which is published on ebay.
+        :type item_id: unicode
         :return: EbayGetItemResponse
 
         <!-- Insert a valid ItemID from a search (on Production or Sandbox, whichever is fitting). -->
