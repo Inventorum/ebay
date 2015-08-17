@@ -2,7 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse, \
-    EbayReviseFixedPriceItemResponse, EbayGetItemResponse
+    EbayReviseFixedPriceItemResponse, EbayGetItemResponse, EbayGetItemId
+import datetime
 
 
 class EbayItems(EbayTrading):
@@ -35,9 +36,9 @@ class EbayItems(EbayTrading):
         response = self.execute('ReviseFixedPriceItem', revise_fixed_price_item.dict())
         return EbayReviseFixedPriceItemResponse.create_from_data(response)
 
-    def get_items(self):
+    def get_item_ids(self):
         """
-        Get List of Items, published on ebay.
+        Get List of ItemIds from the Items, published on ebay.
         <GranularityLevel>Fine</GranularityLevel>
         <StartTimeFrom>2015-07-12T21:59:59.005Z</StartTimeFrom>
         <StartTimeTo>2015-08-14T17:16:59.005Z</StartTimeTo>
@@ -47,14 +48,25 @@ class EbayItems(EbayTrading):
         :return: getItem response
         """
         response = self.execute('GetSellerList', {
-            'GranularityLevel': 'Fine',
+            'DetailLevel': 'ReturnAll',
             'StartTimeFrom': '2015-07-12T21:59:59.005Z',
-            'StartTimeTo': '2015-08-14T14:59:55.000Z',
+            'StartTimeTo': datetime.datetime.now(),
             'IncludeVariations': 'True',
             'Pagination': {'EntriesPerPage': '50'}
         })
         # get only some items, need to get all (paging over start and )
-        # return response
-        return EbayGetItemResponse.create_from_data(data=response)
+        return EbayGetItemId.create_from_data(data=response)
 
-        # ask for offset and limit(number)
+    def get_items(self, item_id):
+        """
+        Get List of item details, which is published on ebay.
+        :return: EbayGetItemResponse
+
+        <!-- Insert a valid ItemID from a search (on Production or Sandbox, whichever is fitting). -->
+            <ItemID>110043671232</ItemID>
+        """
+        response = self.execute('GetItem', {
+            'ItemID': item_id
+        })
+
+        return EbayGetItemResponse.create_from_data(data=response)

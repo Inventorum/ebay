@@ -12,7 +12,6 @@ from rest_framework.fields import ListField, CharField, DictField
 from django.conf import settings
 
 
-
 class EbayPriceModel(object):
     def __init__(self, currencyID, value):
         self.currencyID = currencyID
@@ -336,7 +335,7 @@ class EbayReviseFixedPriceVariation(object):
             original_data['StartPrice'] = EbayParser.encode_price(self.new_start_price)
 
         if self.is_deleted:
-            #  If a variation has any purchases (i.e., an order line item was created and QuantitySold is greather
+            #  If a variation has any purchases (i.e., an order line item was created and QuantitySold is greater
             # than 0), you can't delete the variation, but you can set its quantity to zero. If a variation has no
             # purchases, you can delete it.
             original_data['Quantity'] = 0
@@ -382,12 +381,53 @@ class EbayReviseFixedPriceItemResponse(object):
         return EbayReviseFixedPriceItemResponse()
 
 
+class EbayGetItemId(object):
+
+    def __init__(self, items):
+        self.items = items
+
+    @classmethod
+    def create_from_data(cls, data):
+        """
+        :rtype: EbayPaymentSerializer
+        """
+        if not data['Ack'] == 'Success':
+            return None
+
+        serializer = EbayGetItemIdResponseDeserializer(data=data['ItemArray'])
+        return serializer.build()
+
+
+class EbayItemID(object):
+
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        ItemID = fields.CharField(source='item_id')
+
+    #################################################
+
+    def __init__(self, item_id):
+        self.item_id = item_id
+
+EbayItemID.Serializer.Meta.model = EbayItemID
+
+
+class EbayGetItemIdResponseDeserializer(POPOSerializer):
+    Item = EbayItemID.Serializer(many=True, source='items')
+
+    class Meta:
+        model = EbayGetItemId
+
+
 class EbayReviseFixedPriceItemResponseDeserializer(POPOSerializer):
     ItemID = fields.CharField(source='item_id')
 
 
 class EbayShippingServiceOption(object):
-
     #################################################
 
     class Serializer(POPOSerializer):
@@ -401,15 +441,14 @@ class EbayShippingServiceOption(object):
     def __init__(self, shipping_service):
         self.shipping_service = shipping_service
 
+
 EbayShippingServiceOption.Serializer.Meta.model = EbayShippingServiceOption
 
 
 class EbayShippingDetails(object):
-
     #################################################
 
     class Serializer(POPOSerializer):
-
         class Meta(POPOSerializer.Meta):
             model = None
 
@@ -420,15 +459,14 @@ class EbayShippingDetails(object):
     def __init__(self, shipping_service_options):
         self.shipping_service_options = shipping_service_options
 
+
 EbayShippingDetails.Serializer.Meta.model = EbayShippingDetails
 
 
 class EbayPickupInStoreDetails(object):
-
     #################################################
 
     class Serializer(POPOSerializer):
-
         class Meta(POPOSerializer.Meta):
             model = None
 
@@ -439,11 +477,49 @@ class EbayPickupInStoreDetails(object):
     def __init__(self, is_eligible_for_pick_up):
         self.is_eligible_for_pick_up = is_eligible_for_pick_up
 
+
 EbayPickupInStoreDetails.Serializer.Meta.model = EbayPickupInStoreDetails
 
 
-class EbayItemPictureSerializer(POPOSerializer):
+class EbayVariationList(object):
+    #################################################
 
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        Name = fields.CharField(source='name')
+        Value = fields.CharField(source='value')
+
+    #################################################
+
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+
+EbayVariationList.Serializer.Meta.model = EbayVariationList
+
+
+class EbayVariationSpecifics(object):
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        NameValueList = EbayVariationList.Serializer(many=True, source='name_value_list')
+
+    #################################################
+
+    def __init__(self, name_value_list):
+        self.name_value_list = name_value_list
+
+
+EbayVariationSpecifics.Serializer.Meta.model = EbayVariationSpecifics
+
+
+class EbayItemPictureSerializer(POPOSerializer):
     class Meta:
         model = EbayPicture
 
@@ -454,33 +530,51 @@ class EbayItemPictureSerializer(POPOSerializer):
         return map(self.Meta.model, validated_data['urls'])
 
 
-class EbayItemSpecificationsSerializer(POPOSerializer):
-    ItemSpecific = fields.CharField(source='name')
-    Value = ListField(child=CharField(), source="values")
-
-    class Meta:
-        model = EbayItemSpecific
-
-
-class EbayItemVariationSerializer(POPOSerializer):
-    SKU = fields.CharField(source='sku', default='')
-    StartPrice = fields.DecimalField(source='gross_price', max_digits=4, decimal_places=2)
-    # foo = MoneyField()
-    Quantity = fields.IntegerField(source='quantity')
-    ItemSpecifics = EbayItemSpecificationsSerializer(many=True)
-    EbayPictures = EbayItemPictureSerializer(many=True)
-    EAN = fields.CharField(source='ean')
-
-    class Meta:
-        model = EbayVariation
-
-
 class EbayAmountSerializer(POPOSerializer):
     _currencyID = fields.CharField(source='currencyID', max_length=3)
     value = fields.DecimalField(max_digits=4, decimal_places=2)
 
     class Meta:
         model = EbayPriceModel
+
+
+class EbayItemVariationSerializer(POPOSerializer):
+    SKU = fields.CharField(source='sku', default='')
+    StartPrice = EbayAmountSerializer(source='gross_price')
+    # foo = MoneyField()
+    Quantity = fields.IntegerField(source='quantity')
+    VariationSpecifics = EbayVariationSpecifics.Serializer(source='specifics', many=True)
+    EbayPictures = EbayItemPictureSerializer(many=True, default='')
+    EAN = fields.CharField(source='ean', default='')
+
+    class Meta:
+        model = EbayVariation
+
+
+class EbayVariations(object):
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        Variation = EbayItemVariationSerializer(many=True, source='variation')
+
+    #################################################
+
+    def __init__(self, variation):
+        self.variations = variation
+
+
+EbayVariations.Serializer.Meta.model = EbayVariations
+
+
+class EbayItemSpecificationsSerializer(POPOSerializer):
+    ItemSpecific = fields.CharField(source='name')
+    Value = ListField(child=CharField(), source="values")
+
+    class Meta:
+        model = EbayItemSpecific
 
 
 class EbayItemSerializer(POPOSerializer):
@@ -497,7 +591,7 @@ class EbayItemSerializer(POPOSerializer):
     ShippingDetails = EbayShippingDetails.Serializer(source='shipping_details')
     PictureDetails = EbayItemPictureSerializer(source='pictures')
     ItemSpecifics = EbayItemSpecificationsSerializer(source='item_specifics', many=True, required=False)
-    Variations = EbayItemVariationSerializer(source='variations', many=True, required=False)
+    Variations = EbayVariations.Serializer(source='variations', many=True, required=False)
     SKU = fields.CharField(source='sku', default='')
     EAN = fields.CharField(source='ean', required=False)
     PickupInStoreDetails = EbayPickupInStoreDetails.Serializer(source='pick_up', required=False)
@@ -527,4 +621,3 @@ class EbayGetItemsResponseDeserializer(POPOSerializer):
 
     class Meta:
         model = EbayGetItemResponse
-
