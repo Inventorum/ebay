@@ -123,7 +123,7 @@ class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price, sku,
                  paypal_email_address, payment_methods, category_id=None, shipping_services=(), pictures=None,
                  item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
-                 pick_up=None):
+                 pick_up=None, variation=None):
         """
         :type title: unicode
         :type description: unicode
@@ -145,6 +145,7 @@ class EbayFixedPriceItem(object):
 
         :type shipping_details: EbayShippingDetails
         :type pick_Up: EbayPickupInStoreDetails
+        :type variation: EbayVariations
         """
 
         if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
@@ -175,6 +176,7 @@ class EbayFixedPriceItem(object):
         self.is_click_and_collect = is_click_and_collect
         self.shipping_details = shipping_details
         self.pick_up = pick_up
+        self.variation = variation
 
     def dict(self):
         data = {
@@ -538,17 +540,37 @@ class EbayAmountSerializer(POPOSerializer):
         model = EbayPriceModel
 
 
-class EbayItemVariationSerializer(POPOSerializer):
-    SKU = fields.CharField(source='sku', default='')
-    StartPrice = EbayAmountSerializer(source='gross_price')
-    # foo = MoneyField()
-    Quantity = fields.IntegerField(source='quantity')
-    VariationSpecifics = EbayVariationSpecifics.Serializer(source='specifics', many=True)
-    EbayPictures = EbayItemPictureSerializer(many=True, default='')
-    EAN = fields.CharField(source='ean', default='')
+# class EbayItemVariationSerializer(POPOSerializer):
+#     SKU = fields.CharField(source='sku', default='')
+#     StartPrice = EbayAmountSerializer(source='gross_price')
+#     # foo = MoneyField()
+#     Quantity = fields.IntegerField(source='quantity')
+#     VariationSpecifics = EbayVariationSpecifics.Serializer(source='specifics', many=True)
+#     EbayPictures = EbayItemPictureSerializer(many=True, default='')
+#     EAN = fields.CharField(source='ean', default='')
+#
+#     class Meta:
+#         model = EbayVariation
 
-    class Meta:
-        model = EbayVariation
+class EbayItemVariation(object):
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        SKU = fields.CharField(source='sku')
+        StartPrice = EbayAmountSerializer(source='start_price')
+        Quantity = fields.IntegerField(source='quantity')
+
+    #################################################
+
+    def __init__(self, start_price, quantity, sku=None):
+        self.start_price = start_price
+        self.sku = sku
+        self.quantity = quantity
+
+EbayItemVariation.Serializer.Meta.model = EbayItemVariation
 
 
 class EbayVariationPictureSet(object):
@@ -559,13 +581,13 @@ class EbayVariationPictureSet(object):
             model = None
 
         PictureURL = fields.CharField(source='picture_url')
-        VariationSpecificValue = fields.CharField(source='variantion_specific_value')
+        VariationSpecificValue = fields.CharField(source='variation_specific_value')
 
     #################################################
 
-    def __init__(self, picture_url, variantion_specific_value):
+    def __init__(self, variation_specific_value, picture_url=None):
         self.picture_url = picture_url
-        self.variantion_specific_value = variantion_specific_value
+        self.variation_specific_value = variation_specific_value
 
 EbayVariationPictureSet.Serializer.Meta.model = EbayVariationPictureSet
 
@@ -577,6 +599,7 @@ class EbayVariationPicture(object):
         class Meta(POPOSerializer.Meta):
             model = None
 
+        VariationSpecificName = fields.CharField(source='name')
         VariationSpecificPictureSet = EbayVariationPictureSet.Serializer(many=True, source='values')
 
     #################################################
@@ -587,6 +610,44 @@ class EbayVariationPicture(object):
 
 
 EbayVariationPicture.Serializer.Meta.model = EbayVariationPicture
+
+
+class VariationSpecificSetValue(object):
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        Name = fields.CharField(source='name')
+        Value = fields.ListField(source='values')
+
+    #################################################
+
+    def __init__(self, name, values):
+        self.name = name
+        self.values = values
+
+
+VariationSpecificSetValue.Serializer.Meta.model = VariationSpecificSetValue
+
+
+class EbayItemVariationSpecificSet(object):
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        NameValueList = VariationSpecificSetValue.Serializer(many=True, source='values')
+
+    #################################################
+
+    def __init__(self, values):
+        self.values = values
+
+
+EbayItemVariationSpecificSet.Serializer.Meta.model = EbayItemVariationSpecificSet
 
 
 class EbayVariations(object):
@@ -622,13 +683,15 @@ class EbayVariations(object):
             model = None
 
         Pictures = EbayVariationPicture.Serializer(many=True, source='pictures', required=False)
-        Variation = EbayItemVariationSerializer(many=True, source='variation')
+        Variation = EbayItemVariation.Serializer(many=True, source='variation')
+        VariationSpecificsSet = EbayItemVariationSpecificSet.Serializer(many=True, source='variation_specifics_set')
 
     #################################################
 
-    def __init__(self, variation, pictures=None):
+    def __init__(self, variation, variation_specifics_set, pictures=None):
         self.pictures = pictures
         self.variations = variation
+        self.variation_specifics_set = variation_specifics_set
 
 
 EbayVariations.Serializer.Meta.model = EbayVariations
@@ -656,7 +719,7 @@ class EbayItemSerializer(POPOSerializer):
     ShippingDetails = EbayShippingDetails.Serializer(source='shipping_details')
     PictureDetails = EbayItemPictureSerializer(source='pictures')
     ItemSpecifics = EbayItemSpecificationsSerializer(source='item_specifics', many=True, required=False)
-    Variations = EbayVariations.Serializer(source='variations', many=True, required=False)
+    Variations = EbayVariations.Serializer(source='variation', many=True, required=False)
     SKU = fields.CharField(source='sku', default='')
     EAN = fields.CharField(source='ean', required=False)
     PickupInStoreDetails = EbayPickupInStoreDetails.Serializer(source='pick_up', required=False)
