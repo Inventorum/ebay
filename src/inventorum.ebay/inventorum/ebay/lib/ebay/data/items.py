@@ -401,7 +401,6 @@ class EbayGetItemId(object):
 
 
 class EbayItemID(object):
-
     #################################################
 
     class Serializer(POPOSerializer):
@@ -540,18 +539,6 @@ class EbayAmountSerializer(POPOSerializer):
         model = EbayPriceModel
 
 
-# class EbayItemVariationSerializer(POPOSerializer):
-#     SKU = fields.CharField(source='sku', default='')
-#     StartPrice = EbayAmountSerializer(source='gross_price')
-#     # foo = MoneyField()
-#     Quantity = fields.IntegerField(source='quantity')
-#     VariationSpecifics = EbayVariationSpecifics.Serializer(source='specifics', many=True)
-#     EbayPictures = EbayItemPictureSerializer(many=True, default='')
-#     EAN = fields.CharField(source='ean', default='')
-#
-#     class Meta:
-#         model = EbayVariation
-
 class EbayItemVariation(object):
     #################################################
 
@@ -651,31 +638,6 @@ EbayItemVariationSpecificSet.Serializer.Meta.model = EbayItemVariationSpecificSe
 
 
 class EbayVariations(object):
-    # 'Variations':
-    #   {'Pictures':
-    #       {'VariationSpecificPictureSet': [
-    #           {'PictureURL': 'http://i.ebayimg.com/00/s/OTAwWDE2MDA=/z/E8QAAOSwPcVV0acl/$_1.JPG?set_id=880000500F',
-    #           'VariationSpecificValue': 'Green'},
-    #       {'PictureURL': 'http://i.ebayimg.com/00/s/OTAwWDE2MDA=/z/PjQAAOSwu4BV0ZxG/$_1.JPG?set_id=880000500F',
-    #       'VariationSpecificValue': 'Blue'}],
-    #       'VariationSpecificName': 'Farbe (*)'},
-    #   'Variation': [
-    #      {'SKU': 'invproduction_2811436', 'VariationSpecifics': {
-    #          'NameValueList': [{'Name': 'Farbe (*)', 'Value': 'Green'}, {'Name': u'Gr\xf6\xdfe (*)', 'Value': 'M'}]},
-    #       'StartPrice': {'_currencyID': 'EUR', 'value': '1.0'},
-    #       'SellingStatus': {'QuantitySold': '0', 'QuantitySoldByPickupInStore': '0'},
-    #       'VariationProductListingDetails': None, 'Quantity': '3'}, {'SKU': 'invproduction_2811437',
-    #                                                                  'VariationSpecifics': {'NameValueList': [
-    #                                                                      {'Name': 'Farbe (*)', 'Value': 'Blue'},
-    #                                                                      {'Name': u'Gr\xf6\xdfe (*)', 'Value': 'S'}]},
-    #                                                                  'StartPrice': {'_currencyID': 'EUR',
-    #                                                                                 'value': '1.0'},
-    #                                                                  'SellingStatus': {'QuantitySold': '0',
-    #                                                                                    'QuantitySoldByPickupInStore': '0'},
-    #                                                                  'VariationProductListingDetails': None,
-    #                                                                  'Quantity': '1'}], 'VariationSpecificsSet': {
-    #      'NameValueList': [{'Name': 'Farbe (*)', 'Value': ['Blue', 'Green']},
-    #                        {'Name': u'Gr\xf6\xdfe (*)', 'Value': ['S', 'M']}]}},
     #################################################
 
     class Serializer(POPOSerializer):
