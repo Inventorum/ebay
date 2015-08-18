@@ -2,14 +2,11 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 from BeautifulSoup import CData
-from IPython.parallel.client.map import Map
-from inventorum.ebay.lib.db.fields import MoneyField
-from inventorum.ebay.lib.ebay.data import EbayParser, EbayListSerializer
-from inventorum.ebay.lib.rest.serializers import POPOSerializer, POPOListSerializer
+from inventorum.ebay.lib.ebay.data import EbayParser
+from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.ebay.lib.utils import int_or_none
 from rest_framework import fields
-from rest_framework.fields import ListField, CharField, DictField
-from django.conf import settings
+from rest_framework.fields import ListField, CharField
 
 
 class EbayPriceModel(object):
