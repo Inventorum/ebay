@@ -15,7 +15,7 @@ class EbayItemsSync(object):
         self.account = account
         assert self.account.is_ebay_authenticated, "Account {} is not authenticated to ebay".format(account)
 
-        self.sync = IncomingEbayOrderSyncer(self.account)
+        self.sync = IncomingEbayItemSyncer(self.account)
 
 
 class OldEbayItemImporter(object):
@@ -26,7 +26,7 @@ class OldEbayItemImporter(object):
         log.info(ebay_item)
 
 
-class IncomingEbayOrderSyncer(object):
+class IncomingEbayItemSyncer(object):
 
     def __init__(self, account):
         """
