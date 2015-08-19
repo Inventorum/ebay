@@ -57,7 +57,7 @@ class EbayItems(EbayTrading):
         # get only some items, need to get all (paging over start and )
         return EbayGetItemId.create_from_data(data=response)
 
-    def get_items(self, item_id):
+    def get_item(self, item_id):
         """
         Get List of item details, which is published on ebay.
         :type item_id: unicode

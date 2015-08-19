@@ -206,7 +206,6 @@ class EbayItemModel(OrderableItemModel, BaseModel):
         """
         return sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
 
-
     @property
     def ebay_object(self):
         payment_methods = list(self.payment_methods.all().values_list('external_id', flat=True))
@@ -311,7 +310,7 @@ class EbayItemVariationModel(OrderableItemModel, BaseModel):
 class EbayItemVariationSpecificModel(BaseModel):
     class TranslatedNames(object):
         """
-        This class exist only to trigger Django to translate these 3 names that are originaly comming from core api
+        This class exist only to trigger Django to translate these 3 names that are originally coming from core api
         """
         SIZE = ugettext('size')
         MATERIAL = ugettext('material')

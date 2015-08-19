@@ -23,15 +23,14 @@ class TestForGetDataFromEbay(EbayAuthenticatedAPITestCase):
     def test_get_item_from_ebay(self):
         items = EbayItems(self.ebay_token)
         id_1 = '261967105601'
-        item1 = items.get_items(id_1)
+        item1 = items.get_item(id_1)
         log.debug(item1)
         self.assertEqual(item1.sku, 'invrc_677218')
         self.assertEqual(item1.country, 'DE')
         self.assertEqual(item1.shipping_details.shipping_service_options[0].shipping_service, 'DE_UPSStandard')
 
-
         id_2 = '262005246355'
-        item2 = items.get_items(id_2)
+        item2 = items.get_item(id_2)
         self.assertEqual(item2.sku, 'invproduction_2811435')
         self.assertEqual(item2.country, 'DE')
         self.assertEqual(item2.pictures[0].url,
