@@ -25,12 +25,14 @@ class TestForGetDataFromEbay(EbayAuthenticatedAPITestCase):
         id_1 = '261967105601'
         item1 = items.get_item(id_1)
         log.debug(item1)
+        self.assertEqual(item1.item_id, id_1)
         self.assertEqual(item1.sku, 'invrc_677218')
         self.assertEqual(item1.country, 'DE')
         self.assertEqual(item1.shipping_details.shipping_service_options[0].shipping_service, 'DE_UPSStandard')
 
         id_2 = '262005246355'
         item2 = items.get_item(id_2)
+        self.assertEqual(item2.item_id, id_2)
         self.assertEqual(item2.sku, 'invproduction_2811435')
         self.assertEqual(item2.country, 'DE')
         self.assertEqual(item2.pictures[0].url,
@@ -78,7 +80,8 @@ class TestForGetDataFromEbay(EbayAuthenticatedAPITestCase):
 #               'http://i.ebayimg.com/00/s/OTAwWDE2MDA=/z/S3YAAOSw9N1Vzgml/$_1.JPG?set_id=880000500F',
 #               'http://i.ebayimg.com/00/s/OTAwWDE2MDA=/z/NZcAAOSwu4BV0Zvz/$_1.JPG?set_id=880000500F'],
 #                              'GalleryURL': 'http://i.ebayimg.com/00/s/OTAwWDE2MDA=/z/S3YAAOSw9N1Vzgml/$_1.JPG?set_id=880000500F'},
-#           'BuyerProtection': 'ItemEligible', 'ItemID': '262005246355',
+#           'BuyerProtection': 'ItemEligible',
+#           'ItemID': '262005246355',
 #           'StartPrice': {'_currencyID': 'EUR', 'value': '1.0'}, 'eBayPlusEligible': 'false',
 #           'ReviseStatus': {'ItemRevised': 'true'},
 #           'PrimaryCategory': {'CategoryID': '15687', 'CategoryName': 'Kleidung & Accessoires:Herrenmode:T-Shirts'},

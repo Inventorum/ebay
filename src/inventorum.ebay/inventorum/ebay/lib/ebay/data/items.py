@@ -10,13 +10,13 @@ from rest_framework.fields import ListField, CharField
 
 
 class EbayPriceModel(object):
-    def __init__(self, currencyID, value):
-        self.currencyID = currencyID
+    def __init__(self, currency_id, value):
+        self.currencyID = currency_id
         self.value = value
 
     def dict(self):
         return {
-            'CurrenceID': self.currencyID,
+            'CurrencyID': self.currencyID,
             'Value': self.value
         }
 
@@ -117,10 +117,10 @@ class EbayItemShippingService(object):
 
 
 class EbayFixedPriceItem(object):
-    def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price, sku,
-                 paypal_email_address, payment_methods, category_id=None, shipping_services=(), pictures=None,
+    def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
+                 paypal_email_address, payment_methods, sku=None, category_id=None, shipping_services=(), pictures=None,
                  item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
-                 pick_up=None, variation=None):
+                 pick_up=None, variation=None, item_id=None):
         """
         :type title: unicode
         :type description: unicode
@@ -136,13 +136,14 @@ class EbayFixedPriceItem(object):
         :type pictures: list[EbayPicture]
         :type item_specifics: list[EbayItemSpecific]
         :type variations: list[EbayVariation]
-        :type sku: unicode
+        :type sku: unicode | None
         :type ean: unicode | None
         :type is_click_and_collect: bool
 
         :type shipping_details: EbayShippingDetails
-        :type pick_Up: EbayPickupInStoreDetails
-        :type variation: EbayVariations
+        :type pick_up: EbayPickupInStoreDetails | None
+        :type variation: EbayVariations | None
+        :type item_id: unicode
         """
 
         if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
@@ -174,6 +175,7 @@ class EbayFixedPriceItem(object):
         self.shipping_details = shipping_details
         self.pick_up = pick_up
         self.variation = variation
+        self.item_id = item_id
 
     def dict(self):
         data = {
@@ -529,7 +531,7 @@ class EbayItemPictureSerializer(POPOSerializer):
 
 
 class EbayAmountSerializer(POPOSerializer):
-    _currencyID = fields.CharField(source='currencyID', max_length=3)
+    _currencyID = fields.CharField(source='currency_id', max_length=3)
     value = fields.DecimalField(max_digits=4, decimal_places=2)
 
     class Meta:
@@ -682,6 +684,7 @@ class EbayItemSerializer(POPOSerializer):
     SKU = fields.CharField(source='sku', default='')
     EAN = fields.CharField(source='ean', required=False)
     PickupInStoreDetails = EbayPickupInStoreDetails.Serializer(source='pick_up', required=False)
+    ItemID = fields.CharField(source='item_id')
 
     class Meta:
         model = EbayFixedPriceItem

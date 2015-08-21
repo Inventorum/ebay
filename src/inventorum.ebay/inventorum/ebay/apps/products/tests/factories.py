@@ -64,7 +64,7 @@ class EbayProductFactory(factory.DjangoModelFactory):
     inv_id = factory.Sequence(lambda n: 1225147276579271239L + n)
 
 
-# TODO: Shipping services etc.
+# TODO: Shipping, Variations services etc.
 class EbayItemFactory(factory.DjangoModelFactory):
 
     class Meta:
