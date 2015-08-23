@@ -22,7 +22,7 @@ class TestCoreProductDeserializer(UnitTestCase):
             "meta": {
                 "ebay": {
                     "images": [],
-                    "gross_price": "448.68",
+                    "gross_price": None,
                     "id": 520,
                     "channel": 4,
                     "name": None,
