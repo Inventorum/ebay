@@ -4,6 +4,8 @@ CHANGES
 
 develop
 =======
+2015-08-23 0.1.10
+=================
 - Allow ``None`` for ``gross_price`` in core product meta serializer
 
 2015-08-03 0.1.9
