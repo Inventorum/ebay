@@ -1,3 +1,4 @@
+from __future__ import absolute_import, unicode_literals
 import logging
 from django.db import transaction
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
@@ -63,7 +64,7 @@ def add_sku_for_ebay_model(self, ebay_item):
     # ebay_item.sku = 'inv_123'
     # start_importer_to_convert_to_ebay_item_model(self, ebay_item)
 
-    log.info('No sku for item: ' + ebay_item.item_id + 'Of accountId: ' + self.account.id)
+    log.info('No sku for item: ' + str(ebay_item.item_id) + 'Of accountId: ' + str(self.account.id))
 
 
 class IncomingEbayItemSyncer(object):
