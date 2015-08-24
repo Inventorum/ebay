@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
 from inventorum.ebay.apps.auth.models import EbayTokenModel
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items.ebay_items_sync import IncomingEbayItemSyncer
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
@@ -47,4 +48,21 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             item_id='123abc')
 
         sync = IncomingEbayItemSyncer(account=self.account)
-        log.debug(sync(item))
+        sync(item)
+
+        self.assertPostcondition(EbayItemModel.objects.count(), 1)
+
+        ebay_model = EbayItemModel.objects.first()
+        self.assertIsInstance(ebay_model, EbayItemModel)
+
+        self.assertEqual(ebay_model.account, self.account)
+        self.assertEqual(ebay_model.listing_duration, '30')
+        self.assertEqual(ebay_model.quantity, 1)
+        self.assertEqual(ebay_model.gross_price, 1.00)
+        self.assertIsNotNone(ebay_model.category)
+        self.assertEqual(ebay_model.country, 'DE')
+        self.assertEqual(ebay_model.description, '30')
+        self.assertIsNone(ebay_model.ean)
+        self.assertEqual(ebay_model.is_click_and_collect, False)
+        self.assertEqual(ebay_model.paypal_email_address, 'test@inventorum.com')
+        self.assertEqual(ebay_model.postal_code, '12345')
