@@ -59,8 +59,11 @@ def start_importer_to_convert_to_ebay_item_model(self, ebay_item):
 
 
 def add_sku_for_ebay_model(self, ebay_item):
-    ebay_item.sku = 'inv_123'
-    start_importer_to_convert_to_ebay_item_model(self, ebay_item)
+    # needs to be done over new product entry in database, than retry
+    # ebay_item.sku = 'inv_123'
+    # start_importer_to_convert_to_ebay_item_model(self, ebay_item)
+
+    log.info('No sku for item: ' + ebay_item.item_id + 'Of accountId: ' + self.account.id)
 
 
 class IncomingEbayItemSyncer(object):
