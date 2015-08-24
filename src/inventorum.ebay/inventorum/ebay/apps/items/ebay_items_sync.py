@@ -57,11 +57,11 @@ class OldEbayItemImporter(object):
         log.info(ebay_item)
         item_model = EbayItemModel()
         item_model.item_id = ebay_item.item_id
-        item_model.category = CategoryFactory()  # (ebay_item.category_id)
+        item_model.category = CategoryFactory()
         item_model.description = ebay_item.description
         item_model.postal_code = ebay_item.postal_code
         item_model.ean = ebay_item.ean
-        item_model.is_click_and_collect = ebay_item.is_click_and_collect
+        item_model.is_click_and_collect = ebay_item.pick_up.is_eligible_for_pick_up
         item_model.gross_price = ebay_item.start_price
         item_model.quantity = ebay_item.quantity
         item_model.name = ebay_item.title
