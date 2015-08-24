@@ -1,6 +1,5 @@
 import logging
 from django.db import transaction
-from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
@@ -22,7 +21,7 @@ class EbayItemsSync(object):
         self.sync = IncomingEbayItemSyncer(self.account)
 
 
-class OldEbayItemImporter(object):
+class EbayItemImporter(object):
     """ Gets ebay_item and converts it to ebay_item_model -> store in database """
     def __init__(self, account):
         """
@@ -32,28 +31,6 @@ class OldEbayItemImporter(object):
 
     @transaction.atomic()
     def convert_to_ebay_item_model(self, ebay_item):
-        # :type title: unicode
-        # :type description: unicode
-        # :type listing_duration: unicode
-        # :type country: unicode
-        # :type postal_code: unicode
-        # :type quantity: int
-        # :type start_price: decimal.Decimal
-        # :type paypal_email_address: unicode
-        # :type payment_methods: list[unicode]
-        # :type category_id: unicode
-        # :type shipping_services: list[EbayShippingService]
-        # :type pictures: list[EbayPicture]
-        # :type item_specifics: list[EbayItemSpecific]
-        # :type variations: list[EbayVariation]
-        # :type sku: unicode | None
-        # :type ean: unicode | None
-        # :type is_click_and_collect: bool
-        #
-        # :type shipping_details: EbayShippingDetails
-        # :type pick_up: EbayPickupInStoreDetails
-        # :type variation: EbayVariations
-
         log.info(ebay_item)
         item_model = EbayItemModel()
         item_model.item_id = ebay_item.item_id
@@ -76,6 +53,16 @@ class OldEbayItemImporter(object):
         item_model.save()
 
 
+def start_importer_to_convert_to_ebay_item_model(self, ebay_item):
+    importer = EbayItemImporter(self.account)
+    importer.convert_to_ebay_item_model(ebay_item)
+
+
+def add_sku_for_ebay_model(self, ebay_item):
+    ebay_item.sku = 'inv_123'
+    start_importer_to_convert_to_ebay_item_model(self, ebay_item)
+
+
 class IncomingEbayItemSyncer(object):
 
     def __init__(self, account):
@@ -89,10 +76,14 @@ class IncomingEbayItemSyncer(object):
         :type ebay_item: inventorum.ebay.lib.ebay.data.items.EbayFixedPriceItem
         """
 
-        if hasattr(ebay_item, 'sku') and ebay_item.sku.startswith('inv'):
-            importer = OldEbayItemImporter(self.account)
-            importer.convert_to_ebay_item_model(ebay_item)
-            
+        if hasattr(ebay_item, 'sku') and ebay_item.sku is not None:
+            if ebay_item.sku.startswith('inv'):
+                start_importer_to_convert_to_ebay_item_model(self, ebay_item)
+            else:
+                log.warning('There was an ebay item with another sku (not inventorum): ' + ebay_item.sku)
+                add_sku_for_ebay_model(self, ebay_item)
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
             log.info("Item was not created via Inventorum".format(ebay_item))
+            add_sku_for_ebay_model(self, ebay_item)
+
