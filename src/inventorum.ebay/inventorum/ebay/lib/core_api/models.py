@@ -155,7 +155,7 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
         name = serializers.CharField(allow_null=True, allow_blank=True)
         description = serializers.CharField(allow_null=True, allow_blank=True)
-        gross_price = MoneyField()
+        gross_price = MoneyField(allow_null=True)
 
         images = CoreImage.Deserializer(many=True)
 
