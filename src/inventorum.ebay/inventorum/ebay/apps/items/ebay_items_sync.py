@@ -64,7 +64,7 @@ def add_sku_for_ebay_model(self, ebay_item):
     # ebay_item.sku = 'inv_123'
     # start_importer_to_convert_to_ebay_item_model(self, ebay_item)
 
-    log.info('No sku for item: ' + str(ebay_item.item_id) + 'Of accountId: ' + str(self.account.id))
+    log.warning('No sku for item: ' + str(ebay_item.item_id) + 'Of accountId: ' + str(self.account.id))
 
 
 class IncomingEbayItemSyncer(object):
@@ -81,13 +81,12 @@ class IncomingEbayItemSyncer(object):
         """
 
         if hasattr(ebay_item, 'sku') and ebay_item.sku is not None:
-            if ebay_item.sku.startswith('inv'):
+            if ebay_item.sku.startswith(EbayItemModel.get_env()):
                 start_importer_to_convert_to_ebay_item_model(self, ebay_item)
             else:
                 log.warning('There was an ebay item with another sku (not inventorum): ' + ebay_item.sku)
                 add_sku_for_ebay_model(self, ebay_item)
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
-            log.info("Item was not created via Inventorum".format(ebay_item))
+            log.warning("Item was not created via Inventorum".format(ebay_item))
             add_sku_for_ebay_model(self, ebay_item)
-

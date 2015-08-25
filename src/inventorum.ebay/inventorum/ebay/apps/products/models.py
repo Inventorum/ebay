@@ -4,6 +4,7 @@ from collections import defaultdict
 import logging
 
 from django.db import models
+from django.conf import settings as django_settings
 from django.utils.translation import ugettext
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
@@ -198,13 +199,21 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
 
     @classmethod
+    def get_env(cls):
+        """
+        Gets the environment variable
+        :return: environment as unicode
+        """
+        return django_settings.EBAY_SKU_FORMAT.format('')
+
+    @classmethod
     def clean_sku(cls, sku):
         """
         Extracts Inventorum id from sku
         :type sku: unicode
         :rtype: unicode
         """
-        return sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
+        return sku.replace(settings.EBAY_SKU_FORMAT.format(''), "")
 
     @property
     def ebay_object(self):

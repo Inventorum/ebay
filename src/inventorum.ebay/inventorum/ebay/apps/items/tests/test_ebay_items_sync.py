@@ -42,7 +42,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             pictures=[
                 EbayPicture(url='http://www.testpicture.de/image.png')],
             pick_up=EbayPickupInStoreDetails(is_eligible_for_pick_up=False),
-            sku='inv_1234',
+            sku=EbayItemModel.get_env() + '1234',
             category_id='',
             item_id='123abc')
 
