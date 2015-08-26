@@ -14,12 +14,6 @@ class EbayPriceModel(object):
         self.currencyID = currency_id
         self.value = value
 
-    def dict(self):
-        return {
-            'CurrencyID': self.currencyID,
-            'Value': self.value
-        }
-
 
 class EbayVariation(object):
     def __init__(self, sku, gross_price, quantity, specifics, images, ean=None):
@@ -83,11 +77,6 @@ class EbayItemSpecific(object):
 class EbayPayment(object):
     def __init__(self, method):
         self.method = method
-
-    def dict(self):
-        return {
-            'PaymentMethod': self.method
-        }
 
 
 class EbayPicture(object):
