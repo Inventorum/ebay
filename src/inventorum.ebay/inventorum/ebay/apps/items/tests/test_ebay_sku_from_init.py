@@ -15,6 +15,7 @@ class UnitTestsForEbaySKU(UnitTestCase):
     def test_extract_product_id(self):
         self.assertEqual(EbaySKU.extract_product_id(self.sku), '1234')
 
+    # The current environment for tests will always be the test environment. The configuration can be find in test.ini
     def test_belongs_to_current_env(self):
         self.assertTrue(EbaySKU.belongs_to_current_env(self.sku))
 
