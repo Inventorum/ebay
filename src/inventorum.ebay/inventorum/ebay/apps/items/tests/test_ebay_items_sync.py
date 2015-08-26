@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
 from inventorum.ebay.apps.auth.models import EbayTokenModel
+from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
@@ -43,7 +44,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             pictures=[
                 EbayPicture(url='http://www.testpicture.de/image.png')],
             pick_up=EbayPickupInStoreDetails(is_eligible_for_pick_up=False),
-            sku=EbayItemModel.get_env() + '1234',
+            sku=EbaySKU.get_env_prefix() + '1234',
             category_id='',
             item_id='123abc')
 

@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from django.db import transaction
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
+from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.lib.ebay.items import EbayItems
@@ -84,7 +85,7 @@ class IncomingEbayItemSyncer(object):
         """
 
         if hasattr(self.item, 'sku') and self.item.sku is not None:
-            if self.item.sku.startswith(EbayItemModel.get_env()):
+            if EbaySKU.belongs_to_current_env(self.item.sku):
                 start_importer_to_convert_to_ebay_item_model(self)
             else:
                 log.warning('There was an ebay item with another sku (not inventorum): ' + self.item.sku)

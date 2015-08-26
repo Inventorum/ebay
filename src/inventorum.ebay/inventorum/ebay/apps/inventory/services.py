@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext as _
 
 import logging
+from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products.models import EbayItemModel
 
 log = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ class CoreApiQuantityCheck(object):
         product_ids = []
         ebay_items = {}
         for index, availability in enumerate(self.data):
-            product_id = EbayItemModel.clean_sku(availability.sku)
+            product_id = EbaySKU.extract_product_id(availability.sku)
             product_ids.append(product_id)
             ebay_items[product_id] = availability  # to later access it easily
 
