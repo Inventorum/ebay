@@ -107,7 +107,7 @@ class EbayItemShippingService(object):
 
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
-                 paypal_email_address, payment_methods, sku=None, category_id=None, shipping_services=(), pictures=None,
+                 paypal_email_address, payment_methods, pictures, category_id, sku=None, shipping_services=(),
                  item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
                  pick_up=None, variation=None, item_id=None):
         """
@@ -123,8 +123,8 @@ class EbayFixedPriceItem(object):
         :type category_id: unicode
         :type shipping_services: list[EbayShippingService]
         :type pictures: list[EbayPicture]
-        :type item_specifics: list[EbayItemSpecific]
-        :type variations: list[EbayVariation]
+        :type item_specifics: list[EbayItemSpecific] | None
+        :type variations: list[EbayVariation] | None
         :type sku: unicode | None
         :type ean: unicode | None
         :type is_click_and_collect: bool
@@ -132,7 +132,7 @@ class EbayFixedPriceItem(object):
         :type shipping_details: EbayShippingDetails
         :type pick_up: EbayPickupInStoreDetails | None
         :type variation: EbayVariations | None
-        :type item_id: unicode
+        :type item_id: unicode | None
         """
 
         if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
