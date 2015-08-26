@@ -4,6 +4,7 @@ from django.db import transaction
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
+from inventorum.ebay.lib.ebay.items import EbayItems
 
 log = logging.getLogger(__name__)
 
@@ -12,6 +13,7 @@ class EbayItemsSync(object):
     """ Gets all item_ids and then all items from ebay.
         Filters received ebay_items if sku exists ->
         Call OldEbayItemImporter """
+
     def __init__(self, account):
         """
         :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
@@ -19,16 +21,22 @@ class EbayItemsSync(object):
         self.account = account
         assert self.account.is_ebay_authenticated, "Account {} is not authenticated to ebay".format(account)
 
-        self.sync = IncomingEbayItemSyncer(self.account)
+        ebay_api = EbayItems(self.account.token.ebay_object)
+        ids = ebay_api.get_item_ids()
+
+        for itemId in ids:
+            self.item = ebay_api.get_item(itemId)
+            self.sync = IncomingEbayItemSyncer(self.account, self.item)
 
 
 class EbayItemImporter(object):
     """ Gets ebay_item and converts it to ebay_item_model -> store in database """
-    def __init__(self, account):
+
+    def __init__(self, account, item):
         """
         :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
         """
-        self.sync = IncomingEbayItemSyncer(account)
+        self.sync = IncomingEbayItemSyncer(account, item)
 
     @transaction.atomic()
     def convert_to_ebay_item_model(self, ebay_item):
@@ -54,39 +62,34 @@ class EbayItemImporter(object):
         item_model.save()
 
 
-def start_importer_to_convert_to_ebay_item_model(self, ebay_item):
-    importer = EbayItemImporter(self.account)
-    importer.convert_to_ebay_item_model(ebay_item)
-
-
-def add_sku_for_ebay_model(self, ebay_item):
-    # needs to be done over new product entry in database, than retry
-    # ebay_item.sku = 'inv_123'
-    # start_importer_to_convert_to_ebay_item_model(self, ebay_item)
-
-    log.warning('No sku for item: ' + str(ebay_item.item_id) + 'Of accountId: ' + str(self.account.id))
+def start_importer_to_convert_to_ebay_item_model(self):
+    ebay_item = self.item
+    importer = EbayItemImporter(self.account, ebay_item)
+    importer.convert_to_ebay_item_model(self.account)
 
 
 class IncomingEbayItemSyncer(object):
-
-    def __init__(self, account):
+    def __init__(self, account, item):
         """
         :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
+        :type item: inventorum.ebay.apps.products.EbayItemModel
         """
         self.account = account
+        self.item = item
 
-    def __call__(self, ebay_item):
+    def __call__(self, data):
         """
+        Checks if an ebay item has a valid sku.
         :type ebay_item: inventorum.ebay.lib.ebay.data.items.EbayFixedPriceItem
         """
 
-        if hasattr(ebay_item, 'sku') and ebay_item.sku is not None:
-            if ebay_item.sku.startswith(EbayItemModel.get_env()):
-                start_importer_to_convert_to_ebay_item_model(self, ebay_item)
+        if hasattr(self.item, 'sku') and self.item.sku is not None:
+            if self.item.sku.startswith(EbayItemModel.get_env()):
+                start_importer_to_convert_to_ebay_item_model(self)
             else:
-                log.warning('There was an ebay item with another sku (not inventorum): ' + ebay_item.sku)
-                add_sku_for_ebay_model(self, ebay_item)
+                log.warning('There was an ebay item with another sku (not inventorum): ' + self.item.sku)
+                log.warning('Different sku for item: ' + str(self.item.ebay_item_id) + 'Of accountId: ' + str(self.account.id))
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
-            log.warning("Item was not created via Inventorum".format(ebay_item))
-            add_sku_for_ebay_model(self, ebay_item)
+            log.warning("Item was not created via Inventorum".format(self.item))
+            log.warning('No sku for item: ' + str(self.item.ebay_item_id) + 'Of accountId: ' + str(self.account.id))

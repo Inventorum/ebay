@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
 from inventorum.ebay.apps.auth.models import EbayTokenModel
-from inventorum.ebay.apps.items.ebay_items_sync import IncomingEbayItemSyncer
+from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption
@@ -22,6 +22,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
 
         ebay_token = EbayTokenFactory.create()
         self.account = EbayAccountFactory.create(token=EbayTokenModel.create_from_ebay_token(ebay_token))
+        self.item = EbayItemModel()
         self.default_user = EbayUserFactory.create(account=self.account)
 
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
@@ -85,7 +86,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             category_id='',
             item_id='123abc')
 
-        sync = IncomingEbayItemSyncer(account=self.account)
+        sync = IncomingEbayItemSyncer(account=self.account, item=self.item)
         sync(item)
 
         # self.assertPostcondition(EbayItemModel.objects.count(), 1)
