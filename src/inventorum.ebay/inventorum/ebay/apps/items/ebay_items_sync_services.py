@@ -65,7 +65,7 @@ class EbayItemImporter(object):
 def start_importer_to_convert_to_ebay_item_model(self):
     ebay_item = self.item
     importer = EbayItemImporter(self.account, ebay_item)
-    importer.convert_to_ebay_item_model(self.account)
+    importer.convert_to_ebay_item_model(ebay_item)
 
 
 class IncomingEbayItemSyncer(object):
@@ -92,4 +92,4 @@ class IncomingEbayItemSyncer(object):
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
             log.warning("Item was not created via Inventorum".format(self.item))
-            log.warning('No sku for item: ' + str(self.item.ebay_item_id) + 'Of accountId: ' + str(self.account.id))
+            log.warning('No sku for item: ' + str(self.item.item_id) + 'Of accountId: ' + str(self.account.id))
