@@ -13,4 +13,4 @@ class MoneyFieldTestSerializer(serializers.Serializer):
 class TestDeltaEndpointQuantizeProblem(UnitTestCase):
     def test_it(self):
         serializer = MoneyFieldTestSerializer(data={'money': '2000000000.00'})
-        self.assertFalse(serializer.is_valid())
+        self.assertTrue(serializer.is_valid(), serializer.errors)

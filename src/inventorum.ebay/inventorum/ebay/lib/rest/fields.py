@@ -82,7 +82,7 @@ class InventorumNormalizedDecimalField(serializers.DecimalField):
 
 
 class MoneyField(InventorumNormalizedDecimalField):
-    def __init__(self, max_digits=15, decimal_places=2, **kwargs):
+    def __init__(self, max_digits=12, decimal_places=2, **kwargs):
         super(MoneyField, self).__init__(max_digits=max_digits, decimal_places=decimal_places, **kwargs)
 
 
