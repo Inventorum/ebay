@@ -118,7 +118,7 @@ class EbayItemShippingDetails(BaseModel):
     @property
     def ebay_object(self):
         return EbayItemShippingService(
-            id=self.external_id,
+            shipping_id=self.external_id,
             cost=self.cost,
             additional_cost=self.additional_cost
         )
