@@ -107,7 +107,7 @@ class EbayItemShippingService(object):
 
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
-                 paypal_email_address, payment_methods, pictures, category_id, sku=None, shipping_services=(),
+                 paypal_email_address, payment_methods, pictures, category_id=None, sku=None, shipping_services=(),
                  item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
                  pick_up=None, variation=None, item_id=None):
         """
@@ -120,7 +120,7 @@ class EbayFixedPriceItem(object):
         :type start_price: decimal.Decimal
         :type paypal_email_address: unicode
         :type payment_methods: list[unicode]
-        :type category_id: unicode
+        :type category_id: unicode | None
         :type shipping_services: list[EbayShippingService]
         :type pictures: list[EbayPicture]
         :type item_specifics: list[EbayItemSpecific] | None
@@ -372,7 +372,6 @@ class EbayReviseFixedPriceItemResponse(object):
 
 
 class EbayGetItemId(object):
-
     def __init__(self, items):
         self.items = items
 
@@ -401,6 +400,7 @@ class EbayItemID(object):
 
     def __init__(self, item_id):
         self.item_id = item_id
+
 
 EbayItemID.Serializer.Meta.model = EbayItemID
 
@@ -545,6 +545,7 @@ class EbayItemVariation(object):
         self.sku = sku
         self.quantity = quantity
 
+
 EbayItemVariation.Serializer.Meta.model = EbayItemVariation
 
 
@@ -563,6 +564,7 @@ class EbayVariationPictureSet(object):
     def __init__(self, variation_specific_value, picture_url=None):
         self.picture_url = picture_url
         self.variation_specific_value = variation_specific_value
+
 
 EbayVariationPictureSet.Serializer.Meta.model = EbayVariationPictureSet
 
@@ -693,4 +695,3 @@ class EbayGetItemResponse(object):
 
         serializer = EbayItemSerializer(data=data['Item'])
         return serializer.build()
-

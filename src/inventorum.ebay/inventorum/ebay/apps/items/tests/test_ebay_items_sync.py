@@ -90,9 +90,4 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
         sync = IncomingEbayItemSyncer(account=self.account, item=item)
         sync(item)
 
-        # self.assertPostcondition(EbayItemModel.objects.count(), 1)
-        #
-        # ebay_model = EbayItemModel.objects.first()
-        # self.assertIsInstance(ebay_model, EbayItemModel)
-        #
-        # self.assertIsNotNone(ebay_model.sku)
+        self.assertPostcondition(EbayItemModel.objects.count(), 0)

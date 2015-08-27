@@ -7,6 +7,7 @@ from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayItemShippingService, EbayPicture
 from inventorum.ebay.lib.ebay.items import EbayItems
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+from decimal import *
 
 
 log = logging.getLogger(__name__)
@@ -19,9 +20,18 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         Build item for ebay with missing photos, wrong category_id (not leaf), wrong duration (120 is not supported in
         this category)
         """
+        # self, title, description, listing_duration, country, postal_code, quantity, start_price,
+        #          paypal_email_address, payment_methods, pictures, category_id, sku=None, shipping_services=(),
+        #          item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
+        #          pick_up=None, variation=None, item_id=None):
+
         shipping = EbayItemShippingService(
-            id="DE_DHLPaket",
+            shipping_id="DE_DHLPaket",
             cost="10"
+        )
+        picture = EbayPicture(
+            url='http://shop.inventorum.com/uploads/img-hash/a9fe/1db9/8c9e/564c/8877/d8a1/f1f8/a9fe1db98c9e564c8877d8'
+                'a1f1f8fccf_ipad.JPEG'
         )
         return EbayFixedPriceItem(
             sku="test_321",
@@ -30,10 +40,11 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
             listing_duration="Days_120",
             country="DE",
             postal_code="13355",
-            quantity="1",
-            start_price="599.99",
+            quantity=1,
+            start_price=Decimal(599.99),
             paypal_email_address="bartosz@hernas.pl",
             payment_methods=['PayPal'],
+            pictures=[picture],
             category_id="64540",
             shipping_services=[shipping]
         )
@@ -44,7 +55,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
                 'a1f1f8fccf_ipad.JPEG'
         )
         shipping = EbayItemShippingService(
-            id="DE_DHLPaket",
+            shipping_id="DE_DHLPaket",
             cost="5"
         )
         return EbayFixedPriceItem(
@@ -56,8 +67,8 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
             listing_duration="Days_30",
             country="DE",
             postal_code="13355",
-            quantity="1",
-            start_price="45.99",
+            quantity=1,
+            start_price=Decimal(45.99),
             paypal_email_address="bartosz@hernas.pl",
             payment_methods=['PayPal'],
             category_id="176973",
