@@ -96,8 +96,6 @@ class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
         return self.specific_values.filter(specific__category_id=self.category_id)
 
 
-# Models for data just before publishing
-
 class EbayItemImageModel(BaseModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="images", null=True, blank=True)
     variation = models.ForeignKey("products.EbayItemVariationModel", related_name="images", null=True, blank=True)

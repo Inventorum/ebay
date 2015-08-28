@@ -25,8 +25,8 @@ class EbayItemsSync(object):
         ebay_api = EbayItems(self.account.token.ebay_object)
         ids = ebay_api.get_item_ids()
 
-        for itemId in ids:
-            self.item = ebay_api.get_item(itemId)
+        for item_id in ids:
+            self.item = ebay_api.get_item(item_id)
             self.sync = IncomingEbayItemSyncer(self.account, self.item)
 
 
@@ -89,7 +89,8 @@ class IncomingEbayItemSyncer(object):
                 start_importer_to_convert_to_ebay_item_model(self)
             else:
                 log.warning('There was an ebay item with another sku (not inventorum): ' + self.item.sku)
-                log.warning('Different sku for item: ' + str(self.item.ebay_item_id) + 'Of accountId: ' + str(self.account.id))
+                log.warning('Different sku for item: ' + str(self.item.ebay_item_id) +
+                            'Of accountId: ' + str(self.account.id))
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
             log.warning("Item was not created via Inventorum".format(self.item))
