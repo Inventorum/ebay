@@ -63,9 +63,9 @@ class EbayItemImporter(object):
         item_model.save()
 
 
-def start_importer_to_convert_to_ebay_item_model(self):
-    ebay_item = self.item
-    importer = EbayItemImporter(self.account, ebay_item)
+def start_importer_to_convert_to_ebay_item_model(data):
+    ebay_item = data.item
+    importer = EbayItemImporter(data.account, ebay_item)
     importer.convert_to_ebay_item_model(ebay_item)
 
 
