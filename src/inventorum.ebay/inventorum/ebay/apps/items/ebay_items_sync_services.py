@@ -27,7 +27,7 @@ class EbayItemsSync(object):
 
         for item_id in ids:
             self.item = ebay_api.get_item(item_id)
-            self.sync = IncomingEbayItemSyncer(self.account, self.item)
+            IncomingEbayItemSyncer(self.account, self.item).run()
 
 
 class EbayItemImporter(object):
@@ -63,11 +63,6 @@ class EbayItemImporter(object):
         item_model.save()
 
 
-def start_importer_to_convert_to_ebay_item_model(data):
-    importer = EbayItemImporter(data.account, data.item)
-    importer.convert_to_ebay_item_model(data.item)
-
-
 class IncomingEbayItemSyncer(object):
     def __init__(self, account, item):
         """
@@ -77,20 +72,23 @@ class IncomingEbayItemSyncer(object):
         self.account = account
         self.item = item
 
-    def __call__(self, data):
+    def run(self):
         """
         Checks if an ebay item has a valid sku.
         :type ebay_item: inventorum.ebay.lib.ebay.data.items.EbayFixedPriceItem
         """
-
         if hasattr(self.item, 'sku') and self.item.sku is not None:
             if EbaySKU.belongs_to_current_env(self.item.sku):
-                start_importer_to_convert_to_ebay_item_model(self)
+                self.start_importer_to_convert_to_ebay_item_model()
             else:
-                log.warning('There was an ebay item with another sku (not inventorum): ' + self.item.sku)
-                log.warning('Different sku for item: ' + str(self.item.ebay_item_id) +
-                            'Of accountId: ' + str(self.account.id))
+                log.warning('There was an ebay item with another sku (not inventorum): %s', self.item.sku)
+                log.warning('No sku for item: %s Of accountId: %s', self.item.item_id, self.account.id)
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
             log.warning("Item was not created via Inventorum".format(self.item))
             log.warning('No sku for item: ' + str(self.item.item_id) + 'Of accountId: ' + str(self.account.id))
+
+    def start_importer_to_convert_to_ebay_item_model(self):
+        importer = EbayItemImporter(self.account, self.item)
+        importer.convert_to_ebay_item_model(self.item)
+
