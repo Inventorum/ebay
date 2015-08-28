@@ -64,9 +64,8 @@ class EbayItemImporter(object):
 
 
 def start_importer_to_convert_to_ebay_item_model(data):
-    ebay_item = data.item
-    importer = EbayItemImporter(data.account, ebay_item)
-    importer.convert_to_ebay_item_model(ebay_item)
+    importer = EbayItemImporter(data.account, data.item)
+    importer.convert_to_ebay_item_model(data.item)
 
 
 class IncomingEbayItemSyncer(object):

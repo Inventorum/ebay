@@ -380,7 +380,7 @@ class EbayGetItemId(object):
         """
         :rtype: EbayPaymentSerializer
         """
-        if not data['Ack'] == 'Success':
+        if data['Ack'] != 'Success':
             return None
 
         serializer = EbayGetItemIdResponseDeserializer(data=data['ItemArray'])
@@ -690,7 +690,7 @@ class EbayGetItemResponse(object):
         """
         :rtype: EbayPaymentSerializer
         """
-        if not data['Ack'] == 'Success':
+        if data['Ack'] != 'Success':
             return None
 
         serializer = EbayItemSerializer(data=data['Item'])
