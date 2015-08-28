@@ -659,7 +659,7 @@ class EbayItemSpecificationsSerializer(POPOSerializer):
 
 class EbayItemSerializer(POPOSerializer):
     Title = fields.CharField(source='title')
-    Description = fields.CharField(source='description', default='')  # not existing in response?
+    Description = fields.CharField(source='description', default='')
     ListingDuration = fields.CharField(source='listing_duration')
     Country = fields.CharField(source='country')
     PostalCode = fields.CharField(source='postal_code')
