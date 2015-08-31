@@ -8,6 +8,7 @@ class EbaySKU(object):
         """
         Gets the environment variable as prefix out of the SKU_FORMAT from settings.
         :return: environment as unicode
+        :rtype: unicode
         """
         return django_settings.EBAY_SKU_FORMAT.format('')
 
@@ -25,6 +26,7 @@ class EbaySKU(object):
         """
         Checks, if item.sku fits into the current environment.
         :param sku: unicode
-        :return: boolean
+        :return: belongs to current environment as boolean
+        :rtype boolean
         """
         return sku.startswith(EbaySKU.get_env_prefix())
