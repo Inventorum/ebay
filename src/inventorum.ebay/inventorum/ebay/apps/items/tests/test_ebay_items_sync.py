@@ -48,8 +48,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             category_id='',
             item_id='123abc')
 
-        sync = IncomingEbayItemSyncer(account=self.account, item=item)
-        sync(item)
+        IncomingEbayItemSyncer(account=self.account, item=item).run()
 
         self.assertPostcondition(EbayItemModel.objects.count(), 1)
 
@@ -87,7 +86,6 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             category_id='',
             item_id='123abc')
 
-        sync = IncomingEbayItemSyncer(account=self.account, item=item)
-        sync(item)
+        IncomingEbayItemSyncer(account=self.account, item=item).run
 
         self.assertPostcondition(EbayItemModel.objects.count(), 0)

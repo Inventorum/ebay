@@ -7,7 +7,6 @@ from decimal import Decimal
 import factory
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.models import EbayItemModel
-from inventorum.ebay.lib.db.models import MappedInventorumModelFactory
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 
 from inventorum.ebay.apps.products import models, EbayItemPublishingStatus
