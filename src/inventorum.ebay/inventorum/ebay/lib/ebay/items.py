@@ -49,8 +49,9 @@ class EbayItems(EbayTrading):
         """
         response = self.execute('GetSellerList', {
             'DetailLevel': 'ReturnAll',
-            'StartTimeFrom': '2015-07-12T21:59:59.005Z',
-            'StartTimeTo': datetime.datetime.now(),
+            'EndTimeFrom': datetime.datetime.now(),
+            # 120 days is ebay max for date range filters
+            'EndTimeTo': datetime.datetime.now() + datetime.timedelta(days=120),
             'IncludeVariations': 'True',
             'Pagination': {'EntriesPerPage': '50'}
         })

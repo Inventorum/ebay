@@ -3,6 +3,7 @@ import logging
 from django.db import transaction
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
+from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.lib.ebay.items import EbayItems
@@ -59,6 +60,7 @@ class EbayItemImporter(object):
         item_model.country = ebay_item.country
         item_model.product = EbayProductFactory.create()
         item_model.paypal_email_address = ebay_item.paypal_email_address
+        item_model.publishing_status = EbayItemPublishingStatus.PUBLISHED
 
         item_model.save()
 
