@@ -13,8 +13,8 @@ log = logging.getLogger(__name__)
 
 class EbayItemsSync(object):
     """ Gets all item_ids and then all items from ebay.
-        Filters received ebay_items if sku exists ->
-        Call OldEbayItemImporter """
+        To filter received ebay_items if sku exists it
+        calls EbayItemImporter. """
 
     def __init__(self, account):
         """
