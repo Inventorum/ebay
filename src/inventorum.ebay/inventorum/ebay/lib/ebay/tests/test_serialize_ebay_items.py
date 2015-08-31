@@ -7,7 +7,7 @@ import datetime
 log = logging.getLogger(__name__)
 
 
-class TestForGetDataFromEbay(EbayAuthenticatedAPITestCase):
+class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
     @EbayTest.use_cassette("full_test_for_serialize_get_item_ids_from_ebay.yaml")
     def test_get_item_ids_from_ebay(self):
         items = EbayItems(self.ebay_token)
