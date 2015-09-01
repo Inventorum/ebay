@@ -109,6 +109,7 @@ In case you are getting this error in test:
 You need to downgrade python to 2.7.8
 
 ::
+
     # Check if python 2.7.8 is installed
     port installed python27
 
