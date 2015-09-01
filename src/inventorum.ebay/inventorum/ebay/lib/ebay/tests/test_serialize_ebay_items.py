@@ -14,9 +14,6 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
         items = EbayItems(self.ebay_token)
         response = items.get_item_ids()
 
-        # log.debug(response)
-        # log.debug(datetime.datetime.now())
-
         self.assertEqual(response.items[0].item_id, '261967105601')
         self.assertEqual(response.items[18].item_id, '262005246355')
 
@@ -43,17 +40,11 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
         self.assertEqual(item2.variation[0].variations[1].sku, 'invproduction_2811437')
         self.assertEqual(item2.shipping_details.shipping_service_options[0].shipping_service, 'DE_DeutschePostBrief')
 
-    # @EbayTest.use_cassette("serialize_get_not_expired_items_from_ebay")
+    @EbayTest.use_cassette("serialize_get_not_expired_items_from_ebay")
     def test_not_get_expired_items_from_ebay(self):
-        items2 = EbayItems(self.ebay_token)
-        valid_id_1 = '262029389716'
-        item = items2.get_item(valid_id_1)
-
-        log.debug(item)
-
-        log.info("now time >>>>>>>>>>>>>>>>" + EbayParser.format_date(datetime.datetime.now()))
-        log.info("plus 120 days >>>>>>>>>>>>>>>>" + EbayParser.format_date(datetime.datetime.now() + datetime.timedelta(days=120)))
         items = EbayItems(self.ebay_token)
         response = items.get_item_ids()
-
-        self.assertEqual(item.item_id, valid_id_1)
+        for i in range(len(response.items)):
+            cur_item = items.get_item(response.items[i].item_id)
+            self.assertEqual(response.items[i].item_id, cur_item.item_id)
+        self.assertEqual(i, 5)

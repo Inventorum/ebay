@@ -100,7 +100,7 @@ Known issues
 `Deprecated? On Andis computer it works with Python 2.7.9`
 `Nope, on Mikes and Julians it works only <= 2.7.8`
 
-In case you are getting this error in test:
+In case you are getting this error in test, also in python version 2.7.10:
 
 ::
 
