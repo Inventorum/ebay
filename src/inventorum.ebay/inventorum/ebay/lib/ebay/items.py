@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import EbayTrading
+from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse, \
     EbayReviseFixedPriceItemResponse, EbayGetItemResponse, EbayGetItemId
 import datetime
@@ -49,9 +50,9 @@ class EbayItems(EbayTrading):
         """
         response = self.execute('GetSellerList', {
             'DetailLevel': 'ReturnAll',
-            'EndTimeFrom': datetime.datetime.now(),
+            'EndTimeFrom': EbayParser.format_date(datetime.datetime.now()),
             # 120 days is ebay max for date range filters
-            'EndTimeTo': datetime.datetime.now() + datetime.timedelta(days=120),
+            'EndTimeTo': EbayParser.format_date(datetime.datetime.now() + datetime.timedelta(days=120)),
             'IncludeVariations': 'True',
             'Pagination': {'EntriesPerPage': '50'}
         })
