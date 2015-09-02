@@ -4,9 +4,11 @@ from django.db import transaction
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
-from inventorum.ebay.apps.products.models import EbayItemModel
+from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemImageModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.lib.ebay.items import EbayItems
+from array import array
+
 
 log = logging.getLogger(__name__)
 
@@ -45,7 +47,7 @@ class IncomingEbayItemSyncer(object):
         Checks if an ebay item has a valid sku.
         :type ebay_item: inventorum.ebay.lib.ebay.data.items.EbayFixedPriceItem
         """
-        if hasattr(self.item, 'sku') and self.item.sku is not None:
+        if getattr(self.item, 'sku', None) is not None:
             if EbaySKU.belongs_to_current_env(self.item.sku):
                 self.convert_to_ebay_item_model()
             else:
@@ -61,7 +63,6 @@ class IncomingEbayItemSyncer(object):
         """
         Create database model for ebay item and stores it into db.
         """
-        log.info(self.item)
         item_model = EbayItemModel()
         item_model.item_id = self.item.item_id
         item_model.category = CategoryFactory()
@@ -74,7 +75,6 @@ class IncomingEbayItemSyncer(object):
         item_model.name = self.item.title
         item_model.inv_product_id = self.item.sku.split('_')[1]
         item_model.account_id = self.account.id
-
         item_model.listing_duration = self.item.listing_duration
         item_model.country = self.item.country
         item_model.product = EbayProductFactory.create()
@@ -82,3 +82,6 @@ class IncomingEbayItemSyncer(object):
         item_model.publishing_status = EbayItemPublishingStatus.PUBLISHED
 
         item_model.save()
+
+        for picture in self.item.pictures:
+            item_model.images.create(url=picture.url)

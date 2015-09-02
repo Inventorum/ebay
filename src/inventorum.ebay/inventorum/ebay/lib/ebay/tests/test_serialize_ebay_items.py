@@ -1,9 +1,7 @@
 import logging
-from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.items import EbayItems
 from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-import datetime
 
 log = logging.getLogger(__name__)
 

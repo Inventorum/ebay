@@ -100,7 +100,7 @@ class EbayItemImageModel(BaseModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="images", null=True, blank=True)
     variation = models.ForeignKey("products.EbayItemVariationModel", related_name="images", null=True, blank=True)
     url = models.TextField()
-    inv_image_id = models.IntegerField(verbose_name="Inventorum image id")
+    inv_image_id = models.IntegerField(verbose_name="Inventorum image id", null=True, blank=True)
 
     @property
     def ebay_object(self):

@@ -6,7 +6,7 @@ from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, Eb
 from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer
-from inventorum.ebay.apps.products.models import EbayItemModel
+from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemImageModel
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption
 from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
@@ -67,6 +67,9 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
         self.assertEqual(ebay_model.paypal_email_address, 'test@inventorum.com')
         self.assertEqual(ebay_model.postal_code, '12345')
 
+        self.assertEqual(ebay_model.images.count(), 1)
+        self.assertEqual(ebay_model.images.first().url, 'http://www.testpicture.de/image.png')
+
     def test_convert_item_without_sku(self):
 
         item = EbayFixedPriceItem(
@@ -86,6 +89,6 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             category_id='',
             item_id='123abc')
 
-        IncomingEbayItemSyncer(account=self.account, item=item).run
+        IncomingEbayItemSyncer(account=self.account, item=item).run()
 
         self.assertPostcondition(EbayItemModel.objects.count(), 0)
