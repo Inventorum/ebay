@@ -4,20 +4,15 @@ from django.db import transaction
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
-from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemImageModel
+from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.lib.ebay.items import EbayItems
-from array import array
 
 
 log = logging.getLogger(__name__)
 
 
 class EbayItemsSync(object):
-    """ Gets all item_ids and then all items from ebay.
-        To filter received ebay_items if sku exists it
-        calls EbayItemImporter. """
-
     def __init__(self, account):
         """
         :type account: inventorum.ebay.apps.accounts.models.EbayAccountModel
@@ -25,12 +20,17 @@ class EbayItemsSync(object):
         self.account = account
         assert self.account.is_ebay_authenticated, "Account {} is not authenticated to ebay".format(account)
 
+        self.run()
+
+    def run(self):
+        """ Gets all item_ids and then all items from ebay.
+        To filter received ebay_items if sku exists it
+        calls EbayItemImporter.
+        """
         ebay_api = EbayItems(self.account.token.ebay_object)
         ids = ebay_api.get_item_ids()
-
         for item_id in ids:
-            self.item = ebay_api.get_item(item_id)
-            IncomingEbayItemSyncer(self.account, self.item).run()
+            IncomingEbayItemSyncer(self.account, ebay_api.get_item(item_id)).run()
 
 
 class IncomingEbayItemSyncer(object):

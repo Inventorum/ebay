@@ -6,7 +6,7 @@ from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, Eb
 from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer
-from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemImageModel
+from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption
 from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
