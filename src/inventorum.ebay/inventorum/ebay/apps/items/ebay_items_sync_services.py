@@ -1,10 +1,11 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.db import transaction
+from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
-from inventorum.ebay.apps.products.models import EbayItemModel
+from inventorum.ebay.apps.products.models import EbayItemModel, EbayProductModel
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.lib.ebay.items import EbayItems
 
@@ -64,8 +65,8 @@ class IncomingEbayItemSyncer(object):
         Create database model for ebay item and stores it into db.
         """
         item_model = EbayItemModel()
+        item_model.account = self.account
         item_model.item_id = self.item.item_id
-        item_model.category = CategoryFactory()
         item_model.description = self.item.description
         item_model.postal_code = self.item.postal_code
         item_model.ean = self.item.ean
@@ -77,9 +78,21 @@ class IncomingEbayItemSyncer(object):
         item_model.account_id = self.account.id
         item_model.listing_duration = self.item.listing_duration
         item_model.country = self.item.country
-        item_model.product = EbayProductFactory.create()
         item_model.paypal_email_address = self.item.paypal_email_address
         item_model.publishing_status = EbayItemPublishingStatus.PUBLISHED
+
+        # category model throws CategoryModel.DoesNotExist Exception
+        category_model = CategoryModel.objects.get(external_id=self.item.category_id)
+
+        # product model
+        product_model = EbayProductModel()
+        product_model.category = category_model
+        product_model.account = self.account
+        product_model.inv_id = 12345
+        product_model.save()
+
+        item_model.product = product_model
+        item_model.category = category_model
 
         item_model.save()
 

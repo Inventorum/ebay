@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
 from inventorum.ebay.apps.auth.models import EbayTokenModel
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer
 from inventorum.ebay.apps.products.models import EbayItemModel
@@ -28,6 +29,10 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
 
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
 
+        common_category_attrs = dict(ebay_leaf=True, features=None)
+        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
+        self.category_model.save()
+
     def test_convert_item_with_sku(self):
 
         item = EbayFixedPriceItem(
@@ -45,7 +50,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
                 EbayPicture(url='http://www.testpicture.de/image.png')],
             pick_up=EbayPickupInStoreDetails(is_eligible_for_pick_up=False),
             sku=EbaySKU.get_env_prefix() + '1234',
-            category_id='',
+            category_id='1245',
             item_id='123abc')
 
         IncomingEbayItemSyncer(account=self.account, item=item).run()
@@ -69,6 +74,8 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
 
         self.assertEqual(ebay_model.images.count(), 1)
         self.assertEqual(ebay_model.images.first().url, 'http://www.testpicture.de/image.png')
+        self.assertIsNotNone(ebay_model.category)
+        self.assertEqual(ebay_model.category.external_id, '1245')
 
     def test_convert_item_without_sku(self):
 
