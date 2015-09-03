@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
+import logging
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
 from inventorum.ebay.apps.auth.models import EbayTokenModel
@@ -11,9 +12,8 @@ from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption
 from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
-from inventorum.ebay.tests import Countries
-from inventorum.ebay.tests.testcases import UnitTestCase
-import logging
+from inventorum.ebay.tests import Countries, StagingTestAccount, MockedTest
+from inventorum.ebay.tests.testcases import UnitTestCase, APITestCase
 
 log = logging.getLogger(__name__)
 
@@ -29,11 +29,14 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
 
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
 
+
+class IntegrationTest(APITestCase):
+    @MockedTest.use_cassette("get_product_id_from_core_api_for_ebay_item_serializer.yaml")
+    def test_convert_item_with_sku(self):
+
         common_category_attrs = dict(ebay_leaf=True, features=None)
         self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
         self.category_model.save()
-
-    def test_convert_item_with_sku(self):
 
         item = EbayFixedPriceItem(
             title='testProduct',
@@ -49,7 +52,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             pictures=[
                 EbayPicture(url='http://www.testpicture.de/image.png')],
             pick_up=EbayPickupInStoreDetails(is_eligible_for_pick_up=False),
-            sku=EbaySKU.get_env_prefix() + '1234',
+            sku='%s%s' % (EbaySKU.get_env_prefix(), '463690'),
             category_id='1245',
             item_id='123abc')
 
@@ -71,11 +74,15 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
         self.assertEqual(ebay_model.is_click_and_collect, False)
         self.assertEqual(ebay_model.paypal_email_address, 'test@inventorum.com')
         self.assertEqual(ebay_model.postal_code, '12345')
+        self.assertEqual(ebay_model.inv_product_id, 463690)
 
         self.assertEqual(ebay_model.images.count(), 1)
         self.assertEqual(ebay_model.images.first().url, 'http://www.testpicture.de/image.png')
         self.assertIsNotNone(ebay_model.category)
         self.assertEqual(ebay_model.category.external_id, '1245')
+
+        self.assertIsNotNone(ebay_model.product)
+        self.assertEqual(ebay_model.product.inv_id, 1225145632417445479L)
 
     def test_convert_item_without_sku(self):
 

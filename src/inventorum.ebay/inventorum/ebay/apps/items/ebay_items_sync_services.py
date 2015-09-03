@@ -2,11 +2,9 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from django.db import transaction
 from inventorum.ebay.apps.categories.models import CategoryModel
-from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayProductModel
-from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 from inventorum.ebay.lib.ebay.items import EbayItems
 
 
@@ -74,21 +72,21 @@ class IncomingEbayItemSyncer(object):
         item_model.gross_price = self.item.start_price
         item_model.quantity = self.item.quantity
         item_model.name = self.item.title
-        item_model.inv_product_id = self.item.sku.split('_')[1]
+        item_model.inv_product_id = EbaySKU.extract_product_id(self.item.sku)
         item_model.account_id = self.account.id
         item_model.listing_duration = self.item.listing_duration
         item_model.country = self.item.country
         item_model.paypal_email_address = self.item.paypal_email_address
         item_model.publishing_status = EbayItemPublishingStatus.PUBLISHED
 
-        # category model throws CategoryModel.DoesNotExist Exception
+        # category model (can throw CategoryModel.DoesNotExist Exception, not needed to be handled explicitly)
         category_model = CategoryModel.objects.get(external_id=self.item.category_id)
 
         # product model
         product_model = EbayProductModel()
         product_model.category = category_model
         product_model.account = self.account
-        product_model.inv_id = 12345
+        product_model.inv_id = self.account.core_api.get_product(item_model.inv_product_id).inv_id
         product_model.save()
 
         item_model.product = product_model
