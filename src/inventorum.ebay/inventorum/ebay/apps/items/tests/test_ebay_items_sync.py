@@ -9,7 +9,6 @@ from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer
 from inventorum.ebay.apps.products.models import EbayItemModel
-from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, EbayItemFactory
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
@@ -120,8 +119,7 @@ class IntegrationTest(APITestCase):
     @MockedTest.use_cassette('get_product_id_from_core_api_for_ebay_item_serializer.yaml')
     def test_convert_item_with_sku(self):
         test_inv_product_id = 463690
-
-        item = EbayItemFactory(inv_product_id=test_inv_product_id)
+        item = EbayFixedPriceItemFactory.create(inv_product_id=test_inv_product_id)
         IncomingEbayItemSyncer(account=self.account, item=item).run()
 
         self.assertPostcondition(EbayItemModel.objects.count(), 1)

@@ -64,7 +64,7 @@ class IncomingEbayItemSyncer(object):
         """
         item_model = EbayItemModel()
         item_model.account = self.account
-        item_model.item_id = self.item.item_id
+        item_model.external_id = self.item.item_id
         item_model.description = self.item.description
         item_model.postal_code = self.item.postal_code
         item_model.ean = self.item.ean
