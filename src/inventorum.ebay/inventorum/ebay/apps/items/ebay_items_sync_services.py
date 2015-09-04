@@ -55,7 +55,7 @@ class IncomingEbayItemSyncer(object):
             log.warning('No sku for item: ' + str(self.item.item_id) + 'Of accountId: ' + str(self.account.id))
 
     @transaction.atomic()
-    def convert_to_ebay_item_model(self):
+    def create_ebay_item_db_model(self):
         """
         Create database model for ebay item and stores it into db.
         """
