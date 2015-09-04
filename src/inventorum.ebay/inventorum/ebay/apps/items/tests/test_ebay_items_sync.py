@@ -97,7 +97,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
 
         IncomingEbayItemSyncer(account=self.account, item=self.item).run()
         # No EbayItemModel should be created, as it is not an inventorum product.
-        self.assertPostcondition(EbayItemModel.objects.count(), 0)
+        self.assertEquals(EbayItemModel.objects.count(), 0)
 
 
 class IntegrationTest(APITestCase):
@@ -105,6 +105,9 @@ class IntegrationTest(APITestCase):
     def test_convert_item_with_sku(self):
         test_inv_product_id = 1000000000000000123L
         common_category_attrs = dict(ebay_leaf=True, features=None)
+
+        self.assertPrecondition(EbayItemModel.objects.count(), 0)
+
         self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
         self.category_model.save()
 
