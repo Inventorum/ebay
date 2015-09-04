@@ -104,7 +104,14 @@ class EbayItemImageModel(BaseModel):
 
     @property
     def ebay_object(self):
-        return EbayPicture(self.url.replace('https://', 'http://'))
+        return EbayPicture(self.parsed_url)
+
+    @property
+    def parsed_url(self):
+        url = self.url
+        url = url.replace(settings.INV_CORE_API_HOST, settings.INV_CORE_MEDIA_HOST)
+        url = url.replace('https://', 'http://')
+        return url
 
 
 class EbayItemShippingDetails(BaseModel):
