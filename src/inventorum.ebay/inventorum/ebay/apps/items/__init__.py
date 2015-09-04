@@ -19,7 +19,7 @@ class EbaySKU(object):
         :type sku: unicode
         :rtype: unicode
         """
-        return sku.replace(django_settings.EBAY_SKU_FORMAT.format(''), '')
+        return sku.replace(cls.get_env_prefix(), '')
 
     @classmethod
     def belongs_to_current_env(cls, sku):
@@ -29,7 +29,7 @@ class EbaySKU(object):
         :return: belongs to current environment as boolean
         :rtype boolean
         """
-        return sku.startswith(EbaySKU.get_env_prefix())
+        return sku.startswith(cls.get_env_prefix())
 
     @classmethod
     def generate_sku(cls, product_id):
@@ -39,4 +39,4 @@ class EbaySKU(object):
         :return: sku as unicode
         :rtype unicode
         """
-        return '%s%s' % (EbaySKU.get_env_prefix(), product_id)
+        return '%s%s' % (cls.get_env_prefix(), product_id)
