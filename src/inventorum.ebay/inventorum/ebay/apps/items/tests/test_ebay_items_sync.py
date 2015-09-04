@@ -38,7 +38,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
 
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
 
-    def test_serialize_item(self):
+    def test_serialize_item_with_sku(self):
         test_inv_product_id = 1000000000000000123L
         self.core_api_mock.get_product.return_value = CoreProductFactory.create(inv_id=test_inv_product_id)
 
@@ -112,15 +112,20 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             item_id='123abc')
 
         IncomingEbayItemSyncer(account=self.account, item=item).run()
-
+        # No EbayItemModel should be created, as it is not an inventorum product.
         self.assertPostcondition(EbayItemModel.objects.count(), 0)
 
 
 class IntegrationTest(APITestCase):
     @MockedTest.use_cassette('get_product_id_from_core_api_for_ebay_item_serializer.yaml')
     def test_convert_item_with_sku(self):
-        test_inv_product_id = 463690
-        item = EbayFixedPrizeItemFactory.create(item_id=test_inv_product_id)
+        test_inv_product_id = 1000000000000000123L
+
+        common_category_attrs = dict(ebay_leaf=True, features=None)
+        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
+        self.category_model.save()
+
+        item = EbayFixedPrizeItemFactory.create(item_id=test_inv_product_id, category_id=1245)
         IncomingEbayItemSyncer(account=self.account, item=item).run()
 
         self.assertPostcondition(EbayItemModel.objects.count(), 1)

@@ -1,6 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 import factory
+from factory import fuzzy
 from decimal import Decimal
+from inventorum.ebay.apps.items import EbaySKU
 
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption
@@ -25,5 +27,6 @@ class EbayFixedPrizeItemFactory(factory.Factory):
         EbayPicture(url='http://www.testpicture.de/image.png')]
     shipping_details = EbayShippingDetails(EbayShippingServiceOption(shipping_service='DE_UPSStandard'))
     pick_up = EbayPickupInStoreDetails(is_eligible_for_pick_up=False)
-    category_id = ''
-    item_id = '123abc'
+    category_id = factory.Sequence(lambda n: "{0}".format(n))
+    item_id = '463690'
+    sku = EbaySKU.get_env_prefix() + '463690'
