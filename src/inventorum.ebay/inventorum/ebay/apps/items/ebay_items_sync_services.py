@@ -23,7 +23,6 @@ class EbayItemsSync(object):
 
     def run(self):
         """ Gets all item_ids and then all items from ebay.
-        For filtering the received ebay_items if sku exists, it calls EbayItemImporter.
         """
         ebay_api = EbayItems(self.account.token.ebay_object)
         ids = ebay_api.get_item_ids()
