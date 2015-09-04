@@ -77,6 +77,7 @@ class IncomingEbayItemSyncer(object):
         item_model.listing_duration = self.item.listing_duration
         item_model.country = self.item.country
         item_model.paypal_email_address = self.item.paypal_email_address
+        # only gets the activly published products from ebay, so this can be set constantly
         item_model.publishing_status = EbayItemPublishingStatus.PUBLISHED
 
         # category model (can throw CategoryModel.DoesNotExist Exception, not needed to be handled explicitly)
