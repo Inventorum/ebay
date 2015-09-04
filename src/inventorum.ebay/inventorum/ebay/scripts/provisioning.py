@@ -31,14 +31,14 @@ def _provision_db(db_name, with_drop):
 
     sandbox_root = settings.BUILDOUT_ROOT
     log.debug("sandbox root is %s", sandbox_root)
-    sandbox_exec_path = os.path.join(sandbox_root, "parts", "postgresql", "bin")
+    sandbox_exec_path = os.path.normpath(os.path.join(sandbox_root, "parts", "postgresql", "bin"))
 
     if os.path.isdir(sandbox_exec_path):
         log.info("Running in sandbox mode")
 
         def psql(psql_cmd):
             return """echo "{psql_cmd}" | {sandbox_exec_path}/psql -h {db_host} -d postgres"""\
-                .format(psql_cmd=psql_cmd, sandbox_exec_path=sandbox_exec_path, db_host=db_host)
+                .format(psql_cmd=psql_cmd, sandbox_exec_path=sandbox_exec_path, db_host=os.path.normpath(db_host))
 
         create_user = psql("CREATE USER {db_user} WITH PASSWORD '{db_pass}' CREATEDB;".format(db_user=db_user,
                                                                                               db_pass=db_pass))
