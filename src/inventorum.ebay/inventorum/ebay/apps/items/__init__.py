@@ -30,3 +30,13 @@ class EbaySKU(object):
         :rtype boolean
         """
         return sku.startswith(EbaySKU.get_env_prefix())
+
+    @classmethod
+    def generate_sku(cls, product_id):
+        """
+        Generates sku out of product_id which can be also the inv_id.
+        :param product_id: product_id as unicode
+        :return: sku as unicode
+        :rtype unicode
+        """
+        return '%s%s' % (EbaySKU.get_env_prefix(), product_id)

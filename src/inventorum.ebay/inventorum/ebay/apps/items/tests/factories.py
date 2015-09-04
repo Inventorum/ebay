@@ -29,4 +29,4 @@ class EbayFixedPrizeItemFactory(factory.Factory):
     pick_up = EbayPickupInStoreDetails(is_eligible_for_pick_up=False)
     category_id = factory.Sequence(lambda n: "{0}".format(n))
     item_id = '463690'
-    sku = EbaySKU.get_env_prefix() + '463690'
+    sku = EbaySKU.generate_sku('463690')

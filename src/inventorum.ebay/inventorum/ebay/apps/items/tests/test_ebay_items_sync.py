@@ -44,7 +44,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             pictures=[
                 EbayPicture(url='http://www.testpicture.de/image.png')],
             pick_up=EbayPickupInStoreDetails(is_eligible_for_pick_up=False),
-            sku='%s%s' % (EbaySKU.get_env_prefix(), self.test_inv_product_id),
+            sku=EbaySKU.generate_sku(self.test_inv_product_id),
             category_id='1245',
             item_id='123abc')
         self.default_user = EbayUserFactory.create(account=self.account)

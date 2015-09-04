@@ -21,3 +21,6 @@ class UnitTestsForEbaySKU(UnitTestCase):
 
     def test_wrong_case_for_belongs_to_current_env(self):
         self.assertFalse(EbaySKU.belongs_to_current_env(self.wrong_sku))
+
+    def test_generate_sku(self):
+        self.assertEquals(EbaySKU.generate_sku(1234), 'invtest_1234')
