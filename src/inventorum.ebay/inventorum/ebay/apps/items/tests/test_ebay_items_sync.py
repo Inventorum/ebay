@@ -14,7 +14,8 @@ from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption
 from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
-from inventorum.ebay.tests import Countries, StagingTestAccount, MockedTest
+from inventorum.ebay.apps.items.tests.factories import EbayFixedPrizeItemFactory
+from inventorum.ebay.tests import Countries, MockedTest
 from inventorum.ebay.tests.testcases import UnitTestCase, APITestCase
 from mock import PropertyMock
 
@@ -119,7 +120,7 @@ class IntegrationTest(APITestCase):
     @MockedTest.use_cassette('get_product_id_from_core_api_for_ebay_item_serializer.yaml')
     def test_convert_item_with_sku(self):
         test_inv_product_id = 463690
-        item = EbayFixedPriceItemFactory.create(inv_product_id=test_inv_product_id)
+        item = EbayFixedPrizeItemFactory.create(item_id=test_inv_product_id)
         IncomingEbayItemSyncer(account=self.account, item=item).run()
 
         self.assertPostcondition(EbayItemModel.objects.count(), 1)

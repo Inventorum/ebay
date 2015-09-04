@@ -129,7 +129,7 @@ class EbayFixedPriceItem(object):
         :type ean: unicode | None
         :type is_click_and_collect: bool
 
-        :type shipping_details: EbayShippingDetails
+        :type shipping_details: EbayShippingDetails | None
         :type pick_up: EbayPickupInStoreDetails | None
         :type variation: EbayVariations | None
         :type item_id: unicode | None
