@@ -19,8 +19,6 @@ class EbayItemsSync(object):
         self.account = account
         assert self.account.is_ebay_authenticated, "Account {} is not authenticated to ebay".format(account)
 
-        self.run()
-
     def run(self):
         """ Gets all item_ids and then all items from ebay.
         """
@@ -45,7 +43,7 @@ class IncomingEbayItemSyncer(object):
         """
         if getattr(self.item, 'sku', None) is not None:
             if EbaySKU.belongs_to_current_env(self.item.sku):
-                self.convert_to_ebay_item_model()
+                self.create_ebay_item_db_model()
             else:
                 log.warning('There was an ebay item with another sku (not inventorum): %s', self.item.sku)
                 log.warning('No sku for item: %s Of accountId: %s', self.item.item_id, self.account.id)

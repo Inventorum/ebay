@@ -11,5 +11,5 @@ def ebay_items_sync(self, account_id):
     from inventorum.ebay.apps.items.ebay_items_sync_services import EbayItemsSync
 
     account = EbayAccountModel.objects.get(id=account_id)
-    EbayItemsSync(account)
+    EbayItemsSync(account).run()
 
