@@ -8,10 +8,8 @@ import factory
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
-
 from inventorum.ebay.apps.products import models, EbayItemPublishingStatus
 from inventorum.ebay.tests import StagingTestAccount
-
 
 log = logging.getLogger(__name__)
 
