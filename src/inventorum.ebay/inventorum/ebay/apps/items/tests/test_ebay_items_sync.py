@@ -28,25 +28,9 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
 
         ebay_token = EbayTokenFactory.create()
         self.account = EbayAccountFactory.create(token=EbayTokenModel.create_from_ebay_token(ebay_token))
-        self.item = EbayItemModel()
-        self.default_user = EbayUserFactory.create(account=self.account)
 
-        self.core_api_mock = self.patch(
-            'inventorum.ebay.apps.accounts.models.EbayAccountModel.core_api',
-            new_callable=PropertyMock(spec_set=UserScopedCoreAPIClient)
-        )
-
-        self.assertPrecondition(EbayItemModel.objects.count(), 0)
-
-    def test_serialize_item_with_sku(self):
-        test_inv_product_id = 1000000000000000123L
-        self.core_api_mock.get_product.return_value = CoreProductFactory.create(inv_id=test_inv_product_id)
-
-        common_category_attrs = dict(ebay_leaf=True, features=None)
-        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
-        self.category_model.save()
-
-        item = EbayFixedPriceItem(
+        self.test_inv_product_id = 1000000000000000123L
+        self.item = EbayFixedPriceItem(
             title='testProduct',
             country=Countries.DE,
             description='30',
@@ -60,11 +44,26 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             pictures=[
                 EbayPicture(url='http://www.testpicture.de/image.png')],
             pick_up=EbayPickupInStoreDetails(is_eligible_for_pick_up=False),
-            sku='%s%s' % (EbaySKU.get_env_prefix(), test_inv_product_id),
+            sku='%s%s' % (EbaySKU.get_env_prefix(), self.test_inv_product_id),
             category_id='1245',
             item_id='123abc')
+        self.default_user = EbayUserFactory.create(account=self.account)
 
-        IncomingEbayItemSyncer(account=self.account, item=item).run()
+        self.core_api_mock = self.patch(
+            'inventorum.ebay.apps.accounts.models.EbayAccountModel.core_api',
+            new_callable=PropertyMock(spec_set=UserScopedCoreAPIClient)
+        )
+
+        self.assertPrecondition(EbayItemModel.objects.count(), 0)
+
+    def test_serialize_item_with_sku(self):
+        self.core_api_mock.get_product.return_value = CoreProductFactory.create(inv_id=self.test_inv_product_id)
+
+        common_category_attrs = dict(ebay_leaf=True, features=None)
+        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
+        self.category_model.save()
+
+        IncomingEbayItemSyncer(account=self.account, item=self.item).run()
 
         self.assertPostcondition(EbayItemModel.objects.count(), 1)
 
@@ -82,7 +81,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
         self.assertEqual(ebay_model.is_click_and_collect, False)
         self.assertEqual(ebay_model.paypal_email_address, 'test@inventorum.com')
         self.assertEqual(ebay_model.postal_code, '12345')
-        self.assertEqual(ebay_model.inv_product_id, test_inv_product_id)
+        self.assertEqual(ebay_model.inv_product_id, self.test_inv_product_id)
 
         self.assertEqual(ebay_model.images.count(), 1)
         self.assertEqual(ebay_model.images.first().url, 'http://www.testpicture.de/image.png')
@@ -90,28 +89,13 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
         self.assertEqual(ebay_model.category.external_id, '1245')
 
         self.assertIsNotNone(ebay_model.product)
-        self.assertEqual(ebay_model.product.inv_id, test_inv_product_id)
+        self.assertEqual(ebay_model.product.inv_id, self.test_inv_product_id)
 
     def test_convert_item_without_sku(self):
 
-        item = EbayFixedPriceItem(
-            title='testProduct',
-            country=Countries.DE,
-            description='30',
-            listing_duration='30',
-            postal_code='12345',
-            quantity=1,
-            start_price=Decimal('1.00'),
-            paypal_email_address='test@inventorum.com',
-            payment_methods=['CreditCard', 'Bar'],
-            shipping_details=EbayShippingDetails(EbayShippingServiceOption(shipping_service='DE_UPSStandard')),
-            pictures=[
-                EbayPicture(url='http://www.testpicture.de/image.png')],
-            pick_up=EbayPickupInStoreDetails(is_eligible_for_pick_up=False),
-            category_id='',
-            item_id='123abc')
+        self.item.sku = 'weirdRandomStuff'
 
-        IncomingEbayItemSyncer(account=self.account, item=item).run()
+        IncomingEbayItemSyncer(account=self.account, item=self.item).run()
         # No EbayItemModel should be created, as it is not an inventorum product.
         self.assertPostcondition(EbayItemModel.objects.count(), 0)
 
@@ -120,7 +104,6 @@ class IntegrationTest(APITestCase):
     @MockedTest.use_cassette('get_product_id_from_core_api_for_ebay_item_serializer.yaml')
     def test_convert_item_with_sku(self):
         test_inv_product_id = 1000000000000000123L
-
         common_category_attrs = dict(ebay_leaf=True, features=None)
         self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
         self.category_model.save()

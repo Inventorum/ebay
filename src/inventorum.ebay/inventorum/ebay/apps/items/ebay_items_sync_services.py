@@ -23,8 +23,7 @@ class EbayItemsSync(object):
 
     def run(self):
         """ Gets all item_ids and then all items from ebay.
-        To filter received ebay_items if sku exists it
-        calls EbayItemImporter.
+        For filtering the received ebay_items if sku exists, it calls EbayItemImporter.
         """
         ebay_api = EbayItems(self.account.token.ebay_object)
         ids = ebay_api.get_item_ids()
@@ -44,7 +43,6 @@ class IncomingEbayItemSyncer(object):
     def run(self):
         """
         Checks if an ebay item has a valid sku.
-        :type ebay_item: inventorum.ebay.lib.ebay.data.items.EbayFixedPriceItem
         """
         if getattr(self.item, 'sku', None) is not None:
             if EbaySKU.belongs_to_current_env(self.item.sku):
@@ -77,7 +75,7 @@ class IncomingEbayItemSyncer(object):
         item_model.listing_duration = self.item.listing_duration
         item_model.country = self.item.country
         item_model.paypal_email_address = self.item.paypal_email_address
-        # only gets the activly published products from ebay, so this can be set constantly
+        # only gets the actively published products from ebay, so this can be set constantly
         item_model.publishing_status = EbayItemPublishingStatus.PUBLISHED
 
         # category model (can throw CategoryModel.DoesNotExist Exception, not needed to be handled explicitly)
