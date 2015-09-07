@@ -7,7 +7,7 @@ from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, Eb
 from inventorum.ebay.apps.auth.models import EbayTokenModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
-from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer
+from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer, EbayItemsSync
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory
@@ -15,8 +15,8 @@ from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture,
     EbayShippingDetails, EbayShippingServiceOption
 from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
 from inventorum.ebay.apps.items.tests.factories import EbayFixedPrizeItemFactory
-from inventorum.ebay.tests import Countries, MockedTest
-from inventorum.ebay.tests.testcases import UnitTestCase, APITestCase
+from inventorum.ebay.tests import Countries, MockedTest, StagingTestAccount
+from inventorum.ebay.tests.testcases import UnitTestCase, APITestCase, EbayAuthenticatedAPITestCase
 from mock import PropertyMock
 
 log = logging.getLogger(__name__)
@@ -32,6 +32,7 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
         self.test_inv_product_id = 1000000000000000123L
         self.item = EbayFixedPriceItem(
             title='testProduct',
+            category_id='1245',
             country=Countries.DE,
             description='30',
             listing_duration='30',
@@ -43,9 +44,8 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
             shipping_details=EbayShippingDetails(EbayShippingServiceOption(shipping_service='DE_UPSStandard')),
             pictures=[
                 EbayPicture(url='http://www.testpicture.de/image.png')],
-            pick_up=EbayPickupInStoreDetails(is_eligible_for_pick_up=False),
+            pick_up=EbayPickupInStoreDetails(is_click_and_collect=False),
             sku=EbaySKU.generate_sku(self.test_inv_product_id),
-            category_id='1245',
             item_id='123abc')
         self.default_user = EbayUserFactory.create(account=self.account)
 
@@ -74,7 +74,6 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
         self.assertEqual(ebay_model.listing_duration, '30')
         self.assertEqual(ebay_model.quantity, 1)
         self.assertEqual(ebay_model.gross_price, 1.00)
-        self.assertIsNotNone(ebay_model.category)
         self.assertEqual(ebay_model.country, 'DE')
         self.assertEqual(ebay_model.description, '30')
         self.assertIsNone(ebay_model.ean)
@@ -100,21 +99,18 @@ class UnitTestEbayItemsSyncer(UnitTestCase):
         self.assertEquals(EbayItemModel.objects.count(), 0)
 
 
-class IntegrationTest(APITestCase):
-    @MockedTest.use_cassette('get_product_id_from_core_api_for_ebay_item_serializer.yaml')
-    def test_convert_item_with_sku(self):
-        test_inv_product_id = 1000000000000000123L
+class IntegrationTest(EbayAuthenticatedAPITestCase):
+    @MockedTest.use_cassette('get_product_id_from_core_api_for_ebay_item_serializer.yaml', record_mode="new_episodes")
+    def test_convert_items_without_sku(self):
         common_category_attrs = dict(ebay_leaf=True, features=None)
 
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
 
-        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
-        self.category_model.save()
+        self.category_model = CategoryFactory.create(external_id='22416', name="EAN disabled", **common_category_attrs)
 
-        item = EbayFixedPrizeItemFactory.create(item_id=test_inv_product_id, category_id=1245)
-        IncomingEbayItemSyncer(account=self.account, item=item).run()
+        EbayItemsSync(account=self.account).run()
 
-        self.assertPostcondition(EbayItemModel.objects.count(), 1)
-
-        ebay_model = EbayItemModel.objects.first()
-        self.assertIsInstance(ebay_model, EbayItemModel)
+        self.assertPostcondition(EbayItemModel.objects.count(), 0)
+        #
+        # ebay_model = EbayItemModel.objects.first()
+        # self.assertIsInstance(ebay_model, EbayItemModel)

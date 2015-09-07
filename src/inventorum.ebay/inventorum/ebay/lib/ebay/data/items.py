@@ -2,11 +2,12 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 from BeautifulSoup import CData
-from inventorum.ebay.lib.ebay.data import EbayParser
+from inventorum.ebay.lib.ebay.data import EbayParser, EbayArrayField
+from inventorum.ebay.lib.ebay.data.responses import PaginationResultType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.ebay.lib.utils import int_or_none
 from rest_framework import fields
-from rest_framework.fields import ListField, CharField
+from rest_framework.fields import ListField, CharField, IntegerField
 
 
 class EbayPriceModel(object):
@@ -109,7 +110,7 @@ class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
                  paypal_email_address, payment_methods, pictures, category_id=None, sku=None, shipping_services=(),
                  item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
-                 pick_up=None, variation=None, item_id=None):
+                 pick_up=None, variation=None, item_id=None, primary_category=None):
         """
         :type title: unicode
         :type description: unicode
@@ -133,6 +134,7 @@ class EbayFixedPriceItem(object):
         :type pick_up: EbayPickupInStoreDetails | None
         :type variation: EbayVariations | None
         :type item_id: unicode | None
+        :type primary_category: Category | None
         """
 
         if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
@@ -165,6 +167,7 @@ class EbayFixedPriceItem(object):
         self.pick_up = pick_up
         self.variation = variation
         self.item_id = item_id
+        self.primary_category = primary_category
 
     def dict(self):
         data = {
@@ -371,9 +374,11 @@ class EbayReviseFixedPriceItemResponse(object):
         return EbayReviseFixedPriceItemResponse()
 
 
-class EbayGetItemId(object):
-    def __init__(self, items):
+class EbayGetSellerListResponse(object):
+    def __init__(self, items, pagination_result, page_number):
         self.items = items
+        self.pagination_result = pagination_result
+        self.page_number = page_number
 
     @classmethod
     def create_from_data(cls, data):
@@ -383,7 +388,7 @@ class EbayGetItemId(object):
         if data['Ack'] != 'Success':
             return None
 
-        serializer = EbayGetItemIdResponseDeserializer(data=data['ItemArray'])
+        serializer = EbayGetSellerListResponseDeserializer(data=data)
         return serializer.build()
 
 
@@ -405,11 +410,14 @@ class EbayItemID(object):
 EbayItemID.Serializer.Meta.model = EbayItemID
 
 
-class EbayGetItemIdResponseDeserializer(POPOSerializer):
-    Item = EbayItemID.Serializer(many=True, source='items')
+class EbayGetSellerListResponseDeserializer(POPOSerializer):
+    ItemArray = EbayArrayField(source='items', item_key='Item', item_deserializer=EbayItemID.Serializer,
+                               allow_null=True)
+    PaginationResult = PaginationResultType.Deserializer(source="pagination_result")
+    PageNumber = IntegerField(source="page_number")
 
     class Meta:
-        model = EbayGetItemId
+        model = EbayGetSellerListResponse
 
 
 class EbayReviseFixedPriceItemResponseDeserializer(POPOSerializer):
@@ -459,12 +467,12 @@ class EbayPickupInStoreDetails(object):
         class Meta(POPOSerializer.Meta):
             model = None
 
-        EligibleForPickupInStore = fields.BooleanField(source='is_eligible_for_pick_up')
+        EligibleForPickupInStore = fields.BooleanField(source='is_click_and_collect')
 
     #################################################
 
-    def __init__(self, is_eligible_for_pick_up):
-        self.is_eligible_for_pick_up = is_eligible_for_pick_up
+    def __init__(self, is_click_and_collect):
+        self.is_click_and_collect = is_click_and_collect
 
 
 EbayPickupInStoreDetails.Serializer.Meta.model = EbayPickupInStoreDetails
@@ -657,6 +665,26 @@ class EbayItemSpecificationsSerializer(POPOSerializer):
         model = EbayItemSpecific
 
 
+class PrimaryCategory(object):
+    #################################################
+
+    class Serializer(POPOSerializer):
+        class Meta(POPOSerializer.Meta):
+            model = None
+
+        CategoryID = fields.CharField(source='category_id', required=False)
+        CategoryName = fields.CharField(source='category_name', required=False)
+
+    #################################################
+
+    def __init__(self, category_id, category_name):
+        self.category_id = category_id
+        self.category_name = category_name
+
+
+PrimaryCategory.Serializer.Meta.model = PrimaryCategory
+
+
 class EbayItemSerializer(POPOSerializer):
     Title = fields.CharField(source='title')
     Description = fields.CharField(source='description', default='')
@@ -667,7 +695,7 @@ class EbayItemSerializer(POPOSerializer):
     StartPrice = EbayAmountSerializer(source='start_price')
     PayPalEmailAddress = fields.EmailField(source='paypal_email_address')
     PaymentMethods = fields.CharField(source='payment_methods')
-    CategoryId = fields.CharField(source='category_id', required=False)
+    PrimaryCategory = PrimaryCategory.Serializer(source='primary_category')
     ShippingDetails = EbayShippingDetails.Serializer(source='shipping_details')
     PictureDetails = EbayItemPictureSerializer(source='pictures')
     ItemSpecifics = EbayItemSpecificationsSerializer(source='item_specifics', many=True, required=False)

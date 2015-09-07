@@ -1,6 +1,5 @@
 from __future__ import absolute_import, unicode_literals
 import factory
-from factory import fuzzy
 from decimal import Decimal
 from inventorum.ebay.apps.items import EbaySKU
 
@@ -26,7 +25,7 @@ class EbayFixedPrizeItemFactory(factory.Factory):
     pictures = [
         EbayPicture(url='http://www.testpicture.de/image.png')]
     shipping_details = EbayShippingDetails(EbayShippingServiceOption(shipping_service='DE_UPSStandard'))
-    pick_up = EbayPickupInStoreDetails(is_eligible_for_pick_up=False)
+    pick_up = EbayPickupInStoreDetails(is_click_and_collect=False)
     category_id = factory.Sequence(lambda n: "{0}".format(n))
     item_id = '463690'
     sku = EbaySKU.generate_sku('463690')

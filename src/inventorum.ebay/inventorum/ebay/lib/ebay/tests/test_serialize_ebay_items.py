@@ -10,7 +10,7 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
     @EbayTest.use_cassette("full_test_for_serialize_get_item_ids_from_ebay.yaml")
     def test_get_item_ids_from_ebay(self):
         items = EbayItems(self.ebay_token)
-        response = items.get_item_ids()
+        response = items.get_seller_list()
 
         self.assertEqual(response.items[0].item_id, '261967105601')
         self.assertEqual(response.items[18].item_id, '262005246355')
@@ -25,6 +25,7 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
         self.assertEqual(item1.sku, 'invrc_677218')
         self.assertEqual(item1.country, 'DE')
         self.assertEqual(item1.shipping_details.shipping_service_options[0].shipping_service, 'DE_UPSStandard')
+        self.assertEqual(item1.primary_category.category_id, '50602')
 
         id_2 = '262005246355'
         item2 = items.get_item(id_2)
@@ -37,11 +38,12 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
                          'http://i.ebayimg.com/00/s/OTAwWDE2MDA=/z/E8QAAOSwPcVV0acl/$_1.JPG?set_id=880000500F')
         self.assertEqual(item2.variation[0].variations[1].sku, 'invproduction_2811437')
         self.assertEqual(item2.shipping_details.shipping_service_options[0].shipping_service, 'DE_DeutschePostBrief')
+        self.assertEqual(item2.primary_category.category_id, '15687')
 
     @EbayTest.use_cassette("serialize_get_not_expired_items_from_ebay")
     def test_not_get_expired_items_from_ebay(self):
         items = EbayItems(self.ebay_token)
-        response = items.get_item_ids()
+        response = items.get_seller_list()
         for i in range(len(response.items)):
             cur_item = items.get_item(response.items[i].item_id)
             self.assertEqual(response.items[i].item_id, cur_item.item_id)

@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse, \
-    EbayReviseFixedPriceItemResponse, EbayGetItemResponse, EbayGetItemId
+    EbayReviseFixedPriceItemResponse, EbayGetItemResponse, EbayGetSellerListResponse
 import datetime
 
 
@@ -37,7 +37,7 @@ class EbayItems(EbayTrading):
         response = self.execute('ReviseFixedPriceItem', revise_fixed_price_item.dict())
         return EbayReviseFixedPriceItemResponse.create_from_data(response)
 
-    def get_item_ids(self):
+    def get_seller_list(self):
         """
         Get List of ItemIds from the Items, published on ebay.
         <GranularityLevel>Fine</GranularityLevel>
@@ -54,10 +54,10 @@ class EbayItems(EbayTrading):
             # 120 days is ebay max for date range filters
             'EndTimeTo': EbayParser.format_date(datetime.datetime.now() + datetime.timedelta(days=120)),
             'IncludeVariations': 'True',
-            'Pagination': {'EntriesPerPage': '50'}
+            'Pagination': {'EntriesPerPage': '200'}
         })
         # get only some items, need to get all (paging over start and )
-        return EbayGetItemId.create_from_data(data=response)
+        return EbayGetSellerListResponse.create_from_data(data=response)
 
     def get_item(self, item_id):
         """

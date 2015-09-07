@@ -23,9 +23,12 @@ class EbayItemsSync(object):
         """ Gets all item_ids and then all items from ebay.
         """
         ebay_api = EbayItems(self.account.token.ebay_object)
-        ids = ebay_api.get_item_ids()
-        for item_id in ids:
-            IncomingEbayItemSyncer(self.account, ebay_api.get_item(item_id)).run()
+        response = ebay_api.get_seller_list()
+
+        assert response.page_number == 1, 'EbayItemSync can not handle pagination yet'
+
+        for item in response.items:  # AttributeError: 'list' object has no attribute 'item_id'
+            IncomingEbayItemSyncer(self.account, ebay_api.get_item(item.item_id)).run()
 
 
 class IncomingEbayItemSyncer(object):
@@ -63,20 +66,26 @@ class IncomingEbayItemSyncer(object):
         item_model.description = self.item.description
         item_model.postal_code = self.item.postal_code
         item_model.ean = self.item.ean
-        item_model.is_click_and_collect = self.item.pick_up.is_eligible_for_pick_up
+        item_model.country = self.item.country
+
+        if getattr(self.item, 'pick_up', None) is not None:
+            item_model.is_click_and_collect = self.item.pick_up.is_click_and_collect
+
         item_model.gross_price = self.item.start_price
         item_model.quantity = self.item.quantity
         item_model.name = self.item.title
         item_model.inv_product_id = EbaySKU.extract_product_id(self.item.sku)
         item_model.account_id = self.account.id
         item_model.listing_duration = self.item.listing_duration
-        item_model.country = self.item.country
         item_model.paypal_email_address = self.item.paypal_email_address
         # only gets the actively published products from ebay, so this can be set constantly
         item_model.publishing_status = EbayItemPublishingStatus.PUBLISHED
 
         # category model (can throw CategoryModel.DoesNotExist Exception, not needed to be handled explicitly)
-        category_model = CategoryModel.objects.get(external_id=self.item.category_id)
+        if getattr(self.item, 'primary_category', None) is None:
+            category_model = CategoryModel.objects.get(external_id=self.item.category_id)
+        else:
+            category_model = CategoryModel.objects.get(external_id=self.item.primary_category.category_id)
 
         # product model
         product_model = EbayProductModel()
