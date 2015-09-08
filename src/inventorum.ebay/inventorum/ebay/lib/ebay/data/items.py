@@ -1,6 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
+
 from BeautifulSoup import CData
 from inventorum.ebay.lib.ebay.data import EbayParser, EbayArrayField
 from inventorum.ebay.lib.ebay.data.responses import PaginationResultType

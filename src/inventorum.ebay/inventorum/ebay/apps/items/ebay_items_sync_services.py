@@ -1,13 +1,13 @@
 from __future__ import absolute_import, unicode_literals
 import logging
+
 from django.db import transaction
+
 from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayProductModel
 from inventorum.ebay.lib.ebay.items import EbayItems
-from decimal import Decimal
-
 
 log = logging.getLogger(__name__)
 
@@ -45,16 +45,15 @@ class IncomingEbayItemSyncer(object):
         """
         Checks if an ebay item has a valid sku.
         """
-        if getattr(self.item, 'sku', None) is not None:
+        if len(self.item.sku) > 1:  # getattr(self.item, 'sku', None) is not None:
             if EbaySKU.belongs_to_current_env(self.item.sku):
                 self.create_ebay_item_db_model()
             else:
-                log.warning('There was an ebay item with another sku (not inventorum): %s', self.item.sku)
-                log.warning('No sku for item: %s Of accountId: %s', self.item.item_id, self.account.id)
+                log.warning('There was an ebay item with another sku (not inventorum): %s', self.item.sku,
+                            self.account.id)
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders
-            log.warning("Item was not created via Inventorum".format(self.item))
-            log.warning('No sku for item: ' + str(self.item.item_id) + 'Of accountId: ' + str(self.account.id))
+            log.warning("Item was not created via Inventorum".format(self.item) + str(self.account.id))
 
     @transaction.atomic()
     def create_ebay_item_db_model(self):
@@ -89,13 +88,12 @@ class IncomingEbayItemSyncer(object):
             category_model = CategoryModel.objects.get(external_id=self.item.primary_category.category_id)
 
         # product model
-        defaults = {
-            'category': category_model
-        }
         product_model, is_created = EbayProductModel.objects.get_or_create(
             inv_id=self.account.core_api.get_product(item_model.inv_product_id).inv_id,
             account=self.account,
-            defaults=defaults
+            defaults={
+                'category': category_model
+            }
         )
         if not is_created:
             product_model.category = category_model

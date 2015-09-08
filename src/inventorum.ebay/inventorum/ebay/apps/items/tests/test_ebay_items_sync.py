@@ -20,7 +20,7 @@ from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture,
     EbayShippingDetails, EbayShippingServiceOption, EbayPriceModel
 from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
 from inventorum.ebay.tests import Countries, MockedTest, StagingTestAccount
-from inventorum.ebay.tests.testcases import UnitTestCase, APITestCase, EbayAuthenticatedAPITestCase
+from inventorum.ebay.tests.testcases import UnitTestCase, EbayAuthenticatedAPITestCase
 from mock import PropertyMock
 
 log = logging.getLogger(__name__)

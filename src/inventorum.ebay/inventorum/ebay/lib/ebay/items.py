@@ -1,10 +1,11 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+import datetime
+
 from inventorum.ebay.lib.ebay import EbayTrading
 from inventorum.ebay.lib.ebay.data import EbayParser
 from inventorum.ebay.lib.ebay.data.items import EbayAddItemResponse, EbayUnpublishReasons, EbayEndItemResponse, \
     EbayReviseFixedPriceItemResponse, EbayGetItemResponse, EbayGetSellerListResponse
-import datetime
 
 
 class EbayItems(EbayTrading):

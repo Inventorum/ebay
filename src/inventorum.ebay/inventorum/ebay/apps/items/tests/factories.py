@@ -1,8 +1,8 @@
 from __future__ import absolute_import, unicode_literals
-import factory
 from decimal import Decimal
-from inventorum.ebay.apps.items import EbaySKU
 
+import factory
+from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption
 from inventorum.ebay.tests import Countries
