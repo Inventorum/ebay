@@ -6,6 +6,7 @@ from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayProductModel
 from inventorum.ebay.lib.ebay.items import EbayItems
+from decimal import Decimal
 
 
 log = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ class EbayItemsSync(object):
 
         assert response.page_number == 1, 'EbayItemSync can not handle pagination yet'
 
-        for item in response.items:  # AttributeError: 'list' object has no attribute 'item_id'
+        for item in response.items:
             IncomingEbayItemSyncer(self.account, ebay_api.get_item(item.item_id)).run()
 
 
@@ -71,7 +72,7 @@ class IncomingEbayItemSyncer(object):
         if getattr(self.item, 'pick_up', None) is not None:
             item_model.is_click_and_collect = self.item.pick_up.is_click_and_collect
 
-        item_model.gross_price = self.item.start_price
+        item_model.gross_price = self.item.start_price.value
         item_model.quantity = self.item.quantity
         item_model.name = self.item.title
         item_model.inv_product_id = EbaySKU.extract_product_id(self.item.sku)
@@ -88,11 +89,17 @@ class IncomingEbayItemSyncer(object):
             category_model = CategoryModel.objects.get(external_id=self.item.primary_category.category_id)
 
         # product model
-        product_model = EbayProductModel()
-        product_model.category = category_model
-        product_model.account = self.account
-        product_model.inv_id = self.account.core_api.get_product(item_model.inv_product_id).inv_id
-        product_model.save()
+        defaults = {
+            'category': category_model
+        }
+        product_model, is_created = EbayProductModel.objects.get_or_create(
+            inv_id=self.account.core_api.get_product(item_model.inv_product_id).inv_id,
+            account=self.account,
+            defaults=defaults
+        )
+        if not is_created:
+            product_model.category = category_model
+            product_model.save()
 
         item_model.product = product_model
         item_model.category = category_model
