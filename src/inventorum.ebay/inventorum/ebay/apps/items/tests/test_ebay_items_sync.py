@@ -3,8 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
 import logging
 
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
-from inventorum.ebay.apps.auth.models import EbayTokenModel
+from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
@@ -18,20 +17,16 @@ from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption, EbayPriceModel
-from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
 from inventorum.ebay.tests import Countries, MockedTest, StagingTestAccount
-from inventorum.ebay.tests.testcases import UnitTestCase, EbayAuthenticatedAPITestCase
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from mock import PropertyMock
 
 log = logging.getLogger(__name__)
 
 
-class UnitTestEbayItemsSyncer(UnitTestCase):
+class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
     def setUp(self):
         super(UnitTestEbayItemsSyncer, self).setUp()
-
-        ebay_token = EbayTokenFactory.create()
-        self.account = EbayAccountFactory.create(token=EbayTokenModel.create_from_ebay_token(ebay_token))
 
         self.test_inv_product_id = 1000000000000000123L
         self.item = EbayFixedPriceItem(
