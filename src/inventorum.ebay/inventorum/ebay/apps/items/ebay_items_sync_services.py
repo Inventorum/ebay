@@ -22,10 +22,11 @@ class EbayItemsSync(object):
 
     def run(self):
         """ Gets all item_ids and then all items from ebay.
-        If there is more than one page, it iterates though all pages to get all items.
+        If there is [with maximal entries per page(200)]
+        more than one page, it iterates though all pages to get all items.
         """
         ebay_api = EbayItems(self.account.token.ebay_object)
-        response = ebay_api.get_all_items_from_seller_list()
+        response = ebay_api.get_all_items_from_seller_list(200)
 
         for item in response.items:
             IncomingEbayItemSyncer(self.account, ebay_api.get_item(item.item_id)).run()
