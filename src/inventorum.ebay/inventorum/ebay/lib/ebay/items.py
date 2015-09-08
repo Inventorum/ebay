@@ -38,7 +38,7 @@ class EbayItems(EbayTrading):
         response = self.execute('ReviseFixedPriceItem', revise_fixed_price_item.dict())
         return EbayReviseFixedPriceItemResponse.create_from_data(response)
 
-    def get_seller_list(self):
+    def get_items_from_seller_list(self, page_nr):
         """
         Get List of ItemIds from the Items, published on ebay.
         <GranularityLevel>Fine</GranularityLevel>
@@ -47,7 +47,9 @@ class EbayItems(EbayTrading):
         <Pagination>
             <EntriesPerPage>2</EntriesPerPage>
         </Pagination>
-        :return: getItem response
+        :type page_nr int
+        :rtype: EbayGetSellerListResponse
+        :return: EbayGetSellerListResponse
         """
         response = self.execute('GetSellerList', {
             'DetailLevel': 'ReturnAll',
@@ -55,10 +57,27 @@ class EbayItems(EbayTrading):
             # 120 days is ebay max for date range filters
             'EndTimeTo': EbayParser.format_date(datetime.datetime.now() + datetime.timedelta(days=120)),
             'IncludeVariations': 'True',
-            'Pagination': {'EntriesPerPage': '200'}
+            'Pagination': {
+                'EntriesPerPage': '200',
+                'PageNumber': page_nr}
         })
-        # get only some items, need to get all (paging over start and )
         return EbayGetSellerListResponse.create_from_data(data=response)
+
+    def get_all_items_from_seller_list(self):
+        """
+        Get List of all ItemIds from the Items, published on ebay.
+        :rtype [EbayFixedPrizedItem]
+        :return: getItem response
+        """
+        page_nr = 1
+        response = self.get_items_from_seller_list(page_nr)
+        while (response.page_number-page_nr) > 0:
+            page_nr += 1
+            next_response = self.get_items_from_seller_list(page_nr)
+            for item in next_response.items:
+                response.items.append(item)
+
+        return response
 
     def get_item(self, item_id):
         """

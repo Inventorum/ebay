@@ -22,11 +22,10 @@ class EbayItemsSync(object):
 
     def run(self):
         """ Gets all item_ids and then all items from ebay.
+        If there is more than one page, it iterates though all pages to get all items.
         """
         ebay_api = EbayItems(self.account.token.ebay_object)
-        response = ebay_api.get_seller_list()
-
-        assert response.page_number == 1, 'EbayItemSync can not handle pagination yet'
+        response = ebay_api.get_all_items_from_seller_list()
 
         for item in response.items:
             IncomingEbayItemSyncer(self.account, ebay_api.get_item(item.item_id)).run()
@@ -49,7 +48,7 @@ class IncomingEbayItemSyncer(object):
             if EbaySKU.belongs_to_current_env(self.item.sku):
                 self.create_ebay_item_db_model()
             else:
-                log.warning('There was an ebay item with another sku (not inventorum): %s', self.item.sku,
+                log.warning('There was an ebay item with another sku (not inventorum): %s%s', self.item.sku,
                             self.account.id)
         else:
             # Currently, we do not perform any updates since we're only fetching completed orders

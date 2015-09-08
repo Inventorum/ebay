@@ -109,9 +109,6 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
         EbayItemsSync(account=self.account).run()
 
         self.assertPostcondition(EbayItemModel.objects.count(), 0)
-        #
-        # ebay_model = EbayItemModel.objects.first()
-        # self.assertIsInstance(ebay_model, EbayItemModel)
 
     @MockedTest.use_cassette('create_product_with_sku_and_serialize_it.yaml', record_mode="new_episodes")
     def test_create_product_with_sku_and_serialize_it(self):
