@@ -1,8 +1,10 @@
+from __future__ import absolute_import, unicode_literals
 import logging
 from inventorum.ebay.lib.ebay.items import EbayItems
 from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from decimal import Decimal
+
 
 log = logging.getLogger(__name__)
 
@@ -32,9 +34,13 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
         self.assertEqual(item1.listing_duration, 'Days_30')
         self.assertEqual(item1.payment_methods, 'PayPal')
         self.assertEqual(item1.paypal_email_address, 'bartosz@hernas.pl')
+        self.assertEqual(item1.pictures[0].url,
+                         'http://i.ebayimg.com/00/s/MTIwMFgxNjAw/z/usoAAOSwgQ9VpN-D/$_1.JPG?set_id=880000500F')
         self.assertTrue(item1.pick_up.is_click_and_collect)
         self.assertIsNone(item1.ean)
+        self.assertIsNone(item1.variation)
 
+        # second item with variation
         id_2 = '262005246355'
         item2 = items.get_item(id_2)
         self.assertEqual(item2.item_id, id_2)
