@@ -2,6 +2,7 @@ import logging
 from inventorum.ebay.lib.ebay.items import EbayItems
 from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+from decimal import Decimal
 
 log = logging.getLogger(__name__)
 
@@ -20,12 +21,19 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
         items = EbayItems(self.ebay_token)
         id_1 = '261967105601'
         item1 = items.get_item(id_1)
-        log.debug(item1)
         self.assertEqual(item1.item_id, id_1)
+        self.assertEqual(item1.start_price.value, Decimal('1.09'))
+        self.assertEqual(item1.title, 'Aaa')
         self.assertEqual(item1.sku, 'invrc_677218')
         self.assertEqual(item1.country, 'DE')
+        self.assertEqual(item1.postal_code, '13347')
         self.assertEqual(item1.shipping_details.shipping_service_options[0].shipping_service, 'DE_UPSStandard')
         self.assertEqual(item1.primary_category.category_id, '50602')
+        self.assertEqual(item1.listing_duration, 'Days_30')
+        self.assertEqual(item1.payment_methods, 'PayPal')
+        self.assertEqual(item1.paypal_email_address, 'bartosz@hernas.pl')
+        self.assertTrue(item1.pick_up.is_click_and_collect)
+        self.assertIsNone(item1.ean)
 
         id_2 = '262005246355'
         item2 = items.get_item(id_2)
