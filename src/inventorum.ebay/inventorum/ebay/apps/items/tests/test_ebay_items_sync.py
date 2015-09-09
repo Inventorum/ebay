@@ -157,7 +157,8 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
         publishing_service = PublishingService(item, self.user)
         publishing_service.publish()
         item.delete()
-
+        # deleted the item to make sure that it is recreated by the serializer
+        
         # ---- start serializer ----#
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
         EbayItemsSync(account=self.account).run()
