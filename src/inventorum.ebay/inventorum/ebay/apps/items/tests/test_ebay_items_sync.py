@@ -158,18 +158,19 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
 
         publishing_service = PublishingService(item, self.user)
         publishing_service.publish()
-        item.save()
+        item.delete()
 
         # ---- start serializer ----#
+        self.assertPrecondition(EbayItemModel.objects.count(), 0)
         EbayItemsSync(account=self.account).run()
         self.assertPostcondition(EbayItemModel.objects.count(), 1)
 
         ebay_model = EbayItemModel.objects.first()
         self.assertIsInstance(ebay_model, EbayItemModel)
+        self.assertEqual(ebay_model.publishing_status, EbayItemPublishingStatus.PUBLISHED)
 
         # ---- unpublish the test product ---- #
-        unpublishing_service = UnpublishingService(product.published_item, self.user)
+        unpublishing_service = UnpublishingService(ebay_model, self.user)
         unpublishing_service.unpublish()
 
-        item = product.published_item
-        self.assertIsNone(item)
+        self.assertEqual(ebay_model.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
