@@ -43,17 +43,22 @@ class IncomingEbayItemSyncer(object):
 
     def run(self):
         """
-        Checks if an ebay item has a valid sku.
+        Checks if it has a valid sku and if the ebay item is already in the database.
         """
-        if len(self.item.sku) > 1:  # getattr(self.item, 'sku', None) is not None:
-            if EbaySKU.belongs_to_current_env(self.item.sku):
-                self.create_ebay_item_db_model()
-            else:
-                log.warning('There was an ebay item with another sku (not inventorum): %s%s', self.item.sku,
-                            self.account.id)
+
+        if not self.item.sku:
+            # Currently, we do not perform any updates since we're only fetching items with sku
+            log.warning('Item was not created via Inventorum'.format(self.item) + str(self.account.id))
+            return
+
+        if EbaySKU.belongs_to_current_env(self.item.sku):
+            if EbayItemModel.objects.filter(external_id=self.item.item_id).exists():
+                log.info('EbayItem with `item_id=%s` already exists in database.', self.item.item_id)
+                return
+            self.create_ebay_item_db_model()
         else:
-            # Currently, we do not perform any updates since we're only fetching completed orders
-            log.warning("Item was not created via Inventorum".format(self.item) + str(self.account.id))
+            log.warning('There was an ebay item with another sku (not inventorum or different environment): %s%s',
+                        self.item.sku, self.account.id)
 
     @transaction.atomic()
     def create_ebay_item_db_model(self):

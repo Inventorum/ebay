@@ -60,7 +60,6 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
 
         common_category_attrs = dict(ebay_leaf=True, features=None)
         self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
-        self.category_model.save()
 
         IncomingEbayItemSyncer(account=self.account, item=self.item).run()
 
@@ -95,6 +94,21 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
         IncomingEbayItemSyncer(account=self.account, item=self.item).run()
         # No EbayItemModel should be created, as it is not an inventorum product.
         self.assertEquals(EbayItemModel.objects.count(), 0)
+
+    def test_serialize_duplicated_item(self):
+        self.core_api_mock.get_product.return_value = CoreProductFactory.create(inv_id=self.test_inv_product_id)
+
+        common_category_attrs = dict(ebay_leaf=True, features=None)
+        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
+
+        IncomingEbayItemSyncer(account=self.account, item=self.item).run()
+        self.assertPostcondition(EbayItemModel.objects.count(), 1)
+        ebay_model = EbayItemModel.objects.first()
+        self.assertIsInstance(ebay_model, EbayItemModel)
+
+        # start Syncer again with the same item, shouldn't create another EbayItem
+        IncomingEbayItemSyncer(account=self.account, item=self.item).run()
+        self.assertPostcondition(EbayItemModel.objects.count(), 1)
 
 
 class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingServiceTestMixin):
@@ -142,19 +156,20 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
 
         publishing_service = PublishingService(item, self.user)
         publishing_service.publish()
-        item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
-        item.save()
+        item.delete()
+        # deleted the item to make sure that it is recreated by the serializer
 
         # ---- start serializer ----#
+        self.assertPrecondition(EbayItemModel.objects.count(), 0)
         EbayItemsSync(account=self.account).run()
-        self.assertPostcondition(EbayItemModel.objects.count(), 2)
+        self.assertPostcondition(EbayItemModel.objects.count(), 1)
 
         ebay_model = EbayItemModel.objects.first()
         self.assertIsInstance(ebay_model, EbayItemModel)
+        self.assertEqual(ebay_model.publishing_status, EbayItemPublishingStatus.PUBLISHED)
 
         # ---- unpublish the test product ---- #
-        unpublishing_service = UnpublishingService(product.published_item, self.user)
+        unpublishing_service = UnpublishingService(ebay_model, self.user)
         unpublishing_service.unpublish()
 
-        item = product.published_item
-        self.assertIsNone(item)
+        self.assertEqual(ebay_model.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
