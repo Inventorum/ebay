@@ -158,7 +158,6 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
 
         publishing_service = PublishingService(item, self.user)
         publishing_service.publish()
-        item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
         item.save()
 
         # ---- start serializer ----#
