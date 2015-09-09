@@ -163,7 +163,7 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
 
         # ---- start serializer ----#
         EbayItemsSync(account=self.account).run()
-        self.assertPostcondition(EbayItemModel.objects.count(), 2)
+        self.assertPostcondition(EbayItemModel.objects.count(), 1)
 
         ebay_model = EbayItemModel.objects.first()
         self.assertIsInstance(ebay_model, EbayItemModel)
