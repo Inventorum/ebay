@@ -5,7 +5,6 @@ import json
 from decimal import Decimal as D
 
 from inventorum.ebay.tests import StagingTestAccount
-
 from django.utils.functional import cached_property
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, \
     DurationFactory
@@ -18,7 +17,6 @@ from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFac
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-
 
 log = logging.getLogger(__name__)
 
@@ -206,7 +204,6 @@ class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin)
                     'short_message': 'Artikel kann nicht aufgerufen werden.'
                 }])
 
-
     @celery_test_case()
     def test_publish_then_unpublish_variation_unsupported_category(self):
         with ApiTest.use_cassette("publish_and_unpublish_full_variation_unsupported_cat.yaml") as cass:
@@ -242,10 +239,9 @@ class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin)
                 'state': 'failed'
             })
 
-
     @celery_test_case()
     def test_publish_then_unpublish_variation_supported_category_missing_specifics(self):
-        with ApiTest.use_cassette("publish_and_unpublish_full_variation_missing_specifics.yaml") as cass:
+        with ApiTest.use_cassette("publish_and_unpublish_full_variation_missing_specifics.yaml"):
             inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             category = CategoryFactory.create(external_id="53159")
@@ -264,7 +260,7 @@ class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin)
 
     @celery_test_case()
     def test_publish_then_unpublish_variation_supported_category(self):
-        with ApiTest.use_cassette("publish_and_unpublish_full_variation.yaml") as cass:
+        with ApiTest.use_cassette("publish_and_unpublish_full_variation.yaml"):
             inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
             category = CategoryFactory.create(external_id="53159")

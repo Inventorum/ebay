@@ -4,6 +4,19 @@ CHANGES
 
 develop
 =======
+
+Feature
+- INV-5164 Pull published items from ebay.com with SKUs only
+
+
+2015-08-31 0.1.11
+=================
+- INV-5361 Fixed not visible images in Ebay (wrong hostname)
+
+2015-08-23 0.1.10
+=================
+- Allow ``None`` for ``gross_price`` in core product meta serializer
+
 2015-08-03 0.1.9
 ================
 - INV-4966 Send EAN if needed and validate EAN availability for particular categories

@@ -8,6 +8,7 @@ from django.utils.translation import ugettext
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
+from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.orders.models import OrderableItemModel
 
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
@@ -95,17 +96,22 @@ class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
         return self.specific_values.filter(specific__category_id=self.category_id)
 
 
-# Models for data just before publishing
-
 class EbayItemImageModel(BaseModel):
     item = models.ForeignKey("products.EbayItemModel", related_name="images", null=True, blank=True)
     variation = models.ForeignKey("products.EbayItemVariationModel", related_name="images", null=True, blank=True)
     url = models.TextField()
-    inv_image_id = models.IntegerField(verbose_name="Inventorum image id")
+    inv_image_id = models.IntegerField(verbose_name="Inventorum image id", null=True, blank=True)
 
     @property
     def ebay_object(self):
-        return EbayPicture(self.url.replace('https://', 'http://'))
+        return EbayPicture(self.parsed_url)
+
+    @property
+    def parsed_url(self):
+        url = self.url
+        url = url.replace(settings.INV_CORE_API_HOST, settings.INV_CORE_MEDIA_HOST)
+        url = url.replace('https://', 'http://')
+        return url
 
 
 class EbayItemShippingDetails(BaseModel):
@@ -117,7 +123,7 @@ class EbayItemShippingDetails(BaseModel):
     @property
     def ebay_object(self):
         return EbayItemShippingService(
-            id=self.external_id,
+            shipping_id=self.external_id,
             cost=self.cost,
             additional_cost=self.additional_cost
         )
@@ -148,7 +154,7 @@ class EbayItemModelQuerySet(BaseQuerySet):
         :type sku: unicode
         :rtype EbayItemModelQuerySet
         """
-        inv_id = EbayItemModel.clean_sku(sku)
+        inv_id = EbaySKU.extract_product_id(sku)
         return self.filter(inv_product_id=inv_id)
 
     def by_account(self, account):
@@ -196,16 +202,6 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     unpublished_at = models.DateTimeField(null=True, blank=True)
 
     objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
-
-    @classmethod
-    def clean_sku(cls, sku):
-        """
-        Extracts Inventorum id from sku
-        :type sku: unicode
-        :rtype: unicode
-        """
-        return sku.replace(settings.EBAY_SKU_FORMAT.format(""), "")
-
 
     @property
     def ebay_object(self):
@@ -311,7 +307,7 @@ class EbayItemVariationModel(OrderableItemModel, BaseModel):
 class EbayItemVariationSpecificModel(BaseModel):
     class TranslatedNames(object):
         """
-        This class exist only to trigger Django to translate these 3 names that are originaly comming from core api
+        This class exist only to trigger Django to translate these 3 names that are originally coming from core api
         """
         SIZE = ugettext('size')
         MATERIAL = ugettext('material')

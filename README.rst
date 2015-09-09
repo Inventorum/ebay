@@ -100,7 +100,7 @@ Known issues
 `Deprecated? On Andis computer it works with Python 2.7.9`
 `Nope, on Mikes and Julians it works only <= 2.7.8`
 
-In case you are getting this error in test:
+In case you are getting this error in test, also in python version 2.7.10:
 
 ::
 
@@ -110,8 +110,17 @@ You need to downgrade python to 2.7.8
 
 ::
 
-    sudo port activate python27 @2.7.8
+    # Check if python 2.7.8 is installed
+    port installed python27
 
+    # If it is not installed, install it
+    mkdir ~/ports && cd ~/ports
+    svn checkout -r 128591 https://svn.macports.org/repository/macports/trunk/dports/lang/python27/
+    cd python27
+    sudo port install
+
+    # Activate python 2.7.8
+    sudo port activate python27 @2.7.8
 
 
 Account we are using for testing
@@ -139,4 +148,3 @@ How to add images in console on slingshot
   >>> second_hash_image = ImageHashModel.objects.get(id=2979)
   >>> first_child.images.add(first_hash_image)
   >>> last_child.images.add(second_hash_image)
-

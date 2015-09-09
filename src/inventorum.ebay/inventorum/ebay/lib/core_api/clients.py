@@ -2,16 +2,15 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
+import requests
+from django.conf import settings
 
 from inventorum.ebay.lib.core_api import CoreChannel
 from inventorum.ebay.lib.core_api.models import CoreProductDeserializer, CoreInfoDeserializer, \
     CoreProductDeltaDeserializer, CoreOrder, CoreDeltaReturn
 from inventorum.ebay.lib.core_api.pager import Pager
 from inventorum.util.django.middlewares import get_current_request_id
-import requests
-from django.conf import settings
 from inventorum.ebay.apps.inventory.serializers import QuantityCoreApiResponseDeserializer
-
 
 log = logging.getLogger(__name__)
 
@@ -385,7 +384,6 @@ class UserScopedCoreAPIClient(CoreAPIClient):
 
 
 class CoreReturnsClient(object):
-
     def __init__(self, core_client):
         """
         :type core_client: UserScopedCoreAPIClient

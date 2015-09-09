@@ -6,9 +6,9 @@
       <env name="PYTHONUNBUFFERED" value="1" />
       <env name="PYRAMID_SETTINGS" value="test.ini" />
     </envs>
-    <option name="SDK_HOME" value="/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7" />
+    <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/inventorum.ebay" />
-    <option name="IS_MODULE_SDK" value="false" />
+    <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <module name="ebay" />
