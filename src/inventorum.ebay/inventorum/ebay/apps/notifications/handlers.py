@@ -73,10 +73,14 @@ class FixedPriceTransactionNotificationHandler(EbayNotificationHandler):
         log.info("Handling FixedPriceTransaction notification for ebay item {}".format(item_id))
 
         account = item.account
-        schedule_ebay_orders_sync(account_id=account.id,
-                                  context=TaskExecutionContext(account_id=account.id,
-                                                               user_id=account.default_user.id,
-                                                               request_id=get_current_request_id()))
+        schedule_ebay_orders_sync(
+            account_id=account.id,
+            context=TaskExecutionContext(
+                account_id=account.id,
+                user_id=account.default_user.id,
+                request_id=get_current_request_id()
+            )
+        )
 
 
 class ItemSoldNotificationHandler(EbayNotificationHandler):
@@ -97,10 +101,14 @@ class ItemSoldNotificationHandler(EbayNotificationHandler):
         log.info("Handling ItemSold notification for ebay item {}".format(item_id))
 
         account = item.account
-        schedule_ebay_orders_sync(account_id=account.id,
-                                  context=TaskExecutionContext(account_id=account.id,
-                                                               user_id=account.default_user.id,
-                                                               request_id=get_current_request_id()))
+        schedule_ebay_orders_sync(
+            account_id=account.id,
+            context=TaskExecutionContext(
+                account_id=account.id,
+                user_id=account.default_user.id,
+                request_id=get_current_request_id()
+            )
+        )
 
 
 class ItemClosedNotificationHandler(EbayNotificationHandler):
@@ -124,10 +132,14 @@ class ItemClosedNotificationHandler(EbayNotificationHandler):
             item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED)
 
             account = item.account
-            schedule_core_api_publishing_status_update(ebay_item_id=item.id,
-                                                       context=TaskExecutionContext(account_id=account.id,
-                                                                                    user_id=account.default_user.id,
-                                                                                    request_id=get_current_request_id()))
+            schedule_core_api_publishing_status_update(
+                ebay_item_id=item.id,
+                context=TaskExecutionContext(
+                    account_id=account.id,
+                    user_id=account.default_user.id,
+                    request_id=get_current_request_id()
+                )
+            )
         else:
             log.info("Got ItemClosed notification for already unpublished ebay item {}".format(item_id))
 
@@ -149,12 +161,16 @@ class ItemSuspendedNotificationHandler(EbayNotificationHandler):
 
         log.info("Handling ItemSuspended notification for ebay item {}".format(item_id))
 
-        item.set_publishing_status(EbayItemPublishingStatus.FAILED,
-                                   [ugettext("The listing was suspended by ebay. "
-                                             "Further details are available via the ebay website.")])
+        item.set_publishing_status(
+            EbayItemPublishingStatus.FAILED, [ugettext("The listing was suspended by ebay."
+                                                       "Further details are available via the ebay website.")])
 
         account = item.account
-        schedule_core_api_publishing_status_update(ebay_item_id=item.id,
-                                                   context=TaskExecutionContext(account_id=account.id,
-                                                                                user_id=account.default_user.id,
-                                                                                request_id=get_current_request_id()))
+        schedule_core_api_publishing_status_update(
+            ebay_item_id=item.id,
+            context=TaskExecutionContext(
+                account_id=account.id,
+                user_id=account.default_user.id,
+                request_id=get_current_request_id()
+            )
+        )

@@ -253,7 +253,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
 
         data = ebay_item.dict()
         self.assertEqual(data, {'Item': {
-            'SKU': 'invdev_640416',
+            'SKU': 'invtest_640416',
             'ConditionID': 1000,
             'Country': 'DE',
             'Currency': 'EUR',
@@ -551,7 +551,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
         self.assertEqual(first_variation, {
             'Quantity': 1,
             'StartPrice': '150.00',
-            'SKU': 'invdev_666030',
+            'SKU': 'invtest_666030',
             'VariationSpecifics': {
                 'NameValueList': [
                     {
@@ -575,7 +575,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
         self.assertEqual(second_variation, {
             'Quantity': 2,
             'StartPrice': '130.00',
-            'SKU': 'invdev_666031',
+            'SKU': 'invtest_666031',
             'VariationSpecifics': {
                 'NameValueList': [
                     {

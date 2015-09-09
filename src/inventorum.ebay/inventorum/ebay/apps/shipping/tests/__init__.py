@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import logging
-
 from decimal import Decimal as D
+
 from inventorum.ebay.apps.shipping.models import ShippingServiceModel
 from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceFactory
 from inventorum.ebay.tests import Countries

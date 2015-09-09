@@ -159,7 +159,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(first_variation, {
                 'Quantity': '0',
                 'StartPrice': '1.99',
-                'SKU': 'invdev_{0}'.format(second_variation_obj.inv_product_id),
+                'SKU': 'invtest_{0}'.format(second_variation_obj.inv_product_id),
                 'VariationSpecifics': {
                     'NameValueList': [
                         {
@@ -177,7 +177,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(second_variation, {
                 'Quantity': '22',
                 'StartPrice': '123.45',
-                'SKU': 'invdev_{0}'.format(variation_obj.inv_product_id),
+                'SKU': 'invtest_{0}'.format(variation_obj.inv_product_id),
                 'VariationSpecifics': {
                     'NameValueList': [
                         {
