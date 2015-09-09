@@ -46,7 +46,7 @@ class IncomingEbayItemSyncer(object):
         Checks if it has a valid sku and if the ebay item is already in the database.
         """
 
-        if len(self.item.sku) < 1:
+        if not self.item.sku:
             # Currently, we do not perform any updates since we're only fetching items with sku
             log.warning('Item was not created via Inventorum'.format(self.item) + str(self.account.id))
             return
