@@ -96,6 +96,22 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
         # No EbayItemModel should be created, as it is not an inventorum product.
         self.assertEquals(EbayItemModel.objects.count(), 0)
 
+    def test_serialize_duplicated_item(self):
+        self.core_api_mock.get_product.return_value = CoreProductFactory.create(inv_id=self.test_inv_product_id)
+
+        common_category_attrs = dict(ebay_leaf=True, features=None)
+        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
+        self.category_model.save()
+
+        IncomingEbayItemSyncer(account=self.account, item=self.item).run()
+        self.assertPostcondition(EbayItemModel.objects.count(), 1)
+        ebay_model = EbayItemModel.objects.first()
+        self.assertIsInstance(ebay_model, EbayItemModel)
+
+        # start Syncer again with the same item, shouldn't create another EbayItem
+        IncomingEbayItemSyncer(account=self.account, item=self.item).run()
+        self.assertPostcondition(EbayItemModel.objects.count(), 1)
+
 
 class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingServiceTestMixin):
     @MockedTest.use_cassette('get_product_id_from_core_api_for_ebay_item_serializer.yaml', record_mode="new_episodes")
