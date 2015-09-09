@@ -60,7 +60,6 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
 
         common_category_attrs = dict(ebay_leaf=True, features=None)
         self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
-        self.category_model.save()
 
         IncomingEbayItemSyncer(account=self.account, item=self.item).run()
 
@@ -101,7 +100,6 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
 
         common_category_attrs = dict(ebay_leaf=True, features=None)
         self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
-        self.category_model.save()
 
         IncomingEbayItemSyncer(account=self.account, item=self.item).run()
         self.assertPostcondition(EbayItemModel.objects.count(), 1)

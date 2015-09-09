@@ -46,7 +46,7 @@ class IncomingEbayItemSyncer(object):
         Checks if the ebay item is already in the database and if it has a valid sku.
         """
         if EbayItemModel.objects.filter(external_id=self.item.item_id).exists():
-            log.info('EbayItem with `item_id={}` already exists in database.'.format(self.item.item_id))
+            log.info('EbayItem with `item_id=%s` already exists in database.', self.item.item_id)
             return
 
         if len(self.item.sku) > 1:
