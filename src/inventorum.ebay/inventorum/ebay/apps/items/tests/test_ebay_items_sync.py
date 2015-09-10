@@ -19,6 +19,7 @@ from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture,
     EbayShippingDetails, EbayShippingServiceOption, EbayPriceModel
 from inventorum.ebay.tests import Countries, MockedTest, StagingTestAccount
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
+from inventorum.util.celery import TaskExecutionContext
 from mock import PropertyMock
 
 log = logging.getLogger(__name__)
@@ -45,12 +46,17 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
                 EbayPicture(url='http://www.testpicture.de/image.png')],
             pick_up=EbayPickupInStoreDetails(is_click_and_collect=False),
             sku=EbaySKU.generate_sku(self.test_inv_product_id),
-            item_id='123abc')
+            item_id='123456'
+        )
         self.default_user = EbayUserFactory.create(account=self.account)
 
         self.core_api_mock = self.patch(
             'inventorum.ebay.apps.accounts.models.EbayAccountModel.core_api',
             new_callable=PropertyMock(spec_set=UserScopedCoreAPIClient),
+        )
+
+        self.schedule_core_api_publishing_status_update_mock = self.patch(
+            'inventorum.ebay.apps.items.ebay_items_sync_services.schedule_core_api_publishing_status_update'
         )
 
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
@@ -87,6 +93,16 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
 
         self.assertIsNotNone(ebay_model.product)
         self.assertEqual(ebay_model.product.inv_id, self.test_inv_product_id)
+
+        self.assertEqual(self.schedule_core_api_publishing_status_update_mock.call_count, 1)
+        self.schedule_core_api_publishing_status_update_mock.assert_called_with(
+            ebay_item_id=int(self.item.item_id),
+            context=TaskExecutionContext(
+                account_id=self.account.inv_id,
+                user_id=self.account.user_id,
+                request_id=None
+            )
+        )
 
     def test_convert_item_without_sku(self):
         self.item.sku = 'weirdRandomStuff'
