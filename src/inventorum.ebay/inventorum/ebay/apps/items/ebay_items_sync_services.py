@@ -62,7 +62,7 @@ class IncomingEbayItemSyncer(object):
 
             # api call to core_api for updating the publishing state asynchronously
             schedule_core_api_publishing_status_update(
-                ebay_item_id=item_model.ebay_object.item_id,
+                ebay_item_id=item_model.id,
                 context=TaskExecutionContext(
                     account_id=self.account.inv_id,
                     user_id=self.account.user_id,
