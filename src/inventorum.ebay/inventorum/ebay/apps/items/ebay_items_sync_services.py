@@ -50,7 +50,7 @@ class IncomingEbayItemSyncer(object):
 
         if not self.item.sku:
             # Currently, we do not perform any updates since we're only fetching items with sku
-            log.warning('Item was not created via Inventorum with item: %d and account_id %d',
+            log.warning('Item was not created via Inventorum with item_id: %ss and account_id %d',
                         self.item.item_id, self.account.id)
             return
 
@@ -62,7 +62,7 @@ class IncomingEbayItemSyncer(object):
 
             # api call to core_api for updating the publishing state asynchronously
             schedule_core_api_publishing_status_update(
-                ebay_item_id=int(item_model.external_id),
+                ebay_item_id=item_model.id,
                 context=TaskExecutionContext(
                     account_id=self.account.inv_id,
                     user_id=self.account.user_id,

@@ -46,7 +46,7 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
                 EbayPicture(url='http://www.testpicture.de/image.png')],
             pick_up=EbayPickupInStoreDetails(is_click_and_collect=False),
             sku=EbaySKU.generate_sku(self.test_inv_product_id),
-            item_id='123456'
+            item_id='123abc'
         )
         self.default_user = EbayUserFactory.create(account=self.account)
 
@@ -96,7 +96,7 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(self.schedule_core_api_publishing_status_update_mock.call_count, 1)
         self.schedule_core_api_publishing_status_update_mock.assert_called_with(
-            ebay_item_id=int(self.item.item_id),
+            ebay_item_id=4,
             context=TaskExecutionContext(
                 account_id=self.account.inv_id,
                 user_id=self.account.user_id,
