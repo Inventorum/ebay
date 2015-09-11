@@ -64,8 +64,8 @@ class IncomingEbayItemSyncer(object):
             schedule_core_api_publishing_status_update(
                 ebay_item_id=item_model.id,
                 context=TaskExecutionContext(
-                    account_id=self.account.inv_id,
-                    user_id=self.account.user_id,
+                    account_id=self.account.id,
+                    user_id=self.account.default_user.id,
                     request_id=None
                 )
             )
