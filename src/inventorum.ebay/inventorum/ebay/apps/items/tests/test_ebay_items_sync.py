@@ -96,7 +96,7 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
 
         self.assertEqual(self.schedule_core_api_publishing_status_update_mock.call_count, 1)
         self.schedule_core_api_publishing_status_update_mock.assert_called_with(
-            ebay_item_id=4,
+            ebay_item_id=ebay_model.id,
             context=TaskExecutionContext(
                 account_id=self.account.inv_id,
                 user_id=self.account.user_id,
