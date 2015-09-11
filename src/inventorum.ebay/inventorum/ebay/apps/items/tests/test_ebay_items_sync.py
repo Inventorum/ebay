@@ -144,9 +144,6 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
     @MockedTest.use_cassette('create_product_with_sku_and_serialize_it.yaml', record_mode="new_episodes")
     @celery_test_case()
     def test_create_product_with_sku_and_serialize_it(self):
-        # self.schedule_core_api_publishing_status_update_mock = self.patch(
-        #     'inventorum.ebay.apps.items.ebay_items_sync_services.schedule_core_api_publishing_status_update'
-        # )
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
 
         # ---- create and publish the test product ---- #
