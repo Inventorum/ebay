@@ -7,7 +7,9 @@ from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayProductModel
+from inventorum.ebay.apps.products.tasks import schedule_core_api_publishing_status_update
 from inventorum.ebay.lib.ebay.items import EbayItems
+from inventorum.util.celery import TaskExecutionContext
 
 log = logging.getLogger(__name__)
 
@@ -48,14 +50,25 @@ class IncomingEbayItemSyncer(object):
 
         if not self.item.sku:
             # Currently, we do not perform any updates since we're only fetching items with sku
-            log.warning('Item was not created via Inventorum'.format(self.item) + str(self.account.id))
+            log.warning('Item was not created via Inventorum with item_id: %ss and account_id %d',
+                        self.item.item_id, self.account.id)
             return
 
         if EbaySKU.belongs_to_current_env(self.item.sku):
             if EbayItemModel.objects.filter(external_id=self.item.item_id).exists():
                 log.info('EbayItem with `item_id=%s` already exists in database.', self.item.item_id)
                 return
-            self.create_ebay_item_db_model()
+            item_model = self.create_ebay_item_db_model()
+
+            # api call to core_api for updating the publishing state asynchronously
+            schedule_core_api_publishing_status_update(
+                ebay_item_id=item_model.id,
+                context=TaskExecutionContext(
+                    account_id=self.account.id,
+                    user_id=self.account.default_user.id,
+                    request_id=None
+                )
+            )
         else:
             log.warning('There was an ebay item with another sku (not inventorum or different environment): %s%s',
                         self.item.sku, self.account.id)
@@ -111,3 +124,5 @@ class IncomingEbayItemSyncer(object):
 
         for picture in self.item.pictures:
             item_model.images.create(url=picture.url)
+
+        return item_model
