@@ -151,7 +151,7 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
         # ---- create and publish the test product ---- #
         product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
         # 176973 is valid ebay category id
-        category, c = CategoryModel.objects.get_or_create(external_id='7484')
+        category, c = CategoryModel.objects.get_or_create(external_id='7484', country='DE')
         product.category = category
         product.ean_does_not_apply = True
         product.save()
