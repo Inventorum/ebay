@@ -66,7 +66,9 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
         self.core_api_mock.get_product.return_value = CoreProductFactory.create(inv_id=self.test_inv_product_id)
 
         common_category_attrs = dict(ebay_leaf=True, features=None)
-        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
+        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", country='DE',
+                                                     **common_category_attrs)
+        CategoryFactory.create(external_id='1245', name="EAN disabled", country='AT', **common_category_attrs)
 
         IncomingEbayItemSyncer(account=self.account, item=self.item).run()
 

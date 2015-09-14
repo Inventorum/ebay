@@ -101,7 +101,7 @@ class IncomingEbayItemSyncer(object):
 
         # category model (can throw CategoryModel.DoesNotExist Exception, not needed to be handled explicitly)
         if getattr(self.item, 'primary_category', None) is None:
-            category_model = CategoryModel.objects.get(external_id=self.item.category_id)
+            category_model = CategoryModel.objects.get(external_id=self.item.category_id, country=self.item.country)
         else:
             category_model = CategoryModel.objects.get(external_id=self.item.primary_category.category_id)
 
