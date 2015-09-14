@@ -14,6 +14,7 @@ celery = inventorum.ebay.scripts.celery:run
 provisioning/provision_db = inventorum.ebay.scripts.provisioning:provision_db
 provisioning/provision_rabbitmq = inventorum.ebay.scripts.provisioning:provision_rabbitmq
 manage = inventorum.util.paste:manage
+migrate_from_old_ebay = inventorum.ebay.scripts.migration_tool:migrate_from_old_ebay
 """
 
 # alphabetically ordered(!)
