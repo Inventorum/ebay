@@ -5,7 +5,10 @@ CHANGES
 develop
 =======
 
+2015-09-15 0.1.12
+=================
 Feature
+.......
 - INV-5164 Pull published items from ebay.com with SKUs only
 
 
