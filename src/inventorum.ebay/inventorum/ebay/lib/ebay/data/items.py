@@ -531,7 +531,7 @@ class EbayItemPictureSerializer(POPOSerializer):
 
 class EbayAmountSerializer(POPOSerializer):
     _currencyID = fields.CharField(source='currency_id', max_length=3)
-    value = fields.DecimalField(max_digits=4, decimal_places=2)
+    value = fields.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         model = EbayPriceModel

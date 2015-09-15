@@ -1,8 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from decimal import Decimal
+from inventorum.ebay.lib.ebay.data.items import EbayGetItemResponse, EbayFixedPriceItem
 
 from inventorum.ebay.lib.ebay.items import EbayItems
+from inventorum.ebay.lib.ebay.tests.example_ebay_item_response import EbayResponseItemExample
 from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
@@ -62,3 +64,9 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
             cur_item = items.get_item(response.items[i].item_id)
             self.assertEqual(response.items[i].item_id, cur_item.item_id)
         self.assertEqual(i, 5)
+
+    def test_serialize_data_from_ebay(self):
+        ebay_response_example = EbayResponseItemExample.response
+        item = EbayGetItemResponse.create_from_data(data=ebay_response_example)
+
+        self.assertIsInstance(item, EbayFixedPriceItem)
