@@ -66,7 +66,9 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
         self.core_api_mock.get_product.return_value = CoreProductFactory.create(inv_id=self.test_inv_product_id)
 
         common_category_attrs = dict(ebay_leaf=True, features=None)
-        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", **common_category_attrs)
+        self.category_model = CategoryFactory.create(external_id='1245', name="EAN disabled", country='DE',
+                                                     **common_category_attrs)
+        CategoryFactory.create(external_id='1245', name="EAN disabled", country='AT', **common_category_attrs)
 
         IncomingEbayItemSyncer(account=self.account, item=self.item).run()
 
@@ -149,7 +151,7 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
         # ---- create and publish the test product ---- #
         product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
         # 176973 is valid ebay category id
-        category, c = CategoryModel.objects.get_or_create(external_id='7484')
+        category, c = CategoryModel.objects.get_or_create(external_id='7484', country='DE')
         product.category = category
         product.ean_does_not_apply = True
         product.save()
