@@ -1,13 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
+from decimal import *
 
 from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayItemShippingService, EbayPicture
 from inventorum.ebay.lib.ebay.items import EbayItems
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from decimal import *
 
 
 log = logging.getLogger(__name__)
@@ -81,7 +81,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         item = self._build_wrong_item()
         service = EbayItems(self.ebay_token)
         with self.assertRaises(EbayConnectionException) as e:
-            response = service.publish(item)
+            service.publish(item)
 
         errors = e.exception.errors
         self.assertEqual(len(errors), 4)
@@ -104,13 +104,11 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         self.assertEqual(errors[1].severity_code, 'Error')
         self.assertEqual(errors[1].classification, 'RequestError')
 
-
         self.assertEqual(errors[2].long_message, 'Bei der ausgewählten Kategorie handelt es sich nicht um eine so '
                                                  'genannte Unterkategorie.')
         self.assertEqual(errors[2].code, 87)
         self.assertEqual(errors[2].severity_code, 'Error')
         self.assertEqual(errors[2].classification, 'RequestError')
-
 
         self.assertEqual(errors[3].long_message, 'Die Dauer "120" (in Tagen) ist für dieses Angebotsformat nicht '
                                                  'verfügbar, bzw. ungültig für die Kategorie "64540".')
@@ -132,14 +130,13 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
 
         self.assertTrue(response.end_time)
 
-
     @EbayTest.use_cassette("ebay_publish_ipad_stand_correct.yaml")
     def test_error_message(self):
         item = self._build_correct_item()
         service = EbayItems(self.ebay_token)
 
         with self.assertRaises(EbayConnectionException) as e:
-            response = service.publish(item)
+            service.publish(item)
 
         self.assertTrue(e.exception.ebay_message)
         self.assertTrue(e.exception.serialized_errors[0]['parameters'])
