@@ -17,8 +17,7 @@ from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFac
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory, CoreProductVariationFactory, \
-    CoreProductAttributeFactory, CoreInfoFactory
-from inventorum.ebay.lib.ebay.data.categories import EbayCategory
+    CoreProductAttributeFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from mock import PropertyMock
 

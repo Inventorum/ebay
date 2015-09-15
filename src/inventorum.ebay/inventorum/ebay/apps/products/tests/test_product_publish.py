@@ -110,7 +110,6 @@ class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin)
 
     @celery_test_case()
     def test_failing_publish(self):
-
         with ApiTest.use_cassette("failing_publish.yaml") as cass:
             inv_product_id = StagingTestAccount.Products.IPAD_STAND
             product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
@@ -244,87 +243,87 @@ class TestProductPublish(EbayAuthenticatedAPITestCase, ShippingServiceTestMixin)
 
 
     @celery_test_case()
+    @ApiTest.use_cassette("publish_and_unpublish_full_variation_missing_specifics.yaml")
     def test_publish_then_unpublish_variation_supported_category_missing_specifics(self):
-        with ApiTest.use_cassette("publish_and_unpublish_full_variation_missing_specifics.yaml") as cass:
-            inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
-            product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
-            category = CategoryFactory.create(external_id="53159")
-            CategorySpecificFactory.create(category=category)
-            required_specific = CategorySpecificFactory.create_required(category=category)
+        inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
+        product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
+        category = CategoryFactory.create(external_id="53159")
+        CategorySpecificFactory.create(category=category)
+        required_specific = CategorySpecificFactory.create_required(category=category)
 
-            self._assign_category(product, category=category)
-            self._assign_shipping_services(product)
+        self._assign_category(product, category=category)
+        self._assign_shipping_services(product)
 
-            response = self.client.post("/products/%s/publish" % inv_product_id)
-            log.debug('Got response: %s', response)
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.data, [
-                'You need to pass all required specifics (missing: [%s])!' % required_specific.pk
-            ])
+        response = self.client.post("/products/%s/publish" % inv_product_id)
+        log.debug('Got response: %s', response)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data, [
+            'You need to pass all required specifics (missing: [%s])!' % required_specific.pk
+        ])
 
     @celery_test_case()
+    @ApiTest.use_cassette("publish_and_unpublish_full_variation.yaml")
     def test_publish_then_unpublish_variation_supported_category(self):
-        with ApiTest.use_cassette("publish_and_unpublish_full_variation.yaml") as cass:
-            inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
-            product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
-            category = CategoryFactory.create(external_id="53159")
+        inv_product_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
+        product, c = EbayProductModel.objects.get_or_create(inv_id=inv_product_id, account=self.account)
+        category = CategoryFactory.create(external_id="53159")
 
-            category.features.durations.clear()
-            category.features.durations.add(DurationFactory.create(value='Days_30'))
+        category.features.durations.clear()
+        category.features.durations.add(DurationFactory.create(value='Days_30'))
 
-            size_specific = CategorySpecificFactory.create_required(category=category, name="Größe")
-            brand_specific = CategorySpecificFactory.create_required(category=category, name="Marke")
-            self._assign_category(product, category=category)
-            self._assign_shipping_services(product)
+        size_specific = CategorySpecificFactory.create_required(category=category, name="Größe")
+        brand_specific = CategorySpecificFactory.create_required(category=category, name="Marke")
+        self._assign_category(product, category=category)
+        self._assign_shipping_services(product)
 
-            EbayProductSpecificFactory.create(
-                product=product,
-                specific=size_specific,
-                value="22"
-            )
+        EbayProductSpecificFactory.create(
+            product=product,
+            specific=size_specific,
+            value="22"
+        )
 
-            EbayProductSpecificFactory.create(
-                product=product,
-                specific=brand_specific,
-                value="Adidas"
-            )
+        EbayProductSpecificFactory.create(
+            product=product,
+            specific=brand_specific,
+            value="Adidas"
+        )
 
-            response = self.client.post("/products/%s/publish" % inv_product_id)
-            log.debug('Got response: %s', response)
-            self.assertEqual(response.status_code, 200)
+        response = self.client.post("/products/%s/publish" % inv_product_id)
+        log.debug('Got response: %s', response)
+        self.assertEqual(response.status_code, 200)
 
-            item = product.items.last()
-            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
+        item = product.items.last()
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
 
-            self.assertEqual(item.attempts.count(), 1)
-            last_attempt = item.attempts.last()
-            self.assertTrue(last_attempt.success)
-            self.assertEqual(last_attempt.type, EbayApiAttemptType.PUBLISH)
+        self.assertEqual(item.attempts.count(), 1)
+        last_attempt = item.attempts.last()
+        self.assertTrue(last_attempt.success)
+        self.assertEqual(last_attempt.type, EbayApiAttemptType.PUBLISH)
 
-            response = self.client.post("/products/%s/unpublish" % inv_product_id)
-            log.debug('Got response: %s', response.data)
-            self.assertEqual(response.status_code, 200)
+        response = self.client.post("/products/%s/unpublish" % inv_product_id)
+        log.debug('Got response: %s', response.data)
+        self.assertEqual(response.status_code, 200)
 
-            # Trick api to think product was published
-            item = product.items.last()
-            item.publishing_status = EbayItemPublishingStatus.PUBLISHED
-            item.save()
+        # Trick api to think product was published
+        item = product.items.last()
+        item.publishing_status = EbayItemPublishingStatus.PUBLISHED
+        item.save()
 
-            # Try to unpublish already unpublished product
-            response = self.client.post("/products/%s/unpublish" % inv_product_id)
-            log.debug('Got response: %s', response.data)
-            self.assertEqual(response.status_code, 200)
+        # Try to unpublish already unpublished product
+        response = self.client.post("/products/%s/unpublish" % inv_product_id)
+        log.debug('Got response: %s', response.data)
+        self.assertEqual(response.status_code, 200)
 
-            item = product.items.last()
-            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
+        item = product.items.last()
+        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
 
-            # Publish & Unpublish & Unpublish = 3
-            self.assertEqual(item.attempts.count(), 3)
-            first_unpublish_attempt = item.attempts.order_by('time_added', 'id')[1]
-            self.assertTrue(first_unpublish_attempt.success)
-            self.assertEqual(first_unpublish_attempt.type, EbayApiAttemptType.UNPUBLISH)
+        # Publish & Unpublish & Unpublish = 3
+        self.assertEqual(item.attempts.count(), 3)
+        first_unpublish_attempt = item.attempts.order_by('time_added', 'id')[1]
+        self.assertTrue(first_unpublish_attempt.success)
+        self.assertEqual(first_unpublish_attempt.type, EbayApiAttemptType.UNPUBLISH)
 
-            # Last attempt should be successful cause we got that this item was already unpublished
-            second_unpublish_attempt = item.attempts.order_by('time_added', 'id')[2]
-            self.assertTrue(second_unpublish_attempt.success)
-            self.assertEqual(second_unpublish_attempt.type, EbayApiAttemptType.UNPUBLISH)
+        # Last attempt should be successful cause we got that this item was already unpublished
+        second_unpublish_attempt = item.attempts.order_by('time_added', 'id')[2]
+        self.assertTrue(second_unpublish_attempt.success)
+        self.assertEqual(second_unpublish_attempt.type, EbayApiAttemptType.UNPUBLISH)
