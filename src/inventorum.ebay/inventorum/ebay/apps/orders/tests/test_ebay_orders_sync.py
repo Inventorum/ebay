@@ -53,7 +53,7 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreAp
         EbayItemVariationFactory.create(inv_product_id=670339, item=published_item)
 
         # create shipping service that is selected in the response cassette
-        dhl_shipping = self.get_shipping_service_dhl()
+        self.get_shipping_service_dhl()
 
         periodic_ebay_orders_sync_task.delay(context=get_anonymous_task_execution_context())
 
@@ -81,7 +81,7 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreAp
                                                          external_id="261869293885")
         EbayItemVariationFactory.create(inv_product_id=670339, item=published_item)
         # create shipping service that is selected in the response cassette
-        dhl_shipping = self.get_shipping_service_dhl()
+        self.get_shipping_service_dhl()
 
         periodic_ebay_orders_sync_task.delay(context=get_anonymous_task_execution_context())
 

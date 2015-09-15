@@ -14,6 +14,7 @@ celery = inventorum.ebay.scripts.celery:run
 provisioning/provision_db = inventorum.ebay.scripts.provisioning:provision_db
 provisioning/provision_rabbitmq = inventorum.ebay.scripts.provisioning:provision_rabbitmq
 manage = inventorum.util.paste:manage
+migrate_from_old_ebay = inventorum.ebay.scripts.migration_tool:migrate_from_old_ebay
 """
 
 # alphabetically ordered(!)
@@ -28,7 +29,7 @@ required_eggs = [
     'Django>=1.7.7',
     'django-countries>=3.3',
     'django-extensions>=1.5.2',
-    'djangorestframework>=3.1.2',
+    'djangorestframework==3.1.3',
     'django-mptt>=0.6.1',
     'django-pastedeploy-settings>=1.0rc4dev',
     'django-rest-swagger>=0.2.9',
@@ -75,8 +76,6 @@ setup(
         '#egg=ebaysdk-2.1.1-dev4',
         'https://github.com/rtdean/grequests/archive/0.3.0.zip'
         '#egg=grequests-0.3.1',
-        'https://github.com/bimusiek/django-rest-framework/archive/master.zip'
-        '#egg=djangorestframework-3.1.2',
     ],
 )
 # https://github.com/bimusiek/ebaysdk-python/archive/c8365ee3cb2db29fdaae6d96fbdeff482a65ac29.zip
