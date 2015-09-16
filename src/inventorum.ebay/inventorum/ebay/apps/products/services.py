@@ -8,10 +8,11 @@ from decimal import Decimal
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
-from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants, SellerProfileCodeType
 from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
+from inventorum.ebay.lib.ebay.preferences import EbayPreferences
 from inventorum.util.django.timezone import datetime
 from requests.exceptions import RequestException
 
@@ -57,6 +58,11 @@ class PublishingCouldNotGetDataFromCoreAPI(EbayServiceException):
         self.response = response
 
 
+class PublishingCouldNotGetDataFromEbayException(EbayServiceException):
+    def __init__(self, response):
+        self.response = response
+
+
 class PublishingPreparationService(object):
     def __init__(self, product, user):
         """
@@ -87,8 +93,37 @@ class PublishingPreparationService(object):
         except RequestException as e:
             raise PublishingCouldNotGetDataFromCoreAPI(e.response)
 
+    @cached_property
+    def ebay_user_preferences(self):
+        """
+        :rtype: inventorum.ebay.lib.ebay.data.preferences.GetUserPreferencesResponseType
+        """
+        try:
+            ebay_preferences = EbayPreferences(token=self.account.token.ebay_object)
+            return ebay_preferences.get_user_preferences()
+        except EbayConnectionException as e:
+            raise PublishingCouldNotGetDataFromEbayException(e.response)
+
+    def _get_default_return_policy_from_ebay(self):
+        """
+        :rtype: None | inventorum.ebay.lib.ebay.data.preferences.SupportedSellerProfileType
+        :return:
+        """
+        user_preferences = self.ebay_user_preferences
+        seller_profiles = user_preferences.seller_profile_preferences.supported_seller_profiles
+
+        if not len(seller_profiles):
+            return None
+
+        # find and return the default return policy (there should be at most one) or None there was none
+        return next((p for p in seller_profiles if p.profile_type == SellerProfileCodeType.RETURN_POLICY
+                     and p.category_group.is_default), None)
+
     @property
     def core_account(self):
+        """
+        :rtype: inventorum.ebay.lib.core_api.models.CoreAccount
+        """
         return self.core_info.account
 
     def validate(self):
@@ -117,6 +152,7 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(ugettext('You need to select category'))
 
         self._validate_ean()
+        self._validate_return_policy()
 
         specific_values_ids = set(sv.specific.pk for sv in self.product.specific_values.all())
         required_ones = set(self.product.category.specifics.required().values_list('id', flat=True))
@@ -199,6 +235,19 @@ class PublishingPreparationService(object):
         elif self.core_product.variations and not all(v.ean for v in self.core_product.variations):
             raise PublishingValidationException(
                 ugettext("The selected category requires each variation to have a valid EAN"))
+
+    def _validate_return_policy(self):
+        """
+        Validates whether the ebay account has a default return policy configured.
+        For now, we publish every item with the default return policy configured on the eBay website.
+        If there is none, we disallow the publishing for legal matters.
+
+        :raises: PublishingValidationException
+        """
+        default_return_policy = self._get_default_return_policy_from_ebay()
+        if default_return_policy is None:
+            raise PublishingValidationException(ugettext('Product could not be published! There is no default '
+                                                         'return policy defined in your eBay account.'))
 
     def create_ebay_item(self):
         """

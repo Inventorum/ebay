@@ -13,13 +13,18 @@ from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
     UnpublishingService, PublishingPreparationService
 from inventorum.ebay.apps.products.tests import ProductTestMixin
-from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory, EbayProductFactory
+from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory, EbayProductFactory, \
+    EbayProductModelFactory
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
+from inventorum.ebay.lib.core_api.models import CoreAccount
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory, CoreProductVariationFactory, \
-    CoreProductAttributeFactory
-from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from mock import PropertyMock
+    CoreProductAttributeFactory, CoreInfoFactory
+from inventorum.ebay.lib.ebay.data import SellerProfileCodeType
+from inventorum.ebay.lib.ebay.data.tests.preferences_factories import GetUserPreferencesResponseTypeFactory, \
+    SupportedSellerProfileTypeFactory
+from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
+from mock import PropertyMock, Mock
 
 log = logging.getLogger(__name__)
 
@@ -425,7 +430,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
 
         preparation_service = PublishingPreparationService(product, self.user)
         with self.assertRaises(PublishingValidationException) as exc:
-                preparation_service.validate()
+            preparation_service.validate()
 
         self.assertEqual(exc.exception.message, expected_exception)
 
@@ -433,7 +438,7 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
         core_product.variations[0].ean = "123456789012"
         preparation_service = PublishingPreparationService(product, self.user)
         with self.assertRaises(PublishingValidationException) as exc:
-                preparation_service.validate()
+            preparation_service.validate()
 
         self.assertEqual(exc.exception.message, expected_exception)
 
@@ -725,3 +730,165 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
                                                                'LocationID': 'invdev_346',
                                                                'Quantity': '5'}},
                                     'SKU': last_item.sku}})
+
+
+class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixin):
+    """
+    This test case does not communicate with eBay nor the core api. Instead, it mocks the communication with
+    these external dependencies and allows to configure expected responses.
+    """
+
+    def setUp(self):
+        super(UnitTestPublishingPreparationService, self).setUp()
+
+        # token = EbayTokenModel.objects.create(account=self.account, value=EbayTokenFactory())
+
+        self.setup_mocked_dependencies()
+        self.setup_valid_configuration()
+
+    def setup_mocked_dependencies(self):
+        self.core_api_mock = self.patch('inventorum.ebay.apps.accounts.models.EbayUserModel.core_api',
+                                        new_callable=PropertyMock(return_value=Mock(spec_set=UserScopedCoreAPIClient)))
+        self.ebay_get_user_preferences_mock = self.patch(
+            'inventorum.ebay.apps.products.services.EbayPreferences.get_user_preferences')
+
+    def setup_valid_configuration(self):
+        # create models that are required to configure the valid ebay product
+        self.category = CategoryFactory.create(name='Some leaf category')
+        self.shipping_service = self.get_shipping_service_dhl()
+
+        # expect valid default responses from the core api and from eBay
+        self.valid_ebay_product = self.get_valid_ebay_product()
+        self.expect_core_product(core_product=self.get_valid_core_product())
+        self.expect_core_info(core_info=self.get_valid_core_info())
+        self.expect_ebay_seller_profiles(seller_profiles=[self.get_valid_ebay_return_seller_profile()])
+
+    def get_valid_ebay_product(self):
+        """
+        Returns an eBay product model that is valid for publishing (has valid category + valid shipping services)
+        :rtype: inventorum.ebay.apps.products.models.EbayProductModel
+        """
+        product = EbayProductModelFactory.create(category=self.category)
+        product.shipping_services.create(service=self.shipping_service, cost=Decimal('4.90'))
+        return product
+
+    def get_valid_core_product(self):
+        """
+        :rtype: inventorum.ebay.lib.core_api.models.CoreProduct
+        """
+        return CoreProductFactory.create(gross_price="1.99")
+
+    def get_valid_core_info(self):
+        return CoreInfoFactory.create()
+
+    def get_valid_ebay_return_seller_profile(self):
+        """
+        :rtype: inventorum.ebay.lib.ebay.data.preferences.SupportedSellerProfileType
+        """
+        return SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.RETURN_POLICY,
+                                                        category_group__is_default=True)
+
+    def expect_core_product(self, core_product):
+        """
+        :type core_product: inventorum.ebay.lib.core_api.models.CoreProduct
+        """
+        self.core_api_mock.get_product.reset_mock()
+        self.core_api_mock.get_product.return_value = core_product
+
+    def expect_core_info(self, core_info):
+        """
+        :type core_info: inventorum.ebay.lib.core_api.models.CoreInfo
+        """
+        self.core_api_mock.get_account_info.reset_mock()
+        self.core_api_mock.get_account_info.return_value = core_info
+
+    def expect_ebay_seller_profiles(self, seller_profiles):
+        """
+        :type seller_profiles: list[inventorum.ebay.lib.ebay.data.preferences.SupportedSellerProfileType]
+        """
+        self.ebay_get_user_preferences_mock.reset_mock()
+
+        ebay_user_preferences = GetUserPreferencesResponseTypeFactory.create(
+            seller_profile_preferences__supported_seller_profiles=seller_profiles)
+        self.ebay_get_user_preferences_mock.return_value = ebay_user_preferences
+
+    def test_successful_validation(self):
+        # the preparation service should not raise with this configuration
+        preparation_service = PublishingPreparationService(self.valid_ebay_product, self.user)
+        preparation_service.validate()
+
+    def test_ean_validation_with_variations(self):
+        core_product = CoreProductFactory.create(variations=[
+            CoreProductVariationFactory.create(
+                ean=None,
+                attributes=[CoreProductAttributeFactory.create(key="size", values=["S"])]
+            ),
+            CoreProductVariationFactory.create(
+                ean=None,
+                attributes=[CoreProductAttributeFactory.create(key="size", values=["M"])]
+            )
+        ])
+        self.expect_core_product(core_product)
+
+        self.assertFalse(self.category.features.ean_required)
+        self.assertTrue(all(v.ean is None for v in core_product.variations))
+
+        # ean not required and not given => validate should not raise
+        preparation_service = PublishingPreparationService(self.valid_ebay_product, self.user)
+        preparation_service.validate()
+
+        self.category.features.ean_required = True
+        self.category.features.save()
+
+        # ean required but not given => validate should raise
+        expected_exception = "The selected category requires each variation to have a valid EAN"
+
+        preparation_service = PublishingPreparationService(self.valid_ebay_product, self.user)
+        with self.assertRaises(PublishingValidationException) as exc:
+                preparation_service.validate()
+
+        self.assertEqual(exc.exception.message, expected_exception)
+
+        # add ean only to one variation => validate should still raise
+        core_product.variations[0].ean = "123456789012"
+        preparation_service = PublishingPreparationService(self.valid_ebay_product, self.user)
+        with self.assertRaises(PublishingValidationException) as exc:
+                preparation_service.validate()
+
+        self.assertEqual(exc.exception.message, expected_exception)
+
+        # add ean to the second variation as well => product should be valid again, i.e. not raise
+        core_product.variations[1].ean = "123456789012"
+        preparation_service = PublishingPreparationService(self.valid_ebay_product, self.user)
+        preparation_service.validate()
+
+        # remove ean again, mark product as "ean-less" => should still be valid
+        core_product.variations[0].ean = core_product.variations[1].ean = None
+
+        self.valid_ebay_product.ean_does_not_apply = True
+        self.valid_ebay_product.save()
+
+        preparation_service = PublishingPreparationService(self.valid_ebay_product, self.user)
+        preparation_service.validate()
+
+    def test_return_policy_validation(self):
+        # when there is no configured seller profile
+        seller_profiles = []
+        self.expect_ebay_seller_profiles(seller_profiles)
+
+        # ean not required and not given => validate should not raise
+        expected_exception = 'Product could not be published! There is no default ' \
+                             'return policy defined in your eBay account.'
+
+        preparation_service = PublishingPreparationService(self.valid_ebay_product, self.user)
+        with self.assertRaises(PublishingValidationException) as exc:
+            preparation_service.validate()
+
+        self.assertEqual(exc.exception.message, expected_exception)
+
+        # when there is no configured default return seller profile
+        seller_profiles = [SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.PAYMENT,
+                                                                    category_group__is_default=True),
+                           SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.SHIPPING,
+                                                                    category_group__is_default=True)]
+        self.expect_ebay_seller_profiles(seller_profiles)

@@ -81,8 +81,18 @@ class EbayAuthenticatedAPITestCase(APITestCase):
                          site_id=settings.EBAY_SUPPORTED_SITES['DE'])
 
 
+class IntegrationTestCase(EbayAuthenticatedAPITestCase):
+    pass
+
+
 class UnitTestCase(TestCase, AssertionMixin, PatchMixin):
     maxDiff = None
+
+    def setUp(self):
+        super(UnitTestCase, self).setUp()
+
+        self.account = EbayAccountFactory()
+        self.user = EbayUserFactory(account=self.account)
 
 
 def long_running_test():

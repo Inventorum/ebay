@@ -96,6 +96,8 @@ class SellerProfileCodeType(object):
     RETURN_POLICY = 'RETURN_POLICY'
     SHIPPING = 'SHIPPING'
 
+    CHOICES = (PAYMENT, RETURN_POLICY, SHIPPING)
+
 
 # TODO jm: Move to data/utils.py #######################################################################################
 

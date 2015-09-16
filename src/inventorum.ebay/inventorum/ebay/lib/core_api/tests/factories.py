@@ -8,7 +8,7 @@ import factory
 from factory import fuzzy
 from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
 from inventorum.ebay.lib.core_api.models import CoreProductDelta, CoreOrder, CoreDeltaReturn, CoreDeltaReturnItem, \
-    CoreBasket, CoreProduct, CoreProductAttribute, CoreInfo, CoreTaxType
+    CoreBasket, CoreProduct, CoreProductAttribute, CoreInfo, CoreTaxType, CoreAccount, CoreAccountSettings, CoreAddress
 
 
 log = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class CoreProductFactory(factory.Factory):
 
     id = fuzzy.FuzzyInteger(low=1000, high=99999)
     name = factory.Sequence(lambda n: "Test Product {0}".format(n))
-    gross_price = fuzzy.FuzzyDecimal(low=0, high=1000, precision=2)
+    gross_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
     tax_type_id = fuzzy.FuzzyInteger(low=50000, high=999999)
     quantity = fuzzy.FuzzyInteger(low=0, high=10000)
     ean = fuzzy.FuzzyText(length=12, chars=NUMBER_CHARS)
@@ -103,10 +103,48 @@ class CoreDeltaReturnFactory(factory.Factory):
     items = []
 
 
+class CoreTaxTypeFactory(factory.Factory):
+    class Meta:
+        model = CoreTaxType
+
+    id = fuzzy.FuzzyInteger(low=1000, high=99999)
+    tax_rate = fuzzy.FuzzyChoice(choices=[D("19.000"), D("7.000"), D("0.000")])
+
+
+class CoreAccountSettingsFactory(factory.Factory):
+    class Meta:
+        model = CoreAccountSettings
+
+    ebay_click_and_collect = fuzzy.FuzzyChoice(choices=[True, False])
+
+
+class CoreAddressFactory(factory.Factory):
+    class Meta:
+        model = CoreAddress
+
+    id = fuzzy.FuzzyInteger(low=100, high=99999)
+    address1 = factory.Sequence(lambda n: "Test address #%s" % n)
+    zipcode = fuzzy.FuzzyText(chars=NUMBER_CHARS, length=5)
+    city = factory.Sequence(lambda n: "Test city #%s" % n)
+    country = factory.Sequence(lambda n: "Test country #%s" % n)
+    first_name = "John"
+    last_name = factory.Sequence(lambda n: "Doe #%s" % n)
+
+
+class CoreAccountFactory(factory.Factory):
+    class Meta:
+        model = CoreAccount
+
+    email = factory.Sequence(lambda n: "john_doe_%s@example.com" % n)
+    country = "DE"
+    settings = factory.SubFactory(CoreAccountSettingsFactory)
+    billing_address = factory.SubFactory(CoreAddressFactory)
+
+
 class CoreInfoFactory(factory.Factory):
 
     class Meta:
         model = CoreInfo
 
-    account = None
-    tax_types = CoreTaxType(1, Decimal("19.00"))
+    account = factory.SubFactory(CoreAccountFactory)
+    tax_types = factory.LazyAttribute(lambda o: [])
