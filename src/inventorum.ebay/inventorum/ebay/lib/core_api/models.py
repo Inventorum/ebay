@@ -82,6 +82,7 @@ class CoreProduct(object):
     def has_variations(self):
         return len(self.variations) > 0
 
+
 class CoreImageURLs(object):
     """ Represents the image urls of a core image"""
 

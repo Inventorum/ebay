@@ -8,7 +8,8 @@ import factory
 from factory import fuzzy
 from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
 from inventorum.ebay.lib.core_api.models import CoreProductDelta, CoreOrder, CoreDeltaReturn, CoreDeltaReturnItem, \
-    CoreBasket, CoreProduct, CoreProductAttribute, CoreInfo, CoreTaxType, CoreAccount, CoreAccountSettings, CoreAddress
+    CoreBasket, CoreProduct, CoreProductAttribute, CoreInfo, CoreTaxType, CoreAccount, CoreAccountSettings, CoreAddress, \
+    CoreImage, CoreImageURLs
 
 
 log = logging.getLogger(__name__)
@@ -17,13 +18,28 @@ log = logging.getLogger(__name__)
 NUMBER_CHARS = [str(i) for i in range(10)]
 
 
+class CoreImageURLsFactory(factory.Factory):
+    class Meta:
+        model = CoreImageURLs
+
+    ipad_retina = factory.Sequence(lambda n: 'http://image/%s.png' % n)
+
+
+class CoreImageFactory(factory.Factory):
+    class Meta:
+        model = CoreImage
+
+    id = fuzzy.FuzzyInteger(low=1000, high=99999)
+    urls = factory.SubFactory(CoreImageURLsFactory)
+
+
 class CoreProductFactory(factory.Factory):
 
     class Meta:
         model = CoreProduct
 
     id = fuzzy.FuzzyInteger(low=1000, high=99999)
-    name = factory.Sequence(lambda n: "Test Product {0}".format(n))
+    name = factory.Sequence(lambda n: "Test Product #%s" % n)
     description = fuzzy.FuzzyText(length=255)
     gross_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
     tax_type_id = fuzzy.FuzzyInteger(low=50000, high=999999)
@@ -46,7 +62,13 @@ class CoreProductVariationFactory(CoreProductFactory):
     class Meta:
         model = CoreProduct
 
-    name = factory.Sequence(lambda n: "Test Variation {0}".format(n))
+    id = fuzzy.FuzzyInteger(low=1000, high=99999)
+    name = factory.Sequence(lambda n: "Test Variation #%s" % n)
+    gross_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
+    tax_type_id = fuzzy.FuzzyInteger(low=50000, high=999999)
+    quantity = fuzzy.FuzzyInteger(low=0, high=10000)
+    ean = fuzzy.FuzzyText(length=12, chars=NUMBER_CHARS)
+    images = factory.LazyAttribute(lambda o: [])
 
 
 class CoreProductDeltaFactory(factory.Factory):
