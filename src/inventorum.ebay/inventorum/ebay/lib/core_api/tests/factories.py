@@ -24,11 +24,12 @@ class CoreProductFactory(factory.Factory):
 
     id = fuzzy.FuzzyInteger(low=1000, high=99999)
     name = factory.Sequence(lambda n: "Test Product {0}".format(n))
+    description = fuzzy.FuzzyText(length=255)
     gross_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)
     tax_type_id = fuzzy.FuzzyInteger(low=50000, high=999999)
     quantity = fuzzy.FuzzyInteger(low=0, high=10000)
     ean = fuzzy.FuzzyText(length=12, chars=NUMBER_CHARS)
-    images = None
+    images = factory.LazyAttribute(lambda o: [])
 
 
 class CoreProductAttributeFactory(factory.Factory):

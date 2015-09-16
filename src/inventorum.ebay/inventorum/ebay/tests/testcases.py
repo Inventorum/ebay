@@ -91,8 +91,8 @@ class UnitTestCase(TestCase, AssertionMixin, PatchMixin):
     def setUp(self):
         super(UnitTestCase, self).setUp()
 
-        self.account = EbayAccountFactory()
-        self.user = EbayUserFactory(account=self.account)
+        self.account = EbayAccountFactory.create()
+        self.user = EbayUserFactory.create(account=self.account)
 
 
 def long_running_test():

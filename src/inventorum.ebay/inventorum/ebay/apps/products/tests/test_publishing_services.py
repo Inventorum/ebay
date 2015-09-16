@@ -7,7 +7,7 @@ from inventorum.ebay.tests import StagingTestAccount
 
 from ebaysdk.response import Response, ResponseDataObject
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
-from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory
+from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, DurationFactory
 from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
@@ -19,8 +19,8 @@ from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.models import CoreAccount
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory, CoreProductVariationFactory, \
-    CoreProductAttributeFactory, CoreInfoFactory
-from inventorum.ebay.lib.ebay.data import SellerProfileCodeType
+    CoreProductAttributeFactory, CoreInfoFactory, CoreTaxTypeFactory
+from inventorum.ebay.lib.ebay.data import SellerProfileCodeType, BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.tests.preferences_factories import GetUserPreferencesResponseTypeFactory, \
     SupportedSellerProfileTypeFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
@@ -741,8 +741,6 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
     def setUp(self):
         super(UnitTestPublishingPreparationService, self).setUp()
 
-        # token = EbayTokenModel.objects.create(account=self.account, value=EbayTokenFactory())
-
         self.setup_mocked_dependencies()
         self.setup_valid_configuration()
 
@@ -754,7 +752,10 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
 
     def setup_valid_configuration(self):
         # create models that are required to configure the valid ebay product
-        self.category = CategoryFactory.create(name='Some leaf category')
+        self.category = CategoryFactory.create(name='Some leaf category',
+                                               features__durations=[DurationFactory(value='Days_30'),
+                                                                    DurationFactory(value='Days_60'),
+                                                                    DurationFactory(value='Days_90')])
         self.shipping_service = self.get_shipping_service_dhl()
 
         # expect valid default responses from the core api and from eBay
@@ -763,23 +764,43 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.expect_core_info(core_info=self.get_valid_core_info())
         self.expect_ebay_seller_profiles(seller_profiles=[self.get_valid_ebay_return_seller_profile()])
 
+        # enable and configure payment methods
+        self.account.payment_method_paypal_enabled = True
+        self.account.payment_method_paypal_email_address = "julian@inventorum.com"
+
+        self.account.payment_method_bank_transfer_enabled = True
+        self.account.save()
+
     def get_valid_ebay_product(self):
         """
         Returns an eBay product model that is valid for publishing (has valid category + valid shipping services)
         :rtype: inventorum.ebay.apps.products.models.EbayProductModel
         """
-        product = EbayProductModelFactory.create(category=self.category)
-        product.shipping_services.create(service=self.shipping_service, cost=Decimal('4.90'))
+        product = EbayProductModelFactory.create(account=self.account,
+                                                 category=self.category)
+        # add shipping service configuration to product
+        product.shipping_services.create(service=self.shipping_service,
+                                         cost=Decimal('4.90'))
         return product
 
     def get_valid_core_product(self):
         """
         :rtype: inventorum.ebay.lib.core_api.models.CoreProduct
         """
-        return CoreProductFactory.create(gross_price="1.99")
+        return CoreProductFactory.create(id=941284,
+                                         name='Felt Brougham',
+                                         description='Awesome street bikes are awesome',
+                                         ean="038678561125",
+                                         gross_price=D('499.99'),
+                                         quantity=100,
+                                         tax_type_id=32345)
 
     def get_valid_core_info(self):
-        return CoreInfoFactory.create()
+        """
+        :rtype: inventorum.ebay.lib.core_api.models.CoreInfo
+        """
+        return CoreInfoFactory.create(tax_types=[CoreTaxTypeFactory.create(id=32345, tax_rate=D("19.000"))],
+                                      account__billing_address__zipcode="33098")
 
     def get_valid_ebay_return_seller_profile(self):
         """
@@ -812,10 +833,41 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
             seller_profile_preferences__supported_seller_profiles=seller_profiles)
         self.ebay_get_user_preferences_mock.return_value = ebay_user_preferences
 
-    def test_successful_validation(self):
+    def test_successful_validation_and_builder(self):
         # the preparation service should not raise with this configuration
         preparation_service = PublishingPreparationService(self.valid_ebay_product, self.user)
         preparation_service.validate()
+
+        ebay_item = preparation_service.create_ebay_item()
+        ebay_item = ebay_item.reload()
+
+        self.assertEqual(ebay_item.account, self.account)
+        self.assertEqual(ebay_item.product, self.valid_ebay_product)
+        self.assertEqual(ebay_item.category, self.category)
+        self.assertEqual(ebay_item.name, 'Felt Brougham')
+        self.assertEqual(ebay_item.description, 'Awesome street bikes are awesome')
+        self.assertEqual(ebay_item.ean, '038678561125')
+        self.assertEqual(ebay_item.quantity, 100)
+        self.assertEqual(ebay_item.gross_price, D("499.99"))
+        self.assertEqual(ebay_item.tax_rate, D("19.000"))
+
+        self.assertEqual(ebay_item.postal_code, '33098')
+        self.assertEqual(ebay_item.country, 'DE')
+        self.assertEqual(ebay_item.paypal_email_address, 'julian@inventorum.com')
+
+        self.assertEqual(ebay_item.listing_duration, 'Days_90', 'Listing duration should be the max. allowed listing '
+                                                                'duration of the selected category')
+
+        # validate payment methods
+        payment_methods = ebay_item.payment_methods.all()
+        self.assertEqual(len(payment_methods), 2, 'Paypal and bank transfer should be enabled ')
+        self.assertItemsEqual([p.external_id for p in payment_methods], [BuyerPaymentMethodCodeType.PayPal,
+                                                                         BuyerPaymentMethodCodeType.MoneyXferAccepted])
+        # validate shipping services
+        shipping_details = ebay_item.shipping.all()
+        self.assertEqual(len(shipping_details), 1, 'There should be one shipping service')
+        self.assertEqual(shipping_details[0].cost, D("4.90"))
+        self.assertEqual(shipping_details[0].external_id, "DE_DHLPaket")
 
     def test_ean_validation_with_variations(self):
         core_product = CoreProductFactory.create(variations=[
