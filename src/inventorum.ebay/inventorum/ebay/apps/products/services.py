@@ -269,6 +269,8 @@ class PublishingPreparationService(object):
         else:
             ean = None
 
+        return_policy = self._get_default_return_policy_from_ebay()
+
         item = EbayItemModel.objects.create(
             product=self.product,
             inv_product_id=self.core_product.id,
@@ -284,7 +286,8 @@ class PublishingPreparationService(object):
             listing_duration=self.product.category.features.max_listing_duration,
             paypal_email_address=self.account.payment_method_paypal_email_address,
             postal_code=self.core_account.billing_address.zipcode,
-            is_click_and_collect=self.product.is_click_and_collect
+            is_click_and_collect=self.product.is_click_and_collect,
+            ebay_seller_profile_return_policy_id=return_policy.profile_id
         )
 
         for image in self.core_product.images:

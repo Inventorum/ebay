@@ -17,7 +17,6 @@ from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFac
     EbayProductModelFactory
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
-from inventorum.ebay.lib.core_api.models import CoreAccount
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory, CoreProductVariationFactory, \
     CoreProductAttributeFactory, CoreInfoFactory, CoreTaxTypeFactory
 from inventorum.ebay.lib.ebay.data import SellerProfileCodeType, BuyerPaymentMethodCodeType
@@ -806,7 +805,8 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         """
         :rtype: inventorum.ebay.lib.ebay.data.preferences.SupportedSellerProfileType
         """
-        return SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.RETURN_POLICY,
+        return SupportedSellerProfileTypeFactory.create(profile_id="73359920011",
+                                                        profile_type=SellerProfileCodeType.RETURN_POLICY,
                                                         category_group__is_default=True)
 
     def expect_core_product(self, core_product):
@@ -857,6 +857,8 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
 
         self.assertEqual(ebay_item.listing_duration, 'Days_90', 'Listing duration should be the max. allowed listing '
                                                                 'duration of the selected category')
+
+        self.assertEqual(ebay_item.ebay_seller_profile_return_policy_id, '73359920011')
 
         # validate payment methods
         payment_methods = ebay_item.payment_methods.all()

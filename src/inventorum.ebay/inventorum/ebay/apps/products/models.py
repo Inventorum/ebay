@@ -193,6 +193,8 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     external_id = models.CharField(max_length=255, null=True, blank=True)
     is_click_and_collect = models.BooleanField(default=False)
 
+    ebay_seller_profile_return_policy_id = models.CharField(max_length=255, null=True, blank=True)
+
     country = CountryField()
 
     publishing_status = models.CharField(max_length=255, choices=EbayItemPublishingStatus.CHOICES,
