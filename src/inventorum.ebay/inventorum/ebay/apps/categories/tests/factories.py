@@ -35,7 +35,7 @@ class CategoryFeaturesFactory(factory.DjangoModelFactory):
         if extracted:
             # A list of groups were passed in, use them
             for value in extracted:
-                self.values.add(value)
+                self.durations.add(value)
         else:
             for duration in ['Days_5', 'Days_120']:
                 self.durations.add(DurationFactory.create(value=duration))
