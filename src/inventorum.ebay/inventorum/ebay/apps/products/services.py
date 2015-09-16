@@ -240,13 +240,13 @@ class PublishingPreparationService(object):
                                       .format(self.core_product.tax_type_id))
 
         # ean applies unless product has and cannot have a ean, e.g. when they are self-made
-        ean_applies = not self.product.ean_does_not_apply
+        ean_does_not_apply = self.product.ean_does_not_apply
         ean_required = self.product.category.features.ean_required
 
-        if ean_required and ean_applies:
-            ean = self.core_product.ean or EbayConstants.ProductIdentifierUnavailableText
-        elif not ean_applies:
+        if ean_does_not_apply:
             ean = EbayConstants.ProductIdentifierUnavailableText
+        elif ean_required:
+            ean = self.core_product.ean or EbayConstants.ProductIdentifierUnavailableText
         else:
             ean = self.core_product.ean
 
@@ -308,10 +308,10 @@ class PublishingPreparationService(object):
                 raise PublishingException(message="Cannot determine tax_rate for variation with variation.tax_type={}"
                                           .format(variation.tax_type_id))
 
-            if ean_required and ean_applies:
-                ean = variation.ean or EbayConstants.ProductIdentifierUnavailableText
-            elif not ean_applies:
+            if ean_does_not_apply:
                 ean = EbayConstants.ProductIdentifierUnavailableText
+            elif ean_required:
+                ean = variation.ean or EbayConstants.ProductIdentifierUnavailableText
             else:
                 ean = variation.ean
 
