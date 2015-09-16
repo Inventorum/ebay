@@ -166,31 +166,6 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
             # Should not raise anything finally!
             service.validate()
 
-    def test_ean_validation(self):
-        product = self.get_product(StagingTestAccount.Products.PRODUCT_WITHOUT_EAN, self.account)
-        self.assign_valid_shipping_services(product)
-
-        # prove that the product is valid for publishing if category does not require EAN
-        category = CategoryFactory.create(features__ean_required=False)
-        product.category = category
-        product.save()
-
-        with ApiTest.use_cassette("get_product_without_ean_for_publishing.yaml"):
-            preparation_service = PublishingPreparationService(product, self.user)
-            # no raise means it's valid
-            preparation_service.validate()
-
-        category.features.ean_required = True
-        category.features.save()
-
-        with ApiTest.use_cassette("get_product_without_ean_for_publishing.yaml"):
-            preparation_service = PublishingPreparationService(product, self.user)
-            with self.assertRaises(PublishingValidationException) as exc:
-                preparation_service.validate()
-
-        self.assertEqual(exc.exception.message,
-                         "The selected category requires a valid EAN")
-
     @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml", match_on=['body'])
     def test_publishing(self):
         product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
@@ -241,146 +216,6 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
         self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
         self.assertIsNotNone(last_item.published_at)
         self.assertIsNotNone(last_item.unpublished_at)
-
-    def test_builder_with_variations(self):
-        product = self.get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS, self.account)
-        with ApiTest.use_cassette("get_product_with_variations_for_testing_builder.yaml"):
-            self._assign_category(product)
-            self._add_specific_to_product(product)
-            self.assign_valid_shipping_services(product)
-
-            # Try to publish
-            preparation_service = PublishingPreparationService(product, self.user)
-            preparation_service.validate()
-            last_item = preparation_service.create_ebay_item()
-
-        self.assertEqual(last_item.variations.count(), 2)
-
-        first_variation_obj = last_item.variations.first()
-        self.assertEqual(first_variation_obj.quantity, 1)
-        self.assertEqual(first_variation_obj.gross_price, D("150"))
-        self.assertEqual(first_variation_obj.tax_rate, D("7"))
-        self.assertEqual(first_variation_obj.specifics.count(), 3)
-        self.assertEqual(first_variation_obj.images.count(), 1)
-
-        specifics = first_variation_obj.specifics.all()
-
-        for specific in specifics:
-            self.assertEqual(specific.values.count(), 1)
-
-        self.assertEqual(specifics[0].name, "size")
-        self.assertEqual(specifics[0].values.first().value, "22")
-
-        self.assertEqual(specifics[1].name, "material")
-        self.assertEqual(specifics[1].values.first().value, "Denim")
-
-        self.assertEqual(specifics[2].name, "color")
-        self.assertEqual(specifics[2].values.first().value, "Red")
-
-        # Check data builder
-        ebay_item = last_item.ebay_object
-
-        data = ebay_item.dict()['Item']
-
-        variations_data = data['Variations']['Variation']
-        self.assertEqual(len(variations_data), 2)
-
-        first_variation = variations_data[1]
-
-        self.assertEqual(first_variation, {
-            'Quantity': 1,
-            'StartPrice': '150.00',
-            'SKU': 'invtest_666030',
-            'VariationSpecifics': {
-                'NameValueList': [
-                    {
-                        'Name': 'Größe (*)',
-                        'Value': '22'
-                    },
-                    {
-                        'Name': 'Material (*)',
-                        'Value': 'Denim'
-                    },
-                    {
-                        'Name': 'Farbe (*)',
-                        'Value': 'Red'
-                    },
-                ]
-            }
-        })
-
-        second_variation = variations_data[0]
-
-        self.assertEqual(second_variation, {
-            'Quantity': 2,
-            'StartPrice': '130.00',
-            'SKU': 'invtest_666031',
-            'VariationSpecifics': {
-                'NameValueList': [
-                    {
-                        'Name': 'Größe (*)',
-                        'Value': '50'
-                    },
-                    {
-                        'Name': 'Material (*)',
-                        'Value': 'Leather'
-                    },
-                    {
-                        'Name': 'Farbe (*)',
-                        'Value': 'Blue'
-                    },
-                ]
-            }
-        })
-
-        self.assertEqual(data['Variations']['VariationSpecificsSet'], {
-            'NameValueList': [
-                {
-                    'Name': 'Farbe (*)',
-                    'Value': ['Blue', 'Red']
-                },
-                {
-                    'Name': 'Material (*)',
-                    'Value': ['Leather', 'Denim']
-                },
-                {
-                    'Name': 'Größe (*)',
-                    'Value': ['50', '22']
-                }
-            ]
-        })
-
-        pictures_set = data['Variations']['Pictures']
-        self.assertEqual(pictures_set,
-                         {
-                             'VariationSpecificName': 'Größe (*)',
-                             'VariationSpecificPictureSet': [
-                                 {
-                                     'PictureURL': [
-                                         'http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG'],
-                                     'VariationSpecificValue': '50'
-                                 },
-                                 {
-                                     'PictureURL': [
-                                         'http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG'],
-                                     'VariationSpecificValue': '22'
-                                 }
-                             ]
-                         })
-
-    def test_product_with_invalid_attributes_for_ebay(self):
-        product = self.get_product(StagingTestAccount.Products.WITH_VARIATIONS_INVALID_ATTRS, self.account)
-        with ApiTest.use_cassette("get_product_with_variations_invalid_attrs_for_testing_builder.yaml"):
-            self._assign_category(product)
-            self.assign_valid_shipping_services(product)
-            self._add_specific_to_product(product)
-
-            preparation_service = PublishingPreparationService(product, self.user)
-            with self.assertRaises(PublishingValidationException) as exc:
-                preparation_service.validate()
-
-            self.assertEqual(exc.exception.message,
-                             "All variations needs to have exactly the same number of attributes")
 
     def test_publish_for_click_and_collect(self):
         with ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml") as cass:
@@ -462,6 +297,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         # create models that are required to configure a valid ebay product
         self.category = CategoryFactory.create(name='Some leaf category',
                                                external_id='712304',
+                                               features__ean_required=False,
                                                features__durations=[DurationFactory(value='Days_30'),
                                                                     DurationFactory(value='Days_60'),
                                                                     DurationFactory(value='Days_90')])
@@ -472,7 +308,8 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
 
         # create and configure ebay product model
         self.ebay_product = EbayProductModelFactory.create(account=self.account,
-                                                           category=self.category)
+                                                           category=self.category,
+                                                           ean_does_not_apply=False)
 
         self.ebay_product.specific_values.create(specific=self.category_specific,
                                                  value="Felt")
@@ -719,18 +556,14 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                          {'Variation': [{'Quantity': 20,
                                          'SKU': 'invtest_942446',
                                          'StartPrice': '34.99',
-                                         'VariationProductListingDetails': {
-                                             'EAN': '118678561130'},
+                                         'VariationProductListingDetails': {'EAN': '118678561130'},
                                          'VariationSpecifics': {
-                                             'NameValueList': [{'Name': 'Gr\xf6\xdfe (*)',
-                                                                'Value': 'm'},
-                                                               {'Name': 'Farbe (*)',
-                                                                'Value': 'italy'}]}},
+                                             'NameValueList': [{'Name': 'Gr\xf6\xdfe (*)', 'Value': 'm'},
+                                                               {'Name': 'Farbe (*)', 'Value': 'italy'}]}},
                                         {'Quantity': 30,
                                          'SKU': 'invtest_942445',
                                          'StartPrice': '29.99',
-                                         'VariationProductListingDetails': {
-                                             'EAN': '118678561129'},
+                                         'VariationProductListingDetails': {'EAN': '118678561129'},
                                          'VariationSpecifics': {
                                              'NameValueList': [{'Name': 'Gr\xf6\xdfe (*)', 'Value': 's'},
                                                                {'Name': 'Farbe (*)', 'Value': 'black'}]}}],
@@ -744,29 +577,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                               {'Name': 'Farbe (*)', 'Value': ['black', 'italy']},
                               {'Name': 'Gr\xf6\xdfe (*)', 'Value': ['s', 'm']}]}})
 
-    def test_account_shipping_fallback(self):
-        self.ebay_product.shipping_services.delete()
-        self.assertEqual(self.ebay_product.shipping_services.count(), 0,
-                         'Precondition: The product should have no shipping service configurations')
-        self.assertEqual(self.ebay_product.shipping_services.count(), 0,
-                         'Precondition: The account should have no shipping services configuration')
-
-        # Add valid shipping service configuration to account
-        self.account.shipping_services.create(service=self.get_shipping_service_hermes(),
-                                              cost=D("3.00"), additional_cost=D("0.00"))
-
-        service = PublishingPreparationService(self.ebay_product, self.user)
-        service.validate()
-        ebay_item = service.create_ebay_item()
-
-        shipping_services = ebay_item.shipping.all()
-
-        self.assertEqual(shipping_services.count(), 1)
-        self.assertEqual(shipping_services[0].external_id, "DE_HermesPaket")
-        self.assertEqual(shipping_services[0].cost, D("3.00"))
-        self.assertEqual(shipping_services[0].additional_cost, D("0.00"))
-
-    def test_builder_and_ebay_data_with_click_and_collect(self):
+    def test_validation_and_builder_with_click_and_collect(self):
         # activate click and collect for the core account
         core_info = self.get_valid_core_info()
         core_info.account.settings.ebay_click_and_collect = True
@@ -794,59 +605,24 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertIn('EligibleForPickupInStore', item_data['PickupInStoreDetails'])
         self.assertEqual(item_data['PickupInStoreDetails']['EligibleForPickupInStore'], True)
 
-    def test_ean_validation_with_variations(self):
-        core_product = CoreProductFactory.create(variations=[
-            CoreProductVariationFactory.create(
-                ean=None,
-                attributes=[CoreProductAttributeFactory.create(key="size", values=["S"])]
-            ),
-            CoreProductVariationFactory.create(
-                ean=None,
-                attributes=[CoreProductAttributeFactory.create(key="size", values=["M"])]
-            )
-        ])
+    def test_attribute_validation(self):
+        core_product = self.get_valid_core_product_with_variations()
+
+        # Precondition: Both variations have two attributes
+        self.assertEqual(len(core_product.variations[0].attributes), 2)
+        self.assertEqual(len(core_product.variations[1].attributes), 2)
+
+        # We remove one attribute from the second variation
+        core_product.variations[1].attributes.pop()
+
         self.expect_core_product(core_product)
 
-        self.assertFalse(self.category.features.ean_required)
-        self.assertTrue(all(v.ean is None for v in core_product.variations))
-
-        # ean not required and not given => validate should not raise
-        preparation_service = PublishingPreparationService(self.ebay_product, self.user)
-        preparation_service.validate()
-
-        self.category.features.ean_required = True
-        self.category.features.save()
-
-        # ean required but not given => validate should raise
-        expected_exception = "The selected category requires each variation to have a valid EAN"
-
         preparation_service = PublishingPreparationService(self.ebay_product, self.user)
         with self.assertRaises(PublishingValidationException) as exc:
-                preparation_service.validate()
+            preparation_service.validate()
 
-        self.assertEqual(exc.exception.message, expected_exception)
-
-        # add ean only to one variation => validate should still raise
-        core_product.variations[0].ean = "123456789012"
-        preparation_service = PublishingPreparationService(self.ebay_product, self.user)
-        with self.assertRaises(PublishingValidationException) as exc:
-                preparation_service.validate()
-
-        self.assertEqual(exc.exception.message, expected_exception)
-
-        # add ean to the second variation as well => product should be valid again, i.e. not raise
-        core_product.variations[1].ean = "123456789012"
-        preparation_service = PublishingPreparationService(self.ebay_product, self.user)
-        preparation_service.validate()
-
-        # remove ean again, mark product as "ean-less" => should still be valid
-        core_product.variations[0].ean = core_product.variations[1].ean = None
-
-        self.ebay_product.ean_does_not_apply = True
-        self.ebay_product.save()
-
-        preparation_service = PublishingPreparationService(self.ebay_product, self.user)
-        preparation_service.validate()
+        self.assertEqual(exc.exception.message,
+                         'All variations needs to have exactly the same number of attributes')
 
     def test_return_policy_validation(self):
         # when there is no configured seller profile
@@ -869,3 +645,126 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                            SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.SHIPPING,
                                                                     category_group__is_default=True)]
         self.expect_ebay_seller_profiles(seller_profiles)
+
+    def test_account_shipping_fallback(self):
+        self.ebay_product.shipping_services.delete()
+        self.assertEqual(self.ebay_product.shipping_services.count(), 0,
+                         'Precondition: The product should have no shipping service configurations')
+        self.assertEqual(self.ebay_product.shipping_services.count(), 0,
+                         'Precondition: The account should have no shipping services configuration')
+
+        # Add valid shipping service configuration to account
+        self.account.shipping_services.create(service=self.get_shipping_service_hermes(),
+                                              cost=D("3.00"), additional_cost=D("0.00"))
+
+        service = PublishingPreparationService(self.ebay_product, self.user)
+        service.validate()
+        ebay_item = service.create_ebay_item()
+
+        shipping_services = ebay_item.shipping.all()
+
+        self.assertEqual(shipping_services.count(), 1)
+        self.assertEqual(shipping_services[0].external_id, "DE_HermesPaket")
+        self.assertEqual(shipping_services[0].cost, D("3.00"))
+        self.assertEqual(shipping_services[0].additional_cost, D("0.00"))
+
+    def test_ean_does_not_apply_for_product(self):
+        # expect core product with some EAN
+        core_product = self.get_valid_core_product()
+        self.assertIsNotNone(core_product.ean, 'Precondition: Core product has EAN')
+        self.expect_core_product(core_product)
+
+        # activate ean does not apply for product
+        self.ebay_product.ean_does_not_apply = True
+
+        service = PublishingPreparationService(self.ebay_product, self.user)
+        service.validate()
+        ebay_item = service.create_ebay_item()
+
+        self.assertEqual(ebay_item.ean, 'Does not apply', 'Postcondition: Product should be published with '
+                                                          'EAN ``Does not apply``')
+
+    def test_ean_does_not_apply_for_product_with_variations(self):
+        # expect core product with variations with some EAN
+        core_product = self.get_valid_core_product_with_variations()
+        self.assertIsNotNone(core_product.variations[0].ean, 'Precondition: Core variation has EAN')
+        self.assertIsNotNone(core_product.variations[1].ean, 'Precondition: Core variation has EAN')
+        self.expect_core_product(core_product)
+
+        # activate ean does not apply for product
+        self.ebay_product.ean_does_not_apply = True
+
+        service = PublishingPreparationService(self.ebay_product, self.user)
+        service.validate()
+        ebay_item = service.create_ebay_item()
+
+        variations = list(ebay_item.variations.all())
+        self.assertEqual(variations[0].ean, 'Does not apply', 'Postcondition: Variation should be published '
+                                                              'with EAN ``Does not apply``')
+        self.assertEqual(variations[1].ean, 'Does not apply', 'Postcondition: Variation should be published '
+                                                              'with EAN ``Does not apply``')
+
+    def test_ean_does_not_apply_fallback(self):
+        # expect core product without ean
+        core_product = self.get_valid_core_product()
+        core_product.ean = None
+        self.expect_core_product(core_product)
+
+        self.assertEqual(self.category.features.ean_required, False,
+                         'Precondition: Category does not require a valid EAN')
+
+        service = PublishingPreparationService(self.ebay_product, self.user)
+        service.validate()
+        ebay_item = service.create_ebay_item()
+
+        self.assertEqual(ebay_item.ean, None, 'EAN can be ``None`` when category does not require a valid EAN')
+
+        # change category to require a valid EAN
+        self.category.features.ean_required = True
+        self.category.features.save()
+
+        self.ebay_product = self.ebay_product.reload()
+        service = PublishingPreparationService(self.ebay_product, self.user)
+        service.validate()
+        ebay_item = service.create_ebay_item()
+
+        self.assertEqual(ebay_item.ean, 'Does not apply', 'EAN should fallback to ``Does not apply`` when required '
+                                                          'by the category but not set in core api')
+
+    def test_ean_does_not_apply_fallback_with_variations(self):
+        # expect core product with variations without ean
+        core_product = self.get_valid_core_product_with_variations()
+        core_product.variations[0].ean = None
+        core_product.variations[1].ean = None
+        self.expect_core_product(core_product)
+
+        self.assertEqual(self.category.features.ean_required, False,
+                         'Precondition: Category does not require a valid EAN')
+
+        service = PublishingPreparationService(self.ebay_product, self.user)
+        service.validate()
+        ebay_item = service.create_ebay_item()
+
+        variations = list(ebay_item.variations.all())
+        self.assertEqual(variations[0].ean, None,
+                         'EAN can be ``None`` when category does not require a valid EAN')
+        self.assertEqual(variations[1].ean, None,
+                         'EAN can be ``None`` when category does not require a valid EAN')
+
+        # change category to require a valid EAN
+        self.category.features.ean_required = True
+        self.category.features.save()
+
+        self.ebay_product = self.ebay_product.reload()
+        service = PublishingPreparationService(self.ebay_product, self.user)
+        service.validate()
+        ebay_item = service.create_ebay_item()
+
+        variations = list(ebay_item.variations.all())
+        self.assertEqual(variations[0].ean, 'Does not apply',
+                         'EAN should fallback to ``Does not apply`` when required by the category '
+                         'but not set for the variation in the core api')
+
+        self.assertEqual(variations[1].ean, 'Does not apply',
+                         'EAN should fallback to ``Does not apply`` when required by the category '
+                         'but not set for the variation in the core api')
