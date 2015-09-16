@@ -242,6 +242,132 @@ class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, Shi
         self.assertIsNotNone(last_item.published_at)
         self.assertIsNotNone(last_item.unpublished_at)
 
+    def test_builder_with_variations(self):
+        product = self.get_product(StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS, self.account)
+        with ApiTest.use_cassette("get_product_with_variations_for_testing_builder.yaml"):
+            self._assign_category(product)
+            self._add_specific_to_product(product)
+            self.assign_valid_shipping_services(product)
+
+            # Try to publish
+            preparation_service = PublishingPreparationService(product, self.user)
+            preparation_service.validate()
+            last_item = preparation_service.create_ebay_item()
+
+        self.assertEqual(last_item.variations.count(), 2)
+
+        first_variation_obj = last_item.variations.first()
+        self.assertEqual(first_variation_obj.quantity, 1)
+        self.assertEqual(first_variation_obj.gross_price, D("150"))
+        self.assertEqual(first_variation_obj.tax_rate, D("7"))
+        self.assertEqual(first_variation_obj.specifics.count(), 3)
+        self.assertEqual(first_variation_obj.images.count(), 1)
+
+        specifics = first_variation_obj.specifics.all()
+
+        for specific in specifics:
+            self.assertEqual(specific.values.count(), 1)
+
+        self.assertEqual(specifics[0].name, "size")
+        self.assertEqual(specifics[0].values.first().value, "22")
+
+        self.assertEqual(specifics[1].name, "material")
+        self.assertEqual(specifics[1].values.first().value, "Denim")
+
+        self.assertEqual(specifics[2].name, "color")
+        self.assertEqual(specifics[2].values.first().value, "Red")
+
+        # Check data builder
+        ebay_item = last_item.ebay_object
+
+        data = ebay_item.dict()['Item']
+
+        variations_data = data['Variations']['Variation']
+        self.assertEqual(len(variations_data), 2)
+
+        first_variation = variations_data[1]
+
+        self.assertEqual(first_variation, {
+            'Quantity': 1,
+            'StartPrice': '150.00',
+            'SKU': 'invtest_666030',
+            'VariationSpecifics': {
+                'NameValueList': [
+                    {
+                        'Name': 'Größe (*)',
+                        'Value': '22'
+                    },
+                    {
+                        'Name': 'Material (*)',
+                        'Value': 'Denim'
+                    },
+                    {
+                        'Name': 'Farbe (*)',
+                        'Value': 'Red'
+                    },
+                ]
+            }
+        })
+
+        second_variation = variations_data[0]
+
+        self.assertEqual(second_variation, {
+            'Quantity': 2,
+            'StartPrice': '130.00',
+            'SKU': 'invtest_666031',
+            'VariationSpecifics': {
+                'NameValueList': [
+                    {
+                        'Name': 'Größe (*)',
+                        'Value': '50'
+                    },
+                    {
+                        'Name': 'Material (*)',
+                        'Value': 'Leather'
+                    },
+                    {
+                        'Name': 'Farbe (*)',
+                        'Value': 'Blue'
+                    },
+                ]
+            }
+        })
+
+        self.assertEqual(data['Variations']['VariationSpecificsSet'], {
+            'NameValueList': [
+                {
+                    'Name': 'Farbe (*)',
+                    'Value': ['Blue', 'Red']
+                },
+                {
+                    'Name': 'Material (*)',
+                    'Value': ['Leather', 'Denim']
+                },
+                {
+                    'Name': 'Größe (*)',
+                    'Value': ['50', '22']
+                }
+            ]
+        })
+
+        pictures_set = data['Variations']['Pictures']
+        self.assertEqual(pictures_set,
+                         {
+                             'VariationSpecificName': 'Größe (*)',
+                             'VariationSpecificPictureSet': [
+                                 {
+                                     'PictureURL': [
+                                         'http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG'],
+                                     'VariationSpecificValue': '50'
+                                 },
+                                 {
+                                     'PictureURL': [
+                                         'http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG'],
+                                     'VariationSpecificValue': '22'
+                                 }
+                             ]
+                         })
+
     def test_product_with_invalid_attributes_for_ebay(self):
         product = self.get_product(StagingTestAccount.Products.WITH_VARIATIONS_INVALID_ATTRS, self.account)
         with ApiTest.use_cassette("get_product_with_variations_invalid_attrs_for_testing_builder.yaml"):
@@ -528,7 +654,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                         'Quantity': 100,
                                         'ReturnPolicy': {'Description': '',
                                                          'ReturnsAcceptedOption': 'ReturnsAccepted'},
-                                        'SKU': 'invdev_941284',
+                                        'SKU': 'invtest_941284',
                                         'ShippingDetails': {
                                             'ShippingServiceOptions': [{'ShippingService': 'DE_DHLPaket',
                                                                         'ShippingServiceAdditionalCost': '0.00',
@@ -591,7 +717,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         data = ebay_item.ebay_object.dict()
         self.assertEqual(data['Item']['Variations'],
                          {'Variation': [{'Quantity': 20,
-                                         'SKU': 'invdev_942446',
+                                         'SKU': 'invtest_942446',
                                          'StartPrice': '34.99',
                                          'VariationProductListingDetails': {
                                              'EAN': '118678561130'},
@@ -601,7 +727,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                                                {'Name': 'Farbe (*)',
                                                                 'Value': 'italy'}]}},
                                         {'Quantity': 30,
-                                         'SKU': 'invdev_942445',
+                                         'SKU': 'invtest_942445',
                                          'StartPrice': '29.99',
                                          'VariationProductListingDetails': {
                                              'EAN': '118678561129'},

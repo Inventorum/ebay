@@ -5,6 +5,13 @@ CHANGES
 develop
 =======
 
+2015-09-15 0.1.12
+=================
+Feature
+.......
+- INV-5164 Pull published items from ebay.com with SKUs only
+
+
 2015-08-31 0.1.11
 =================
 - INV-5361 Fixed not visible images in Ebay (wrong hostname)

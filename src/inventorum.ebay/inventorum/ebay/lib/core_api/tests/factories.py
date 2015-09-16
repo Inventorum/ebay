@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from decimal import Decimal as D, Decimal
 import logging
-from random import randint
 
+from decimal import Decimal as D
 import factory
 from factory import fuzzy
 from inventorum.ebay.lib.core_api import BinaryCoreOrderStates
 from inventorum.ebay.lib.core_api.models import CoreProductDelta, CoreOrder, CoreDeltaReturn, CoreDeltaReturnItem, \
     CoreBasket, CoreProduct, CoreProductAttribute, CoreInfo, CoreTaxType, CoreAccount, CoreAccountSettings, CoreAddress, \
     CoreImage, CoreImageURLs
-
 
 log = logging.getLogger(__name__)
 
@@ -39,6 +37,7 @@ class CoreProductFactory(factory.Factory):
         model = CoreProduct
 
     id = fuzzy.FuzzyInteger(low=1000, high=99999)
+    inv_id = fuzzy.FuzzyInteger(low=1000000000000000000L, high=99999999999999999999L)
     name = factory.Sequence(lambda n: "Test Product #%s" % n)
     description = fuzzy.FuzzyText(length=255)
     gross_price = fuzzy.FuzzyDecimal(low=1, high=1000, precision=2)

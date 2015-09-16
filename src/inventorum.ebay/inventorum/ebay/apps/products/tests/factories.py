@@ -7,12 +7,10 @@ from decimal import Decimal
 import factory
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.models import EbayItemModel
-from inventorum.ebay.lib.db.models import MappedInventorumModelFactory
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
-
 from inventorum.ebay.apps.products import models, EbayItemPublishingStatus
 from inventorum.ebay.tests import StagingTestAccount
-
+from inventorum.ebay.lib.db.models import MappedInventorumModelFactory
 
 log = logging.getLogger(__name__)
 
@@ -71,7 +69,7 @@ class EbayProductFactory(factory.DjangoModelFactory):
     inv_id = factory.Sequence(lambda n: 1225147276579271239L + n)
 
 
-# TODO: Shipping services etc.
+# TODO: Shipping, Variations services etc.
 class EbayItemFactory(factory.DjangoModelFactory):
 
     class Meta:

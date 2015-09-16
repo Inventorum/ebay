@@ -162,7 +162,6 @@ class EbayApiCategoriesTest(EbayAuthenticatedAPITestCase):
         self.assertEqual(sum([suggested_category.percent_item_found
                               for suggested_category in response.suggested_categories]), 100)
 
-
     @EbayTest.use_cassette("ebay_get_specfic_for_category_162499_AT.yaml")
     def test_specifics_for_one_category(self):
         token = self.ebay_token

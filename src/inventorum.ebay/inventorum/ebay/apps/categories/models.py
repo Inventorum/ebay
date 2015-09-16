@@ -8,7 +8,6 @@ from inventorum.ebay.apps.categories import ListingDurations
 from django.db.models.fields import CharField, BooleanField, URLField, TextField, IntegerField
 from django_countries.fields import CountryField
 from inventorum.ebay.lib.db.models import BaseModel, BaseQuerySet
-from inventorum.ebay.lib.ebay.data import ProductIdentiferEnabledCodeType
 from inventorum.util.django.model_utils import PassThroughManager
 from mptt.fields import TreeForeignKey
 from mptt.managers import TreeManager
@@ -45,7 +44,6 @@ class CategoryModel(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['name']
-
 
     @classmethod
     def create_or_update_from_ebay_category(cls, data, country_code):

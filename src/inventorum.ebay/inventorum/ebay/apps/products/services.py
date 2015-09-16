@@ -552,7 +552,11 @@ class CorePublishingStatusUpdateService(object):
                          details="({})".format(details) if details else ""))
 
         core_api_state = EbayItemPublishingStatus.core_api_state(publishing_status)
-        self.account.core_api.post_product_publishing_state(self.ebay_item.inv_product_id, core_api_state, details=details)
+        self.account.core_api.post_product_publishing_state(
+            self.ebay_item.inv_product_id,
+            core_api_state,
+            details=details
+        )
 
 
 class UpdateFailedException(EbayServiceException):
@@ -574,7 +578,7 @@ class UpdateService(object):
         ebay_api = EbayItems(self.user.account.token.ebay_object)
 
         try:
-            response = ebay_api.revise_fixed_price_item(self.item_update.ebay_object)
+            ebay_api.revise_fixed_price_item(self.item_update.ebay_object)
         except EbayConnectionException as e:
             self.item_update.set_status(EbayItemUpdateStatus.FAILED, details=e.serialized_errors)
             EbayApiAttempt.create_failed_update_attempt(self.item_update, exception=e)

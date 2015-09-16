@@ -1,11 +1,12 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-import json
+import logging
 from inventorum.ebay.lib.rest.fields import MoneyField
 
 from rest_framework import serializers
-from inventorum.ebay.lib.core_api.models import CoreProductDeltaDeserializer
 from inventorum.ebay.tests.testcases import UnitTestCase
+
+log = logging.getLogger(__name__)
 
 
 class MoneyFieldTestSerializer(serializers.Serializer):
@@ -16,4 +17,6 @@ class TestDeltaEndpointQuantizeProblem(UnitTestCase):
     def test_it(self):
 
         serializer = MoneyFieldTestSerializer(data={'money': '2000000000.00'})
-        self.assertTrue(serializer.is_valid())
+        valid = serializer.is_valid()
+        log.debug(serializer.errors)
+        self.assertTrue(valid)
