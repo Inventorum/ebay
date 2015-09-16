@@ -115,7 +115,7 @@ class PublishingPreparationService(object):
         if not len(seller_profiles):
             return None
 
-        # find and return the default return policy (there should be at most one) or None there was none
+        # find and return the default return policy (there should be at most one) or None if there is none
         return next((p for p in seller_profiles if p.profile_type == SellerProfileCodeType.RETURN_POLICY
                      and p.category_group.is_default), None)
 
