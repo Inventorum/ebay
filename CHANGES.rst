@@ -7,6 +7,7 @@ develop
 Feature
 .......
 - Allow accounts to configure return policies
+- INV-5496: Use "Does not apply" by default if EAN is not there
 
 Code
 ....
