@@ -139,6 +139,8 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         self.assertEqual(updated_account.return_policy.shipping_cost_paid_by_option, ShippingCostPaidByOption.Seller)
         self.assertEqual(updated_account.return_policy.description, 'Awesome descriptions are awesome')
 
+        return_policy_id = updated_account.return_policy.id
+
         # update the return policy
         serializer = EbayAccountSerializer(self.account, partial=True, data={
             'return_policy': {
@@ -152,6 +154,8 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         serializer.save()
 
         updated_account = self.account.reload()
+        self.assertEqual(updated_account.return_policy.id, return_policy_id, 'The serializer should update an existing '
+                                                                             'policy and not create a new one')
         self.assertEqual(updated_account.return_policy.returns_accepted_option, ReturnsAcceptedOption.ReturnsNotAccepted)
         self.assertEqual(updated_account.return_policy.returns_within_option, None)
         self.assertEqual(updated_account.return_policy.shipping_cost_paid_by_option, None)

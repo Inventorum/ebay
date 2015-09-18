@@ -120,9 +120,11 @@ class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.M
         if not return_policy_data:
             return
 
-        if not instance.return_policy:
+        if not instance.has_return_policy:
+            # create a new return policy
             instance.return_policy = ReturnPolicyModel.create(**return_policy_data)
             instance.save()
         else:
+            # update the existing return policy
             ReturnPolicyModel.objects.filter(id=instance.return_policy.id)\
                 .update(**return_policy_data)
