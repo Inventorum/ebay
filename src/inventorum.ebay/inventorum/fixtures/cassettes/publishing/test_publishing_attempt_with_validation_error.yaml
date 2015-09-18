@@ -6,10 +6,11 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.9-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
+      X-Rid: [&id001 !!python/long '3225259305428755794']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/1225145632417445479/
   response:
@@ -31,20 +32,22 @@ interactions:
         "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
         "", "supplier": "", "meta": {}, "is_giftcard": false, "gross_price": "1999.99",
         "purchase_price": "1.5E+3", "states": [{"channel": "ebay", "details": null,
-        "state": "in_progress"}], "attributes_str": "", "inv_id": "1225145632417445479"}'}
+        "state": "in_progress"}], "attributes_str": "", "inv_id": "1225145632417445479",
+        "package_size_value": null, "package_size_unit": null, "base_price": null,
+        "base_size_value": null, "base_size_unit": null}'}
     headers:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Wed, 29 Jul 2015 16:59:25 GMT']
+      date: ['Fri, 18 Sep 2015 08:40:59 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZKUhR:I_5ACazPZ6jBeAlYysfipL5WXtI"; Domain=app.intern.inventorum.net;
-          expires=Wed, 29-Jul-2015 18:59:25 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1ZcrE3:MVWbhKk4aQjTvbctfKnBBv-5Bso"; Domain=app.intern.inventorum.net;
+          expires=Fri, 18-Sep-2015 10:40:59 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3414715097232762356']
+      x-rid: ['3225259305428755794']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -53,10 +56,61 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.9-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
+      X-Rid: [*id001]
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/1225145632417445479/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "XtC Advanced 2 LTD",
+        "id": 463690, "quantity": "1000.00", "reorder_level": "10.00", "safety_stock":
+        "2.00", "price": "1680.6638655462", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad.JPEG",
+        "id": 2914, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"},
+        "variation_count": 0, "variations": [], "average_purchase_price": "1.5E+3",
+        "description": "GIANT XtC 27.5\" Advanced Carbon", "product_code": "123456789",
+        "ean": "75678164125", "categories": [], "images": [{"new": false, "type":
+        0, "id": 2914, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad.JPEG",
+        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_ipad_retina.JPEG",
+        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb_retina.JPEG",
+        "thumb": "https://app.inventorum.net/uploads/img-hash/f6ac/f910/410a/1ce2/9f24/6d92/ea14/f6acf910410a1ce29f246d92ea1402ae_thumb.JPEG"}}],
+        "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
+        "", "supplier": "", "meta": {}, "is_giftcard": false, "gross_price": "1999.99",
+        "purchase_price": "1.5E+3", "states": [{"channel": "ebay", "details": null,
+        "state": "in_progress"}], "attributes_str": "", "inv_id": "1225145632417445479",
+        "package_size_value": null, "package_size_unit": null, "base_price": null,
+        "base_size_value": null, "base_size_unit": null}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Fri, 18 Sep 2015 08:40:59 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1ZcrE3:MVWbhKk4aQjTvbctfKnBBv-5Bso"; Domain=app.intern.inventorum.net;
+          expires=Fri, 18-Sep-2015 10:40:59 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['3225259305428755794']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+      X-Rid: [*id001]
     method: GET
     uri: http://app.intern.inventorum.net/api/info/
   response:
@@ -65,19 +119,20 @@ interactions:
         "name": "19%", "tax_rate": "19.00000"}], "customer_groups": [{"id": 325, "name":
         "Inventorum Test Account", "description": "-"}], "groups": [{"id": 2, "name":
         "owner"}, {"id": 3, "name": "manager"}, {"id": 4, "name": "staff"}], "attributes":
-        [{"key": "color"}, {"key": "size"}, {"key": "material"}], "account": {"paypal":
-        false, "ebay": false, "image": null, "shipping_address": null, "billing_address":
-        {"country": "DE", "id": 5067, "address1": "Voltastr 5", "address2": "Gebaude
-        3", "zipcode": "13355", "city": "Berlin", "state": null, "first_name": "John",
-        "last_name": "Newman", "company": "Inventorum", "title": null}, "phone_numbers":
-        [{"country_code": "49", "id": 1444, "type": "normal", "national_number": "030
-        12341234"}], "name": "Inventorum Test Account", "store_name": "Inventorum
-        Test Account", "store_description": "", "store_slogan": "", "email": "tech+slingshot-test@inventorum.com",
-        "fax": "", "tax_number": "", "vat_number": "", "payment_method_note": "",
-        "thanks_note": "", "invoice_prefix": "", "invoice_counter": 2, "bank_name":
-        "", "bank_account_number": "", "bank_code": "", "bank_iban": "", "bank_bic_swift":
-        "", "settings": {"shipping_services": [{"id": "DE_DHLPaket", "description":
-        "DHL Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
+        [{"used": true, "usage_count": 3, "key": "color"}, {"used": true, "usage_count":
+        4, "key": "size"}, {"used": true, "usage_count": 4, "key": "material"}], "account":
+        {"paypal": false, "ebay": false, "image": null, "shipping_address": null,
+        "billing_address": {"country": "DE", "id": 5067, "address1": "Voltastr 5",
+        "address2": "Gebaude 3", "zipcode": "13355", "city": "Berlin", "state": null,
+        "first_name": "John", "last_name": "Newman", "company": "Inventorum", "title":
+        null}, "phone_numbers": [{"country_code": "49", "id": 1444, "type": "normal",
+        "national_number": "030 12341234"}], "name": "Inventorum Test Account", "store_name":
+        "Inventorum Test Account", "store_description": "", "store_slogan": "", "email":
+        "tech+slingshot-test@inventorum.com", "fax": "", "tax_number": "", "vat_number":
+        "", "payment_method_note": "", "thanks_note": "", "invoice_prefix": "", "invoice_counter":
+        2, "bank_name": "", "bank_account_number": "", "bank_code": "", "bank_iban":
+        "", "bank_bic_swift": "", "settings": {"shipping_services": [{"id": "DE_DHLPaket",
+        "description": "DHL Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
         "Group3MaxFlatShippingCost", "carrier": "DHL", "category": "[STANDARD]", "service":
         "DE_DHLPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
         "enabled": true, "free_above_price": null}], "ebay_payment_methods": [1],
@@ -139,19 +194,21 @@ interactions:
         8, "description": "Pick up in store"}, {"id": 9, "description": "Deutsche
         Post"}, {"id": 10, "description": "UPS"}, {"id": 11, "description": "Hermes"},
         {"id": 12, "description": "DPD"}, {"id": 13, "description": "GLS"}], "countries":
-        {"DE": "Germany", "AT": "Austria"}}'}
+        {"DE": "Germany", "AT": "Austria"}, "units": {"kg": "kilogram", "g": "gram",
+        "ml": "millilitre", "m": "metre", "l": "litre", "pc": "piece", "m3": "cubic
+        metre", "m2": "square metre"}}'}
     headers:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Wed, 29 Jul 2015 16:59:25 GMT']
+      date: ['Fri, 18 Sep 2015 08:40:59 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZKUhR:I_5ACazPZ6jBeAlYysfipL5WXtI"; Domain=app.intern.inventorum.net;
-          expires=Wed, 29-Jul-2015 18:59:25 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1ZcrE3:MVWbhKk4aQjTvbctfKnBBv-5Bso"; Domain=app.intern.inventorum.net;
+          expires=Fri, 18-Sep-2015 10:40:59 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3414715097232762356']
+      x-rid: ['3225259305428755794']
     status: {code: 200, message: OK}
 version: 1

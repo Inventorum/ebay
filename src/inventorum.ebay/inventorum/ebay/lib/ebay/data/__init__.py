@@ -77,7 +77,7 @@ class TradingRoleCodeType(object):
     Seller = "Seller"
 
 
-class ProductIdentiferEnabledCodeType(unicode):
+class ProductIdentiferEnabledCodeType(object):
     """
     Provides consts for the ebay `ProductIdentiferEnabledCodeType`
     http://developer.ebay.com/devzone/xml/docs/reference/ebay/types/ProductIdentiferEnabledCodeType.html
@@ -85,6 +85,18 @@ class ProductIdentiferEnabledCodeType(unicode):
     Disabled = "Disabled"
     Enabled = "Enabled"
     Required = "Required"
+
+
+class SellerProfileCodeType(object):
+    """
+    Provides consts for the ebay `SellerProfileCodeType`
+    http://developer.ebay.com/devzone/xml/docs/reference/ebay/types/SupportedSellerProfileType.html#ProfileType
+    """
+    PAYMENT = 'PAYMENT'
+    RETURN_POLICY = 'RETURN_POLICY'
+    SHIPPING = 'SHIPPING'
+
+    CHOICES = (PAYMENT, RETURN_POLICY, SHIPPING)
 
 
 # TODO jm: Move to data/utils.py #######################################################################################

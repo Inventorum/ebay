@@ -7,8 +7,9 @@ from decimal import Decimal
 
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
+from inventorum.ebay.apps.accounts.models import ReturnPolicyModel
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
-from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants, SellerProfileCodeType
 from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
@@ -89,6 +90,9 @@ class PublishingPreparationService(object):
 
     @property
     def core_account(self):
+        """
+        :rtype: inventorum.ebay.lib.core_api.models.CoreAccount
+        """
         return self.core_info.account
 
     def validate(self):
@@ -110,13 +114,15 @@ class PublishingPreparationService(object):
         if not (self.product.shipping_services.exists() or self.account.shipping_services.exists()):
             raise PublishingValidationException(ugettext('Neither product or account have configured shipping services'))
 
+        if not self.account.has_defined_return_policy:
+            raise PublishingValidationException(ugettext('Product could not be published! '
+                                                         'You must configure a return policy in your eBay settings'))
+
         self._validate_prices()
         self._validate_attributes_in_variations()
 
         if not self.product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
-
-        self._validate_ean()
 
         specific_values_ids = set(sv.specific.pk for sv in self.product.specific_values.all())
         required_ones = set(self.product.category.specifics.required().values_list('id', flat=True))
@@ -181,25 +187,6 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(ugettext("All variations needs to have exactly the same number of "
                                                          "attributes"))
 
-    def _validate_ean(self):
-        """
-        Since the GTIN mandate, some ebay categories require a valid EAN code for item.
-        This method is responsible for validating the EAN for these categories. In case
-        of variations, it validates whether each variation has a EAN.
-
-        :raises: PublishingValidationException
-        """
-        if not self.product.category.features.ean_required or self.product.ean_does_not_apply:
-            return
-
-        # no variations => core product is expected to have EAN
-        if not self.core_product.has_variations and not self.core_product.ean:
-            raise PublishingValidationException(ugettext("The selected category requires a valid EAN"))
-        # variations => every variation is expected to have EAN
-        elif self.core_product.variations and not all(v.ean for v in self.core_product.variations):
-            raise PublishingValidationException(
-                ugettext("The selected category requires each variation to have a valid EAN"))
-
     def create_ebay_item(self):
         """
         :rtype: EbayItemModel
@@ -211,14 +198,15 @@ class PublishingPreparationService(object):
                                       .format(self.core_product.tax_type_id))
 
         # ean applies unless product has and cannot have a ean, e.g. when they are self-made
-        ean_applies = not self.product.ean_does_not_apply
+        ean_does_not_apply = self.product.ean_does_not_apply
+        ean_required = self.product.category.features.ean_required
 
-        if ean_applies and not self.core_product.has_variations:
-            ean = self.core_product.ean
-        elif not self.core_product.has_variations:
+        if ean_does_not_apply:
             ean = EbayConstants.ProductIdentifierUnavailableText
+        elif ean_required:
+            ean = self.core_product.ean or EbayConstants.ProductIdentifierUnavailableText
         else:
-            ean = None
+            ean = self.core_product.ean
 
         item = EbayItemModel.objects.create(
             product=self.product,
@@ -235,8 +223,17 @@ class PublishingPreparationService(object):
             listing_duration=self.product.category.features.max_listing_duration,
             paypal_email_address=self.account.payment_method_paypal_email_address,
             postal_code=self.core_account.billing_address.zipcode,
-            is_click_and_collect=self.product.is_click_and_collect
+            is_click_and_collect=self.product.is_click_and_collect,
         )
+
+        # create return policy from the account's return policy configuration
+        item.return_policy = ReturnPolicyModel.objects.create(
+            returns_accepted_option=self.account.return_policy.returns_accepted_option,
+            returns_within_option=self.account.return_policy.returns_within_option,
+            shipping_cost_paid_by_option=self.account.return_policy.shipping_cost_paid_by_option,
+            description=self.account.return_policy.description
+        )
+        item.save()
 
         for image in self.core_product.images:
             EbayItemImageModel.objects.create(
@@ -274,9 +271,17 @@ class PublishingPreparationService(object):
             if tax_rate is None:
                 raise PublishingException(message="Cannot determine tax_rate for variation with variation.tax_type={}"
                                           .format(variation.tax_type_id))
+
+            if ean_does_not_apply:
+                ean = EbayConstants.ProductIdentifierUnavailableText
+            elif ean_required:
+                ean = variation.ean or EbayConstants.ProductIdentifierUnavailableText
+            else:
+                ean = variation.ean
+
             variation_obj = EbayItemVariationModel.objects.create(
                 inv_product_id=variation.id,
-                ean=variation.ean if ean_applies else EbayConstants.ProductIdentifierUnavailableText,
+                ean=ean,
                 quantity=variation.quantity,
                 gross_price=variation.gross_price,
                 tax_rate=tax_rate,

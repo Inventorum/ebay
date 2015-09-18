@@ -10,8 +10,16 @@ from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 from inventorum.ebay.apps.products import models, EbayItemPublishingStatus
 from inventorum.ebay.tests import StagingTestAccount
+from inventorum.ebay.lib.db.models import MappedInventorumModelFactory
 
 log = logging.getLogger(__name__)
+
+
+class EbayProductModelFactory(MappedInventorumModelFactory):
+    class Meta:
+        model = models.EbayProductModel
+
+    account = factory.SubFactory(EbayAccountFactory)
 
 
 class EbayItemVariationSpecificValueFactory(factory.DjangoModelFactory):

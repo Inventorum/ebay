@@ -4,10 +4,12 @@ from decimal import Decimal as D
 import logging
 from datetime import datetime, timedelta
 import unittest
+from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 
 from inventorum.ebay.tests.utils import PatchMixin
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
+from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
@@ -19,7 +21,7 @@ from inventorum.ebay.apps.products.tasks import periodic_core_products_sync_task
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
-from inventorum.ebay.tests import ApiTest
+from inventorum.ebay.tests import ApiTest, IntegrationTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
 from mock import PropertyMock
 from rest_framework import status
@@ -28,101 +30,96 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class IntegrationTestPeriodicCoreProductsSync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin,
-                                              ShippingServiceTestMixin):
+class IntegrationTestPeriodicCoreProductsSync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, AccountTestMixin,
+                                              ProductTestMixin):
+
+    def setUp(self):
+        super(IntegrationTestPeriodicCoreProductsSync, self).setUp()
+        self.prepare_account_for_publishing(self.account)
 
     @celery_test_case()
+    @IntegrationTest.use_cassette("core_products_sync/core_products_sync_integration_test.yaml",
+                                  filter_query_parameters=['start_date'], record_mode="never")
     def test_integration(self):
-        with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date'],
-                                  record_mode="never") as cassette:
-            # create some core products to play with
-            product_1_inv_id = self.create_core_api_product(name="Test product 1",
-                                                            gross_price="1.99",
-                                                            quantity=12)
-            ebay_product_1 = EbayProductModel.objects.create(inv_id=product_1_inv_id, account=self.account)
+        # create some core products to play with
+        product_1_inv_id = self.create_core_api_product(name="Test product 1",
+                                                        description="Awesome test products are awesome",
+                                                        gross_price="1.99",
+                                                        quantity=12)
+        ebay_product_1 = self.get_valid_ebay_product_for_publishing(self.account, inv_id=product_1_inv_id)
 
-            product_2_inv_id = self.create_core_api_product(name="Test product 2",
-                                                            gross_price="3.45",
-                                                            quantity=5)
-            ebay_product_2 = EbayProductModel.objects.create(inv_id=product_2_inv_id, account=self.account)
+        product_2_inv_id = self.create_core_api_product(name="Test product 2",
+                                                        description="Awesome test products are awesome",
+                                                        gross_price="3.45",
+                                                        quantity=5)
+        ebay_product_2 = self.get_valid_ebay_product_for_publishing(self.account, inv_id=product_2_inv_id)
 
-            # Create and assign valid ebay category
-            category = CategoryFactory.create(external_id="176973")
+        response = self.client.post("/products/%s/publish" % product_1_inv_id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
-            ebay_product_1.category = category
-            ebay_product_1.save()
+        response = self.client.post("/products/%s/publish" % product_2_inv_id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
-            ebay_product_2.category = category
-            ebay_product_2.save()
+        ebay_item_1 = ebay_product_1.published_item
+        self.assertEqual(ebay_item_1.gross_price, D("1.99"))
 
-            self.account.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("5.00"))
+        ebay_item_2 = ebay_product_2.published_item
+        self.assertEqual(ebay_item_2.gross_price, D("3.45"))
 
-            response = self.client.post("/products/%s/publish" % product_1_inv_id)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # ------------------------------------------------------------
 
-            response = self.client.post("/products/%s/publish" % product_2_inv_id)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # product 1: update gross price
+        self.update_core_api_product(product_1_inv_id, {
+            "gross_price": "2.99"
+        })
 
-            ebay_item_1 = ebay_product_1.published_item
-            self.assertEqual(ebay_item_1.gross_price, D("1.99"))
+        periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
-            ebay_item_2 = ebay_product_2.published_item
-            self.assertEqual(ebay_item_2.gross_price, D("3.45"))
+        # assert first update of product 1
+        ebay_item_1 = ebay_product_1.items.first()
+        self.assertEqual(ebay_item_1.updates.count(), 1)
+        update = ebay_item_1.updates.first()
 
-            # ------------------------------------------------------------
+        self.assertEqual(update.gross_price, D("2.99"))
+        self.assertEqual(update.quantity, None)
+        self.assertEqual(update.status, EbayItemUpdateStatus.SUCCEEDED)
 
-            # product 1: update gross price
-            self.update_core_api_product(product_1_inv_id, {
-                "gross_price": "2.99"
-            })
+        # ebay item should have been updated as well
+        ebay_item_1 = ebay_product_1.published_item
+        self.assertEqual(ebay_item_1.gross_price, D("2.99"))
 
-            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
+        # ------------------------------------------------------------
 
-            # assert first update of product 1
-            ebay_item_1 = ebay_product_1.items.first()
-            self.assertEqual(ebay_item_1.updates.count(), 1)
-            update = ebay_item_1.updates.first()
+        # product 1: inventory adjustment
+        self.adjust_core_inventory(product_1_inv_id, quantity=10, price="2.99")
 
-            self.assertEqual(update.gross_price, D("2.99"))
-            self.assertEqual(update.quantity, None)
-            self.assertEqual(update.status, EbayItemUpdateStatus.SUCCEEDED)
+        # run sync task
+        periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
-            # ebay item should have been updated as well
-            ebay_item_1 = ebay_product_1.published_item
-            self.assertEqual(ebay_item_1.gross_price, D("2.99"))
+        # assert first update of product 1
+        self.assertEqual(ebay_item_1.updates.count(), 2)
+        update = ebay_item_1.updates.last()
 
-            # ------------------------------------------------------------
+        self.assertEqual(update.gross_price, None)
+        self.assertEqual(update.quantity, 22)  # 12 initial + 10
 
-            # product 1: inventory adjustment
-            self.adjust_core_inventory(product_1_inv_id, quantity=10, price="2.99")
+        # ebay item should have been updated as well
+        ebay_item_1 = ebay_product_1.published_item
+        self.assertEqual(ebay_item_1.quantity, 22)
 
-            # run sync task
-            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
+        # ------------------------------------------------------------
 
-            # assert first update of product 1
-            self.assertEqual(ebay_item_1.updates.count(), 2)
-            update = ebay_item_1.updates.last()
+        self.delete_core_api_product(product_1_inv_id)
+        self.delete_core_api_product(product_2_inv_id)
 
-            self.assertEqual(update.gross_price, None)
-            self.assertEqual(update.quantity, 22)  # 12 initial + 10
+        # run sync task
+        periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
 
-            # ebay item should have been updated as well
-            ebay_item_1 = ebay_product_1.published_item
-            self.assertEqual(ebay_item_1.quantity, 22)
+        with self.assertRaises(EbayProductModel.DoesNotExist):
+            EbayProductModel.objects.get(id=ebay_product_1.id)
 
-            # ------------------------------------------------------------
-
-            self.delete_core_api_product(product_1_inv_id)
-            self.delete_core_api_product(product_2_inv_id)
-
-            # run sync task
-            periodic_core_products_sync_task.delay(context=get_anonymous_task_execution_context())
-
-            with self.assertRaises(EbayProductModel.DoesNotExist):
-                EbayProductModel.objects.get(id=ebay_product_1.id)
-
-            with self.assertRaises(EbayProductModel.DoesNotExist):
-                EbayProductModel.objects.get(id=ebay_product_2.id)
+        with self.assertRaises(EbayProductModel.DoesNotExist):
+            EbayProductModel.objects.get(id=ebay_product_2.id)
 
 
 class UnitTestCoreProductsSync(UnitTestCase):
