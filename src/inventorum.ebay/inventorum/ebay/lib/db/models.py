@@ -53,4 +53,4 @@ class MappedInventorumModel(BaseModel):
 
 
 class MappedInventorumModelFactory(factory.DjangoModelFactory):
-    inv_id = fuzzy.FuzzyInteger(low=1225146152575102591, high=9225146152575102591)
+    inv_id = fuzzy.FuzzyInteger(low=1225146152575102591, high=2225146152575102591)

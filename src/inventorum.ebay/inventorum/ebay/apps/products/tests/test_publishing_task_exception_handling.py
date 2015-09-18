@@ -20,12 +20,9 @@ class TestPublishingTaskExceptionHandling(EbayAuthenticatedAPITestCase, ProductT
     def test_fatal_exception(self, publish_mock):
         publish_mock.side_effect = KeyError()
 
-        product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
+        product = self.get_valid_ebay_product_for_publishing(self.account)
         product.is_click_and_collect = True
         product.save()
-
-        self.assign_product_to_valid_category(product)
-        self.assign_valid_shipping_services(product)
 
         # Try to publish
         preparation_service = PublishingPreparationService(product, self.user)

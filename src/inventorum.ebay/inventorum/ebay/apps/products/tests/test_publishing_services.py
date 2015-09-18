@@ -3,18 +3,10 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from decimal import Decimal as D, Decimal
 
-from inventorum.ebay.tests import StagingTestAccount
-
-from ebaysdk.response import Response, ResponseDataObject
-from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, DurationFactory
-from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
-from inventorum.ebay.apps.products.services import PublishingService, PublishingValidationException, \
-    UnpublishingService, PublishingPreparationService
-from inventorum.ebay.apps.products.tests import ProductTestMixin
-from inventorum.ebay.apps.products.tests.factories import EbayProductSpecificFactory, EbayProductFactory, \
-    EbayProductModelFactory
+from inventorum.ebay.apps.products.services import PublishingValidationException, PublishingPreparationService
+from inventorum.ebay.apps.products.tests.factories import EbayProductModelFactory, EbayItemFactory
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory, CoreProductVariationFactory, \
@@ -22,257 +14,10 @@ from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory, Cor
 from inventorum.ebay.lib.ebay.data import SellerProfileCodeType, BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.tests.preferences_factories import GetUserPreferencesResponseTypeFactory, \
     SupportedSellerProfileTypeFactory
-from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
+from inventorum.ebay.tests.testcases import UnitTestCase
 from mock import PropertyMock, Mock
 
 log = logging.getLogger(__name__)
-
-
-class TestPublishingServices(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingServiceTestMixin):
-
-    def _assign_category(self, product):
-        leaf_category = CategoryFactory.create(name="Leaf category", external_id='64540')
-
-        self.specific = CategorySpecificFactory.create(category=leaf_category)
-        self.required_specific = CategorySpecificFactory.create_required(category=leaf_category, max_values=2)
-
-        product.category = leaf_category
-        product.save()
-
-    def _add_specific_to_product(self, product):
-        EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test")
-        EbayProductSpecificFactory.create(product=product, specific=self.required_specific, value="Test 2")
-
-    def test_failed_validation(self):
-        product = self.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingPreparationService(product, self.user)
-
-            with self.assertRaises(PublishingValidationException) as e:
-                service.validate()
-
-        self.assertEqual(e.exception.message, 'Neither product or account have configured shipping services')
-
-        self.assign_valid_shipping_services(product)
-
-        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingPreparationService(product, self.user)
-
-            with self.assertRaises(PublishingValidationException) as e:
-                service.validate()
-
-        self.assertEqual(e.exception.message, 'You need to select category')
-        self._assign_category(service.product)
-
-        service.core_product.gross_price = D("0.99")
-
-        with self.assertRaises(PublishingValidationException) as e:
-            service.validate()
-
-        self.assertEqual(e.exception.message, 'Price needs to be greater or equal than 1')
-
-        service.core_product.gross_price = 1
-
-        # mock that product was published
-        item = service.create_ebay_item()
-        item.publishing_status = EbayItemPublishingStatus.PUBLISHED
-        item.save()
-
-        with self.assertRaises(PublishingValidationException) as e:
-            service.validate()
-
-        self.assertEqual(e.exception.message, 'Product is already published')
-
-        item.publishing_status = EbayItemPublishingStatus.UNPUBLISHED
-        item.save()
-
-        product = self.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingPreparationService(product, self.user)
-
-            with self.assertRaises(PublishingValidationException) as e:
-                service.validate()
-
-            self.assertEqual(e.exception.message,
-                             'You need to pass all required specifics (missing: [%s])!' % self.required_specific.pk)
-
-            self._add_specific_to_product(product)
-
-        # Add click & collect to check validation of it!
-        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            # Mark product as click and collect product
-            product.is_click_and_collect = True
-            product.save()
-
-            service = PublishingPreparationService(product, self.user)
-
-            # Disable click and collect
-            service.core_account.settings.ebay_click_and_collect = False
-
-            with self.assertRaises(PublishingValidationException) as e:
-                service.validate()
-
-            self.assertEqual(e.exception.message,
-                             "You cannot publish product with Click & Collect, because you don't have it enabled for "
-                             "your account!")
-
-        # Add click & collect to check validation of payment methods!
-        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            # Mark product as click and collect product
-            product.is_click_and_collect = True
-            product.save()
-
-            # Disable Paypal
-            account = self.user.account
-            account.payment_method_paypal_enabled = False
-            account.save()
-
-            service = PublishingPreparationService(product, self.user)
-
-            # Enable click and collect
-            service.core_account.settings.ebay_click_and_collect = True
-
-            with self.assertRaises(PublishingValidationException) as e:
-                service.validate()
-
-            self.assertEqual(e.exception.message,
-                             "Click&Collect requires to use PayPal as payment method!")
-
-        product.is_click_and_collect = False
-        product.save()
-
-        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            # Enable Paypal, remove email
-            account = self.user.account
-            account.payment_method_paypal_enabled = True
-            account.payment_method_paypal_email_address = None
-            account.save()
-
-            service = PublishingPreparationService(product, self.user)
-
-            with self.assertRaises(PublishingValidationException) as e:
-                service.validate()
-
-            self.assertEqual(e.exception.message,
-                             'Missing paypal email addres, however paypal payment method is enabled!')
-
-        account = self.user.account
-        account.payment_method_paypal_email_address = "bartosz@hernas.pl"
-        account.save()
-
-        product = self.get_product(StagingTestAccount.Products.SIMPLE_PRODUCT_ID, self.account)
-        with ApiTest.use_cassette("get_product_simple_for_publishing_test.yaml"):
-            service = PublishingPreparationService(product, self.user)
-            # Should not raise anything finally!
-            service.validate()
-
-    @ApiTest.use_cassette("test_publishing_service_publish_and_unpublish.yaml", match_on=['body'])
-    def test_publishing(self):
-        product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
-
-        # 176973 is valid ebay category id
-        category, c = CategoryModel.objects.get_or_create(external_id='176973')
-        product.category = category
-        product.save()
-
-        features = CategoryFeaturesModel.objects.create(
-            category=category
-        )
-        durations = ['Days_5', 'Days_30']
-        for d in durations:
-            duration = DurationModel.objects.create(
-                value=d
-            )
-            features.durations.add(duration)
-
-        # assign valid shipping service
-        self.assign_valid_shipping_services(product)
-
-        # Try to publish
-        preparation_service = PublishingPreparationService(product, self.user)
-        preparation_service.validate()
-        item = preparation_service.create_ebay_item()
-
-        publishing_service = PublishingService(item, self.user)
-        publishing_service.initialize_publish_attempt()
-        publishing_service.publish()
-        publishing_service.finalize_publish_attempt()
-
-        item = product.published_item
-        self.assertIsNotNone(item)
-        self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
-        self.assertIsNotNone(item.published_at)
-        self.assertIsNotNone(item.ends_at)
-        self.assertIsNone(item.unpublished_at)
-
-        # And now unpublish
-        unpublishing_service = UnpublishingService(item, self.user)
-        unpublishing_service.unpublish()
-
-        item = product.published_item
-        self.assertIsNone(item)
-
-        last_item = product.items.last()
-        self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
-        self.assertIsNotNone(last_item.published_at)
-        self.assertIsNotNone(last_item.unpublished_at)
-
-    def test_publish_for_click_and_collect(self):
-        with ApiTest.use_cassette("test_publish_product_for_click_and_collect.yaml") as cass:
-            product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
-            product.is_click_and_collect = True
-            product.save()
-
-            self.assign_product_to_valid_category(product)
-            self.assign_valid_shipping_services(product)
-
-            # Try to publish
-            preparation_service = PublishingPreparationService(product, self.user)
-            preparation_service.validate()
-            item = preparation_service.create_ebay_item()
-
-            publishing_service = PublishingService(item, self.user)
-            publishing_service.initialize_publish_attempt()
-            publishing_service.publish()
-            publishing_service.finalize_publish_attempt()
-
-            item = product.published_item
-            self.assertIsNotNone(item)
-            self.assertEqual(item.publishing_status, EbayItemPublishingStatus.PUBLISHED)
-            self.assertIsNotNone(item.published_at)
-            self.assertIsNotNone(item.ends_at)
-            self.assertIsNone(item.unpublished_at)
-
-            # And now unpublish
-            unpublishing_service = UnpublishingService(item, self.user)
-            unpublishing_service.unpublish()
-
-            item = product.published_item
-            self.assertIsNone(item)
-
-            last_item = product.items.last()
-            self.assertEqual(last_item.publishing_status, EbayItemPublishingStatus.UNPUBLISHED)
-            self.assertIsNotNone(last_item.published_at)
-            self.assertIsNotNone(last_item.unpublished_at)
-
-        requests = cass.requests
-        uris = [r.uri for r in requests]
-        self.assertIn('https://api.ebay.com/selling/inventory/v1/inventory/delta/add', uris)
-        self.assertIn('https://api.ebay.com/selling/inventory/v1/inventory/delta/delete', uris)
-
-        inventory_add_request = None
-        for r in requests:
-            if r.uri == 'https://api.ebay.com/selling/inventory/v1/inventory/delta/add':
-                inventory_add_request = r
-                break
-
-        self.assertIsNotNone(inventory_add_request)
-        body = Response(ResponseDataObject({'content': inventory_add_request.body.encode('utf-8')}, [])).dict()
-        self.assertEqual(body, {
-            'AddInventoryRequest': {'Locations': {'Location': {'Availability': 'IN_STOCK',
-                                                               'LocationID': 'invdev_346',
-                                                               'Quantity': '5'}},
-                                    'SKU': last_item.sku}})
 
 
 class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixin):
@@ -419,6 +164,13 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
             seller_profile_preferences__supported_seller_profiles=seller_profiles)
         self.ebay_get_user_preferences_mock.return_value = ebay_user_preferences
 
+    def validate_and_assert_expected_validation_error(self, ebay_product, expected_error_message):
+        service = PublishingPreparationService(ebay_product, self.user)
+        with self.assertRaises(PublishingValidationException) as exc:
+            service.validate()
+
+        self.assertEqual(exc.exception.message, expected_error_message)
+
     # -Test methods -----------------------------
 
     def test_validation_and_builder_with_valid_configuration(self):
@@ -446,7 +198,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertEqual(ebay_item.listing_duration, 'Days_90', 'Listing duration should be the max. allowed listing '
                                                                 'duration of the selected category')
 
-        self.assertEqual(ebay_item.ebay_seller_profile_return_policy_id, '73359920011')
+        self.assertEqual(ebay_item.ebay_seller_return_profile_id, '73359920011')
 
         # validate payment methods
         payment_methods = ebay_item.payment_methods.all()
@@ -489,8 +241,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                         'PrimaryCategory': {'CategoryID': '712304'},
                                         'ProductListingDetails': {'EAN': '038678561125'},
                                         'Quantity': 100,
-                                        'ReturnPolicy': {'Description': '',
-                                                         'ReturnsAcceptedOption': 'ReturnsAccepted'},
+                                        'SellerProfiles': {'SellerReturnProfile': {'ReturnProfileID': '73359920011'}},
                                         'SKU': 'invtest_941284',
                                         'ShippingDetails': {
                                             'ShippingServiceOptions': [{'ShippingService': 'DE_DHLPaket',
@@ -605,53 +356,15 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertIn('EligibleForPickupInStore', item_data['PickupInStoreDetails'])
         self.assertEqual(item_data['PickupInStoreDetails']['EligibleForPickupInStore'], True)
 
-    def test_attribute_validation(self):
-        core_product = self.get_valid_core_product_with_variations()
-
-        # Precondition: Both variations have two attributes
-        self.assertEqual(len(core_product.variations[0].attributes), 2)
-        self.assertEqual(len(core_product.variations[1].attributes), 2)
-
-        # We remove one attribute from the second variation
-        core_product.variations[1].attributes.pop()
-
-        self.expect_core_product(core_product)
-
-        preparation_service = PublishingPreparationService(self.ebay_product, self.user)
-        with self.assertRaises(PublishingValidationException) as exc:
-            preparation_service.validate()
-
-        self.assertEqual(exc.exception.message,
-                         'All variations needs to have exactly the same number of attributes')
-
-    def test_return_policy_validation(self):
-        # when there is no configured seller profile
-        seller_profiles = []
-        self.expect_ebay_seller_profiles(seller_profiles)
-
-        # ean not required and not given => validate should not raise
-        expected_exception = 'Product could not be published! There is no default ' \
-                             'return policy defined in your eBay account.'
-
-        preparation_service = PublishingPreparationService(self.ebay_product, self.user)
-        with self.assertRaises(PublishingValidationException) as exc:
-            preparation_service.validate()
-
-        self.assertEqual(exc.exception.message, expected_exception)
-
-        # when there is no configured default return seller profile
-        seller_profiles = [SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.PAYMENT,
-                                                                    category_group__is_default=True),
-                           SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.SHIPPING,
-                                                                    category_group__is_default=True)]
-        self.expect_ebay_seller_profiles(seller_profiles)
-
-    def test_account_shipping_fallback(self):
+    def test_shipping_service_validation_and_account_shipping_fallback(self):
         self.ebay_product.shipping_services.delete()
         self.assertEqual(self.ebay_product.shipping_services.count(), 0,
                          'Precondition: The product should have no shipping service configurations')
         self.assertEqual(self.ebay_product.shipping_services.count(), 0,
                          'Precondition: The account should have no shipping services configuration')
+
+        expected_error_message = 'Neither product or account have configured shipping services'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
 
         # Add valid shipping service configuration to account
         self.account.shipping_services.create(service=self.get_shipping_service_hermes(),
@@ -667,6 +380,134 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertEqual(shipping_services[0].external_id, "DE_HermesPaket")
         self.assertEqual(shipping_services[0].cost, D("3.00"))
         self.assertEqual(shipping_services[0].additional_cost, D("0.00"))
+
+    def test_category_and_category_specifics_validation(self):
+        self.ebay_product.category = None
+        self.ebay_product.save()
+
+        expected_error_message = 'You need to select category'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+        # check required category specifics validation
+        self.ebay_product.category = self.category
+        self.ebay_product.save()
+        required_category_specific = CategorySpecificFactory.create_required(name='Required specific',
+                                                                             category=self.category)
+        expected_error_message = 'You need to pass all required specifics (missing: [%s])!' \
+                                 % required_category_specific.id
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+        # add required specific to product to verify that the product is valid then
+        self.ebay_product.specific_values.create(specific=required_category_specific,
+                                                 value='Some value')
+
+        subject = PublishingPreparationService(self.ebay_product, self.user)
+        subject.validate()
+
+    def test_core_product_price_validation(self):
+        # expect core product with invalid gross price (must be >= 1.00)
+        core_product = self.get_valid_core_product()
+        core_product.gross_price = D("0.49")
+        self.expect_core_product(core_product)
+
+        expected_error_message = 'Price needs to be greater or equal than 1'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+    def test_core_account_billing_address_validation(self):
+        # expect core info without billing address
+        core_info = self.get_valid_core_info()
+        core_info.account.billing_address = None
+        self.expect_core_info(core_info)
+
+        expected_error_message = 'To publish product we need your billing address'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+    def test_click_and_collect_validation(self):
+        # expect core info with click_and_collect disabled but enabled for ebay product
+        core_info = self.get_valid_core_info()
+        core_info.account.settings.ebay_click_and_collect = False
+        self.expect_core_info(core_info)
+
+        self.ebay_product.is_click_and_collect = True
+        self.ebay_product.save()
+
+        expected_error_message = "You cannot publish product with Click & Collect, because you don't have it enabled " \
+                                 "for your account!"
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+        # enable click and collect in core api but remove paypal payment from ebay account
+        core_info.account.settings.ebay_click_and_collect = True
+        self.expect_core_info(core_info)
+
+        self.account.payment_method_paypal_enabled = False
+        self.account.save()
+
+        expected_error_message = 'Click&Collect requires to use PayPal as payment method!'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+        self.account.payment_method_paypal_enabled = True
+        self.account.payment_method_paypal_email_address = None
+        self.account.save()
+
+        expected_error_message = 'Missing paypal email addres, however paypal payment method is enabled!'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+    def test_already_published_and_publishing_in_progress_validation(self):
+        # create a published item model for the test product
+        existing_ebay_item = EbayItemFactory.create(account=self.account, product=self.ebay_product,
+                                                    publishing_status=EbayItemPublishingStatus.PUBLISHED)
+
+        expected_error_message = 'Product is already published'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+        # change publishing state of existing item model to ``in progress``
+        existing_ebay_item.publishing_status = EbayItemPublishingStatus.IN_PROGRESS
+        existing_ebay_item.save()
+
+        expected_error_message = 'Product is already being published'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+    def test_variation_attributes_validation(self):
+        core_product = self.get_valid_core_product_with_variations()
+
+        # Precondition: Both variations have two attributes
+        self.assertEqual(len(core_product.variations[0].attributes), 2)
+        self.assertEqual(len(core_product.variations[1].attributes), 2)
+
+        # We remove one attribute from the second variation
+        core_product.variations[1].attributes.pop()
+
+        self.expect_core_product(core_product)
+
+        expected_error_message = 'All variations needs to have exactly the same number of attributes'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+        core_product.variations[0].attributes = []
+        core_product.variations[1].attributes = []
+        self.expect_core_product(core_product)
+
+        expected_error_message = 'Variations need to have at least one attribute'
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+    def test_return_policy_validation(self):
+        # when there is no configured seller profile
+        seller_profiles = []
+        self.expect_ebay_seller_profiles(seller_profiles)
+
+        # there are no configured seller profiles
+        expected_error_message = 'Product could not be published! There is no default ' \
+                                 'return policy defined in your eBay account.'
+
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+        # there is no configured default return seller profile
+        seller_profiles = [SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.PAYMENT,
+                                                                    category_group__is_default=True),
+                           SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.SHIPPING,
+                                                                    category_group__is_default=True)]
+        self.expect_ebay_seller_profiles(seller_profiles)
+
+        self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
 
     def test_ean_does_not_apply_for_product(self):
         # expect core product with some EAN

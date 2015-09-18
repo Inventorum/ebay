@@ -268,7 +268,7 @@ class PublishingPreparationService(object):
             paypal_email_address=self.account.payment_method_paypal_email_address,
             postal_code=self.core_account.billing_address.zipcode,
             is_click_and_collect=self.product.is_click_and_collect,
-            ebay_seller_profile_return_policy_id=return_policy.profile_id
+            ebay_seller_return_profile_id=return_policy.profile_id
         )
 
         for image in self.core_product.images:

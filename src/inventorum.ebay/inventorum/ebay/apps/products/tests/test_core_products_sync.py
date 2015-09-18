@@ -8,6 +8,7 @@ import unittest
 from inventorum.ebay.tests.utils import PatchMixin
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
+from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from inventorum.ebay.apps.products import EbayItemUpdateStatus
@@ -19,7 +20,7 @@ from inventorum.ebay.apps.products.tasks import periodic_core_products_sync_task
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
-from inventorum.ebay.tests import ApiTest
+from inventorum.ebay.tests import ApiTest, IntegrationTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
 from mock import PropertyMock
 from rest_framework import status
@@ -28,40 +29,30 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class IntegrationTestPeriodicCoreProductsSync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, PatchMixin,
-                                              ShippingServiceTestMixin):
+class IntegrationTestPeriodicCoreProductsSync(EbayAuthenticatedAPITestCase, CoreApiTestHelpers, ProductTestMixin):
 
     @celery_test_case()
     def test_integration(self):
-        with ApiTest.use_cassette("core_api_sync_integration_test.yaml", filter_query_parameters=['start_date'],
-                                  record_mode="never") as cassette:
+        with IntegrationTest.use_cassette("core_products_sync_integration_test.yaml",
+                                          filter_query_parameters=['start_date'], record_mode="never") as cassette:
             # create some core products to play with
             product_1_inv_id = self.create_core_api_product(name="Test product 1",
+                                                            description="Awesome test products are awesome",
                                                             gross_price="1.99",
                                                             quantity=12)
-            ebay_product_1 = EbayProductModel.objects.create(inv_id=product_1_inv_id, account=self.account)
+            ebay_product_1 = self.get_valid_ebay_product_for_publishing(self.account, inv_id=product_1_inv_id)
 
             product_2_inv_id = self.create_core_api_product(name="Test product 2",
+                                                            description="Awesome test products are awesome",
                                                             gross_price="3.45",
                                                             quantity=5)
-            ebay_product_2 = EbayProductModel.objects.create(inv_id=product_2_inv_id, account=self.account)
-
-            # Create and assign valid ebay category
-            category = CategoryFactory.create(external_id="176973")
-
-            ebay_product_1.category = category
-            ebay_product_1.save()
-
-            ebay_product_2.category = category
-            ebay_product_2.save()
-
-            self.account.shipping_services.create(service=self.get_shipping_service_dhl(), cost=D("5.00"))
+            ebay_product_2 = self.get_valid_ebay_product_for_publishing(self.account, inv_id=product_2_inv_id)
 
             response = self.client.post("/products/%s/publish" % product_1_inv_id)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
             response = self.client.post("/products/%s/publish" % product_2_inv_id)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
             ebay_item_1 = ebay_product_1.published_item
             self.assertEqual(ebay_item_1.gross_price, D("1.99"))

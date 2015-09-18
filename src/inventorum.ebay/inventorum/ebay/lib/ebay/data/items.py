@@ -111,7 +111,7 @@ class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
                  paypal_email_address, payment_methods, pictures, category_id=None, sku=None, shipping_services=(),
                  item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
-                 pick_up=None, variation=None, item_id=None, primary_category=None):
+                 pick_up=None, variation=None, item_id=None, primary_category=None, seller_return_profile_id=None):
         """
         :type title: unicode
         :type description: unicode
@@ -136,6 +136,7 @@ class EbayFixedPriceItem(object):
         :type variation: EbayVariations | None
         :type item_id: unicode | None
         :type primary_category: Category | None
+        :type seller_return_profile_id: unicode
         """
 
         if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
@@ -169,6 +170,7 @@ class EbayFixedPriceItem(object):
         self.variation = variation
         self.item_id = item_id
         self.primary_category = primary_category
+        self.seller_return_profile_id = seller_return_profile_id
 
     def dict(self):
         data = {
@@ -213,6 +215,13 @@ class EbayFixedPriceItem(object):
                 'EAN': self.ean
             }
 
+        if self.seller_return_profile_id:
+            data['SellerProfiles'] = {
+                'SellerReturnProfile': {
+                    'ReturnProfileID': self.seller_return_profile_id
+                }
+            }
+
         # Static data
         data.update(**self._static_data)
 
@@ -223,10 +232,6 @@ class EbayFixedPriceItem(object):
         return {
             'Currency': 'EUR',
             'ListingType': 'FixedPriceItem',
-            'ReturnPolicy': {
-                'ReturnsAcceptedOption': 'ReturnsAccepted',
-                'Description': ''
-            },
             'DispatchTimeMax': 3,
             'ConditionID': 1000
         }

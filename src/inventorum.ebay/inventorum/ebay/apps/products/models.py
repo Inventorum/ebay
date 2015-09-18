@@ -192,7 +192,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     external_id = models.CharField(max_length=255, null=True, blank=True)
     is_click_and_collect = models.BooleanField(default=False)
 
-    ebay_seller_profile_return_policy_id = models.CharField(max_length=255, null=True, blank=True)
+    ebay_seller_return_profile_id = models.CharField(max_length=255, null=True, blank=True)
 
     country = CountryField()
 
@@ -225,7 +225,8 @@ class EbayItemModel(OrderableItemModel, BaseModel):
             pictures=[i.ebay_object for i in self.images.all()],
             item_specifics=self._build_item_specifics(),
             variations=[v.ebay_object for v in self.variations.all()],
-            is_click_and_collect=self.is_click_and_collect
+            is_click_and_collect=self.is_click_and_collect,
+            seller_return_profile_id=self.ebay_seller_return_profile_id,
         )
 
     @property

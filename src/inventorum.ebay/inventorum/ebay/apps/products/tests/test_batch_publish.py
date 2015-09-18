@@ -15,10 +15,15 @@ class TestBatchPublish(EbayAuthenticatedAPITestCase, ProductTestMixin):
 
     def setUp(self):
         super(TestBatchPublish, self).setUp()
-        self.product_1 = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
-        self.assign_valid_shipping_services(self.product_1)
+
+        self.product_1 = self.get_valid_ebay_product_for_publishing(self.account,
+                                                                    inv_id=StagingTestAccount.Products.IPAD_STAND)
 
     def test_validate(self):
+        # remove category from product to trigger validation error
+        self.product_1.category = None
+        self.product_1.save()
+
         with ApiTest.use_cassette("batch_publishing_test_validate.yaml"):
             response = self.client.post('/products/publish', data=[
                 {'product': str(self.product_1.inv_id)},
@@ -35,12 +40,8 @@ class TestBatchPublish(EbayAuthenticatedAPITestCase, ProductTestMixin):
     @mock.patch('inventorum.ebay.apps.products.resources.schedule_ebay_item_publish')
     @mock.patch('inventorum.ebay.apps.products.services.PublishingService.initialize_publish_attempt')
     def test_publish(self, schedule_ebay_item_publish_mock, initialize_publish_attempt_mock):
-        product_2 = self.get_product(StagingTestAccount.Products.PRODUCT_VALID_FOR_PUBLISHING, self.account)
-        self.assign_valid_shipping_services(self.product_1)
-        self.assign_valid_shipping_services(product_2)
-
-        self.assign_product_to_valid_category(self.product_1)
-        self.assign_product_to_valid_category(product_2)
+        product_2 = self.get_valid_ebay_product_for_publishing(account=self.account,
+                                                               inv_id=StagingTestAccount.Products.PRODUCT_VALID_FOR_PUBLISHING)
 
         with ApiTest.use_cassette("batch_publishing_test_publish.yaml"):
             response = self.client.post('/products/publish', data=[
