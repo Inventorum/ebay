@@ -8,6 +8,8 @@ from django.utils.translation import ugettext
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
 from inventorum.ebay import settings
+from inventorum.ebay.apps.returns.models import ReturnPolicyModel
+from inventorum.ebay.apps.returns import ReturnsAcceptedOption
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.orders.models import OrderableItemModel
 
@@ -18,7 +20,7 @@ from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, Base
 from inventorum.ebay.lib.ebay.data import EbayParser
 
 from inventorum.ebay.lib.ebay.data.items import EbayItemShippingService, EbayFixedPriceItem, EbayPicture,\
-    EbayItemSpecific, EbayVariation, EbayReviseFixedPriceItem, EbayReviseFixedPriceVariation
+    EbayItemSpecific, EbayVariation, EbayReviseFixedPriceItem, EbayReviseFixedPriceVariation, EbayReturnPolicy
 from inventorum.ebay.lib.utils import translation
 from inventorum.util.django.model_utils import PassThroughManager
 
@@ -176,6 +178,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
                                 verbose_name="Inventorum ebay account")
     product = models.ForeignKey("products.EbayProductModel", related_name="items")
     category = models.ForeignKey("categories.CategoryModel", related_name="items")
+    return_policy = models.OneToOneField(ReturnPolicyModel, null=True, blank=True, related_name="item")
 
     ean = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
@@ -208,6 +211,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     @property
     def ebay_object(self):
         payment_methods = list(self.payment_methods.all().values_list('external_id', flat=True))
+
         return EbayFixedPriceItem(
             title=self.name,
             sku=self.sku,
@@ -226,7 +230,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
             item_specifics=self._build_item_specifics(),
             variations=[v.ebay_object for v in self.variations.all()],
             is_click_and_collect=self.is_click_and_collect,
-            seller_return_profile_id=self.ebay_seller_return_profile_id,
+            return_policy=self.return_policy.ebay_object if self.has_return_policy else self._default_ebay_return_policy,
         )
 
     @property
@@ -236,6 +240,23 @@ class EbayItemModel(OrderableItemModel, BaseModel):
         :rtype: unicode
         """
         return self.external_id
+
+    @property
+    def has_return_policy(self):
+        """
+        :rtype: bool
+        """
+        return self.return_policy is not None
+
+    @property
+    def _default_ebay_return_policy(self):
+        """
+        For legacy reasons, this returns a default ebay return policy, which was used statically before the
+        introduction of configurable return policies.
+
+        :rtype: inventorum.ebay.lib.ebay.data.items.EbayReturnPolicy
+        """
+        return EbayReturnPolicy(returns_accepted_option=ReturnsAcceptedOption.ReturnsAccepted, description='')
 
     def _build_item_specifics(self):
         specifics = self.specific_values.all()

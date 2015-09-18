@@ -41,7 +41,7 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreAp
         generate_random_mock.return_value = not_so_random
 
     @celery_test_case()
-    @MockedTest.use_cassette("ebay_orders_sync.yaml", record_mode="new_episodes", match_on=["body"])
+    @MockedTest.use_cassette("ebay_orders_sync.yaml", record_mode="once", match_on=['body'])
     def test_ebay_orders_sync(self):
         # ensure constant sync start since we're matching on body with vcr
         self.account.last_ebay_orders_sync = EbayParser.parse_date("2015-04-25T12:16:11.257939Z")
@@ -49,6 +49,7 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreAp
 
         # create published item with variations that are included in the response cassette
         published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         product__account=self.account,
                                                          external_id="261869293885")
         EbayItemVariationFactory.create(inv_product_id=670339, item=published_item)
 
@@ -70,7 +71,7 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreAp
             self.assertIsNotNone(order_line_item.inv_id)
 
     @celery_test_case()
-    @MockedTest.use_cassette("ebay_orders_sync_click_and_collect.yaml", record_mode="new_episodes", match_on=["body"])
+    @MockedTest.use_cassette("ebay_orders_sync_click_and_collect.yaml", record_mode="once", match_on=['body'])
     def test_ebay_orders_click_and_collect_sync(self):
         # ensure constant sync start since we're matching on body with vcr
         self.account.last_ebay_orders_sync = EbayParser.parse_date("2015-04-25T12:16:11.257939Z")
@@ -78,6 +79,7 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreAp
 
         # create published item with variations that are included in the response cassette
         published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         product__account=self.account,
                                                          external_id="261869293885")
         EbayItemVariationFactory.create(inv_product_id=670339, item=published_item)
         # create shipping service that is selected in the response cassette

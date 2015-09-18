@@ -3,8 +3,8 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.utils.translation import ugettext
-from inventorum.ebay.apps.accounts.models import EbayAccountModel, EbayLocationModel, AddressModel, ReturnPolicy
-from inventorum.ebay.apps.info import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
+from inventorum.ebay.apps.accounts.models import EbayAccountModel, EbayLocationModel, AddressModel, ReturnPolicyModel
+from inventorum.ebay.apps.returns import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
 from inventorum.ebay.apps.shipping.serializers import ShippingServiceConfigurableSerializer
 
 from rest_framework import serializers
@@ -53,20 +53,20 @@ class EbayLocationSerializer(serializers.ModelSerializer):
 
 
 class ReturnPolicySerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = ReturnPolicy
+        model = ReturnPolicyModel
         fields = ('returns_accepted_option', 'returns_within_option', 'shipping_cost_paid_by_option', 'description')
 
     returns_accepted_option = serializers.ChoiceField(required=False, choices=ReturnsAcceptedOption.CHOICES)
     returns_within_option = serializers.ChoiceField(required=False, allow_null=True, choices=ReturnsWithinOption.CHOICES)
-    shipping_cost_paid_by_option = serializers.ChoiceField(required=False, allow_null=True, choices=ShippingCostPaidByOption.CHOICES)
+    shipping_cost_paid_by_option = serializers.ChoiceField(required=False, allow_null=True,
+                                                           choices=ShippingCostPaidByOption.CHOICES)
     description = serializers.CharField(max_length=5000, allow_null=True, required=False)
 
 
 class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.ModelSerializer):
     location = EbayLocationSerializer(required=False, allow_null=True)
-    return_policy = ReturnPolicySerializer(required=False)
+    return_policy = ReturnPolicySerializer(required=False, allow_null=True)
 
     class Meta:
         model = EbayAccountModel
@@ -120,4 +120,9 @@ class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.M
         if not return_policy_data:
             return
 
-        ReturnPolicy.objects.update_or_create(account=instance, defaults=return_policy_data)
+        if not instance.return_policy:
+            instance.return_policy = ReturnPolicyModel.create(**return_policy_data)
+            instance.save()
+        else:
+            ReturnPolicyModel.objects.filter(id=instance.return_policy.id)\
+                .update(**return_policy_data)

@@ -370,7 +370,7 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
 
     class MetaDeserializer(serializers.Serializer):
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
-        gross_price = MoneyField()
+        gross_price = MoneyField(allow_null=True)
 
     class Meta(POPOSerializer.Meta):
         model = CoreProductDelta

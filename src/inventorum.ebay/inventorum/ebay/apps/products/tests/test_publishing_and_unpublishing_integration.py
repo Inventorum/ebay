@@ -5,6 +5,7 @@ import json
 from decimal import Decimal as D
 
 from ebaysdk.response import Response, ResponseDataObject
+from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.lib.core_api import PublishStates
@@ -18,10 +19,14 @@ from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 log = logging.getLogger(__name__)
 
 
-class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, ProductTestMixin):
+class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, ProductTestMixin, AccountTestMixin):
+
+    def setUp(self):
+        super(IntegrationTestPublishingAndUnpublishing, self).setUp()
+        self.prepare_account_for_publishing(self.account)
 
     @celery_test_case()
-    @IntegrationTest.use_cassette('publishing/integration_test_publishing_and_unpublishing.yaml')
+    @IntegrationTest.use_cassette('publishing/test_publishing_and_unpublishing.yaml')
     def test_publishing_and_unpublishing(self):
         product = self.get_valid_ebay_product_for_publishing(account=self.account)
 
@@ -57,8 +62,7 @@ class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, Pro
         product.save()
 
         with IntegrationTest \
-                .use_cassette(
-                'publishing/integration_test_publishing_and_unpublishing_with_click_and_collect.yaml') as cass:
+                .use_cassette('publishing/test_publishing_and_unpublishing_with_click_and_collect.yaml') as cass:
             response = self.client.post('/products/%s/publish' % product.inv_id)
             log.debug('Got response: %s', response)
             self.assertEqual(response.status_code, 200)
@@ -102,7 +106,7 @@ class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, Pro
 
 
     @celery_test_case()
-    @IntegrationTest.use_cassette('publishing/integration_test_publishing_and_unpublishing_with_variations.yaml')
+    @IntegrationTest.use_cassette('publishing/test_publishing_and_unpublishing_with_variations.yaml')
     def test_publishing_and_unpublishing_with_variations(self):
         product = self.get_valid_ebay_product_with_variations_for_publishing(self.account)
 
@@ -149,7 +153,7 @@ class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, Pro
     @celery_test_case()
     def test_publishing_attempt_with_ebay_error(self):
         # try to publish a product with variations to a category that does not support variations
-        with IntegrationTest.use_cassette('publishing/integration_test_publishing_attempt_with_ebay_error.yaml') as cass:
+        with IntegrationTest.use_cassette('publishing/test_publishing_attempt_with_ebay_error.yaml') as cass:
             inv_id = StagingTestAccount.Products.WITH_VARIATIONS_VALID_ATTRS
             product = self.get_valid_ebay_product_for_publishing(account=self.account, inv_id=inv_id)
 
@@ -159,7 +163,7 @@ class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, Pro
 
             item = product.items.last()
             self.assertEqual(item.publishing_status, EbayItemPublishingStatus.FAILED)
-            last_request = cass.requests[5]
+            last_request = cass.requests[4]
             body = json.loads(last_request.body)
             self.assertEqual(body, {
                 'channel': 'ebay',
@@ -176,7 +180,7 @@ class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, Pro
     def test_unpublishing_attempt_with_ebay_error(self):
         # try to unpublish an item with an invalid item id
         with IntegrationTest.use_cassette(
-                'publishing/integration_test_unpublishing_attempt_with_ebay_error.yaml') as cass:
+                'publishing/test_unpublishing_attempt_with_ebay_error.yaml') as cass:
             product = self.get_valid_ebay_product_for_publishing(self.account)
 
             service = PublishingPreparationService(product, self.user)
@@ -211,7 +215,7 @@ class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, Pro
                     'short_message': 'Artikel kann nicht aufgerufen werden.'
                 }])
 
-    @IntegrationTest.use_cassette('publishing/integration_test_publishing_attempt_with_validation_error.yaml')
+    @IntegrationTest.use_cassette('publishing/test_publishing_attempt_with_validation_error.yaml')
     def test_publishing_attempt_with_validation_error(self):
         inv_product_id = StagingTestAccount.Products.SIMPLE_PRODUCT_ID
         assert not EbayProductModel.objects.by_inv_id(inv_product_id).exists()
@@ -225,7 +229,7 @@ class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, Pro
         data = response.data
         self.assertEqual(data, ['You need to select category'])
 
-    @IntegrationTest.use_cassette('publishing/integration_test_publishing_attempt_for_non_existing_product.yaml')
+    @IntegrationTest.use_cassette('publishing/test_publishing_attempt_for_non_existing_product.yaml')
     def test_publishing_attempt_for_non_existing_product(self):
         inv_product_id = StagingTestAccount.Products.PRODUCT_NOT_EXISTING
 

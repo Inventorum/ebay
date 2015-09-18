@@ -6,9 +6,9 @@ import json
 
 from decimal import Decimal as D
 from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer, AddressSerializer
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayLocationFactory, AddressFactory, \
-    ReturnPolicyFactory
-from inventorum.ebay.apps.info import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
+from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayLocationFactory, AddressFactory
+from inventorum.ebay.apps.returns import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
+from inventorum.ebay.apps.returns.models import ReturnPolicyModel
 
 from inventorum.ebay.apps.shipping.tests import ShippingServiceConfigurableSerializerTest
 from inventorum.ebay.tests.testcases import UnitTestCase
@@ -38,11 +38,13 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         account = self.get_account_with_default_data()
         shipping_service = account.shipping_services.first()
         location = EbayLocationFactory.create(account=account)
-        return_policy = ReturnPolicyFactory.create(account=account,
-                                                   returns_accepted_option=ReturnsAcceptedOption.ReturnsAccepted,
-                                                   returns_within_option=ReturnsWithinOption.Days_14,
-                                                   shipping_cost_paid_by_option=ShippingCostPaidByOption.Buyer,
-                                                   description='The article can be returned in the given time frame')
+        account.return_policy = ReturnPolicyModel.objects.create(
+            returns_accepted_option=ReturnsAcceptedOption.ReturnsAccepted,
+            returns_within_option=ReturnsWithinOption.Days_14,
+            shipping_cost_paid_by_option=ShippingCostPaidByOption.Buyer,
+            description='The article can be returned in the given time frame')
+        account.save()
+
         subject = EbayAccountSerializer(account)
         # Crazy trick to have nice diff in case of failure
 

@@ -2,18 +2,19 @@
 from __future__ import absolute_import, unicode_literals
 
 from inventorum.ebay.apps.auth.models import EbayTokenModel
-from inventorum.ebay.tests import ApiTest
+from inventorum.ebay.tests import ApiTest, IntegrationTest
 from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
 from inventorum.util.django.timezone import datetime
 
 
 class TestDjangoEbayAuthenticator(APITestCase):
 
-    @ApiTest.use_cassette('auth_test_endpoint_without_ebay_auth.yaml')
+    @IntegrationTest.use_cassette('auth/test_endpoint_without_ebay_auth.yaml')
     def test_endpoint_without_ebay_auth(self):
         response = self.client.get('/auth/authorize/')
         self.assertEqual(response.status_code, 200)
 
+    @IntegrationTest.use_cassette('auth/test_endpoint_with_ebay_auth.yaml')
     def test_endpoint_with_ebay_auth(self):
         response = self.client.get('/products/1')
         self.assertEqual(response.status_code, 404)

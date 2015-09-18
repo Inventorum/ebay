@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.lib.ebay.data.errors import EbayFatalError
 
@@ -13,11 +14,13 @@ from inventorum.ebay.tests import ApiTest, StagingTestAccount
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 
-class TestPublishingTaskExceptionHandling(EbayAuthenticatedAPITestCase, ProductTestMixin):
+class TestPublishingTaskExceptionHandling(EbayAuthenticatedAPITestCase, AccountTestMixin, ProductTestMixin):
     @ApiTest.use_cassette("test_publishing_task_exception_handling.yaml")
     @celery_test_case()
     @mock.patch('inventorum.ebay.apps.products.tasks.PublishingService.publish')
     def test_fatal_exception(self, publish_mock):
+        self.prepare_account_for_publishing(self.account)
+
         publish_mock.side_effect = KeyError()
 
         product = self.get_valid_ebay_product_for_publishing(self.account)

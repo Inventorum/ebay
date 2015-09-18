@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
 import logging
+from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
@@ -130,7 +131,12 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
         self.assertPostcondition(EbayItemModel.objects.count(), 1)
 
 
-class IntegrationTestEbayItemsSync(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingServiceTestMixin):
+class IntegrationTestEbayItemsSync(EbayAuthenticatedAPITestCase, AccountTestMixin, ProductTestMixin,
+                                   ShippingServiceTestMixin):
+
+    def setUp(self):
+        super(IntegrationTestEbayItemsSync, self).setUp()
+        self.prepare_account_for_publishing(self.account)
 
     @IntegrationTest.use_cassette('items_sync/get_product_id_from_core_api_for_ebay_item_serializer.yaml')
     def test_convert_items_without_sku(self):

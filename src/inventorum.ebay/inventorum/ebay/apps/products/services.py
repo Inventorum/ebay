@@ -7,12 +7,12 @@ from decimal import Decimal
 
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
+from inventorum.ebay.apps.accounts.models import ReturnPolicyModel
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
 from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants, SellerProfileCodeType
 from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
-from inventorum.ebay.lib.ebay.preferences import EbayPreferences
 from inventorum.util.django.timezone import datetime
 from requests.exceptions import RequestException
 
@@ -93,32 +93,6 @@ class PublishingPreparationService(object):
         except RequestException as e:
             raise PublishingCouldNotGetDataFromCoreAPI(e.response)
 
-    @cached_property
-    def ebay_user_preferences(self):
-        """
-        :rtype: inventorum.ebay.lib.ebay.data.preferences.GetUserPreferencesResponseType
-        """
-        try:
-            ebay_preferences = EbayPreferences(token=self.account.token.ebay_object)
-            return ebay_preferences.get_user_preferences()
-        except EbayConnectionException as e:
-            raise PublishingCouldNotGetDataFromEbayException(e.response)
-
-    def _get_default_return_policy_from_ebay(self):
-        """
-        :rtype: None | inventorum.ebay.lib.ebay.data.preferences.SupportedSellerProfileType
-        :return:
-        """
-        user_preferences = self.ebay_user_preferences
-        seller_profiles = user_preferences.seller_profile_preferences.supported_seller_profiles
-
-        if not len(seller_profiles):
-            return None
-
-        # find and return the default return policy (there should be at most one) or None if there is none
-        return next((p for p in seller_profiles if p.profile_type == SellerProfileCodeType.RETURN_POLICY
-                     and p.category_group.is_default), None)
-
     @property
     def core_account(self):
         """
@@ -145,13 +119,15 @@ class PublishingPreparationService(object):
         if not (self.product.shipping_services.exists() or self.account.shipping_services.exists()):
             raise PublishingValidationException(ugettext('Neither product or account have configured shipping services'))
 
+        if not self.account.has_defined_return_policy:
+            raise PublishingValidationException(ugettext('Product could not be published! '
+                                                         'You must configure a return policy in your eBay settings'))
+
         self._validate_prices()
         self._validate_attributes_in_variations()
 
         if not self.product.category_id:
             raise PublishingValidationException(ugettext('You need to select category'))
-
-        self._validate_return_policy()
 
         specific_values_ids = set(sv.specific.pk for sv in self.product.specific_values.all())
         required_ones = set(self.product.category.specifics.required().values_list('id', flat=True))
@@ -216,19 +192,6 @@ class PublishingPreparationService(object):
             raise PublishingValidationException(ugettext("All variations needs to have exactly the same number of "
                                                          "attributes"))
 
-    def _validate_return_policy(self):
-        """
-        Validates whether the ebay account has a default return policy configured.
-        For now, we publish every item with the default return policy configured on the eBay website.
-        If there is none, we disallow the publishing for legal matters.
-
-        :raises: PublishingValidationException
-        """
-        default_return_policy = self._get_default_return_policy_from_ebay()
-        if default_return_policy is None:
-            raise PublishingValidationException(ugettext('Product could not be published! There is no default '
-                                                         'return policy defined in your eBay account.'))
-
     def create_ebay_item(self):
         """
         :rtype: EbayItemModel
@@ -250,8 +213,6 @@ class PublishingPreparationService(object):
         else:
             ean = self.core_product.ean
 
-        return_policy = self._get_default_return_policy_from_ebay()
-
         item = EbayItemModel.objects.create(
             product=self.product,
             inv_product_id=self.core_product.id,
@@ -268,8 +229,16 @@ class PublishingPreparationService(object):
             paypal_email_address=self.account.payment_method_paypal_email_address,
             postal_code=self.core_account.billing_address.zipcode,
             is_click_and_collect=self.product.is_click_and_collect,
-            ebay_seller_return_profile_id=return_policy.profile_id
         )
+
+        # create return policy from the account's return policy configuration
+        item.return_policy = ReturnPolicyModel.objects.create(
+            returns_accepted_option=self.account.return_policy.returns_accepted_option,
+            returns_within_option=self.account.return_policy.returns_within_option,
+            shipping_cost_paid_by_option=self.account.return_policy.shipping_cost_paid_by_option,
+            description=self.account.return_policy.description
+        )
+        item.save()
 
         for image in self.core_product.images:
             EbayItemImageModel.objects.create(

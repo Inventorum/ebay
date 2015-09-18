@@ -2,8 +2,10 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from decimal import Decimal as D, Decimal
+from inventorum.ebay.apps.returns.models import ReturnPolicyModel
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, DurationFactory
+from inventorum.ebay.apps.returns import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.services import PublishingValidationException, PublishingPreparationService
 from inventorum.ebay.apps.products.tests.factories import EbayProductModelFactory, EbayItemFactory
@@ -11,9 +13,7 @@ from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory, CoreProductVariationFactory, \
     CoreProductAttributeFactory, CoreInfoFactory, CoreTaxTypeFactory, CoreImageFactory
-from inventorum.ebay.lib.ebay.data import SellerProfileCodeType, BuyerPaymentMethodCodeType
-from inventorum.ebay.lib.ebay.data.tests.preferences_factories import GetUserPreferencesResponseTypeFactory, \
-    SupportedSellerProfileTypeFactory
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 from inventorum.ebay.tests.testcases import UnitTestCase
 from mock import PropertyMock, Mock
 
@@ -35,8 +35,6 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
     def setup_mocked_dependencies(self):
         self.core_api_mock = self.patch('inventorum.ebay.apps.accounts.models.EbayUserModel.core_api',
                                         new_callable=PropertyMock(return_value=Mock(spec_set=UserScopedCoreAPIClient)))
-        self.ebay_get_user_preferences_mock = self.patch(
-            'inventorum.ebay.apps.products.services.EbayPreferences.get_user_preferences')
 
     def setup_valid_configuration(self):
         # create models that are required to configure a valid ebay product
@@ -57,7 +55,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                                            ean_does_not_apply=False)
 
         self.ebay_product.specific_values.create(specific=self.category_specific,
-                                                 value="Felt")
+                                                 value='Felt')
 
         self.ebay_product.shipping_services.create(service=self.shipping_service,
                                                    cost=Decimal('4.90'))
@@ -65,13 +63,19 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         # expect valid default responses from the core api and from eBay
         self.expect_core_product(core_product=self.get_valid_core_product())
         self.expect_core_info(core_info=self.get_valid_core_info())
-        self.expect_ebay_seller_profiles(seller_profiles=[self.get_valid_ebay_return_seller_profile()])
 
         # enable and configure payment methods
         self.account.payment_method_paypal_enabled = True
-        self.account.payment_method_paypal_email_address = "julian@inventorum.com"
-
+        self.account.payment_method_paypal_email_address = 'julian@inventorum.com'
         self.account.payment_method_bank_transfer_enabled = True
+
+        # configure return policy
+        self.account.return_policy = ReturnPolicyModel.create(
+            returns_accepted_option=ReturnsAcceptedOption.ReturnsAccepted,
+            returns_within_option=ReturnsWithinOption.Days_14,
+            shipping_cost_paid_by_option=ShippingCostPaidByOption.Seller,
+            description='The article can be returned to the given conditions')
+
         self.account.save()
 
     # -Helper methods ---------------------------
@@ -132,14 +136,6 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                       account__billing_address__zipcode='33098',
                                       account__settings__ebay_click_and_collect=False)
 
-    def get_valid_ebay_return_seller_profile(self):
-        """
-        :rtype: inventorum.ebay.lib.ebay.data.preferences.SupportedSellerProfileType
-        """
-        return SupportedSellerProfileTypeFactory.create(profile_id="73359920011",
-                                                        profile_type=SellerProfileCodeType.RETURN_POLICY,
-                                                        category_group__is_default=True)
-
     def expect_core_product(self, core_product):
         """
         :type core_product: inventorum.ebay.lib.core_api.models.CoreProduct
@@ -153,16 +149,6 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         """
         self.core_api_mock.get_account_info.reset_mock()
         self.core_api_mock.get_account_info.return_value = core_info
-
-    def expect_ebay_seller_profiles(self, seller_profiles):
-        """
-        :type seller_profiles: list[inventorum.ebay.lib.ebay.data.preferences.SupportedSellerProfileType]
-        """
-        self.ebay_get_user_preferences_mock.reset_mock()
-
-        ebay_user_preferences = GetUserPreferencesResponseTypeFactory.create(
-            seller_profile_preferences__supported_seller_profiles=seller_profiles)
-        self.ebay_get_user_preferences_mock.return_value = ebay_user_preferences
 
     def validate_and_assert_expected_validation_error(self, ebay_product, expected_error_message):
         service = PublishingPreparationService(ebay_product, self.user)
@@ -198,7 +184,11 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertEqual(ebay_item.listing_duration, 'Days_90', 'Listing duration should be the max. allowed listing '
                                                                 'duration of the selected category')
 
-        self.assertEqual(ebay_item.ebay_seller_return_profile_id, '73359920011')
+        self.assertIsNotNone(ebay_item.return_policy)
+        self.assertEqual(ebay_item.return_policy.returns_accepted_option, 'ReturnsAccepted')
+        self.assertEqual(ebay_item.return_policy.returns_within_option, 'Days_14')
+        self.assertEqual(ebay_item.return_policy.shipping_cost_paid_by_option, 'Seller')
+        self.assertEqual(ebay_item.return_policy.description, 'The article can be returned to the given conditions')
 
         # validate payment methods
         payment_methods = ebay_item.payment_methods.all()
@@ -241,7 +231,12 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                         'PrimaryCategory': {'CategoryID': '712304'},
                                         'ProductListingDetails': {'EAN': '038678561125'},
                                         'Quantity': 100,
-                                        'SellerProfiles': {'SellerReturnProfile': {'ReturnProfileID': '73359920011'}},
+                                        'ReturnPolicy': {
+                                            'ReturnsAcceptedOption': 'ReturnsAccepted',
+                                            'ReturnsWithinOption': 'Days_14',
+                                            'ShippingCostPaidByOption': 'Seller',
+                                            'Description': 'The article can be returned to the given conditions'
+                                        },
                                         'SKU': 'invtest_941284',
                                         'ShippingDetails': {
                                             'ShippingServiceOptions': [{'ShippingService': 'DE_DHLPaket',
@@ -490,22 +485,18 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
 
     def test_return_policy_validation(self):
-        # when there is no configured seller profile
-        seller_profiles = []
-        self.expect_ebay_seller_profiles(seller_profiles)
+        # when there is no configured return policy
+        self.account.return_policy = None
+        self.account.save()
 
         # there are no configured seller profiles
-        expected_error_message = 'Product could not be published! There is no default ' \
-                                 'return policy defined in your eBay account.'
+        expected_error_message = 'Product could not be published! ' \
+                                 'You must configure a return policy in your eBay settings'
 
         self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
 
-        # there is no configured default return seller profile
-        seller_profiles = [SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.PAYMENT,
-                                                                    category_group__is_default=True),
-                           SupportedSellerProfileTypeFactory.create(profile_type=SellerProfileCodeType.SHIPPING,
-                                                                    category_group__is_default=True)]
-        self.expect_ebay_seller_profiles(seller_profiles)
+        # there is no defined return policy
+        self.account.return_policy = ReturnPolicyModel.objects.create(returns_accepted_option=None)
 
         self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
 
