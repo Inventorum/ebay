@@ -58,11 +58,6 @@ class PublishingCouldNotGetDataFromCoreAPI(EbayServiceException):
         self.response = response
 
 
-class PublishingCouldNotGetDataFromEbayException(EbayServiceException):
-    def __init__(self, response):
-        self.response = response
-
-
 class PublishingPreparationService(object):
     def __init__(self, product, user):
         """
