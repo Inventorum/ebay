@@ -102,6 +102,7 @@ class IntegrationTestPeriodicCoreReturnsSync(EbayAuthenticatedAPITestCase, Shipp
         order = OrderModelFactory.create(account=self.account, **order_extra)
         order_line_item = OrderLineItemModelFactory.create(order=order,
                                                            orderable_item__product=product,
+                                                           orderable_item__account=self.account,
                                                            quantity=5)
 
         core_order_creation_data = OrderModelCoreAPIDataSerializer(order).data

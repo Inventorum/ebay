@@ -82,6 +82,7 @@ class CoreProduct(object):
     def has_variations(self):
         return len(self.variations) > 0
 
+
 class CoreImageURLs(object):
     """ Represents the image urls of a core image"""
 
@@ -369,7 +370,7 @@ class CoreProductDeltaDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
 
     class MetaDeserializer(serializers.Serializer):
         """ Helper deserializer for nested meta information (won't be assigned to POPOs) """
-        gross_price = MoneyField()
+        gross_price = MoneyField(allow_null=True)
 
     class Meta(POPOSerializer.Meta):
         model = CoreProductDelta

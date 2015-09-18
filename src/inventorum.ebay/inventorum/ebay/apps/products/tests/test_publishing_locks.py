@@ -5,6 +5,7 @@ import logging
 import grequests
 from decimal import Decimal
 from inventorum.ebay import settings
+from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.models import EbayProductModel
 
@@ -18,8 +19,13 @@ from rest_framework import status
 log = logging.getLogger(__name__)
 
 
-class TestPublishingLocks(ConcurrentLiveServerTestCase, ProductTestMixin, PatchMixin, ShippingServiceTestMixin):
+class TestPublishingLocks(ConcurrentLiveServerTestCase, AccountTestMixin, ProductTestMixin, PatchMixin,
+                          ShippingServiceTestMixin):
     TEST_CORE_API_HOST = "localhost:9999"
+
+    def setUp(self):
+        super(TestPublishingLocks, self).setUp()
+        self.prepare_account_for_publishing(self.account)
 
     @classmethod
     def setUpClass(cls):

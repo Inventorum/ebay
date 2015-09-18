@@ -10,6 +10,12 @@ from django.conf import settings
 log = logging.getLogger(__name__)
 
 
+IntegrationTest = vcr.VCR(
+    serializer='yaml',
+    cassette_library_dir=os.path.join(settings.CASSETTES_DIR),
+    record_mode='once'
+)
+
 CoreApiTest = vcr.VCR(
     serializer='yaml',
     cassette_library_dir=os.path.join(settings.CASSETTES_DIR, 'core_api'),
@@ -46,6 +52,7 @@ class StagingTestAccount:
     ACCOUNT_ID = 346
     USER_ID = 425
     TAX_TYPE_19_ID = 1063
+    VALID_IMAGE_ID = 2933
 
     EMAIL = "tech+ebay@inventorum.com"
 

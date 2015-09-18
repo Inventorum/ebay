@@ -107,11 +107,43 @@ class EbayItemShippingService(object):
                 'ShippingService': self.shipping_id}
 
 
+class EbayReturnPolicy(object):
+    def __init__(self, returns_accepted_option, returns_within_option=None, shipping_cost_paid_by_option=None,
+                 description=None):
+        """
+        :type returns_accepted_option: unicode
+        :type returns_within_option: unicode
+        :type shipping_cost_paid_by_option: unicode
+        :type description: unicode
+        """
+        self.returns_accepted_option = returns_accepted_option
+        self.returns_within_option = returns_within_option
+        self.shipping_cost_paid_by_option = shipping_cost_paid_by_option
+        self.description = description
+
+    def dict(self):
+        """
+        :rtype: dict
+        """
+        data = {'ReturnsAcceptedOption': self.returns_accepted_option}
+
+        if self.returns_within_option is not None:
+            data['ReturnsWithinOption'] = self.returns_within_option
+
+        if self.shipping_cost_paid_by_option is not None:
+            data['ShippingCostPaidByOption'] = self.shipping_cost_paid_by_option
+
+        if self.description is not None:
+            data['Description'] = self.description
+
+        return data
+
+
 class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
                  paypal_email_address, payment_methods, pictures, category_id=None, sku=None, shipping_services=(),
                  item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
-                 pick_up=None, variation=None, item_id=None, primary_category=None):
+                 pick_up=None, variation=None, item_id=None, primary_category=None, return_policy=None):
         """
         :type title: unicode
         :type description: unicode
@@ -136,6 +168,7 @@ class EbayFixedPriceItem(object):
         :type variation: EbayVariations | None
         :type item_id: unicode | None
         :type primary_category: Category | None
+        :type return_policy: None | EbayReturnPolicy
         """
 
         if not all([isinstance(s, EbayItemShippingService) for s in shipping_services]):
@@ -169,6 +202,7 @@ class EbayFixedPriceItem(object):
         self.variation = variation
         self.item_id = item_id
         self.primary_category = primary_category
+        self.return_policy = return_policy
 
     def dict(self):
         data = {
@@ -213,6 +247,9 @@ class EbayFixedPriceItem(object):
                 'EAN': self.ean
             }
 
+        if self.return_policy:
+            data['ReturnPolicy'] = self.return_policy.dict()
+
         # Static data
         data.update(**self._static_data)
 
@@ -223,10 +260,6 @@ class EbayFixedPriceItem(object):
         return {
             'Currency': 'EUR',
             'ListingType': 'FixedPriceItem',
-            'ReturnPolicy': {
-                'ReturnsAcceptedOption': 'ReturnsAccepted',
-                'Description': ''
-            },
             'DispatchTimeMax': 3,
             'ConditionID': 1000
         }
@@ -377,7 +410,12 @@ class EbayReviseFixedPriceItemResponse(object):
 
 class EbayGetSellerListResponse(object):
     def __init__(self, items, pagination_result, page_number):
-        self.items = items
+        """
+        :type items: None | list
+        :type pagination_result: PaginationResultType
+        :type page_number: int
+        """
+        self.items = items or []
         self.pagination_result = pagination_result
         self.page_number = page_number
 
@@ -413,7 +451,7 @@ EbayItemID.Serializer.Meta.model = EbayItemID
 
 class EbayGetSellerListResponseDeserializer(POPOSerializer):
     ItemArray = EbayArrayField(source='items', item_key='Item', item_deserializer=EbayItemID.Serializer,
-                               allow_null=True)
+                               allow_null=True, default=[])
     PaginationResult = PaginationResultType.Deserializer(source="pagination_result")
     PageNumber = IntegerField(source="page_number")
 

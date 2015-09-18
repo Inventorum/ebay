@@ -34,9 +34,11 @@ class APITestCase(AssertionMixin, PatchMixin, test.APITestCase):
     def setUp(self):
         super(APITestCase, self).setUp()
 
-        self._account = EbayAccountFactory(inv_id=StagingTestAccount.ACCOUNT_ID,
-                                           ebay_location_uuid='BB54CED9-2A34-480A-B187-11A97C4E15D4')
-        self._user = EbayUserFactory(inv_id=StagingTestAccount.USER_ID, account=self.account)
+        self._account = EbayAccountFactory.create(inv_id=StagingTestAccount.ACCOUNT_ID,
+                                                  ebay_location_uuid='BB54CED9-2A34-480A-B187-11A97C4E15D4')
+
+        self._user = EbayUserFactory.create(inv_id=StagingTestAccount.USER_ID,
+                                            account=self.account)
 
         self.authenticate(self.user)
 
@@ -81,8 +83,18 @@ class EbayAuthenticatedAPITestCase(APITestCase):
                          site_id=settings.EBAY_SUPPORTED_SITES['DE'])
 
 
+class IntegrationTestCase(EbayAuthenticatedAPITestCase):
+    pass
+
+
 class UnitTestCase(TestCase, AssertionMixin, PatchMixin):
     maxDiff = None
+
+    def setUp(self):
+        super(UnitTestCase, self).setUp()
+
+        self.account = EbayAccountFactory.create()
+        self.user = EbayUserFactory.create(account=self.account)
 
 
 def long_running_test():

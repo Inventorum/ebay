@@ -7,6 +7,8 @@ import json
 from decimal import Decimal as D
 from inventorum.ebay.apps.accounts.serializers import EbayAccountSerializer, AddressSerializer
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayLocationFactory, AddressFactory
+from inventorum.ebay.apps.returns import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
+from inventorum.ebay.apps.returns.models import ReturnPolicyModel
 
 from inventorum.ebay.apps.shipping.tests import ShippingServiceConfigurableSerializerTest
 from inventorum.ebay.tests.testcases import UnitTestCase
@@ -36,6 +38,12 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         account = self.get_account_with_default_data()
         shipping_service = account.shipping_services.first()
         location = EbayLocationFactory.create(account=account)
+        account.return_policy = ReturnPolicyModel.objects.create(
+            returns_accepted_option=ReturnsAcceptedOption.ReturnsAccepted,
+            returns_within_option=ReturnsWithinOption.Days_14,
+            shipping_cost_paid_by_option=ShippingCostPaidByOption.Buyer,
+            description='The article can be returned in the given time frame')
+        account.save()
 
         subject = EbayAccountSerializer(account)
         # Crazy trick to have nice diff in case of failure
@@ -68,9 +76,14 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
                 },
                 'latitude': unicode(location.latitude),
                 'pickup_instruction': location.pickup_instruction
+            },
+            'return_policy': {
+                'returns_accepted_option': 'ReturnsAccepted',
+                'returns_within_option': 'Days_14',
+                'shipping_cost_paid_by_option': 'Buyer',
+                'description': 'The article can be returned in the given time frame'
             }
         })
-
 
     def test_deserialize_serialized(self):
         account = self.get_account_with_default_data()
@@ -86,7 +99,6 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
         # deserialize serialized doesn't change the representation
         data_before = serialized
         self.assertEqual(EbayAccountSerializer(updated_account).data, data_before)
-
 
     def test_serialize_address(self):
         address = AddressFactory.create(country=None)
@@ -105,3 +117,46 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
             'country': unicode(address.country),
             'postal_code': address.postal_code,
         })
+
+    def test_return_policy_create_and_update(self):
+        self.assertFalse(self.account.has_return_policy, 'Precondition: Account should not have return policy')
+
+        serializer = EbayAccountSerializer(self.account, partial=True, data={
+            'return_policy': {
+                'returns_accepted_option': ReturnsAcceptedOption.ReturnsAccepted,
+                'returns_within_option': ReturnsWithinOption.Months_1,
+                'shipping_cost_paid_by_option': ShippingCostPaidByOption.Seller,
+                'description': 'Awesome descriptions are awesome'
+            }})
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        updated_account = self.account.reload()
+        self.assertTrue(updated_account.has_return_policy, 'Postcondition: Return policy should have been created')
+        self.assertEqual(updated_account.return_policy.returns_accepted_option, ReturnsAcceptedOption.ReturnsAccepted)
+        self.assertEqual(updated_account.return_policy.returns_within_option, ReturnsWithinOption.Months_1)
+        self.assertEqual(updated_account.return_policy.shipping_cost_paid_by_option, ShippingCostPaidByOption.Seller)
+        self.assertEqual(updated_account.return_policy.description, 'Awesome descriptions are awesome')
+
+        return_policy_id = updated_account.return_policy.id
+
+        # update the return policy
+        serializer = EbayAccountSerializer(self.account, partial=True, data={
+            'return_policy': {
+                'returns_accepted_option': ReturnsAcceptedOption.ReturnsNotAccepted,
+                'returns_within_option': None,
+                'shipping_cost_paid_by_option': None,
+                'description': None
+            }})
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        updated_account = self.account.reload()
+        self.assertEqual(updated_account.return_policy.id, return_policy_id, 'The serializer should update an existing '
+                                                                             'policy and not create a new one')
+        self.assertEqual(updated_account.return_policy.returns_accepted_option, ReturnsAcceptedOption.ReturnsNotAccepted)
+        self.assertEqual(updated_account.return_policy.returns_within_option, None)
+        self.assertEqual(updated_account.return_policy.shipping_cost_paid_by_option, None)
+        self.assertEqual(updated_account.return_policy.description, None)

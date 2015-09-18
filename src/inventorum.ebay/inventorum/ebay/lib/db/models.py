@@ -5,6 +5,7 @@ from random import randint
 
 import factory
 from django.db import models
+from factory import fuzzy
 
 from inventorum.util.django.db.managers import ValidityQuerySet
 from inventorum.util.django.db.models import AbstractModel
@@ -52,6 +53,4 @@ class MappedInventorumModel(BaseModel):
 
 
 class MappedInventorumModelFactory(factory.DjangoModelFactory):
-    # A randomly generated inv_id to better reflect reality
-    # TODO jm: Use fuzzy attribute instead
-    inv_id = factory.LazyAttribute(lambda m: randint(999, 99999))
+    inv_id = fuzzy.FuzzyInteger(low=1225146152575102591, high=2225146152575102591)
