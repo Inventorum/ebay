@@ -3,7 +3,8 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.utils.translation import ugettext
-from inventorum.ebay.apps.accounts.models import EbayAccountModel, EbayLocationModel, AddressModel
+from inventorum.ebay.apps.accounts.models import EbayAccountModel, EbayLocationModel, AddressModel, ReturnPolicy
+from inventorum.ebay.apps.info import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
 from inventorum.ebay.apps.shipping.serializers import ShippingServiceConfigurableSerializer
 
 from rest_framework import serializers
@@ -51,13 +52,26 @@ class EbayLocationSerializer(serializers.ModelSerializer):
         instance.save()
 
 
+class ReturnPolicySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ReturnPolicy
+        fields = ('returns_accepted_option', 'returns_within_option', 'shipping_cost_paid_by_option', 'description')
+
+    returns_accepted_option = serializers.ChoiceField(required=False, choices=ReturnsAcceptedOption.CHOICES)
+    returns_within_option = serializers.ChoiceField(required=False, allow_null=True, choices=ReturnsWithinOption.CHOICES)
+    shipping_cost_paid_by_option = serializers.ChoiceField(required=False, allow_null=True, choices=ShippingCostPaidByOption.CHOICES)
+    description = serializers.CharField(max_length=5000, allow_null=True, required=False)
+
+
 class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.ModelSerializer):
     location = EbayLocationSerializer(required=False, allow_null=True)
+    return_policy = ReturnPolicySerializer(required=False)
 
     class Meta:
         model = EbayAccountModel
         read_only_fields = ('email', 'user_id')
-        fields = ('shipping_services', 'location', 'payment_method_paypal_enabled',
+        fields = ('shipping_services', 'location', 'return_policy', 'payment_method_paypal_enabled',
                   'payment_method_paypal_email_address', 'payment_method_bank_transfer_enabled') + read_only_fields
 
     def validate_shipping_services(self, shipping_services):
@@ -79,6 +93,8 @@ class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.M
         """
         self.create_or_update_shipping_services(instance, validated_data)
         self.create_or_update_location(instance, validated_data)
+        self.create_or_update_return_policy(instance, validated_data)
+
         return super(EbayAccountSerializer, self).update(instance, validated_data)
 
     def create_or_update_location(self, instance, validated_data):
@@ -97,3 +113,11 @@ class EbayAccountSerializer(ShippingServiceConfigurableSerializer, serializers.M
         location_instance = serializer.save()
         location_instance.account = instance
         location_instance.save()
+
+    def create_or_update_return_policy(self, instance, validated_data):
+        return_policy_data = validated_data.pop('return_policy', None)
+
+        if not return_policy_data:
+            return
+
+        ReturnPolicy.objects.update_or_create(account=instance, defaults=return_policy_data)

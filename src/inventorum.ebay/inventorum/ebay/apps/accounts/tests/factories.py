@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 import factory
 from factory import fuzzy
 from inventorum.ebay.apps.auth.models import EbayTokenModel
+from inventorum.ebay.apps.info import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
 from inventorum.ebay.lib.db.models import MappedInventorumModelFactory
 
 from inventorum.ebay.apps.accounts import models
@@ -76,3 +77,14 @@ class EbayUserFactory(MappedInventorumModelFactory):
         model = models.EbayUserModel
 
     account = factory.SubFactory(EbayAccountFactory)
+
+
+class ReturnPolicyFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = models.ReturnPolicy
+
+    account = factory.SubFactory(EbayAccountFactory)
+    returns_accepted_option = fuzzy.FuzzyChoice(choices=(c[0] for c in ReturnsAcceptedOption.CHOICES))
+    returns_within_option = fuzzy.FuzzyChoice(choices=(c[0] for c in ReturnsWithinOption.CHOICES))
+    shipping_cost_paid_by_option = fuzzy.FuzzyChoice(choices=(c[0] for c in ShippingCostPaidByOption.CHOICES))
+    description = fuzzy.FuzzyText(length=50)

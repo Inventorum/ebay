@@ -141,6 +141,10 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
         return hasattr(self, "location")
 
     @property
+    def has_return_policy(self):
+        return hasattr(self, 'return_policy')
+
+    @property
     def ebay_payment_methods(self):
         methods = []
 
@@ -187,6 +191,14 @@ class EbayLocationModel(BaseModel):
             url=self.url,
             utc_offset="+02:00"  # TODO: What to do with it???
             )
+
+
+class ReturnPolicy(BaseModel):
+    account = OneToOneField(EbayAccountModel, related_name="return_policy")
+    returns_accepted_option = CharField(max_length=255, null=True, blank=True)
+    returns_within_option = CharField(max_length=255, null=True, blank=True)
+    shipping_cost_paid_by_option = CharField(max_length=255, null=True, blank=True)
+    description = TextField(null=True, blank=True)
 
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):
