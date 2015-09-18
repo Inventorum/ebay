@@ -4,6 +4,13 @@ CHANGES
 
 develop
 =======
+Feature
+.......
+- Allow accounts to configure return policies
+
+Code
+....
+- Refactor all publishing tests + re-record all related cassettes
 
 2015-09-15 0.1.12
 =================
