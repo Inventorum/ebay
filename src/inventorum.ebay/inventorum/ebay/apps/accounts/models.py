@@ -7,6 +7,8 @@ from django.db.models.fields import CharField, EmailField, BooleanField, DateTim
     URLField
 from django.db.models.fields.related import ForeignKey, OneToOneField
 from django_countries.fields import CountryField
+from inventorum.ebay.apps.products.models import EbayItemModel
+from inventorum.ebay.apps.returns.models import ReturnPolicyModel
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
@@ -14,6 +16,7 @@ from inventorum.ebay.lib.auth.models import AuthenticableModelMixin
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation
+from inventorum.ebay.lib.ebay.data.items import EbayReturnPolicy
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -108,6 +111,8 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
     payment_method_paypal_email_address = EmailField(null=True, blank=True)
     payment_method_bank_transfer_enabled = BooleanField(default=True)  # By default enabled
 
+    return_policy = OneToOneField(ReturnPolicyModel, null=True, blank=True, related_name="account")
+
     objects = PassThroughManager.for_queryset_class(EbayAccountModelQuerySet)()
 
     @property
@@ -138,7 +143,24 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
 
     @property
     def has_location(self):
+        """
+        :rtype: bool
+        """
         return hasattr(self, "location")
+
+    @property
+    def has_return_policy(self):
+        """
+        :rtype: bool
+        """
+        return self.return_policy is not None
+
+    @property
+    def has_defined_return_policy(self):
+        """
+        :rtype: bool
+        """
+        return self.has_return_policy and self.return_policy.is_defined
 
     @property
     def ebay_payment_methods(self):

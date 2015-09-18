@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from decimal import Decimal
 import logging
+from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
@@ -18,7 +19,7 @@ from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption, EbayPriceModel
-from inventorum.ebay.tests import Countries, MockedTest, StagingTestAccount
+from inventorum.ebay.tests import Countries, MockedTest, StagingTestAccount, IntegrationTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from inventorum.util.celery import TaskExecutionContext
 from mock import PropertyMock
@@ -130,8 +131,14 @@ class UnitTestEbayItemsSyncer(EbayAuthenticatedAPITestCase):
         self.assertPostcondition(EbayItemModel.objects.count(), 1)
 
 
-class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingServiceTestMixin):
-    @MockedTest.use_cassette('get_product_id_from_core_api_for_ebay_item_serializer.yaml', record_mode="new_episodes")
+class IntegrationTestEbayItemsSync(EbayAuthenticatedAPITestCase, AccountTestMixin, ProductTestMixin,
+                                   ShippingServiceTestMixin):
+
+    def setUp(self):
+        super(IntegrationTestEbayItemsSync, self).setUp()
+        self.prepare_account_for_publishing(self.account)
+
+    @IntegrationTest.use_cassette('items_sync/get_product_id_from_core_api_for_ebay_item_serializer.yaml')
     def test_convert_items_without_sku(self):
         common_category_attrs = dict(ebay_leaf=True, features=None)
 
@@ -143,43 +150,25 @@ class IntegrationTest(EbayAuthenticatedAPITestCase, ProductTestMixin, ShippingSe
 
         self.assertPostcondition(EbayItemModel.objects.count(), 0)
 
-    @MockedTest.use_cassette('create_product_with_sku_and_serialize_it.yaml', record_mode="new_episodes")
+    @IntegrationTest.use_cassette('items_sync/publish_and_sync_published_item.yaml')
     @celery_test_case()
     def test_create_product_with_sku_and_serialize_it(self):
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
 
         # ---- create and publish the test product ---- #
-        product = self.get_product(StagingTestAccount.Products.IPAD_STAND, self.account)
-        # 176973 is valid ebay category id
-        category, c = CategoryModel.objects.get_or_create(external_id='7484', country='DE')
-        product.category = category
-        product.ean_does_not_apply = True
-        product.save()
+        product = self.get_valid_ebay_product_for_publishing(account=self.account,
+                                                             inv_id=StagingTestAccount.Products.IPAD_STAND)
 
-        features = CategoryFeaturesModel.objects.create(
-            category=category
-        )
-        durations = ['Days_5', 'Days_30']
-        for d in durations:
-            duration = DurationModel.objects.create(
-                value=d
-            )
-            features.durations.add(duration)
-
-        # assign valid shipping service
-        self.assign_valid_shipping_services(product)
-
-        # Try to publish
         preparation_service = PublishingPreparationService(product, self.user)
         preparation_service.validate()
         item = preparation_service.create_ebay_item()
 
         publishing_service = PublishingService(item, self.user)
         publishing_service.publish()
-        item.delete()
         # deleted the item to make sure that it is recreated by the serializer
+        item.delete()
 
-        # ---- start serializer ----#
+        # ---- start sync ----#
         self.assertPrecondition(EbayItemModel.objects.count(), 0)
         EbayItemsSync(account=self.account).run()
         self.assertPostcondition(EbayItemModel.objects.count(), 1)

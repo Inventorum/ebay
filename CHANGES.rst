@@ -4,6 +4,16 @@ CHANGES
 
 develop
 =======
+2015-09-18 0.1.13
+=================
+Feature
+.......
+- INV-5515 Allow accounts to configure return policies
+- INV-5496: Use "Does not apply" by default if core product has no EAN
+
+Code
+....
+- Refactor all publishing tests + re-record all related cassettes
 
 2015-09-15 0.1.12
 =================

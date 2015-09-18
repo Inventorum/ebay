@@ -36,7 +36,7 @@ class CoreApiTestHelpers(object):
             "quantity": quantity,
             "reorder_level": 10,
             "safety_stock": 5,
-            "images": []
+            "images": [{"id": StagingTestAccount.VALID_IMAGE_ID}]
         })
 
         json_body = response.json()

@@ -3,10 +3,11 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.db import models
-from inventorum.ebay.apps.returns import EbayRefundType
-from inventorum.ebay.lib.db.models import MappedInventorumModel
+from inventorum.ebay.apps.returns import EbayRefundType, ReturnsAcceptedOption
+from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel
 
 from inventorum.ebay.lib.db.fields import MoneyField
+from inventorum.ebay.lib.ebay.data.items import EbayReturnPolicy
 
 
 log = logging.getLogger(__name__)
@@ -27,3 +28,38 @@ class ReturnModel(MappedInventorumModel):
     refund_amount = MoneyField()
 
     refund_note = models.TextField(default="")
+
+
+class ReturnPolicyModel(BaseModel):
+    returns_accepted_option = models.CharField(max_length=255, null=True, blank=True)
+    returns_within_option = models.CharField(max_length=255, null=True, blank=True)
+    shipping_cost_paid_by_option = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+
+    @property
+    def is_defined(self):
+        """
+        :rtype: bool
+        """
+        return self.returns_accepted_option is not None
+
+    @property
+    def returns_accepted(self):
+        """
+        :rtype: bool
+        """
+        return self.returns_accepted_option == ReturnsAcceptedOption.ReturnsAccepted
+
+    @property
+    def ebay_object(self):
+        """
+        :rtype: bool
+        """
+        ebay_return_policy_kwargs = dict(returns_accepted_option=self.returns_accepted_option)
+
+        if self.returns_accepted:
+            ebay_return_policy_kwargs.update(returns_within_option=self.returns_within_option,
+                                             shipping_cost_paid_by_option=self.shipping_cost_paid_by_option,
+                                             description=self.description)
+
+        return EbayReturnPolicy(**ebay_return_policy_kwargs)
