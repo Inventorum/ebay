@@ -4,6 +4,8 @@ CHANGES
 
 develop
 =======
+2015-09-22 0.1.14
+=================
 Feature
 .......
 - Enable Out-of-Stock feature for authenticated users
