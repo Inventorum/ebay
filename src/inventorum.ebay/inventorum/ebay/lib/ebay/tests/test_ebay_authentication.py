@@ -50,5 +50,5 @@ class EbayAuthenticationTest(APITestCase):
         set_user_preferences_request = find_request('SetUserPreferencesRequest')
         self.assertTrue(set_user_preferences_request)
 
-        self.assertTrue('<OutOfStockControlPreference>true</OutOfStockControlPreference>'
-                        in set_user_preferences_request.body)
+        self.assertIn('<OutOfStockControlPreference>true</OutOfStockControlPreference>',
+                      set_user_preferences_request.body)
