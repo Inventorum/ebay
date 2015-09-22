@@ -122,8 +122,7 @@ class CoreProductsSync(object):
         # thus, we need to go through the EbayItemModel, which stores the core product id
         # for now, this means that only products are deleted, that have been published once (which is not a big deal)
         mapped_ebay_product_ids = EbayItemModel.objects.by_account(self.account)\
-            .filter(inv_product_id__in=deleted_core_product_ids, product__is_active=True)\
-            .values_list("product_id", flat=True)
+            .filter(inv_product_id__in=deleted_core_product_ids).values_list("product_id", flat=True)
 
         for ebay_product_id in set(mapped_ebay_product_ids):
             ebay_product = EbayProductModel.objects.get(pk=ebay_product_id)
