@@ -40,8 +40,6 @@ class EbayAuthenticationTest(APITestCase):
         self.assertEqual(token.expiration_time, datetime(2016, 9, 21, 13, 18, 38))
 
         requests = cass.requests
-        self.assertEqual(len(requests), 3)
-
         find_request = lambda request_name: next((r for r in requests if request_name in r.body ), None)
 
         self.assertTrue(find_request('FetchTokenRequest'))
