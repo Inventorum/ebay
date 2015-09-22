@@ -16,7 +16,6 @@ class EbayAuthentication(EbayTrading):
         params = 'SignIn&RuName=%s&SessID=%s' % (settings.EBAY_RUNAME, session_id)
         return '%sws/eBayISAPI.dll?%s' % (settings.EBAY_SIGNIN, params)
 
-
     def fetch_token(self, session_id):
         """
         Creates ebay auth token using session_id (had to be already validated in frontend)
@@ -34,6 +33,7 @@ class EbayAuthentication(EbayTrading):
 
         self.token = token
         self.update_notification_settings()
+        self.update_user_preferences()
 
         return token
 
@@ -108,3 +108,8 @@ class EbayAuthentication(EbayTrading):
                 ]}
             }
         )
+
+    def update_user_preferences(self):
+        self.execute('SetUserPreferences', {
+            'OutOfStockControlPreference': 'true'
+        })

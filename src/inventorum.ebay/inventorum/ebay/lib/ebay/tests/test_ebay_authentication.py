@@ -19,10 +19,12 @@ class EbayAuthenticationTest(APITestCase):
         self.assertEqual(url, 'https://signin.ebay.de/ws/eBayISAPI.dll?SignIn&RuName='
                               'Inventorum_GmbH-Inventor-9021-4-pbiiw&SessID=SESSION_ID')
 
-    @MockedTest.use_cassette("ebay_fetch_token.yaml")
     def test_fetch_token(self):
         auth = EbayAuthentication()
-        token = auth.fetch_token('qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c')
+
+        with MockedTest.use_cassette("ebay_fetch_token.yaml", record_mode='new_episodes', match_on=['body']) as cass:
+            token = auth.fetch_token('qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c')
+
         self.assertEqual(token.value, 'AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x'
                                       '9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89c'
                                       'LIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYA'
@@ -36,3 +38,17 @@ class EbayAuthenticationTest(APITestCase):
                                       'JXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/')
 
         self.assertEqual(token.expiration_time, datetime(2016, 9, 21, 13, 18, 38))
+
+        requests = cass.requests
+        self.assertEqual(len(requests), 3)
+
+        find_request = lambda request_name: next((r for r in requests if request_name in r.body ), None)
+
+        self.assertTrue(find_request('FetchTokenRequest'))
+        self.assertTrue(find_request('SetNotificationPreferencesRequest'))
+
+        set_user_preferences_request = find_request('SetUserPreferencesRequest')
+        self.assertTrue(set_user_preferences_request)
+
+        self.assertTrue('<OutOfStockControlPreference>true</OutOfStockControlPreference>'
+                        in set_user_preferences_request.body)
