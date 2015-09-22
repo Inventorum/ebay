@@ -4,6 +4,11 @@ CHANGES
 
 develop
 =======
+Fix
+...
+- Fix core products sync by handling double deletion attempts gracefully
+
+
 2015-09-18 0.1.13
 =================
 Feature
