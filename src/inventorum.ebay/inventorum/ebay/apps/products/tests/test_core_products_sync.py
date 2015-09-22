@@ -6,9 +6,7 @@ from datetime import datetime, timedelta
 import unittest
 from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 
-from inventorum.ebay.tests.utils import PatchMixin
 
-from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
@@ -19,9 +17,8 @@ from inventorum.ebay.apps.products.core_products_sync import CoreProductsSync
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemVariationModel
 from inventorum.ebay.apps.products.tasks import periodic_core_products_sync_task
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
-from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
-from inventorum.ebay.tests import ApiTest, IntegrationTest
+from inventorum.ebay.tests import IntegrationTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
 from mock import PropertyMock
 from rest_framework import status
@@ -208,6 +205,33 @@ class UnitTestCoreProductsSync(UnitTestCase):
 
         self.assertFalse(self.schedule_ebay_item_update_mock.called)
         self.assertFalse(self.schedule_ebay_product_deletion_mock.called)
+
+    def test_with_already_deleted_ebay_product(self):
+        subject = CoreProductsSync(account=self.account)
+
+        # product a with updated quantity
+        product = EbayProductFactory.create(account=self.account)
+        item = PublishedEbayItemFactory.create(account=self.account,
+                                               product=product,
+                                               inv_product_id=1000)
+
+        # some other published product, should not be deleted
+        product_noise = EbayProductFactory.create(account=self.account)
+        item_noise = PublishedEbayItemFactory.create(account=self.account,
+                                                     product=product_noise)
+
+        self.expect_deleted([1000])
+
+        # delete product
+        product.delete()
+
+        # this should not raise..
+        subject.run()
+
+        # ..and also may not touch non-related published products
+        product_noise = product_noise.reload()
+        self.assertEqual(product_noise.is_active, True)
+
 
     @unittest.skip("only products that were published at least once are deleted, see core products sync for details")
     def test_unpublished_modified_and_deleted(self):

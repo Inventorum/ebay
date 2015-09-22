@@ -31,7 +31,7 @@ class EbayAuthorizationTest(APITestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_fetch_token(self):
-        with MockedTest.use_cassette("ebay_fetch_token.yaml") as cass:
+        with MockedTest.use_cassette("ebay_fetch_token.yaml", record_mode='new_episodes', match_on=['body']) as cass:
             response = self.client.post('/auth/authorize/', data={
                 'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
             })
@@ -65,18 +65,18 @@ class EbayAuthorizationTest(APITestCase):
             self.assertEqual(account.id_verified, False)
             self.assertEqual(account.status, 'Confirmed')
             self.assertEqual(account.user_id, 'newmade')
-            self.assertEqual(account.qualifies_for_b2b_vat, False)
+            self.assertEqual(account.qualifies_for_b2b_vat, True)
             self.assertEqual(account.store_owner, False)
             self.assertEqual(account.country, StagingTestAccount.COUNTRY)
             self.assertEqual(account.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=pytz.UTC))
 
             address = account.registration_address
             self.assertEqual(address.name, "John Newman")
-            self.assertEqual(address.street, None)
-            self.assertEqual(address.street1, None)
-            self.assertEqual(address.city, 'default')
+            self.assertEqual(address.street, 'Inventorum GmbH, Voltastr 5')
+            self.assertEqual(address.street1, 'Inventorum GmbH')
+            self.assertEqual(address.city, 'Berlin')
             self.assertEqual(address.country, 'DE')
-            self.assertEqual(address.postal_code, 'default')
+            self.assertEqual(address.postal_code, '13355')
 
             response = self.client.post('/auth/logout/')
             self.assertEqual(response.status_code, 200)
@@ -84,9 +84,10 @@ class EbayAuthorizationTest(APITestCase):
             account = EbayAccountModel.objects.get(pk=self.account.pk)
             self.assertIsNone(account.token)
 
-
     def test_fetch_token_from_AT(self):
-        with MockedTest.use_cassette("ebay_fetch_token_fake_AT.yaml") as cass:
+        with MockedTest.use_cassette("ebay_fetch_token_fake_AT.yaml", record_mode='new_episides',
+                                     match_on=['body']) as cass:
+
             response = self.client.post('/auth/authorize/', data={
                 'session_id': 'qeUBAA**6ffa1eb714c0a5e3ca06a646ffff843c'
             })
@@ -121,19 +122,18 @@ class EbayAuthorizationTest(APITestCase):
             self.assertEqual(account.id_verified, False)
             self.assertEqual(account.status, 'Confirmed')
             self.assertEqual(account.user_id, 'newmade')
-            self.assertEqual(account.qualifies_for_b2b_vat, False)
+            self.assertEqual(account.qualifies_for_b2b_vat, True)
             self.assertEqual(account.store_owner, False)
             self.assertEqual(account.country, Countries.AT)
             self.assertEqual(account.registration_date, datetime(2015, 3, 31, 8, 57, 26, tzinfo=pytz.UTC))
 
             address = account.registration_address
             self.assertEqual(address.name, "John Newman")
-            self.assertEqual(address.street, 'Voltastr 5')
-            self.assertEqual(address.street1, 'Voltastr 5')
+            self.assertEqual(address.street, 'Inventorum GmbH, Voltastr 5')
+            self.assertEqual(address.street1, 'Inventorum GmbH')
             self.assertEqual(address.city, 'Berlin')
             self.assertEqual(address.country, 'DE')
             self.assertEqual(address.postal_code, '13355')
-
 
     def test_api_error(self):
         with MockedTest.use_cassette("ebay_fetch_token_api_error.yaml", record_mode='never') as cass:
