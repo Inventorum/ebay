@@ -125,11 +125,15 @@ class CoreProductsSync(object):
             .filter(inv_product_id__in=deleted_core_product_ids).values_list("product_id", flat=True)
 
         for ebay_product_id in set(mapped_ebay_product_ids):
-            ebay_product = EbayProductModel.objects.get(pk=ebay_product_id)
-            ebay_product.deleted_in_core_api = True
-            ebay_product.save()
+            # we check here for existence to ensure that the product was not already deleted
+            # this is needed because related ebay item models are not deleted with the product model and
+            # the foreign key in the ebay item model still points to the already deleted ebay product model
+            ebay_product = EbayProductModel.objects.filter(pk=ebay_product_id).first()
+            if ebay_product:
+                ebay_product.deleted_in_core_api = True
+                ebay_product.save()
 
-            tasks.schedule_ebay_product_deletion(ebay_product.id, context=self.get_task_execution_context())
+                tasks.schedule_ebay_product_deletion(ebay_product.id, context=self.get_task_execution_context())
 
         deleted_variations = EbayItemVariationModel.objects.filter(inv_product_id__in=deleted_core_product_ids)
         for deleted_variation in deleted_variations:
