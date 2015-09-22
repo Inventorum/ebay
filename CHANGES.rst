@@ -4,10 +4,17 @@ CHANGES
 
 develop
 =======
+Feature
+.......
+- Enable Out-of-Stock feature for authenticated users
+
+Code
+....
+- Add script to active Out-of-Stock feature for existing, ebay-authenticated accounts
+
 Fix
 ...
 - Fix core products sync by handling double deletion attempts gracefully
-
 
 2015-09-18 0.1.13
 =================
