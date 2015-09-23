@@ -333,6 +333,10 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.ebay_product.is_click_and_collect = True
         self.ebay_product.save()
 
+        # remove all shipping services since they are not required when click & collect is enabled
+        self.account.shipping_services.delete()
+        self.ebay_product.shipping_services.delete()
+
         service = PublishingPreparationService(self.ebay_product, self.user)
         service.validate()
         ebay_item = service.create_ebay_item()
@@ -351,6 +355,8 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertIn('EligibleForPickupInStore', item_data['PickupInStoreDetails'])
         self.assertEqual(item_data['PickupInStoreDetails']['EligibleForPickupInStore'], True)
 
+        self.assertNotIn('ShippingDetails', item_data)
+
     def test_shipping_service_validation_and_account_shipping_fallback(self):
         self.ebay_product.shipping_services.delete()
         self.assertEqual(self.ebay_product.shipping_services.count(), 0,
@@ -360,6 +366,21 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
 
         expected_error_message = 'Neither product or account have configured shipping services'
         self.validate_and_assert_expected_validation_error(self.ebay_product, expected_error_message)
+
+        # activate click & collect for the product and account to verify that shipping services are not required here
+        self.ebay_product.is_click_and_collect = True
+        self.ebay_product.save()
+        # activate click and collect for the core account
+        core_info = self.get_valid_core_info()
+        core_info.account.settings.ebay_click_and_collect = True
+        self.expect_core_info(core_info)
+
+        service = PublishingPreparationService(self.ebay_product, self.user)
+        # should not raise
+        service.validate()
+
+        self.ebay_product.is_click_and_collect = False
+        self.ebay_product.save()
 
         # Add valid shipping service configuration to account
         self.account.shipping_services.create(service=self.get_shipping_service_hermes(),
