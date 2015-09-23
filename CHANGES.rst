@@ -4,6 +4,8 @@ CHANGES
 
 develop
 =======
+2015-09-23 0.1.15
+=================
 Fix
 ...
 - Do not require shipping services with click & collect
