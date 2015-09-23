@@ -61,6 +61,10 @@ class IntegrationTestPublishingAndUnpublishing(EbayAuthenticatedAPITestCase, Pro
         product.is_click_and_collect = True
         product.save()
 
+        # remove all shipping services since they are not required for click & collect
+        product.shipping_services.delete()
+        self.account.shipping_services.delete()
+
         with IntegrationTest \
                 .use_cassette('publishing/test_publishing_and_unpublishing_with_click_and_collect.yaml') as cass:
             response = self.client.post('/products/%s/publish' % product.inv_id)
