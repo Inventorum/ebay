@@ -6,11 +6,11 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.15-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
-      X-Rid: [&id001 !!python/long '3568940251992466770']
+      X-Rid: [&id001 !!python/long '4605049641264391506']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/1225146588560351744/
   response:
@@ -65,23 +65,27 @@ interactions:
         null}, "ebay": {"channel": 4, "description": "", "gross_price": null, "id":
         747, "images": [], "name": "", "price": null}}, "is_giftcard": false, "gross_price":
         "1.00", "purchase_price": "3E+1", "states": [{"channel": "shop", "details":
-        null, "state": "published"}, {"channel": "ebay", "details": {}, "state": "unpublished"}],
-        "attributes_str": "", "inv_id": "1225146588560351744", "package_size_value":
+        null, "state": "published"}, {"channel": "ebay", "details": [{"severity_code":
+        "Error", "code": 17, "classification": "RequestError", "parameters": ["1234"],
+        "long_message": "Der Artikel kann nicht aufgerufen werden, da er gel\u00f6scht
+        wurde, es sich um ein Half.com-Angebot handelt oder weil Sie nicht der Verk\u00e4ufer
+        sind.", "short_message": "Artikel kann nicht aufgerufen werden."}], "state":
+        "published"}], "attributes_str": "", "inv_id": "1225146588560351744", "package_size_value":
         null, "package_size_unit": null, "base_price": null, "base_size_value": null,
         "base_size_unit": null}'}
     headers:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 18 Sep 2015 08:40:42 GMT']
+      date: ['Wed, 23 Sep 2015 14:06:41 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZcrDm:UIIEXSUIo7qOA1KDvRmNPl32RoA"; Domain=app.intern.inventorum.net;
-          expires=Fri, 18-Sep-2015 10:40:42 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Zekgz:phlsedeCpI1lpIBNB7kFpd_Ox84"; Domain=app.intern.inventorum.net;
+          expires=Wed, 23-Sep-2015 16:06:41 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3568940251992466770']
+      x-rid: ['4605049641264391506']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -90,7 +94,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.15-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -103,20 +107,38 @@ interactions:
         "name": "19%", "tax_rate": "19.00000"}], "customer_groups": [{"id": 325, "name":
         "Inventorum Test Account", "description": "-"}], "groups": [{"id": 2, "name":
         "owner"}, {"id": 3, "name": "manager"}, {"id": 4, "name": "staff"}], "attributes":
-        [{"used": true, "usage_count": 3, "key": "color"}, {"used": true, "usage_count":
-        4, "key": "size"}, {"used": true, "usage_count": 4, "key": "material"}], "account":
-        {"paypal": false, "ebay": false, "image": null, "shipping_address": null,
-        "billing_address": {"country": "DE", "id": 5067, "address1": "Voltastr 5",
-        "address2": "Gebaude 3", "zipcode": "13355", "city": "Berlin", "state": null,
-        "first_name": "John", "last_name": "Newman", "company": "Inventorum", "title":
-        null}, "phone_numbers": [{"country_code": "49", "id": 1444, "type": "normal",
-        "national_number": "030 12341234"}], "name": "Inventorum Test Account", "store_name":
-        "Inventorum Test Account", "store_description": "", "store_slogan": "", "email":
-        "tech+slingshot-test@inventorum.com", "fax": "", "tax_number": "", "vat_number":
-        "", "payment_method_note": "", "thanks_note": "", "invoice_prefix": "", "invoice_counter":
-        2, "bank_name": "", "bank_account_number": "", "bank_code": "", "bank_iban":
-        "", "bank_bic_swift": "", "settings": {"shipping_services": [{"id": "DE_DHLPaket",
-        "description": "DHL Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
+        [{"used": true, "usage_count": 4, "key": "size", "name": "Size"}, {"used":
+        true, "usage_count": 4, "key": "material", "name": "Material"}, {"used": true,
+        "usage_count": 3, "key": "color", "name": "Color"}, {"used": false, "usage_count":
+        0, "key": "cut", "name": "Cut"}, {"used": false, "usage_count": 0, "key":
+        "fabric", "name": "Fabric"}, {"used": false, "usage_count": 0, "key": "finish",
+        "name": "Finish"}, {"used": false, "usage_count": 0, "key": "fit", "name":
+        "Fit"}, {"used": false, "usage_count": 0, "key": "flavor", "name": "Flavor"},
+        {"used": false, "usage_count": 0, "key": "fragrance", "name": "Fragrance"},
+        {"used": false, "usage_count": 0, "key": "length", "name": "Length"}, {"used":
+        false, "usage_count": 0, "key": "model", "name": "Model"}, {"used": false,
+        "usage_count": 0, "key": "package", "name": "Package"}, {"used": false, "usage_count":
+        0, "key": "pattern", "name": "Pattern"}, {"used": false, "usage_count": 0,
+        "key": "quantity ", "name": "Quantity"}, {"used": false, "usage_count": 0,
+        "key": "scent", "name": "Scent"}, {"used": false, "usage_count": 0, "key":
+        "season", "name": "Season"}, {"used": false, "usage_count": 0, "key": "stone",
+        "name": "Stone"}, {"used": false, "usage_count": 0, "key": "style", "name":
+        "Style"}, {"used": false, "usage_count": 0, "key": "texture", "name": "Texture"},
+        {"used": false, "usage_count": 0, "key": "title", "name": "Title"}, {"used":
+        false, "usage_count": 0, "key": "weight", "name": "Weight"}, {"used": false,
+        "usage_count": 0, "key": "width", "name": "Width"}], "account": {"paypal":
+        false, "ebay": false, "image": null, "shipping_address": null, "billing_address":
+        {"country": "DE", "id": 5067, "address1": "Voltastr 5", "address2": "Gebaude
+        3", "zipcode": "13355", "city": "Berlin", "state": null, "first_name": "John",
+        "last_name": "Newman", "company": "Inventorum", "title": null}, "phone_numbers":
+        [{"country_code": "49", "id": 1444, "type": "normal", "national_number": "030
+        12341234"}], "name": "Inventorum Test Account", "store_name": "Inventorum
+        Test Account", "store_description": "", "store_slogan": "", "email": "tech+slingshot-test@inventorum.com",
+        "fax": "", "tax_number": "", "vat_number": "", "payment_method_note": "",
+        "thanks_note": "", "invoice_prefix": "", "invoice_counter": 2, "bank_name":
+        "", "bank_account_number": "", "bank_code": "", "bank_iban": "", "bank_bic_swift":
+        "", "settings": {"shipping_services": [{"id": "DE_DHLPaket", "description":
+        "DHL Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
         "Group3MaxFlatShippingCost", "carrier": "DHL", "category": "[STANDARD]", "service":
         "DE_DHLPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
         "enabled": true, "free_above_price": null}], "ebay_payment_methods": [1],
@@ -185,15 +207,15 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 18 Sep 2015 08:40:42 GMT']
+      date: ['Wed, 23 Sep 2015 14:06:41 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZcrDm:UIIEXSUIo7qOA1KDvRmNPl32RoA"; Domain=app.intern.inventorum.net;
-          expires=Fri, 18-Sep-2015 10:40:42 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Zekgz:phlsedeCpI1lpIBNB7kFpd_Ox84"; Domain=app.intern.inventorum.net;
+          expires=Wed, 23-Sep-2015 16:06:41 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3568940251992466770']
+      x-rid: ['4605049641264391506']
     status: {code: 200, message: OK}
 - request:
     body: '{"state": "in_progress", "details": null, "channel": "ebay"}'
@@ -203,7 +225,7 @@ interactions:
       Connection: [keep-alive]
       Content-Length: ['60']
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.15-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -215,15 +237,15 @@ interactions:
     headers:
       allow: ['POST, OPTIONS']
       connection: [keep-alive]
-      date: ['Fri, 18 Sep 2015 08:40:42 GMT']
+      date: ['Wed, 23 Sep 2015 14:06:41 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZcrDm:UIIEXSUIo7qOA1KDvRmNPl32RoA"; Domain=app.intern.inventorum.net;
-          expires=Fri, 18-Sep-2015 10:40:42 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Zekgz:phlsedeCpI1lpIBNB7kFpd_Ox84"; Domain=app.intern.inventorum.net;
+          expires=Wed, 23-Sep-2015 16:06:41 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3568940251992466770']
+      x-rid: ['4605049641264391506']
     status: {code: 200, message: OK}
 - request:
     body: <?xml version="1.0" encoding="utf-8"?><AddInventoryRequest><Locations><Location><Availability>IN_STOCK</Availability><LocationID>invdev_346</LocationID></Location></Locations><SKU>invtest_665753</SKU></AddInventoryRequest>
@@ -232,21 +254,21 @@ interactions:
       Content-Length: ['222']
       Content-Type: [application/xml]
       User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.5 Darwin/13.4.0]
-      X-EBAY-SDK-REQUEST-ID: [3343b405-dd3e-4fe0-ad80-ff5748988e88]
+      X-EBAY-SDK-REQUEST-ID: [942e7e77-e640-4f76-869a-ea2175a35bde]
     method: POST
     uri: https://api.ebay.com/selling/inventory/v1/inventory/delta/add
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><AddInventoryResponse><Ack>SUCCESS</Ack><SKU>INVTEST_665753</SKU></AddInventoryResponse>'}
     headers:
       content-type: [application/xml]
-      date: ['Fri, 18 Sep 2015 08:40:42 GMT']
-      guid: [14fdf9cd-c930-a568-60d2-1462f8555e52]
-      rlogid: [t6jkptufoi9%3Fvo%7B%3Dd70f%2B0%60%3Dc-14fdf9cdc95-0xba]
+      date: ['Wed, 23 Sep 2015 14:06:41 GMT']
+      guid: [14ffa871-bae0-a569-6212-f8c2eaf147c8]
+      rlogid: [t6jkptufoi9%3Fvo%7B2d71f%2B11%3Ce%29pqtfwpu%29sm%7E%29fgg%7E-fij-14ffa871baf-0x2fe69]
       server: [Apache-Coyote/1.1]
       set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
       transfer-encoding: [chunked]
       x-ebay-c-version: [1.0.0]
-      x-ebay-request-id: ['14fdf9cd-c930-a568-60d2-1462f8555e52!selling.inventory.v1.inventory!10.86.134.13!comosesb[!inventory.v1!r1invsvcin[]]']
+      x-ebay-request-id: ['14ffa871-bae0-a569-6212-f8c2eaf147c8!selling.inventory.v1.inventory!10.86.150.33!comosesb[!inventory.v1!r1invsvcin[]]']
       x-frame-options: [SAMEORIGIN]
     status: {code: 200, message: OK}
 - request:
@@ -257,10 +279,10 @@ interactions:
       \ ist dieser ideal, um einfach und schnell Produkte mit der internen Kamera\
       \ des iPads zu scannen.  Kompatibel f\xFCr iPad 2, 3 und 4, sowie das iPad Air\
       \ und iPad mini.]]></Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PickupInStoreDetails><EligibleForPickupInStore>True</EligibleForPickupInStore></PickupInStoreDetails><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>171949</CategoryID></PrimaryCategory><Quantity>74</Quantity><ReturnPolicy><Description>The\
-      \ article can be returned to the given conditions</Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsWithinOption>Days_14</ReturnsWithinOption><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption></ReturnPolicy><SKU>invtest_665753</SKU><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>3.00</ShippingServiceAdditionalCost><ShippingServiceCost>5.00</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions><ShippingServiceOptions><ShippingService>DE_HermesPaket</ShippingService><ShippingServiceAdditionalCost>1.00</ShippingServiceAdditionalCost><ShippingServiceCost>4.50</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>1.00</StartPrice><Title>INVENTORUM\
+      \ article can be returned to the given conditions</Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsWithinOption>Days_14</ReturnsWithinOption><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption></ReturnPolicy><SKU>invtest_665753</SKU><StartPrice>1.00</StartPrice><Title>INVENTORUM\
       \ iPad-Stand</Title></Item></AddFixedPriceItemRequest>"
     headers:
-      Content-Length: ['3440']
+      Content-Length: ['2880']
       Content-Type: [text/xml]
       User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.5 Darwin/13.4.0]
       X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
@@ -269,16 +291,16 @@ interactions:
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [912281b2-4a22-40b7-82d5-ba78876d0c35]
+      X-EBAY-SDK-REQUEST-ID: [254ddf80-0c65-4830-b1bb-ee4d6257734d]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddFixedPriceItemResponse\
-        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-09-18T08:40:46.280Z</Timestamp><Ack>Warning</Ack><Errors><ShortMessage>F\xFC\
+        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-09-23T14:06:45.390Z</Timestamp><Ack>Warning</Ack><Errors><ShortMessage>F\xFC\
         r dieses Angebot kann die \u201ENicht mehr vorr\xE4tig\u201C-Steuerung nicht\
         \ verwendet werden.</ShortMessage><LongMessage>Sie k\xF6nnen f\xFCr dieses\
         \ Angebot die \u201ENicht mehr vorr\xE4tig\u201C-Steuerung nicht verwenden,\
-        \ da die Angebotsdauer nicht \u201EG\xFCltig bis auf Widerruf\u201C ist </LongMessage><ErrorCode>21919258</ErrorCode><SeverityCode>Warning</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Version>939</Version><Build>E939_UNI_API5_17667776_R1</Build><ItemID>262054230947</ItemID><StartTime>2015-09-18T08:40:45.186Z</StartTime><EndTime>2015-10-18T08:40:45.186Z</EndTime><Fees><Fee><Name>AuctionLengthFee</Name><Fee\
+        \ da die Angebotsdauer nicht \u201EG\xFCltig bis auf Widerruf\u201C ist </LongMessage><ErrorCode>21919258</ErrorCode><SeverityCode>Warning</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Version>939</Version><Build>E939_UNI_API5_17667776_R1</Build><ItemID>262062466035</ItemID><StartTime>2015-09-23T14:06:44.031Z</StartTime><EndTime>2015-10-23T14:06:44.031Z</EndTime><Fees><Fee><Name>AuctionLengthFee</Name><Fee\
         \ currencyID=\"EUR\">0.0</Fee></Fee><Fee><Name>BoldFee</Name><Fee currencyID=\"\
         EUR\">0.0</Fee></Fee><Fee><Name>BuyItNowFee</Name><Fee currencyID=\"EUR\"\
         >0.0</Fee></Fee><Fee><Name>CategoryFeaturedFee</Name><Fee currencyID=\"EUR\"\
@@ -304,16 +326,16 @@ interactions:
     headers:
       content-length: ['2809']
       content-type: [text/xml]
-      date: ['Fri, 18 Sep 2015 08:40:45 GMT']
-      guid: [14fdf9ce-07d0-a785-f483-a333feb40d8f]
+      date: ['Wed, 23 Sep 2015 14:06:44 GMT']
+      guid: [14ffa871-e9c0-a788-49f2-0362fdbdb5d5]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMWQ3MWYrM2BnYCgyNSg2MzMoNjAzKDU3MDw/Mz02]
+      x-ebay-api-server-name: [___dWtgMWQ3MGYrMWYxMCgyNSgyMCs3NTYrMj45PTY/Mw==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddFixedPriceItem]
-      x-ebay-esb-guid: ['urn:uuid:db498c90-f5e6-40be-a9c7-69b4e0310892']
+      x-ebay-esb-guid: ['urn:uuid:7b8a5564-047d-47e8-a6d6-5e57c48b1df6']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14fdf9ce-07d0-a785-f483-a333feb40d8f!ws.api.dll!10.120.95.72!esbtrading[']
+      x-ebay-request-id: ['14ffa871-e9c0-a788-49f2-0362fdbdb5d5!ws.api.dll!10.120.132.159!esbtrading[']
     status: {code: 200, message: OK}
 - request:
     body: '{"state": "published", "details": {}, "channel": "ebay"}'
@@ -323,7 +345,7 @@ interactions:
       Connection: [keep-alive]
       Content-Length: ['56']
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.15-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -335,15 +357,15 @@ interactions:
     headers:
       allow: ['POST, OPTIONS']
       connection: [keep-alive]
-      date: ['Fri, 18 Sep 2015 08:40:46 GMT']
+      date: ['Wed, 23 Sep 2015 14:06:45 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZcrDq:DJF3AK96XMlrpKy3opZqtEL32aE"; Domain=app.intern.inventorum.net;
-          expires=Fri, 18-Sep-2015 10:40:46 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Zekh3:bvK5zmY_vd2thGq7skrrhh2aAls"; Domain=app.intern.inventorum.net;
+          expires=Wed, 23-Sep-2015 16:06:45 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3568940251992466770']
+      x-rid: ['4605049641264391506']
     status: {code: 200, message: OK}
 - request:
     body: '{"state": "in_progress", "details": null, "channel": "ebay"}'
@@ -353,11 +375,11 @@ interactions:
       Connection: [keep-alive]
       Content-Length: ['60']
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.15-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
-      X-Rid: [&id002 !!python/long '3027945346754585938']
+      X-Rid: [&id002 !!python/long '1636614536873813330']
     method: POST
     uri: http://app.intern.inventorum.net/api/products/665753/state/
   response:
@@ -365,18 +387,18 @@ interactions:
     headers:
       allow: ['POST, OPTIONS']
       connection: [keep-alive]
-      date: ['Fri, 18 Sep 2015 08:40:46 GMT']
+      date: ['Wed, 23 Sep 2015 14:06:46 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZcrDq:DJF3AK96XMlrpKy3opZqtEL32aE"; Domain=app.intern.inventorum.net;
-          expires=Fri, 18-Sep-2015 10:40:46 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Zekh4:UmkNvvcuLjXpcYq8Jbckm37MM_I"; Domain=app.intern.inventorum.net;
+          expires=Wed, 23-Sep-2015 16:06:46 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3027945346754585938']
+      x-rid: ['1636614536873813330']
     status: {code: 200, message: OK}
 - request:
-    body: <?xml version='1.0' encoding='utf-8'?><EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>262054230947</ItemID></EndFixedPriceItemRequest>
+    body: <?xml version='1.0' encoding='utf-8'?><EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>262062466035</ItemID></EndFixedPriceItemRequest>
     headers:
       Content-Length: ['1185']
       Content-Type: [text/xml]
@@ -387,26 +409,26 @@ interactions:
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [7661d0a1-545e-4993-a041-0f1477ed82a4]
+      X-EBAY-SDK-REQUEST-ID: [989cb7e9-f168-456e-94af-ef1bf97c58fe]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
 
-        <EndFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-09-18T08:40:48.000Z</Timestamp><Ack>Success</Ack><Version>939</Version><Build>E939_UNI_API5_17667776_R1</Build><EndTime>2015-09-18T08:40:47.000Z</EndTime></EndFixedPriceItemResponse>'}
+        <EndFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-09-23T14:06:47.602Z</Timestamp><Ack>Success</Ack><Version>939</Version><Build>E939_UNI_API5_17667776_R1</Build><EndTime>2015-09-23T14:06:47.000Z</EndTime></EndFixedPriceItemResponse>'}
     headers:
       content-length: ['304']
       content-type: [text/xml]
-      date: ['Fri, 18 Sep 2015 08:40:47 GMT']
-      guid: [14fdf9ce-d120-a794-4445-7955fe128dab]
+      date: ['Wed, 23 Sep 2015 14:06:46 GMT']
+      guid: [14ffa872-c210-a785-f483-6283fb8978f7]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___ZW9nNGQ3MmYrYTM0YCgyNSg+NSs3NjErNDc3Pz43OzU=]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrPjM9MSgyNSg+Oys+KTU3PD8zPTY=]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [EndFixedPriceItem]
-      x-ebay-esb-guid: ['urn:uuid:e0685001-abf4-4e97-ae34-967adb15ac95']
+      x-ebay-esb-guid: ['urn:uuid:48b58be7-4473-4616-9e8a-6419290cd45e']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['14fdf9ce-d120-a794-4445-7955fe128dab!ws.api.dll!10.121.68.68!esbtrading[']
+      x-ebay-request-id: ['14ffa872-c210-a785-f483-6283fb8978f7!ws.api.dll!10.120.95.72!esbtrading[']
     status: {code: 200, message: OK}
 - request:
     body: <?xml version="1.0" encoding="utf-8"?><DeleteInventoryRequest><Confirm>true</Confirm><Locations></Locations><SKU>invtest_665753</SKU></DeleteInventoryRequest>
@@ -415,21 +437,21 @@ interactions:
       Content-Length: ['158']
       Content-Type: [application/xml]
       User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.5 Darwin/13.4.0]
-      X-EBAY-SDK-REQUEST-ID: [b142b313-2099-4189-ad1d-307a4cbc1a4b]
+      X-EBAY-SDK-REQUEST-ID: [507ea1f5-6ed3-49a9-8406-b4aad04969cf]
     method: POST
     uri: https://api.ebay.com/selling/inventory/v1/inventory/delta/delete
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><DeleteInventoryResponse><Ack>SUCCESS</Ack><SKU>INVTEST_665753</SKU></DeleteInventoryResponse>'}
     headers:
       content-type: [application/xml]
-      date: ['Fri, 18 Sep 2015 08:40:48 GMT']
-      guid: [14fdf9cf-1de0-a358-a1a2-e962fc0c1d70]
-      rlogid: [t6jkptufoi9%3Fuk%601d71f%2B%3Fa14%29pqtfwpu%29pie%29fgg%7E-fij-14fdf9cf1df-0x2fe9b]
+      date: ['Wed, 23 Sep 2015 14:06:48 GMT']
+      guid: [14ffa873-2800-a7ea-0717-0747fd9d5838]
+      rlogid: [t6jkptufoi9%3Fuk%601d70f%2B333%60-14ffa873281-0x18beb]
       server: [Apache-Coyote/1.1]
       set-cookie: [ebay=%5Esbf%3D%23%5E;Domain=.ebay.com;Path=/]
       transfer-encoding: [chunked]
       x-ebay-c-version: [1.0.0]
-      x-ebay-request-id: ['14fdf9cf-1de0-a358-a1a2-e962fc0c1d70!selling.inventory.v1.inventory!10.53.138.26!comosesb[!inventory.v1!r1invsvcin[]]']
+      x-ebay-request-id: ['14ffa873-2800-a7ea-0717-0747fd9d5838!selling.inventory.v1.inventory!10.126.160.113!comosesb[!inventory.v1!r1invsvcin[]']
       x-frame-options: [SAMEORIGIN]
     status: {code: 200, message: OK}
 - request:
@@ -440,7 +462,7 @@ interactions:
       Connection: [keep-alive]
       Content-Length: ['58']
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.15-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -452,14 +474,14 @@ interactions:
     headers:
       allow: ['POST, OPTIONS']
       connection: [keep-alive]
-      date: ['Fri, 18 Sep 2015 08:40:49 GMT']
+      date: ['Wed, 23 Sep 2015 14:06:48 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZcrDt:b8-EQiMiYp0Ngw98vam9ozvyr0Q"; Domain=app.intern.inventorum.net;
-          expires=Fri, 18-Sep-2015 10:40:49 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1Zekh6:vdO5BGWcIimCQ5VFNd13gIkHvAE"; Domain=app.intern.inventorum.net;
+          expires=Wed, 23-Sep-2015 16:06:48 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3027945346754585938']
+      x-rid: ['1636614536873813330']
     status: {code: 200, message: OK}
 version: 1

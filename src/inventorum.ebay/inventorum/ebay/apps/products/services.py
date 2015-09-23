@@ -111,7 +111,8 @@ class PublishingPreparationService(object):
         if not self.core_account.billing_address:
             raise PublishingValidationException(ugettext('To publish product we need your billing address'))
 
-        if not (self.product.shipping_services.exists() or self.account.shipping_services.exists()):
+        if not self.product.is_click_and_collect and \
+                not (self.product.shipping_services.exists() or self.account.shipping_services.exists()):
             raise PublishingValidationException(ugettext('Neither product or account have configured shipping services'))
 
         if not self.account.has_defined_return_policy:
