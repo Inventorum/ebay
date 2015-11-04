@@ -4,6 +4,8 @@ CHANGES
 
 develop
 =======
+2015-11-04 0.1.16
+=================
 Code
 ....
 - Configure sentry to use ``log01.inventorum.net``
