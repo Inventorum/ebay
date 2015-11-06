@@ -8,7 +8,7 @@ develop
 =================
 Fix
 ...
-- INV-5559 Whitelist shipping services with ``DimensionsRequired=True`` (e.g. DHL Paket)
+- INV-5559 Whitelist shipping services with ``DimensionsRequired = True`` (e.g. DHL Paket)
 
 2015-11-04 0.1.16
 =================
