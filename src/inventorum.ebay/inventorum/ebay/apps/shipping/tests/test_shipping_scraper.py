@@ -26,7 +26,7 @@ class IntegrationTestShippingScraper(EbayAuthenticatedAPITestCase):
         subject.scrape()
 
         DE_categories = ShippingServiceModel.objects.by_country(Countries.DE)
-        self.assertEqual(DE_categories.count(), 20)
+        self.assertEqual(DE_categories.count(), 32)
 
         AT_categories = ShippingServiceModel.objects.by_country(Countries.AT)
         self.assertEqual(AT_categories.count(), 14)
@@ -113,13 +113,13 @@ class UnitTestShippingScraper(UnitTestCase, ShippingServiceTestMixin):
         self.assertPostcondition(product.shipping_services.filter(service=ups_preserved).count(), 1)
 
     def test_skipping(self):
-        valid_service = EbayShippingServiceFactory.create(id="ValidService")
-
+        valid_service = EbayShippingServiceFactory.create(id="ValidService1")
+        with_dimensions_required = EbayShippingServiceFactory.create(id="ValidService2",
+                                                                     dimensions_required=True)
         invalid_for_selling_flow = EbayShippingServiceFactory.create(id="InvalidService1",
                                                                      valid_for_selling_flow=False)
-        with_dimensions_required = EbayShippingServiceFactory.create(id="InvalidService2",
-                                                                     dimensions_required=True)
-        international_service = EbayShippingServiceFactory.create(id="InvalidService3",
+
+        international_service = EbayShippingServiceFactory.create(id="InvalidService2",
                                                                   international=True)
 
         self.expect_shipping_services_from_ebay([valid_service, invalid_for_selling_flow, with_dimensions_required,
@@ -129,11 +129,10 @@ class UnitTestShippingScraper(UnitTestCase, ShippingServiceTestMixin):
         subject.scrape()
 
         imported_services = ShippingServiceModel.objects.by_country(Countries.DE)
-        self.assertEqual(imported_services.count(), 1)
+        self.assertEqual(imported_services.count(), 2)
 
-        self.assertTrue(imported_services.filter(external_id="ValidService").exists())
-        self.assertFalse(imported_services.filter(external_id__in=["InvalidService1", "InvalidService2",
-                                                                   "InvalidService3"]).exists())
+        self.assertEqual(imported_services.filter(external_id__in=["ValidService1", "ValidService2"]).count(), 2)
+        self.assertFalse(imported_services.filter(external_id__in=["InvalidService1", "InvalidService2"]).exists())
 
     def test_update(self):
         service = EbayShippingServiceFactory.create(id="ShippingService",
