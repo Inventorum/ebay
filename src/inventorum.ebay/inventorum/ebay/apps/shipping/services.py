@@ -73,7 +73,7 @@ class EbayShippingScraper(object):
         :type service: inventorum.ebay.lib.ebay.details.EbayShippingService
         :rtype: bool
         """
-        return not service.valid_for_selling_flow or service.dimensions_required or service.international
+        return not service.valid_for_selling_flow or service.international
 
     def _get_ebay_token_for_country(self, country_code):
         """
