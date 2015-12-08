@@ -3,6 +3,14 @@ CHANGES
 =======
 
 develop
+
+2015-12-08 0.1.19
+=================
+Feature
+...
+- INV-6183 Fetch product attribute translations from the Core-API when publishing products to ebay.
+
+
 =======
 2015-11-06 0.1.17
 =================
