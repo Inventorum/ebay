@@ -9,6 +9,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.accounts.models import ReturnPolicyModel
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
+from inventorum.ebay.lib.core_api.clients import CoreAPIClient
 from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants, SellerProfileCodeType
 from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
@@ -267,6 +268,7 @@ class PublishingPreparationService(object):
                 item=item
             )
 
+        attr_translations = CoreAPIClient().get_product_attribute_translations()
         for variation in self.core_product.variations:
             tax_rate = self.core_info.get_tax_rate_for(variation.tax_type_id)
             if tax_rate is None:
@@ -298,7 +300,7 @@ class PublishingPreparationService(object):
 
             for attribute in variation.attributes:
                 specific_obj = EbayItemVariationSpecificModel.objects.create(
-                    name=attribute.key,
+                    name=attr_translations.get(attribute.key) or attribute.key,
                     variation=variation_obj
                 )
                 for value in attribute.values:
