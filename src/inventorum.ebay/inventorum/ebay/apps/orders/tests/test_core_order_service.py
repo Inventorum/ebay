@@ -43,4 +43,5 @@ class TestCoreOrderService(UnitTestCase):
         core_order_service.create_in_core_api(order)
 
         self.assertTrue(order.inv_id)
-        self.assertTrue(all(order_line_item.inv_id for order_line_item in order.line_items.all()))
+        self.assertTrue(order.line_items.count(), 2)
+        self.assertTrue(all(order.line_items.values_list('inv_id', flat=True)))
