@@ -12,7 +12,7 @@ from inventorum.ebay.tests.testcases import UnitTestCase
 
 class TestCoreOrderService(UnitTestCase):
 
-    @MockedTest.use_cassette("core_order_service_sync.yaml", record_mode="once")
+    @MockedTest.use_cassette("core_order_service_sync.yaml", record_mode="once", macth_on="body")
     def test_core_order_serializer(self):
         account = EbayAccountFactory(
             inv_id=StagingTestAccount.ACCOUNT_ID,

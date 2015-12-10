@@ -1,24 +1,24 @@
 interactions:
 - request:
     body: '{"channel": "ebay", "basket": {"items": [{"product": 463690, "name": "XtC
-      Advanced 2 LTD", "quantity": 2, "unit_gross_price": "942.68", "tax_rate": "7.000"},
+      Advanced 2 LTD", "quantity": 2, "unit_gross_price": "7.51", "tax_rate": "0.000"},
       {"product": 463691, "name": "FastRoad CoMax", "quantity": 5, "unit_gross_price":
-      "582.93", "tax_rate": "7.000"}], "note_external": "Ebay order id: 9912341245-7534821047"},
+      "138.57", "tax_rate": "19.000"}], "note_external": "Ebay order id: 9912341245-9679510956"},
       "shipment": {"service": {"name": "Some ebay description", "time_min": 86400,
-      "time_max": 259200}, "name": "Some ebay description", "cost": "4.39", "external_key":
+      "time_max": 259200}, "name": "Some ebay description", "cost": "8.54", "external_key":
       "EbayShippingService_7", "tracking_number": null}, "customer": {"first_name":
       "John", "last_name": "Wayne", "email": "test@inventorum.com", "billing_address":
-      {"first_name": "LTepUeOyoY", "last_name": "", "address1": "niTmhxqbpi", "address2":
-      "miDpYOAECS", "zipcode": "hr", "city": "ecQOToDbLt", "state": "sYoVijgGIF",
-      "country": "DE"}, "shipping_address": [{"first_name": "swSQootkmt", "last_name":
-      "", "address1": "yfZznHbpgq", "address2": "JUXdJufyiN", "zipcode": "oS", "city":
-      "fPHILmUlrT", "state": "bAioavLHXA", "country": "DE"}]}, "payments": [{"payment_amount":
-      "259.58", "payment_method": "4"}], "state": 2}'
+      {"first_name": "rVAphmBjxt", "last_name": "", "address1": "OenypMoTMX", "address2":
+      "AsmJwXGPWp", "zipcode": "pg", "city": "NTnRdVzzEN", "state": "QYILtOUKhu",
+      "country": "DE"}, "shipping_address": [{"first_name": "LRmwRcceNo", "last_name":
+      "", "address1": "ueeCvtrUAR", "address2": "xDLUXgNdjR", "zipcode": "Py", "city":
+      "IPKehVEkEN", "state": "cpywEdQjhy", "country": "DE"}]}, "payments": [{"payment_amount":
+      "78.65", "payment_method": "4"}], "state": 2}'
     headers:
       Accept: [!!python/unicode 'application/json']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['1109']
+      Content-Length: ['1107']
       Content-Type: [!!python/unicode 'application/json']
       User-Agent: [!!python/unicode 'inv-ebay/0.1.18-dev']
       X-Api-Version: [10]
@@ -27,231 +27,36 @@ interactions:
     method: POST
     uri: http://app.intern.inventorum.net/api/orders/
   response:
-    body: {string: !!python/unicode '{"id": 15090, "basket": {"note_internal": null,
-        "note_external": "Ebay order id: 9912341245-7534821047", "items": [{"id":
-        33277, "name": "XtC Advanced 2 LTD", "discount": null, "original_quantity":
-        "2.00", "price": "881.0093457944", "product": 463690, "quantity": 2, "tax_rate":
-        "7.000", "gross_price": "1885.36", "unit_gross_price": "942.68"}, {"id": 33278,
+    body: {string: !!python/unicode '{"id": 15094, "basket": {"note_internal": null,
+        "note_external": "Ebay order id: 9912341245-9679510956", "items": [{"id":
+        33285, "name": "XtC Advanced 2 LTD", "discount": null, "original_quantity":
+        "2.00", "price": "7.5100000000", "product": 463690, "quantity": 2, "tax_rate":
+        "0.000", "gross_price": "15.02", "unit_gross_price": "7.51"}, {"id": 33286,
         "name": "FastRoad CoMax", "discount": null, "original_quantity": "5.00", "price":
-        "544.7943925234", "product": 463691, "quantity": 5, "tax_rate": "7.000", "gross_price":
-        "2914.65", "unit_gross_price": "582.93"}]}, "state": 2, "customer": {"id":
-        11846, "channel": 1, "email": "test@inventorum.com", "title": null, "first_name":
-        "John", "middle_name": null, "last_name": "Wayne", "billing_address": {"country":
-        "DE", "id": 23395, "address1": "niTmhxqbpi", "address2": "miDpYOAECS", "zipcode":
-        "hr", "city": "ecQOToDbLt", "state": "sYoVijgGIF", "first_name": "LTepUeOyoY",
-        "last_name": "", "company": null, "title": null}, "shipping_address": [{"country":
-        "DE", "id": 23394, "address1": "yfZznHbpgq", "address2": "JUXdJufyiN", "zipcode":
-        "oS", "city": "fPHILmUlrT", "state": "bAioavLHXA", "first_name": "swSQootkmt",
-        "last_name": "", "company": null, "title": null}]}, "amount_paid": "259.5800000000",
-        "payments": [{"id": 11621, "payment_method": "4", "payment_amount": "259.5800000000",
-        "date": "10.12.2015 - 15:20", "transaction_id": null, "transaction_duration":
-        null, "paypal_invoice_id": null, "paypal_tab_id": null}], "shipment": {"id":
-        2445, "name": "Some ebay description", "tracking_number": null, "cost": "4.39",
-        "external_key": "EbayShippingService_7", "service": {"id": 1916, "name": "Some
-        ebay description", "time_max": 259200, "time_min": 86400}}, "channel": "ebay"}'}
-    headers:
-      allow: ['GET, POST, HEAD, OPTIONS']
-      connection: [keep-alive]
-      content-type: [application/json]
-      date: ['Thu, 10 Dec 2015 14:20:37 GMT']
-      server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1a725F:8UfLiY0AtqH5ZrIRIqGJPF5Uox8"; Domain=app.intern.inventorum.net;
-          expires=Thu, 10-Dec-2015 16:20:37 GMT; httponly; Max-Age=7200; Path=/']
-      transfer-encoding: [chunked]
-      vary: ['Accept, Cookie']
-      x-inv-account: ['346']
-      x-inv-processed-version: ['10']
-      x-inv-user: ['425']
-      x-rid: ['344667526249637364']
-    status: {code: 201, message: CREATED}
-- request:
-    body: '{"channel": "ebay", "basket": {"items": [{"product": 463690, "name": "XtC
-      Advanced 2 LTD", "quantity": 2, "unit_gross_price": "638.27", "tax_rate": "7.000"},
-      {"product": 463691, "name": "FastRoad CoMax", "quantity": 5, "unit_gross_price":
-      "726.24", "tax_rate": "19.000"}], "note_external": "Ebay order id: 9912341245-6921974477"},
-      "shipment": {"service": {"name": "Some ebay description", "time_min": 86400,
-      "time_max": 259200}, "name": "Some ebay description", "cost": "3.21", "external_key":
-      "EbayShippingService_8", "tracking_number": null}, "customer": {"first_name":
-      "John", "last_name": "Wayne", "email": "test@inventorum.com", "billing_address":
-      {"first_name": "GpcBOhdnhx", "last_name": "", "address1": "AGdtTgLQda", "address2":
-      "TAFXOPlLpc", "zipcode": "DQ", "city": "DKxtkSyDRh", "state": "SiiwOvSwyu",
-      "country": "DE"}, "shipping_address": [{"first_name": "eqEwXagtJg", "last_name":
-      "", "address1": "jwAQvWibpV", "address2": "xrdSwztipm", "zipcode": "Af", "city":
-      "NCEjkpzOnI", "state": "SRiiwhCCMM", "country": "DE"}]}, "payments": [{"payment_amount":
-      "847.43", "payment_method": "4"}], "state": 2}'
-    headers:
-      Accept: [!!python/unicode 'application/json']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      Content-Length: ['1110']
-      Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.18-dev']
-      X-Api-Version: [10]
-      X-Inv-Account: [!!python/unicode '346']
-      X-Inv-User: [!!python/unicode '425']
-    method: POST
-    uri: http://app.intern.inventorum.net/api/orders/
-  response:
-    body: {string: !!python/unicode '{"id": 15091, "basket": {"note_internal": null,
-        "note_external": "Ebay order id: 9912341245-6921974477", "items": [{"id":
-        33279, "name": "XtC Advanced 2 LTD", "discount": null, "original_quantity":
-        "2.00", "price": "596.5140186916", "product": 463690, "quantity": 2, "tax_rate":
-        "7.000", "gross_price": "1276.54", "unit_gross_price": "638.27"}, {"id": 33280,
-        "name": "FastRoad CoMax", "discount": null, "original_quantity": "5.00", "price":
-        "610.2857142857", "product": 463691, "quantity": 5, "tax_rate": "19.000",
-        "gross_price": "3631.20", "unit_gross_price": "726.24"}]}, "state": 2, "customer":
-        {"id": 11847, "channel": 1, "email": "test@inventorum.com", "title": null,
+        "116.4453781513", "product": 463691, "quantity": 5, "tax_rate": "19.000",
+        "gross_price": "692.85", "unit_gross_price": "138.57"}]}, "state": 2, "customer":
+        {"id": 11850, "channel": 1, "email": "test@inventorum.com", "title": null,
         "first_name": "John", "middle_name": null, "last_name": "Wayne", "billing_address":
-        {"country": "DE", "id": 23397, "address1": "AGdtTgLQda", "address2": "TAFXOPlLpc",
-        "zipcode": "DQ", "city": "DKxtkSyDRh", "state": "SiiwOvSwyu", "first_name":
-        "GpcBOhdnhx", "last_name": "", "company": null, "title": null}, "shipping_address":
-        [{"country": "DE", "id": 23396, "address1": "jwAQvWibpV", "address2": "xrdSwztipm",
-        "zipcode": "Af", "city": "NCEjkpzOnI", "state": "SRiiwhCCMM", "first_name":
-        "eqEwXagtJg", "last_name": "", "company": null, "title": null}]}, "amount_paid":
-        "847.4300000000", "payments": [{"id": 11622, "payment_method": "4", "payment_amount":
-        "847.4300000000", "date": "10.12.2015 - 15:24", "transaction_id": null, "transaction_duration":
+        {"country": "DE", "id": 23403, "address1": "OenypMoTMX", "address2": "AsmJwXGPWp",
+        "zipcode": "pg", "city": "NTnRdVzzEN", "state": "QYILtOUKhu", "first_name":
+        "rVAphmBjxt", "last_name": "", "company": null, "title": null}, "shipping_address":
+        [{"country": "DE", "id": 23402, "address1": "ueeCvtrUAR", "address2": "xDLUXgNdjR",
+        "zipcode": "Py", "city": "IPKehVEkEN", "state": "cpywEdQjhy", "first_name":
+        "LRmwRcceNo", "last_name": "", "company": null, "title": null}]}, "amount_paid":
+        "78.6500000000", "payments": [{"id": 11625, "payment_method": "4", "payment_amount":
+        "78.6500000000", "date": "10.12.2015 - 15:56", "transaction_id": null, "transaction_duration":
         null, "paypal_invoice_id": null, "paypal_tab_id": null}], "shipment": {"id":
-        2446, "name": "Some ebay description", "tracking_number": null, "cost": "3.21",
-        "external_key": "EbayShippingService_8", "service": {"id": 1917, "name": "Some
+        2449, "name": "Some ebay description", "tracking_number": null, "cost": "8.54",
+        "external_key": "EbayShippingService_7", "service": {"id": 1920, "name": "Some
         ebay description", "time_max": 259200, "time_min": 86400}}, "channel": "ebay"}'}
     headers:
       allow: ['GET, POST, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Thu, 10 Dec 2015 14:24:09 GMT']
+      date: ['Thu, 10 Dec 2015 14:56:35 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1a728f:wpS7PLBJZVLFpxDkLogXrS2TUQI"; Domain=app.intern.inventorum.net;
-          expires=Thu, 10-Dec-2015 16:24:09 GMT; httponly; Max-Age=7200; Path=/']
-      transfer-encoding: [chunked]
-      vary: ['Accept, Cookie']
-      x-inv-account: ['346']
-      x-inv-processed-version: ['10']
-      x-inv-user: ['425']
-      x-rid: ['344667526249637364']
-    status: {code: 201, message: CREATED}
-- request:
-    body: '{"channel": "ebay", "basket": {"items": [{"product": 463690, "name": "XtC
-      Advanced 2 LTD", "quantity": 2, "unit_gross_price": "34.56", "tax_rate": "7.000"},
-      {"product": 463691, "name": "FastRoad CoMax", "quantity": 5, "unit_gross_price":
-      "332.98", "tax_rate": "0.000"}], "note_external": "Ebay order id: 9912341245-7684691882"},
-      "shipment": {"service": {"name": "Some ebay description", "time_min": 86400,
-      "time_max": 259200}, "name": "Some ebay description", "cost": "9.55", "external_key":
-      "EbayShippingService_7", "tracking_number": null}, "customer": {"first_name":
-      "John", "last_name": "Wayne", "email": "test@inventorum.com", "billing_address":
-      {"first_name": "iTjpeMFSGX", "last_name": "", "address1": "nRvRiffJxj", "address2":
-      "FCHelIKGdw", "zipcode": "pt", "city": "LDrcrXRvuh", "state": "rmJlsnMker",
-      "country": "DE"}, "shipping_address": [{"first_name": "blYBTWegAc", "last_name":
-      "", "address1": "MlKNUpqhwl", "address2": "ZvsWcEBfYJ", "zipcode": "SV", "city":
-      "DvPOewrxAN", "state": "yBLdGghyGc", "country": "DE"}]}, "payments": [{"payment_amount":
-      "832.35", "payment_method": "4"}], "state": 2}'
-    headers:
-      Accept: [!!python/unicode 'application/json']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      Content-Length: ['1108']
-      Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.18-dev']
-      X-Api-Version: [10]
-      X-Inv-Account: [!!python/unicode '346']
-      X-Inv-User: [!!python/unicode '425']
-    method: POST
-    uri: http://app.intern.inventorum.net/api/orders/
-  response:
-    body: {string: !!python/unicode '{"id": 15092, "basket": {"note_internal": null,
-        "note_external": "Ebay order id: 9912341245-7684691882", "items": [{"id":
-        33281, "name": "XtC Advanced 2 LTD", "discount": null, "original_quantity":
-        "2.00", "price": "32.2990654206", "product": 463690, "quantity": 2, "tax_rate":
-        "7.000", "gross_price": "69.12", "unit_gross_price": "34.56"}, {"id": 33282,
-        "name": "FastRoad CoMax", "discount": null, "original_quantity": "5.00", "price":
-        "332.9800000000", "product": 463691, "quantity": 5, "tax_rate": "0.000", "gross_price":
-        "1664.90", "unit_gross_price": "332.98"}]}, "state": 2, "customer": {"id":
-        11848, "channel": 1, "email": "test@inventorum.com", "title": null, "first_name":
-        "John", "middle_name": null, "last_name": "Wayne", "billing_address": {"country":
-        "DE", "id": 23399, "address1": "nRvRiffJxj", "address2": "FCHelIKGdw", "zipcode":
-        "pt", "city": "LDrcrXRvuh", "state": "rmJlsnMker", "first_name": "iTjpeMFSGX",
-        "last_name": "", "company": null, "title": null}, "shipping_address": [{"country":
-        "DE", "id": 23398, "address1": "MlKNUpqhwl", "address2": "ZvsWcEBfYJ", "zipcode":
-        "SV", "city": "DvPOewrxAN", "state": "yBLdGghyGc", "first_name": "blYBTWegAc",
-        "last_name": "", "company": null, "title": null}]}, "amount_paid": "832.3500000000",
-        "payments": [{"id": 11623, "payment_method": "4", "payment_amount": "832.3500000000",
-        "date": "10.12.2015 - 15:29", "transaction_id": null, "transaction_duration":
-        null, "paypal_invoice_id": null, "paypal_tab_id": null}], "shipment": {"id":
-        2447, "name": "Some ebay description", "tracking_number": null, "cost": "9.55",
-        "external_key": "EbayShippingService_7", "service": {"id": 1918, "name": "Some
-        ebay description", "time_max": 259200, "time_min": 86400}}, "channel": "ebay"}'}
-    headers:
-      allow: ['GET, POST, HEAD, OPTIONS']
-      connection: [keep-alive]
-      content-type: [application/json]
-      date: ['Thu, 10 Dec 2015 14:29:25 GMT']
-      server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1a72Dl:9mDknscpUg5QvfO86L64a-MlzjI"; Domain=app.intern.inventorum.net;
-          expires=Thu, 10-Dec-2015 16:29:25 GMT; httponly; Max-Age=7200; Path=/']
-      transfer-encoding: [chunked]
-      vary: ['Accept, Cookie']
-      x-inv-account: ['346']
-      x-inv-processed-version: ['10']
-      x-inv-user: ['425']
-      x-rid: ['344667526249637364']
-    status: {code: 201, message: CREATED}
-- request:
-    body: '{"channel": "ebay", "basket": {"items": [{"product": 463690, "name": "XtC
-      Advanced 2 LTD", "quantity": 2, "unit_gross_price": "329.46", "tax_rate": "0.000"},
-      {"product": 463691, "name": "FastRoad CoMax", "quantity": 5, "unit_gross_price":
-      "134.71", "tax_rate": "19.000"}], "note_external": "Ebay order id: 9912341245-4573765005"},
-      "shipment": {"service": {"name": "Some ebay description", "time_min": 86400,
-      "time_max": 259200}, "name": "Some ebay description", "cost": "7.39", "external_key":
-      "EbayShippingService_7", "tracking_number": null}, "customer": {"first_name":
-      "John", "last_name": "Wayne", "email": "test@inventorum.com", "billing_address":
-      {"first_name": "sfhmVqUBvT", "last_name": "", "address1": "uzNhPSowXS", "address2":
-      "BuXUnsGDim", "zipcode": "ER", "city": "egueRtqAYu", "state": "jdKfOOTcuG",
-      "country": "DE"}, "shipping_address": [{"first_name": "KXCHSxAHnE", "last_name":
-      "", "address1": "KOQAnYiYgk", "address2": "LiXHEEXkGx", "zipcode": "rD", "city":
-      "gxJQcofcry", "state": "vVoxGUaYlr", "country": "DE"}]}, "payments": [{"payment_amount":
-      "4.23", "payment_method": "4"}], "state": 2}'
-    headers:
-      Accept: [!!python/unicode 'application/json']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      Content-Length: ['1108']
-      Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.18-dev']
-      X-Api-Version: [10]
-      X-Inv-Account: [!!python/unicode '346']
-      X-Inv-User: [!!python/unicode '425']
-    method: POST
-    uri: http://app.intern.inventorum.net/api/orders/
-  response:
-    body: {string: !!python/unicode '{"id": 15093, "basket": {"note_internal": null,
-        "note_external": "Ebay order id: 9912341245-4573765005", "items": [{"id":
-        33283, "name": "XtC Advanced 2 LTD", "discount": null, "original_quantity":
-        "2.00", "price": "329.4600000000", "product": 463690, "quantity": 2, "tax_rate":
-        "0.000", "gross_price": "658.92", "unit_gross_price": "329.46"}, {"id": 33284,
-        "name": "FastRoad CoMax", "discount": null, "original_quantity": "5.00", "price":
-        "113.2016806723", "product": 463691, "quantity": 5, "tax_rate": "19.000",
-        "gross_price": "673.55", "unit_gross_price": "134.71"}]}, "state": 2, "customer":
-        {"id": 11849, "channel": 1, "email": "test@inventorum.com", "title": null,
-        "first_name": "John", "middle_name": null, "last_name": "Wayne", "billing_address":
-        {"country": "DE", "id": 23401, "address1": "uzNhPSowXS", "address2": "BuXUnsGDim",
-        "zipcode": "ER", "city": "egueRtqAYu", "state": "jdKfOOTcuG", "first_name":
-        "sfhmVqUBvT", "last_name": "", "company": null, "title": null}, "shipping_address":
-        [{"country": "DE", "id": 23400, "address1": "KOQAnYiYgk", "address2": "LiXHEEXkGx",
-        "zipcode": "rD", "city": "gxJQcofcry", "state": "vVoxGUaYlr", "first_name":
-        "KXCHSxAHnE", "last_name": "", "company": null, "title": null}]}, "amount_paid":
-        "4.2300000000", "payments": [{"id": 11624, "payment_method": "4", "payment_amount":
-        "4.2300000000", "date": "10.12.2015 - 15:30", "transaction_id": null, "transaction_duration":
-        null, "paypal_invoice_id": null, "paypal_tab_id": null}], "shipment": {"id":
-        2448, "name": "Some ebay description", "tracking_number": null, "cost": "7.39",
-        "external_key": "EbayShippingService_7", "service": {"id": 1919, "name": "Some
-        ebay description", "time_max": 259200, "time_min": 86400}}, "channel": "ebay"}'}
-    headers:
-      allow: ['GET, POST, HEAD, OPTIONS']
-      connection: [keep-alive]
-      content-type: [application/json]
-      date: ['Thu, 10 Dec 2015 14:30:07 GMT']
-      server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1a72ER:1eSTTVyy-lG1acsuUlakn25frLo"; Domain=app.intern.inventorum.net;
-          expires=Thu, 10-Dec-2015 16:30:07 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1a72e3:nDuJmR9Jm2g39gD1qBlr0DHFcOg"; Domain=app.intern.inventorum.net;
+          expires=Thu, 10-Dec-2015 16:56:35 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
