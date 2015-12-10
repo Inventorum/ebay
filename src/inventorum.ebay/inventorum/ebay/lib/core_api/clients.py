@@ -230,7 +230,7 @@ class CoreAPIClient(object):
         """
         translations = self._product_attribute_translations_cache[language]
         if not translations:
-            response = self.get('/api/public/info/attributes/', custom_headers={'ACCEPT_LANGUAGE': language})
+            response = self.get('/api/public/info/attributes/', custom_headers={'Accept-Language': language})
             translations.update(response.json())
 
         # Return a copy so if someone modifies it, it does not affect the cache.
