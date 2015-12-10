@@ -22,22 +22,23 @@ class CoreOrderService(object):
         self.account = account
 
     def create_in_core_api(self, order):
-        """
+        """Create the order in the Core-API and link the local objects to using the IDs returned by the Core-API.
+
         :type order: inventorum.ebay.apps.orders.models.OrderModel
         """
-        assert order.line_items.count() == 1, "Core order creation for combined ebay orders is not supported"
-
         data = OrderModelCoreAPIDataSerializer(order).data
         core_order = self.account.core_api.create_order(data)
 
         order.inv_id = core_order.id
         order.save()
 
-        order_line_item = order.line_items.first()
-        core_order_line_item = core_order.basket.items[0]
+        order_line_items_to_update = {item.inv_product_id: item for item in order.line_items.all()}
+        for core_basket_item in core_order.basket.items:
+            order_line_item = order_line_items_to_update.pop(core_basket_item.product_id)
+            order_line_item.inv_id = core_basket_item.id
+            order_line_item.save()
 
-        order_line_item.inv_id = core_order_line_item.id
-        order_line_item.save()
+        assert not order_line_items_to_update, 'Oh! the Core-API returned less basket items that what it should'
 
 
 class EbayOrderStatusUpdateException(Exception):
