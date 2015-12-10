@@ -5,9 +5,9 @@ CHANGES
 develop
 =======
 Feature
-...
+.......
 - INV-6061 Add support for combined eBay orders.
-
+- INV-6183 Fetch product attribute translations from the Core-API when publishing products to ebay.
 
 
 2015-11-06 0.1.17
