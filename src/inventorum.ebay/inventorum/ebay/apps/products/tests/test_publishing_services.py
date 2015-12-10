@@ -272,9 +272,9 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         variation_a_specifics = variation_a.specifics.all()
         self.assertEqual(variation_a_specifics.count(), 2)
 
-        self.assertEqual(variation_a_specifics[0].name, "size")
+        self.assertEqual(variation_a_specifics[0].name, "Größe")
         self.assertEqual(variation_a_specifics[0].values.first().value, "s")
-        self.assertEqual(variation_a_specifics[1].name, "color")
+        self.assertEqual(variation_a_specifics[1].name, "Farbe")
         self.assertEqual(variation_a_specifics[1].values.first().value, "black")
 
         # assert item variation data for the second variation
@@ -291,9 +291,9 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         variation_b_specifics = variation_b.specifics.all()
         self.assertEqual(variation_b_specifics.count(), 2)
 
-        self.assertEqual(variation_b_specifics[0].name, "size")
+        self.assertEqual(variation_b_specifics[0].name, "Größe")
         self.assertEqual(variation_b_specifics[0].values.first().value, "m")
-        self.assertEqual(variation_b_specifics[1].name, "color")
+        self.assertEqual(variation_b_specifics[1].name, "Farbe")
         self.assertEqual(variation_b_specifics[1].values.first().value, "italy")
 
         # assert complete ebay payload with variations
