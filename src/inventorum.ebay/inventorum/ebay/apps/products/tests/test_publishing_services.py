@@ -2,10 +2,12 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from decimal import Decimal as D, Decimal
-from inventorum.ebay.apps.returns.models import ReturnPolicyModel
+
+from mock import PropertyMock, Mock
 
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory, CategorySpecificFactory, DurationFactory
 from inventorum.ebay.apps.returns import ReturnsAcceptedOption, ReturnsWithinOption, ShippingCostPaidByOption
+from inventorum.ebay.apps.returns.models import ReturnPolicyModel
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.services import PublishingValidationException, PublishingPreparationService
 from inventorum.ebay.apps.products.tests.factories import EbayProductModelFactory, EbayItemFactory
@@ -15,7 +17,6 @@ from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory, Cor
     CoreProductAttributeFactory, CoreInfoFactory, CoreTaxTypeFactory, CoreImageFactory
 from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 from inventorum.ebay.tests.testcases import UnitTestCase
-from mock import PropertyMock, Mock
 
 log = logging.getLogger(__name__)
 
@@ -86,7 +87,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         """
         return CoreProductFactory.create(id=941284,
                                          name='Felt Brougham',
-                                         description='Awesome street bikes are awesome',
+                                         description='Awesome street\nbikes are awesome',
                                          ean="038678561125",
                                          gross_price=D('499.99'),
                                          quantity=100,
@@ -171,7 +172,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertEqual(ebay_item.product, self.ebay_product)
         self.assertEqual(ebay_item.category, self.category)
         self.assertEqual(ebay_item.name, 'Felt Brougham')
-        self.assertEqual(ebay_item.description, 'Awesome street bikes are awesome')
+        self.assertEqual(ebay_item.description, 'Awesome street\nbikes are awesome')
         self.assertEqual(ebay_item.ean, '038678561125')
         self.assertEqual(ebay_item.quantity, 100)
         self.assertEqual(ebay_item.gross_price, D("499.99"))
@@ -217,7 +218,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertEqual(data['Item'], {'ConditionID': 1000,
                                         'Country': 'DE',
                                         'Currency': 'EUR',
-                                        'Description': '<![CDATA[Awesome street bikes are awesome]]>',
+                                        'Description': '<![CDATA[<p>Awesome street<br />bikes are awesome</p>]]>',
                                         'DispatchTimeMax': 3,
                                         'ItemSpecifics': {'NameValueList': [{'Name': 'Brand',
                                                                              'Value': 'Felt'}]},
@@ -272,9 +273,9 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         variation_a_specifics = variation_a.specifics.all()
         self.assertEqual(variation_a_specifics.count(), 2)
 
-        self.assertEqual(variation_a_specifics[0].name, "size")
+        self.assertEqual(variation_a_specifics[0].name, "Größe")
         self.assertEqual(variation_a_specifics[0].values.first().value, "s")
-        self.assertEqual(variation_a_specifics[1].name, "color")
+        self.assertEqual(variation_a_specifics[1].name, "Farbe")
         self.assertEqual(variation_a_specifics[1].values.first().value, "black")
 
         # assert item variation data for the second variation
@@ -291,9 +292,9 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         variation_b_specifics = variation_b.specifics.all()
         self.assertEqual(variation_b_specifics.count(), 2)
 
-        self.assertEqual(variation_b_specifics[0].name, "size")
+        self.assertEqual(variation_b_specifics[0].name, "Größe")
         self.assertEqual(variation_b_specifics[0].values.first().value, "m")
-        self.assertEqual(variation_b_specifics[1].name, "color")
+        self.assertEqual(variation_b_specifics[1].name, "Farbe")
         self.assertEqual(variation_b_specifics[1].values.first().value, "italy")
 
         # assert complete ebay payload with variations

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-import json
 import logging
 from decimal import Decimal as D
 
@@ -61,18 +60,34 @@ class TestCoreAPIDataSerializers(UnitTestCase, ShippingServiceTestMixin):
                                          tax_rate=D("7"),
                                          quantity=5)
 
+        OrderLineItemModelFactory.create(order=order,
+                                         orderable_item__inv_product_id=24,
+                                         name="Inventorum Pants [Red, XXL]",
+                                         unit_price=D("19.99"),
+                                         tax_rate=D("7"),
+                                         quantity=2)
+
         serializer = OrderModelCoreAPIDataSerializer(order)
 
         self.assertDictEqual(serializer.data, {
             "channel": "ebay",
             "basket": {
-                "items": [{
-                    "product": 23,
-                    "name": "Inventorum T-Shirt [Green, L]",
-                    "quantity": 5,
-                    "unit_gross_price": "3.99",
-                    "tax_rate": "7.000"
-                }],
+                "items": [
+                    {
+                        "product": 24,
+                        "name": "Inventorum Pants [Red, XXL]",
+                        "quantity": 2,
+                        "unit_gross_price": "19.99",
+                        "tax_rate": "7.000"
+                    },
+                    {
+                        "product": 23,
+                        "name": "Inventorum T-Shirt [Green, L]",
+                        "quantity": 5,
+                        "unit_gross_price": "3.99",
+                        "tax_rate": "7.000"
+                    },
+                ],
                 "note_external": "Ebay order id: 9912341245-123456789"
             },
             "shipment": {

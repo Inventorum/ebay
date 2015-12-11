@@ -62,3 +62,12 @@ class TestCoreAPIClient(UnitTestCase):
         self.assertEqual(pager.limit_per_page, 10)
         self.assertEqual(pager.params, {"foo": "bar"})
         self.assertEqual(pager.custom_headers, {"X-Inv-Foo": "bar"})
+
+    def test_get_product_attribute_translations(self):
+        spanish = {
+            'name': 'nombre',
+            'size': 'talla',
+        }
+        # prefill cache to avoid hitting the network
+        self.subject._product_attribute_translations_cache['es'] = spanish
+        self.assertEqual(self.subject.get_product_attribute_translations(language='es'), spanish)

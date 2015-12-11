@@ -15,6 +15,7 @@ from rest_framework import test
 
 from inventorum.ebay.tests import StagingTestAccount
 from inventorum.ebay.apps.auth.models import EbayTokenModel
+from inventorum.ebay.lib.core_api.clients import CoreAPIClient
 from inventorum.ebay.lib.ebay.authentication import EbayToken
 from inventorum.ebay.lib.auth.backends import TrustedHeaderAuthentication
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory, EbayAccountFactory
@@ -76,6 +77,9 @@ class EbayAuthenticatedAPITestCase(APITestCase):
         self.ebay_token = self.create_ebay_token()
         self.account.token = EbayTokenModel.create_from_ebay_token(self.ebay_token)
         self.account.save()
+
+        # Patch the CoreAPIClient with the German translations so it does not hit the network
+        CoreAPIClient._product_attribute_translations_cache['de'] = {'size': 'Größe', 'color': 'Farbe'}
 
     @staticmethod
     def create_ebay_token():

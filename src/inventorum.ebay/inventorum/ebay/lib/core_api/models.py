@@ -402,18 +402,21 @@ class CoreBasketItem(object):
         id = serializers.IntegerField()
         name = serializers.CharField()
         quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
+        product = serializers.IntegerField(source='product_id')
 
     # / Serializer #######################
 
-    def __init__(self, id, name, quantity):
+    def __init__(self, id, name, quantity, product_id):
         """
         :type id: int
         :type name: unicode
         :type quantity: decimal.Decimal
+        :type product_id: int
         """
         self.id = id
         self.name = name
         self.quantity = quantity
+        self.product_id = product_id
 
 CoreBasketItem.Serializer.Meta.model = CoreBasketItem
 
