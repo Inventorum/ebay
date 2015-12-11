@@ -2,6 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import logging
+from collections import defaultdict
+
 import requests
 from django.conf import settings
 
@@ -217,6 +219,22 @@ class CoreAPIClient(object):
         :type dt: datetime.datetime
         """
         return dt.replace(microsecond=0).isoformat()
+
+    # This attributed is shared between objects, and that's ok for a cache.
+    _product_attribute_translations_cache = defaultdict(dict)
+
+    def get_product_attribute_translations(self, language='de'):
+        """Return a dict containing attribute names and their translations to the specified `language`.
+
+        :rtype: dict
+        """
+        translations = self._product_attribute_translations_cache[language]
+        if not translations:
+            response = self.get('/api/public/info/attributes/', custom_headers={'Accept-Language': language})
+            translations.update(response.json())
+
+        # Return a copy so if someone modifies it, it does not affect the cache.
+        return dict(translations)
 
 
 class UserScopedCoreAPIClient(CoreAPIClient):
