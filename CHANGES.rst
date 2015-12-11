@@ -4,6 +4,8 @@ CHANGES
 
 develop
 =======
+2015-12-11 0.1.18
+=================
 Feature
 .......
 - INV-6061 Add support for combined eBay orders.
