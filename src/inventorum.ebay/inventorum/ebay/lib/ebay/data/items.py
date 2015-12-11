@@ -2,13 +2,15 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 
-from BeautifulSoup import CData
+from django.utils.html import linebreaks
+
+from rest_framework import fields
+from rest_framework.fields import ListField, CharField, IntegerField
+
 from inventorum.ebay.lib.ebay.data import EbayParser, EbayArrayField, EbayListSerializer
 from inventorum.ebay.lib.ebay.data.responses import PaginationResultType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from inventorum.ebay.lib.utils import int_or_none
-from rest_framework import fields
-from rest_framework.fields import ListField, CharField, IntegerField
 
 
 class EbayPriceModel(object):
@@ -208,7 +210,7 @@ class EbayFixedPriceItem(object):
         data = {
             'Title': self.title,
             'SKU': self.sku,
-            'Description': str(CData(self.description)),
+            'Description': '<![CDATA[{html}]]>'.format(html=linebreaks(self.description)),
             'ListingDuration': self.listing_duration,
             'Country': self.country,
             'PostalCode': self.postal_code,

@@ -8,6 +8,7 @@ Feature
 .......
 - INV-6061 Add support for combined eBay orders.
 - INV-6183 Fetch product attribute translations from the Core-API when publishing products to ebay.
+- INV-5839 Transform new lines to `<br>` and do not escape HTML tags in product descriptions.
 
 
 2015-11-06 0.1.17
