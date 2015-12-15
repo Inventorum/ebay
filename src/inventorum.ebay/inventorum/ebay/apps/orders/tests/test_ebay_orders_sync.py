@@ -222,6 +222,13 @@ class UnitTestEbayOrderSyncer(UnitTestCase, ShippingServiceTestMixin):
 
         self.assertPrecondition(OrderModel.objects.count(), 0)
 
+    def test_new_icoming_order_with_invalid_request_in_buyer_email(self):
+        incoming_order = OrderModelFactory.create(
+            buyer_email='Invalid Request'
+        )
+        serialized_data = OrderCustomerCoreAPIDataSerializer(instance=incoming_order).data
+        self.assertIsNone(serialized_data['email'])
+
     def test_new_incoming_order_for_non_variation_listing(self):
         published_ebay_item_id = "123456789"
         transaction_id = "987654321"

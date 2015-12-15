@@ -98,6 +98,18 @@ class OrderCustomerCoreAPIDataSerializer(serializers.ModelSerializer):
         # Note: core api wants to have a list of shipping addresses :-(
         return [OrderCustomerAddressCoreAPIDataSerializer(order.shipping_address).data]
 
+    def to_representation(self, instance):
+        """Return the representation of `instance`.
+
+        If the `email` field contains an invalid email, its value is substituted with `None`.
+        """
+        data = super(OrderCustomerCoreAPIDataSerializer, self).to_representation(instance)
+        try:
+            validate_email(data['email'])
+        except ValidationError:
+            data['email'] = None
+        return data
+
 
 class OrderPaymentCoreAPIDataSerializer(serializers.ModelSerializer):
 
@@ -144,7 +156,7 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     Responsible for serializing a `OrderModel` instance into the according data format
     to create/update its representation in the core api.
     """
-    
+
     class Meta:
         model = OrderModel
         fields = ("channel", "basket", "shipment", "customer", "payments", "state")

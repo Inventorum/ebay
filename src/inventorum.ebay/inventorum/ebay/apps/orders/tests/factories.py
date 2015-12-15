@@ -21,7 +21,7 @@ NUMBER_CHARS = [str(i) for i in range(10)]
 
 
 class OrderStatusModelFactory(factory.DjangoModelFactory):
-    
+
     class Meta:
         model = OrderStatusModel
 
