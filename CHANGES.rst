@@ -4,6 +4,11 @@ CHANGES
 
 develop
 =======
+
+2015-12-15 0.1.19
+=================
+- Changed gevent to 1.0.2 (grequests have no constraints on it) so it works with new Python2.7
+
 2015-12-11 0.1.18
 =================
 Feature
