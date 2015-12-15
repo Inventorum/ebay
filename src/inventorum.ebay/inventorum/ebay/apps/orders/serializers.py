@@ -3,14 +3,18 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.conf import settings
-from inventorum.ebay.apps.accounts.models import AddressModel
-from inventorum.ebay.lib.core_api import CoreChannel, BinaryCoreOrderStates
-from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel, ShippingServiceModel
-from inventorum.ebay.lib.rest.fields import MoneyField, TaxRateField
-from inventorum.ebay.lib.utils import days_to_seconds
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+
 from rest_framework import serializers
 
+from inventorum.ebay.lib.core_api import CoreChannel, BinaryCoreOrderStates
+from inventorum.ebay.lib.rest.fields import MoneyField, TaxRateField
+from inventorum.ebay.lib.utils import days_to_seconds
+
+from inventorum.ebay.apps.accounts.models import AddressModel
+from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel, ShippingServiceModel
 
 log = logging.getLogger(__name__)
 
@@ -94,6 +98,18 @@ class OrderCustomerCoreAPIDataSerializer(serializers.ModelSerializer):
         # Note: core api wants to have a list of shipping addresses :-(
         return [OrderCustomerAddressCoreAPIDataSerializer(order.shipping_address).data]
 
+    def to_representation(self, instance):
+        """Return the representation of `instance`.
+
+        If the `email` field contains an invalid email, its value is substituted with `None`.
+        """
+        data = super(OrderCustomerCoreAPIDataSerializer, self).to_representation(instance)
+        try:
+            validate_email(data['email'])
+        except ValidationError:
+            data['email'] = None
+        return data
+
 
 class OrderPaymentCoreAPIDataSerializer(serializers.ModelSerializer):
 
@@ -140,7 +156,7 @@ class OrderModelCoreAPIDataSerializer(serializers.ModelSerializer):
     Responsible for serializing a `OrderModel` instance into the according data format
     to create/update its representation in the core api.
     """
-    
+
     class Meta:
         model = OrderModel
         fields = ("channel", "basket", "shipment", "customer", "payments", "state")
