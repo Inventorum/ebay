@@ -4,19 +4,6 @@ import logging
 from decimal import Decimal as D
 from datetime import datetime, timedelta
 
-from inventorum.ebay.apps.accounts.models import AddressModel
-from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
-from inventorum.ebay.apps.auth.models import EbayTokenModel
-from inventorum.ebay.tests import MockedTest
-from inventorum.ebay.apps.orders import CorePaymentMethod
-from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync, IncomingEbayOrderSyncer, EbayOrderSyncException
-from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
-from inventorum.ebay.apps.orders.tasks import periodic_ebay_orders_sync_task
-from inventorum.ebay.apps.products.models import EbayItemVariationModel, EbayItemModel
-from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory, EbayItemVariationFactory
-from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
-from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
 from inventorum.ebay.lib.core_api.tests import CoreApiTestHelpers
 from inventorum.ebay.lib.ebay.data import EbayParser, OrderStatusCodeType, PaymentStatusCodeType, \
@@ -24,7 +11,28 @@ from inventorum.ebay.lib.ebay.data import EbayParser, OrderStatusCodeType, Payme
 from inventorum.ebay.lib.ebay.data.tests.factories import OrderTypeFactory, GetOrdersResponseTypeFactory, \
     TransactionTypeWithVariationFactory, TransactionTypeFactory
 from inventorum.ebay.lib.ebay.tests.factories import EbayTokenFactory
+
+from inventorum.ebay.tests import MockedTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
+
+from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory, EbayUserFactory
+from inventorum.ebay.apps.accounts.models import AddressModel
+
+from inventorum.ebay.apps.auth.models import EbayTokenModel
+
+from inventorum.ebay.apps.products.models import EbayItemVariationModel, EbayItemModel
+from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory, EbayItemVariationFactory
+
+from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel
+from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
+
+from inventorum.ebay.apps.orders import CorePaymentMethod
+from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync, IncomingEbayOrderSyncer, EbayOrderSyncException
+from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+from inventorum.ebay.apps.orders.serializers import OrderCustomerCoreAPIDataSerializer
+from inventorum.ebay.apps.orders.tasks import periodic_ebay_orders_sync_task
+from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory
 
 
 log = logging.getLogger(__name__)

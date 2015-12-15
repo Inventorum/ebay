@@ -3,14 +3,18 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from django.conf import settings
-from inventorum.ebay.apps.accounts.models import AddressModel
-from inventorum.ebay.lib.core_api import CoreChannel, BinaryCoreOrderStates
-from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
-from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel, ShippingServiceModel
-from inventorum.ebay.lib.rest.fields import MoneyField, TaxRateField
-from inventorum.ebay.lib.utils import days_to_seconds
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+
 from rest_framework import serializers
 
+from inventorum.ebay.lib.core_api import CoreChannel, BinaryCoreOrderStates
+from inventorum.ebay.lib.rest.fields import MoneyField, TaxRateField
+from inventorum.ebay.lib.utils import days_to_seconds
+
+from inventorum.ebay.apps.accounts.models import AddressModel
+from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurationModel, ShippingServiceModel
 
 log = logging.getLogger(__name__)
 
