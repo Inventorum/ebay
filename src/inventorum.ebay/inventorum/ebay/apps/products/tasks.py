@@ -10,6 +10,7 @@ from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateMo
 from inventorum.ebay.apps.products.services import PublishingService, PublishingSendStateFailedException,\
     PublishingException, UnpublishingService, UnpublishingException, UpdateService, UpdateFailedException, \
     ProductDeletionService, CorePublishingStatusUpdateService
+from inventorum.ebay.lib.ebay import EbayConnectionException
 from inventorum.ebay.lib.ebay.data.errors import EbayFatalError
 from inventorum.ebay.lib.utils import preserve_and_reraise_exception
 
@@ -72,7 +73,7 @@ def _ebay_item_publish(self, ebay_item_id):
 
     try:
         service.publish()
-    except PublishingException as e:
+    except (PublishingException, EbayConnectionException) as e:
         log.error("Publishing failed with ebay errors: %s", e.original_exception.errors)
         # no retry, finalize will still be executed to finalize the failed publishing attempt
     except Exception as e:

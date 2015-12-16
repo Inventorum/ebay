@@ -4,6 +4,18 @@ CHANGES
 
 develop
 =======
+
+2015-12-15 0.1.20
+=================
+Fix
+...
+- INV-6218 Handle "Invalid Request" or any other invalid email address as the buyer's email address when publishing to the Core-API.
+- INV-6226 When C&C fails, log it and ignore it.
+
+2015-12-15 0.1.19
+=================
+- Changed gevent to 1.0.2 (grequests have no constraints on it) so it works with new Python2.7
+
 2015-12-11 0.1.18
 =================
 Feature
