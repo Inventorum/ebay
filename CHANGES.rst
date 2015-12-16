@@ -4,6 +4,9 @@ CHANGES
 
 develop
 =======
+
+2015-12-15 0.1.20
+=================
 Fix
 ...
 - INV-6218 Handle "Invalid Request" or any other invalid email address as the buyer's email address when publishing to the Core-API.
