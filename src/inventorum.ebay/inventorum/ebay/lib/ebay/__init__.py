@@ -2,15 +2,13 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
-from django.utils.datetime_safe import datetime
 from ebaysdk.exception import ConnectionError
 from ebaysdk.trading import Connection as TradingConnection
 
 from django.conf import settings
 from ebaysdk.parallel import Parallel
-from rest_framework import serializers
 from inventorum.ebay.lib.ebay.data.errors import EbayError
-from inventorum.ebay.lib.rest.serializers import POPOSerializer
+
 
 log = logging.getLogger(__name__)
 
