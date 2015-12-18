@@ -208,7 +208,7 @@ class EbayFixedPriceItem(object):
 
     def dict(self):
         data = {
-            'Title': self.title,
+            'Title': '<![CDATA[{html}]]>'.format(html=self.title),
             'SKU': self.sku,
             'Description': '<![CDATA[{html}]]>'.format(html=linebreaks(self.description)),
             'ListingDuration': self.listing_duration,
