@@ -217,6 +217,7 @@ class EbayFixedPriceItem(object):
             'PayPalEmailAddress': self.paypal_email_address,
             'PaymentMethods': self.payment_methods,
             'PrimaryCategory': {'CategoryID': self.category_id},
+            'UseTaxTable': True,  # mark the product like taxes were calculated by the seller.
         }
         if self.pictures:
             data['PictureDetails'] = {'PictureURL': [p.url for p in self.pictures]}

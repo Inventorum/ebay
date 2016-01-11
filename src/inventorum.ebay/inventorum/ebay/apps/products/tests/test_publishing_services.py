@@ -245,7 +245,8 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                                                         'ShippingServiceCost': '4.90',
                                                                         'ShippingServicePriority': 1}]},
                                         'StartPrice': '499.99',
-                                        'Title': '<![CDATA[Felt Brougham]]>'})
+                                        'Title': '<![CDATA[Felt Brougham]]>',
+                                        'UseTaxTable': True})
 
     def test_validation_and_builder_with_variations(self):
         self.expect_core_product(core_product=self.get_valid_core_product_with_variations())
