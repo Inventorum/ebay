@@ -37,7 +37,7 @@ zope.interface==4.1.2
 waitress==0.8.9
 django-mptt==0.7.1
 mock==1.0.1
-ebaysdk==2.1.2
+ebaysdk==2.1.1
 PyYAML==3.11
 lxml==3.4.2
 celery==3.1.17
@@ -64,3 +64,4 @@ futures==2.2.0
 factory-boy==2.5.2
 graypy==0.2.11
 inventorum.util==10.0.0
+-e git+https://github.com/rtdean/grequests.git@19239a34b00b8ac226b21f01b0fb55e869097fb7#egg=grequests
