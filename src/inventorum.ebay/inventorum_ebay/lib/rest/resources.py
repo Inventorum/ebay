@@ -1,0 +1,45 @@
+# encoding: utf-8
+from __future__ import absolute_import, unicode_literals
+import logging
+from inventorum.util.celery import TaskExecutionContext
+from inventorum.util.django.middlewares import get_current_request_id
+from rest_framework import mixins
+from rest_framework.generics import GenericAPIView
+from inventorum_ebay.lib.rest.permissions import IsEbayAuthenticated
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
+
+log = logging.getLogger(__name__)
+
+
+class PublicAPIResource(GenericAPIView):
+    permission_classes = ()
+
+
+class UnauthorizedEbayAPIResource(GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+
+
+class APIResource(UnauthorizedEbayAPIResource):
+    permission_classes = UnauthorizedEbayAPIResource.permission_classes + (IsEbayAuthenticated, )
+
+    def get_task_execution_context(self):
+        """
+        Creates an execution context for celery tasks from the current request
+        :rtype: TaskExecutionContext
+        """
+        user = self.request.user
+        account = user.account
+        request_id = get_current_request_id()
+
+        return TaskExecutionContext(
+            user_id=user.id,
+            account_id=account.id,
+            request_id=request_id
+        )
+
+
+class APIListResource(APIResource, mixins.ListModelMixin):
+    pass

@@ -4,7 +4,7 @@ import sys
 
 if __name__ == "__main__":
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "inventorum.ebay.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "inventorum_ebay.settings")
 
     from django.core.management import execute_from_command_line
 
