@@ -1,0 +1,36 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><DetailLevel>ReturnAll</DetailLevel><EndTimeFrom>2015-09-18T10:16:49.828532Z</EndTimeFrom><EndTimeTo>2016-01-16T10:16:49.828558Z</EndTimeTo><ErrorLanguage>de_DE</ErrorLanguage><IncludeVariations>True</IncludeVariations><Pagination><EntriesPerPage>200</EntriesPerPage><PageNumber>1</PageNumber></Pagination></GetSellerListRequest>
+    headers:
+      Content-Length: ['1377']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.5 Darwin/13.4.0]
+      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetSellerList']
+      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [a4bd6c0e-a19e-4352-9967-eae1d0e6be04]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <GetSellerListResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-09-18T08:16:51.156Z</Timestamp><Ack>Success</Ack><Version>939</Version><Build>E939_INTL_APISELLING_17668125_R1</Build><PaginationResult><TotalNumberOfPages>0</TotalNumberOfPages><TotalNumberOfEntries>0</TotalNumberOfEntries></PaginationResult><HasMoreItems>false</HasMoreItems><ItemArray/><ItemsPerPage>200</ItemsPerPage><PageNumber>1</PageNumber><ReturnedItemCountActual>0</ReturnedItemCountActual><Seller><AboutMePage>false</AboutMePage><Email>tech+ebay@inventorum.com</Email><FeedbackScore>1</FeedbackScore><PositiveFeedbackPercent>66.7</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>false</NewUser><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATExempt</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>true</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><StoreOwner>false</StoreOwner><SafePaymentExempt>false</SafePaymentExempt></SellerInfo><MotorsDealer>false</MotorsDealer></Seller></GetSellerListResponse>'}
+    headers:
+      connection: [Keep-Alive]
+      content-length: ['1532']
+      content-type: [text/xml]
+      date: ['Fri, 18 Sep 2015 08:16:51 GMT']
+      guid: [14fdf870-0ed0-a624-ccc5-2c25fe122ac5]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW90Zmlqbm1ib2l3aQ==]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrYTAxNCgyNSg+Oys3Ny0yND07NT42]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetSellerList]
+      x-ebay-esb-guid: ['urn:uuid:696e6035-3536-4081-b2d2-20584a3ee386']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14fdf870-0ed0-a624-ccc5-2c25fe122ac5!ws.api.dll!10.98.76.204!esbtrading[']
+    status: {code: 200, message: OK}
+version: 1

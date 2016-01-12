@@ -10,11 +10,11 @@ entry_points = """\
 ebay_main = inventorum.util.paste:make_wsgi_application
 
 [console_scripts]
-celery = inventorum_ebay.scripts.celery:run
-provisioning/provision_db = inventorum_ebay.scripts.provisioning:provision_db
-provisioning/provision_rabbitmq = inventorum_ebay.scripts.provisioning:provision_rabbitmq
+celery = inventorum.ebay.scripts.celery:run
+provisioning/provision_db = inventorum.ebay.scripts.provisioning:provision_db
+provisioning/provision_rabbitmq = inventorum.ebay.scripts.provisioning:provision_rabbitmq
 manage = inventorum.util.paste:manage
-migrate_from_old_ebay = inventorum_ebay.scripts.migration_tool:migrate_from_old_ebay
+migrate_from_old_ebay = inventorum.ebay.scripts.migration_tool:migrate_from_old_ebay
 """
 
 # alphabetically ordered(!)
@@ -46,7 +46,7 @@ required_eggs = [
 ]
 
 setup(
-    name='inventorum_ebay',
+    name='inventorum.ebay',
     version=VERSION,
     description="",
     author="Inventorum GmbH",

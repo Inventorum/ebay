@@ -1,0 +1,140 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetCategoryFeaturesRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><AllFeaturesForCategory>True</AllFeaturesForCategory><CategoryID>17145</CategoryID><DetailLevel>ReturnAll</DetailLevel><ErrorLanguage>de_DE</ErrorLanguage><FeatureID>ListingDurations</FeatureID><FeatureID>PaymentMethods</FeatureID><FeatureID>ItemSpecificsEnabled</FeatureID><FeatureID>VariationsEnabled</FeatureID><FeatureID>EANEnabled</FeatureID><LevelLimit>7</LevelLimit><ViewAllNodes>True</ViewAllNodes></GetCategoryFeaturesRequest>
+    headers:
+      Content-Length: ['1489']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.5 Darwin/13.4.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetCategoryFeatures']
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [ecc7256b-12ef-423d-9953-16d06cab2ce0]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <GetCategoryFeaturesResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-07-29T15:08:30.387Z</Timestamp><Ack>Success</Ack><Version>923</Version><Build>E923_INTL_APICATALOG_17529574_R1</Build><CategoryVersion>3273</CategoryVersion><UpdateTime>2015-07-29T09:31:32.000Z</UpdateTime><Category><CategoryID>17145</CategoryID><ListingDuration
+        type="Chinese">1</ListingDuration><ListingDuration type="Dutch">1</ListingDuration><ListingDuration
+        type="Live">1</ListingDuration><ListingDuration type="AdType">5</ListingDuration><ListingDuration
+        type="StoresFixedPrice">31</ListingDuration><ListingDuration type="PersonalOffer">1</ListingDuration><ListingDuration
+        type="FixedPriceItem">8</ListingDuration><ListingDuration type="LeadGeneration">20</ListingDuration><ListingDuration
+        type="Express">7</ListingDuration><PaymentMethod>PayPal</PaymentMethod><PaymentMethod>Moneybookers</PaymentMethod><PaymentMethod>CashOnPickup</PaymentMethod><PaymentMethod>MoneyXferAcceptedInCheckout</PaymentMethod><PaymentMethod>MoneyXferAccepted</PaymentMethod><PaymentMethod>COD</PaymentMethod><PaymentMethod>PaymentSeeDescription</PaymentMethod><PaymentMethod>CCAccepted</PaymentMethod><PaymentMethod>Escrow</PaymentMethod><PaymentMethod>StandardPayment</PaymentMethod><VariationsEnabled>false</VariationsEnabled><EANEnabled>Disabled</EANEnabled></Category><SiteDefaults><ListingDuration
+        type="Chinese">1</ListingDuration><ListingDuration type="Dutch">1</ListingDuration><ListingDuration
+        type="Live">1</ListingDuration><ListingDuration type="AdType">5</ListingDuration><ListingDuration
+        type="StoresFixedPrice">31</ListingDuration><ListingDuration type="PersonalOffer">1</ListingDuration><ListingDuration
+        type="FixedPriceItem">8</ListingDuration><ListingDuration type="LeadGeneration">20</ListingDuration><ListingDuration
+        type="Express">7</ListingDuration><ItemSpecificsEnabled>Enabled</ItemSpecificsEnabled><PaymentMethod>PayPal</PaymentMethod><PaymentMethod>Moneybookers</PaymentMethod><PaymentMethod>CashOnPickup</PaymentMethod><PaymentMethod>MoneyXferAcceptedInCheckout</PaymentMethod><PaymentMethod>MoneyXferAccepted</PaymentMethod><PaymentMethod>COD</PaymentMethod><PaymentMethod>PaymentSeeDescription</PaymentMethod><PaymentMethod>CCAccepted</PaymentMethod><PaymentMethod>Escrow</PaymentMethod><PaymentMethod>StandardPayment</PaymentMethod><VariationsEnabled>false</VariationsEnabled><AttributeConversionEnabled>Disabled</AttributeConversionEnabled></SiteDefaults><FeatureDefinitions><ListingDurations
+        Version="8"><ListingDuration durationSetID="1"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration></ListingDuration><ListingDuration
+        durationSetID="20"><Duration>Days_14</Duration><Duration>Days_28</Duration></ListingDuration><ListingDuration
+        durationSetID="5"><Duration>Days_10</Duration><Duration>Days_30</Duration></ListingDuration><ListingDuration
+        durationSetID="7"><Duration>Days_30</Duration><Duration>GTC</Duration></ListingDuration><ListingDuration
+        durationSetID="8"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration><Duration>Days_30</Duration></ListingDuration><ListingDuration
+        durationSetID="31"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration><Duration>Days_30</Duration><Duration>GTC</Duration></ListingDuration></ListingDurations><ItemSpecificsEnabled/><PaymentMethod/><VariationsEnabled/><AttributeConversionEnabled/></FeatureDefinitions></GetCategoryFeaturesResponse>'}
+    headers:
+      content-length: ['3593']
+      content-type: [text/xml]
+      date: ['Wed, 29 Jul 2015 15:08:29 GMT']
+      guid: [14eda5b8-f270-a5e4-3655-75f5d3932119]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW9kYnFna2xib2l3aQ==]
+      x-ebay-api-server-name: [___dm97PWQ3MGYrZDo0PygyNSgzMSs0MjIrNzc3Pz43OzQ=]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetCategoryFeatures]
+      x-ebay-esb-guid: ['urn:uuid:ea29f83a-4832-4316-ba5a-f37e53952905']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14eda5b8-f270-a5e4-3655-75f5d3932119!ws.api.dll!10.94.67.101!esbtrading[]']
+    status: {code: 200, message: OK}
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetCategoryFeaturesRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><AllFeaturesForCategory>True</AllFeaturesForCategory><CategoryID>147915</CategoryID><DetailLevel>ReturnAll</DetailLevel><ErrorLanguage>de_DE</ErrorLanguage><FeatureID>ListingDurations</FeatureID><FeatureID>PaymentMethods</FeatureID><FeatureID>ItemSpecificsEnabled</FeatureID><FeatureID>VariationsEnabled</FeatureID><FeatureID>EANEnabled</FeatureID><LevelLimit>7</LevelLimit><ViewAllNodes>True</ViewAllNodes></GetCategoryFeaturesRequest>
+    headers:
+      Content-Length: ['1490']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.5 Darwin/13.4.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetCategoryFeatures']
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [a391d428-3ac1-4c4a-a511-5be35a17ab35]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <GetCategoryFeaturesResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-07-29T15:08:30.732Z</Timestamp><Ack>Success</Ack><Version>923</Version><Build>E923_INTL_APICATALOG_17529574_R1</Build><CategoryVersion>3273</CategoryVersion><UpdateTime>2015-07-29T09:37:08.000Z</UpdateTime><Category><CategoryID>147915</CategoryID><ListingDuration
+        type="Chinese">1</ListingDuration><ListingDuration type="Dutch">1</ListingDuration><ListingDuration
+        type="Live">1</ListingDuration><ListingDuration type="AdType">5</ListingDuration><ListingDuration
+        type="StoresFixedPrice">31</ListingDuration><ListingDuration type="PersonalOffer">1</ListingDuration><ListingDuration
+        type="FixedPriceItem">8</ListingDuration><ListingDuration type="LeadGeneration">20</ListingDuration><ListingDuration
+        type="Express">7</ListingDuration><PaymentMethod>PayPal</PaymentMethod><PaymentMethod>Moneybookers</PaymentMethod><PaymentMethod>CashOnPickup</PaymentMethod><PaymentMethod>MoneyXferAcceptedInCheckout</PaymentMethod><PaymentMethod>MoneyXferAccepted</PaymentMethod><PaymentMethod>COD</PaymentMethod><PaymentMethod>PaymentSeeDescription</PaymentMethod><PaymentMethod>CCAccepted</PaymentMethod><PaymentMethod>Escrow</PaymentMethod><PaymentMethod>StandardPayment</PaymentMethod><VariationsEnabled>false</VariationsEnabled><EANEnabled>Enabled</EANEnabled></Category><SiteDefaults><ListingDuration
+        type="Chinese">1</ListingDuration><ListingDuration type="Dutch">1</ListingDuration><ListingDuration
+        type="Live">1</ListingDuration><ListingDuration type="AdType">5</ListingDuration><ListingDuration
+        type="StoresFixedPrice">31</ListingDuration><ListingDuration type="PersonalOffer">1</ListingDuration><ListingDuration
+        type="FixedPriceItem">8</ListingDuration><ListingDuration type="LeadGeneration">20</ListingDuration><ListingDuration
+        type="Express">7</ListingDuration><ItemSpecificsEnabled>Enabled</ItemSpecificsEnabled><PaymentMethod>PayPal</PaymentMethod><PaymentMethod>Moneybookers</PaymentMethod><PaymentMethod>CashOnPickup</PaymentMethod><PaymentMethod>MoneyXferAcceptedInCheckout</PaymentMethod><PaymentMethod>MoneyXferAccepted</PaymentMethod><PaymentMethod>COD</PaymentMethod><PaymentMethod>PaymentSeeDescription</PaymentMethod><PaymentMethod>CCAccepted</PaymentMethod><PaymentMethod>Escrow</PaymentMethod><PaymentMethod>StandardPayment</PaymentMethod><VariationsEnabled>false</VariationsEnabled><AttributeConversionEnabled>Disabled</AttributeConversionEnabled></SiteDefaults><FeatureDefinitions><ListingDurations
+        Version="8"><ListingDuration durationSetID="1"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration></ListingDuration><ListingDuration
+        durationSetID="20"><Duration>Days_14</Duration><Duration>Days_28</Duration></ListingDuration><ListingDuration
+        durationSetID="5"><Duration>Days_10</Duration><Duration>Days_30</Duration></ListingDuration><ListingDuration
+        durationSetID="7"><Duration>Days_30</Duration><Duration>GTC</Duration></ListingDuration><ListingDuration
+        durationSetID="8"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration><Duration>Days_30</Duration></ListingDuration><ListingDuration
+        durationSetID="31"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration><Duration>Days_30</Duration><Duration>GTC</Duration></ListingDuration></ListingDurations><ItemSpecificsEnabled/><PaymentMethod/><VariationsEnabled/><AttributeConversionEnabled/></FeatureDefinitions></GetCategoryFeaturesResponse>'}
+    headers:
+      content-length: ['3594']
+      content-type: [text/xml]
+      date: ['Wed, 29 Jul 2015 15:08:30 GMT']
+      guid: [14eda5b9-01f0-a794-4556-e0c6c0143832]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW9kYnFna2xib2l3aQ==]
+      x-ebay-api-server-name: [___dWtgMGQ3MWYrNjExZCgyNSg2MTMoNC00Nz07NT42]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetCategoryFeatures]
+      x-ebay-esb-guid: ['urn:uuid:cb8fcd9d-57e8-4631-ac37-5e95e4060c47']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14eda5b9-01f0-a794-4556-e0c6c0143832!ws.api.dll!10.121.68.85!esbtrading[]']
+    status: {code: 200, message: OK}
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetCategoryFeaturesRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><AllFeaturesForCategory>True</AllFeaturesForCategory><CategoryID>163769</CategoryID><DetailLevel>ReturnAll</DetailLevel><ErrorLanguage>de_DE</ErrorLanguage><FeatureID>ListingDurations</FeatureID><FeatureID>PaymentMethods</FeatureID><FeatureID>ItemSpecificsEnabled</FeatureID><FeatureID>VariationsEnabled</FeatureID><FeatureID>EANEnabled</FeatureID><LevelLimit>7</LevelLimit><ViewAllNodes>True</ViewAllNodes></GetCategoryFeaturesRequest>
+    headers:
+      Content-Length: ['1490']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.5 Darwin/13.4.0]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetCategoryFeatures']
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [d9b37d2c-8116-47cd-a1ce-945fefc5ba27]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <GetCategoryFeaturesResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2015-07-29T15:08:31.036Z</Timestamp><Ack>Success</Ack><Version>923</Version><Build>E923_INTL_APICATALOG_17529574_R1</Build><CategoryVersion>3273</CategoryVersion><UpdateTime>2015-07-29T09:41:13.000Z</UpdateTime><Category><CategoryID>163769</CategoryID><ListingDuration
+        type="Chinese">1</ListingDuration><ListingDuration type="Dutch">1</ListingDuration><ListingDuration
+        type="Live">1</ListingDuration><ListingDuration type="AdType">5</ListingDuration><ListingDuration
+        type="StoresFixedPrice">31</ListingDuration><ListingDuration type="PersonalOffer">1</ListingDuration><ListingDuration
+        type="FixedPriceItem">8</ListingDuration><ListingDuration type="LeadGeneration">20</ListingDuration><ListingDuration
+        type="Express">7</ListingDuration><PaymentMethod>PayPal</PaymentMethod><PaymentMethod>Moneybookers</PaymentMethod><PaymentMethod>CashOnPickup</PaymentMethod><PaymentMethod>MoneyXferAcceptedInCheckout</PaymentMethod><PaymentMethod>MoneyXferAccepted</PaymentMethod><PaymentMethod>COD</PaymentMethod><PaymentMethod>PaymentSeeDescription</PaymentMethod><PaymentMethod>CCAccepted</PaymentMethod><PaymentMethod>Escrow</PaymentMethod><PaymentMethod>StandardPayment</PaymentMethod><VariationsEnabled>false</VariationsEnabled><EANEnabled>Required</EANEnabled></Category><SiteDefaults><ListingDuration
+        type="Chinese">1</ListingDuration><ListingDuration type="Dutch">1</ListingDuration><ListingDuration
+        type="Live">1</ListingDuration><ListingDuration type="AdType">5</ListingDuration><ListingDuration
+        type="StoresFixedPrice">31</ListingDuration><ListingDuration type="PersonalOffer">1</ListingDuration><ListingDuration
+        type="FixedPriceItem">8</ListingDuration><ListingDuration type="LeadGeneration">20</ListingDuration><ListingDuration
+        type="Express">7</ListingDuration><ItemSpecificsEnabled>Enabled</ItemSpecificsEnabled><PaymentMethod>PayPal</PaymentMethod><PaymentMethod>Moneybookers</PaymentMethod><PaymentMethod>CashOnPickup</PaymentMethod><PaymentMethod>MoneyXferAcceptedInCheckout</PaymentMethod><PaymentMethod>MoneyXferAccepted</PaymentMethod><PaymentMethod>COD</PaymentMethod><PaymentMethod>PaymentSeeDescription</PaymentMethod><PaymentMethod>CCAccepted</PaymentMethod><PaymentMethod>Escrow</PaymentMethod><PaymentMethod>StandardPayment</PaymentMethod><VariationsEnabled>false</VariationsEnabled><AttributeConversionEnabled>Disabled</AttributeConversionEnabled></SiteDefaults><FeatureDefinitions><ListingDurations
+        Version="8"><ListingDuration durationSetID="1"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration></ListingDuration><ListingDuration
+        durationSetID="20"><Duration>Days_14</Duration><Duration>Days_28</Duration></ListingDuration><ListingDuration
+        durationSetID="5"><Duration>Days_10</Duration><Duration>Days_30</Duration></ListingDuration><ListingDuration
+        durationSetID="7"><Duration>Days_30</Duration><Duration>GTC</Duration></ListingDuration><ListingDuration
+        durationSetID="8"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration><Duration>Days_30</Duration></ListingDuration><ListingDuration
+        durationSetID="31"><Duration>Days_3</Duration><Duration>Days_5</Duration><Duration>Days_7</Duration><Duration>Days_10</Duration><Duration>Days_30</Duration><Duration>GTC</Duration></ListingDuration></ListingDurations><ItemSpecificsEnabled/><PaymentMethod/><VariationsEnabled/><AttributeConversionEnabled/></FeatureDefinitions></GetCategoryFeaturesResponse>'}
+    headers:
+      content-length: ['3594']
+      content-type: [text/xml]
+      date: ['Wed, 29 Jul 2015 15:08:30 GMT']
+      guid: [14eda5b9-1a60-a788-4544-6514b9510e56]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW9kYnFna2xib2l3aQ==]
+      x-ebay-api-server-name: [___dWtgMWQ3MmYrPjphNygyNSg+Nis+KTI1MT07NT42]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetCategoryFeatures]
+      x-ebay-esb-guid: ['urn:uuid:c5ea1c3a-38a5-474b-8c7e-2c21578fd1b6']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['14eda5b9-1a60-a788-4544-6514b9510e56!ws.api.dll!10.120.132.84!esbtrading[]']
+    status: {code: 200, message: OK}
+version: 1
