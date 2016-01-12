@@ -7,7 +7,7 @@ from django.db import models
 from django.utils.translation import ugettext
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
-from inventorum_ebay import settings
+from django.conf import settings
 from inventorum_ebay.apps.returns.models import ReturnPolicyModel
 from inventorum_ebay.apps.returns import ReturnsAcceptedOption
 from inventorum_ebay.apps.items import EbaySKU

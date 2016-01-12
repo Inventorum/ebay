@@ -30,7 +30,7 @@ class TestLocationUpdateService(EbayAuthenticatedAPITestCase):
                                             {'Close': '20:00:00',
                                              'Open': '18:00:00'}]}]},
             'Latitude': location.latitude,
-            'LocationID': 'invdev_346',
+            'LocationID': 'invtest_346',
             'LocationType': 'STORE',
             'Longitude': location.longitude,
             'Name': location.name,

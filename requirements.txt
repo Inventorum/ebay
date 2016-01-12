@@ -64,4 +64,5 @@ futures==2.2.0
 factory-boy==2.5.2
 graypy==0.2.11
 inventorum.util==10.0.0
--e git+https://github.com/rtdean/grequests.git@19239a34b00b8ac226b21f01b0fb55e869097fb7#egg=grequests
+https://github.com/bimusiek/ebaysdk-python/archive/master.zip#egg=ebaysdk-2.1.1-dev4
+https://github.com/rtdean/grequests/archive/0.3.0.zip#egg=grequests-0.3.1

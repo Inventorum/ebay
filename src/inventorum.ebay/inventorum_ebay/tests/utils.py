@@ -4,7 +4,7 @@ from decimal import Decimal
 import json
 import logging
 import os
-from inventorum_ebay import settings
+from django.conf import settings
 import mock
 
 

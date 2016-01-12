@@ -1,8 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+import logging
+
+from inventorum_ebay.lib.core_api.clients import CoreAPIClient
 from inventorum_ebay.apps.products.tests.factories import EbayItemFactory, EbayItemVariationFactory, \
     EbayItemVariationSpecificFactory
 from inventorum_ebay.tests.testcases import EbayAuthenticatedAPITestCase
+
+log = logging.getLogger(__name__)
 
 
 class TestDuplicatedItemSpecificsInVariation(EbayAuthenticatedAPITestCase):
@@ -22,6 +27,7 @@ class TestDuplicatedItemSpecificsInVariation(EbayAuthenticatedAPITestCase):
             'Name': 'Farbe (*)',
             'Value': ['Blue', 'Red']
         })
+
         self.assertDictEqual(data['Item']['Variations']['VariationSpecificsSet']['NameValueList'][1], {
             'Name': 'Material (*)',
             'Value': 'Denim'  # here we make sure 'Denim' is not doubled

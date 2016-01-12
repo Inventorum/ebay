@@ -12,64 +12,9 @@ from inventorum_ebay.lib.celery import get_anonymous_task_execution_context
 from inventorum.util.celery import TaskExecutionContext
 
 here = os.path.abspath(os.path.dirname(__file__))
-VERSION = open(os.path.join(here, '..', 'VERSION')).read().strip()
+VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()
 
-VAR_ROOT = "{here}/../../var".format(here=here)
-admin_email = "tech@inventorum.com"
-STATIC_URL = "/static/"
-
-DEBUG = True
-TEMPLATE_DEBUG = True
-
-# https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-bcrypt-with-django
-PASSWORD_HASHERS = [
-        "django.contrib.auth.hashers.BCryptSHA256PasswordHasher"
-    ]
-
-JOHNNY_MIDDLEWARE_KEY_PREFIX = "local"
-TEMPLATE_STRING_IF_INVALID = "INVALID %s"
-
-STATIC_ROOT = "{VAR_ROOT}/inventorum/ebay/static".format(VAR_ROOT=VAR_ROOT)
-
-# TODO jm: This should be changed, right?! :-)
-SECRET_KEY = "kregvegWoon2osyitwap}ebogyebJadWawmisyokidWoytkehaxbyicNomyefEwdEdCymwatHomUgucfikWiabziBicAjtijuctinyefmytdaicyegCyxHogEcthilsh"
-
-DEFAULT_FROM_EMAIL = "%s" % admin_email
-INVOICES_FROM_EMAIL = "%s" % admin_email
-
-# reconnect after 10 minutes
-DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": "inventorum_ebay_develop",
-            "HOST": "db",
-            "USER": "postgres",
-            "PASSWORD": "postgres",
-            "OPTIONS": {
-                "sslmode": "disable",
-                "client_encoding": "utf8"
-            },
-            "CONN_MAX_AGE": 0
-        }
-    }
-
-
-SQL_META_EXTRA = False
-
-EMAIL_HOST = "inventorum.com"
-EMAIL_PORT = 25
-SERVER_EMAIL = "ebay@slingshot.inventorum.net"
-
-ALLOWED_HOSTS = ["*"]
-
-
-INV_CORE_API_HOST = "app.intern.inventorum.net"
-INV_CORE_MEDIA_HOST = "app.inventorum.net"
-INV_CORE_API_SECURE = False
-
-EBAY_RUNAME = "Inventorum_GmbH-Inventor-9021-4-ptdrwjhq"
-EBAY_SKU_FORMAT = "invdev_{0}"
-EBAY_LOCATION_ID_FORMAT = "invdev_{0}"
+BASE_DIR = os.path.dirname(here + "/..")
 
 # ==============================================================================
 # Generic Django project settings
@@ -130,7 +75,7 @@ ALLOWED_HOSTS = [
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
-FIXTURE_DIR = os.path.join(here, "..", 'fixtures')
+FIXTURE_DIR = os.path.join(here, "..", "..", 'fixtures')
 
 # ==============================================================================
 # Third party configurations
@@ -256,7 +201,7 @@ logging.getLogger("vcr").setLevel(logging.WARN)
 # Calculation of directories relative to the project module location
 # ==============================================================================
 
-PROJECT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
+PROJECT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
 BUILDOUT_ROOT = os.path.join(PROJECT_DIR, '..', '..', '..')
 CASSETTES_DIR = os.path.join(PROJECT_DIR, 'fixtures', 'cassettes')
 ENCRYPTED_FIELD_KEYS_DIR = os.path.join(PROJECT_DIR, 'fieldkeys')
@@ -302,7 +247,7 @@ LANGUAGE_CODE = 'en'
 LANGUAGES = (('de', _('German'),),
              ('en', _('English'),),)
 
-LOCALE_PATHS = (os.path.join(PROJECT_DIR, 'ebay', 'conf', 'locale'), )
+LOCALE_PATHS = (os.path.join(PROJECT_DIR, 'inventorum_ebay', 'conf', 'locale'), )
 
 AVAILABLE_LANGUAGES = [l[0] for l in LANGUAGES]
 

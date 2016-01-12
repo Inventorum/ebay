@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 import logging
 from decimal import Decimal
-from inventorum_ebay import settings
+from django.conf import settings
 from inventorum_ebay.apps.accounts.tests import AccountTestMixin
 from inventorum_ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum_ebay.apps.products.models import EbayProductModel
