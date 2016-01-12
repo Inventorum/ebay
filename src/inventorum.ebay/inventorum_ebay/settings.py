@@ -42,9 +42,9 @@ DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": "inventorum_ebay_develop",
-            "HOST": "${VAR_ROOT}/run/postgresql",
-            "USER": "inventorum_ebay",
-            "PASSWORD": "inventorum_ebay",
+            "HOST": "db",
+            "USER": "postgres",
+            "PASSWORD": "postgres",
             "OPTIONS": {
                 "sslmode": "disable",
                 "client_encoding": "utf8"
