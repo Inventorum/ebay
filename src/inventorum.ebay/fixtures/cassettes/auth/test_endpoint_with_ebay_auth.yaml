@@ -1,0 +1,64 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+      X-Rid: [!!python/long '2461054743659324754']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/1/
+  response:
+    body: {string: !!python/unicode '{"error": {"fields": {}, "description": null,
+        "key": "product.not_found"}}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Fri, 18 Sep 2015 08:49:43 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1ZcrMV:mUtic9cNVTl7GGUCNiNWYVv-luc"; Domain=app.intern.inventorum.net;
+          expires=Fri, 18-Sep-2015 10:49:43 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['2461054743659324754']
+    status: {code: 404, message: NOT FOUND}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+      X-Rid: [!!python/long '4235191521866589522']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/1/
+  response:
+    body: {string: !!python/unicode '{"error": {"fields": {}, "description": null,
+        "key": "product.not_found"}}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Fri, 18 Sep 2015 08:49:43 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1ZcrMV:mUtic9cNVTl7GGUCNiNWYVv-luc"; Domain=app.intern.inventorum.net;
+          expires=Fri, 18-Sep-2015 10:49:43 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['4235191521866589522']
+    status: {code: 404, message: NOT FOUND}
+version: 1
