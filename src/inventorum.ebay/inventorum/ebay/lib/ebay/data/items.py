@@ -145,7 +145,7 @@ class EbayFixedPriceItem(object):
     def __init__(self, title, description, listing_duration, country, postal_code, quantity, start_price,
                  paypal_email_address, payment_methods, pictures, category_id=None, sku=None, shipping_services=(),
                  item_specifics=None, variations=None, ean=None, is_click_and_collect=False, shipping_details=None,
-                 pick_up=None, variation=None, item_id=None, primary_category=None, return_policy=None):
+                 pick_up=None, variation=None, item_id=None, primary_category=None, return_policy=None, tax_rate=None):
         """
         :type title: unicode
         :type description: unicode
@@ -205,6 +205,7 @@ class EbayFixedPriceItem(object):
         self.item_id = item_id
         self.primary_category = primary_category
         self.return_policy = return_policy
+        self.tax_rate = tax_rate
 
     def dict(self):
         data = {
@@ -218,6 +219,12 @@ class EbayFixedPriceItem(object):
             'PaymentMethods': self.payment_methods,
             'PrimaryCategory': {'CategoryID': self.category_id},
         }
+
+        if self.tax_rate:
+            data['VATDetails'] = {
+                'VATPercent': str(self.tax_rate)
+            }
+
         if self.pictures:
             data['PictureDetails'] = {'PictureURL': [p.url for p in self.pictures]}
         if self.shipping_services:

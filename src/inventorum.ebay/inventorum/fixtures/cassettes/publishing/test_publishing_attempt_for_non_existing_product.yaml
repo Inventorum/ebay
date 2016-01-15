@@ -6,11 +6,11 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.13-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
-      X-Rid: [!!python/long '4265309344374629714']
+      X-Rid: [!!python/long '1831198031522029144']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/1/
   response:
@@ -20,14 +20,14 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 18 Sep 2015 08:40:56 GMT']
+      date: ['Fri, 15 Jan 2016 12:33:56 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1ZcrE0:bh8JeASHu2A43q_8qy9Ek22pWdA"; Domain=app.intern.inventorum.net;
-          expires=Fri, 18-Sep-2015 10:40:56 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aK3Zk:ywH7knAJpuCZVhNuZkW59s2RhCY"; Domain=app.intern.inventorum.net;
+          expires=Fri, 15-Jan-2016 14:33:56 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['4265309344374629714']
+      x-rid: ['1831198031522029144']
     status: {code: 404, message: NOT FOUND}
 version: 1

@@ -4,6 +4,10 @@ CHANGES
 
 develop
 =======
+Feature
+.......
+- INV-6302 Add "taxes included" (inkl. MwSt) in all products.
+
 Fix
 ...
 - INV-6234 Ebay product now can contain special characters like "&"."

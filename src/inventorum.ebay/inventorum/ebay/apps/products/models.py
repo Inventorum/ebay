@@ -229,6 +229,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
             variations=[v.ebay_object for v in self.variations.all()],
             is_click_and_collect=self.is_click_and_collect,
             return_policy=self.return_policy.ebay_object if self.has_return_policy else self._default_ebay_return_policy,
+            tax_rate=self.tax_rate,
         )
 
     @property
