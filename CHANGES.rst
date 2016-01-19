@@ -10,6 +10,7 @@ Feature
 
 Fix
 ...
+- INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 - INV-6234 Ebay product now can contain special characters like "&"."
 
 2015-12-15 0.1.20
