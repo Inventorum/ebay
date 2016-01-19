@@ -8,13 +8,10 @@ import logging
 import sys
 from datetime import datetime, timedelta
 from celery.schedules import crontab
-from inventorum_ebay.lib.celery import get_anonymous_task_execution_context
-from inventorum.util.celery import TaskExecutionContext
+from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
 
 here = os.path.abspath(os.path.dirname(__file__))
-VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()
-
-BASE_DIR = os.path.dirname(here + "/..")
+VERSION = open(os.path.join(here, '..', '..', '..', 'VERSION')).read().strip()
 
 # ==============================================================================
 # Generic Django project settings
@@ -29,7 +26,7 @@ DATE_FORMAT = 'd/m/Y'
 DATETIME_FORMAT = 'd/m/Y H:i:s'
 USE_THOUSAND_SEPARATOR = True
 
-FORMAT_MODULE_PATH = 'inventorum_ebay.conf.locale'
+FORMAT_MODULE_PATH = 'inventorum.ebay.conf.locale'
 
 # if True use nginx to serve protected files
 # Else user django default django.views.static.serve (which would not be for production)
@@ -42,15 +39,15 @@ INSTALLED_APPS = (
     'django_extensions',
     'django_nose',
 
-    'inventorum_ebay.apps.accounts',
-    'inventorum_ebay.apps.auth',
-    'inventorum_ebay.apps.categories',
-    'inventorum_ebay.apps.notifications',
-    'inventorum_ebay.apps.orders',
-    'inventorum_ebay.apps.returns',
-    'inventorum_ebay.apps.products',
-    'inventorum_ebay.apps.shipping',
-    'inventorum_ebay.lib.core_api',
+    'inventorum.ebay.apps.accounts',
+    'inventorum.ebay.apps.auth',
+    'inventorum.ebay.apps.categories',
+    'inventorum.ebay.apps.notifications',
+    'inventorum.ebay.apps.orders',
+    'inventorum.ebay.apps.returns',
+    'inventorum.ebay.apps.products',
+    'inventorum.ebay.apps.shipping',
+    'inventorum.ebay.lib.core_api',
 
     'mptt',
     'raven.contrib.django.raven_compat',
@@ -58,7 +55,7 @@ INSTALLED_APPS = (
     'rest_framework_swagger'
 )
 
-AUTH_USER_MODEL = 'inventorum_ebay.apps.accounts.models.EbayAccountModel'
+AUTH_USER_MODEL = 'inventorum.ebay.apps.accounts.models.EbayAccountModel'
 
 ADMINS = (
     ('Development', 'tech@inventorum.com'),
@@ -75,8 +72,6 @@ ALLOWED_HOSTS = [
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
-FIXTURE_DIR = os.path.join(here, "..", "..", 'fixtures')
-
 # ==============================================================================
 # Third party configurations
 # ==============================================================================
@@ -85,62 +80,62 @@ FIXTURE_DIR = os.path.join(here, "..", "..", 'fixtures')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'inventorum_ebay.lib.auth.backends.TrustedHeaderAuthentication',
+        'inventorum.ebay.lib.auth.backends.TrustedHeaderAuthentication',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_THROTTLE_RATES': {
         'default': '20/sec',
     },
-    'DEFAULT_PAGINATION_CLASS': 'inventorum_ebay.lib.rest.APIPagination',
-    'EXCEPTION_HANDLER': 'inventorum_ebay.lib.rest.exceptions.custom_exception_handler'
+    'DEFAULT_PAGINATION_CLASS': 'inventorum.ebay.lib.rest.APIPagination',
+    'EXCEPTION_HANDLER': 'inventorum.ebay.lib.rest.exceptions.custom_exception_handler'
 }
 
 # RabbitMQ/Celery settings ==============================================================
 
-RABBITMQ_VHOST = 'inventorum_ebay'
+RABBITMQ_VHOST = 'inventorum.ebay'
 RABBITMQ_USER = 'ebay'
 RABBITMQ_PASSWORD = 'ebay'
 
-BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum_ebay"
+BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum.ebay"
 
 CELERYBEAT_SCHEDULE = {
     'periodic_ebay_orders_sync_task': {
-        'task': 'inventorum_ebay.apps.orders.tasks.periodic_ebay_orders_sync_task',
+        'task': 'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task',
         'schedule': timedelta(seconds=30),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
         }
     },
     'periodic_core_orders_sync_task': {
-        'task': 'inventorum_ebay.apps.orders.tasks.periodic_core_orders_sync_task',
+        'task': 'inventorum.ebay.apps.orders.tasks.periodic_core_orders_sync_task',
         'schedule': timedelta(seconds=30),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
         }
     },
     'periodic_core_returns_sync_task': {
-        'task': 'inventorum_ebay.apps.returns.tasks.periodic_core_returns_sync_task',
+        'task': 'inventorum.ebay.apps.returns.tasks.periodic_core_returns_sync_task',
         'schedule': timedelta(minutes=1),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
         }
     },
     'periodic_core_products_sync_task': {
-        'task': 'inventorum_ebay.apps.products.tasks.periodic_core_products_sync_task',
+        'task': 'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task',
         'schedule': timedelta(seconds=30),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
         }
     },
     'periodic_ebay_categories_sync_task': {
-        'task': 'inventorum_ebay.apps.categories.tasks.initialize_periodic_ebay_categories_sync_task',
+        'task': 'inventorum.ebay.apps.categories.tasks.initialize_periodic_ebay_categories_sync_task',
         'schedule': crontab(hour=3, minute=0),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
         }
     },
     'periodic_ebay_shipping_sync_task': {
-        'task': 'inventorum_ebay.apps.shipping.tasks.periodic_ebay_shipping_sync_task',
+        'task': 'inventorum.ebay.apps.shipping.tasks.periodic_ebay_shipping_sync_task',
         'schedule': crontab(hour=3, minute=10),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
@@ -149,7 +144,7 @@ CELERYBEAT_SCHEDULE = {
 }
 
 # will be used by util.celery.InventorumTask to handle async celery exceptions
-CELERY_MIDDLEWARE = 'inventorum_ebay.celery.CeleryMiddleware'
+CELERY_MIDDLEWARE = 'inventorum.ebay.celery.CeleryMiddleware'
 
 # https://github.com/celery/celery/issues/2437
 CELERYD_HIJACK_ROOT_LOGGER = False
@@ -157,34 +152,34 @@ CELERYD_HIJACK_ROOT_LOGGER = False
 # Celery queues
 CELERY_ROUTES = {
     # Fetching
-    'inventorum_ebay.apps.categories.tasks.initialize_periodic_ebay_categories_sync_task': {'queue': 'fetching'},
-    'inventorum_ebay.apps.categories.tasks.ebay_category_specifics_sync_task': {'queue': 'fetching'},
-    'inventorum_ebay.apps.categories.tasks.ebay_category_features_sync_task': {'queue': 'fetching'},
-    'inventorum_ebay.apps.categories.tasks.ebay_categories_sync_task': {'queue': 'fetching'},
-    'inventorum_ebay.apps.categories.tasks.ebay_category_specifics_batch_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.initialize_periodic_ebay_categories_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_category_specifics_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_category_features_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_categories_sync_task': {'queue': 'fetching'},
+    'inventorum.ebay.apps.categories.tasks.ebay_category_specifics_batch_task': {'queue': 'fetching'},
 
     # Syncing
-    'inventorum_ebay.apps.orders.tasks.periodic_ebay_orders_sync_task': {'queue': 'syncing'},
-    'inventorum_ebay.apps.orders.tasks.ebay_orders_sync': {'queue': 'syncing'},
-    'inventorum_ebay.apps.orders.tasks.periodic_core_orders_sync_task': {'queue': 'syncing'},
-    'inventorum_ebay.apps.orders.tasks.core_order_creation_task': {'queue': 'syncing'},
-    'inventorum_ebay.apps.returns.tasks.periodic_core_returns_sync_task': {'queue': 'syncing'},
-    'inventorum_ebay.apps.orders.tasks.click_and_collect_status_update_with_event_task': {'queue': 'syncing'},
-    'inventorum_ebay.apps.orders.tasks.ebay_order_status_update_task': {'queue': 'syncing'},
-    'inventorum_ebay.apps.products.tasks.periodic_core_products_sync_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.ebay_orders_sync': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.periodic_core_orders_sync_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.core_order_creation_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.returns.tasks.periodic_core_returns_sync_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.click_and_collect_status_update_with_event_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.orders.tasks.ebay_order_status_update_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task': {'queue': 'syncing'},
 
     # Publishing
-    'inventorum_ebay.apps.products.tasks._initialize_ebay_item_publish': {'queue': 'publishing'},
-    'inventorum_ebay.apps.products.tasks._ebay_item_publish': {'queue': 'publishing'},
-    'inventorum_ebay.apps.products.tasks._finalize_ebay_item_publish': {'queue': 'publishing'},
-    'inventorum_ebay.apps.products.tasks._initialize_ebay_item_unpublish': {'queue': 'publishing'},
-    'inventorum_ebay.apps.products.tasks._ebay_item_unpublish': {'queue': 'publishing'},
-    'inventorum_ebay.apps.products.tasks._finalize_ebay_item_unpublish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._initialize_ebay_item_publish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._ebay_item_publish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._finalize_ebay_item_publish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._initialize_ebay_item_unpublish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._ebay_item_unpublish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks._finalize_ebay_item_unpublish': {'queue': 'publishing'},
 
     # Updating
-    'inventorum_ebay.apps.products.tasks.ebay_item_update': {'queue': 'updating'},
-    'inventorum_ebay.apps.products.tasks.ebay_product_deletion': {'queue': 'updating'},
-    'inventorum_ebay.apps.products.tasks.core_api_publishing_status_update_task': {'queue': 'updating'},
+    'inventorum.ebay.apps.products.tasks.ebay_item_update': {'queue': 'updating'},
+    'inventorum.ebay.apps.products.tasks.ebay_product_deletion': {'queue': 'updating'},
+    'inventorum.ebay.apps.products.tasks.core_api_publishing_status_update_task': {'queue': 'updating'},
 }
 
 
@@ -201,20 +196,20 @@ logging.getLogger("vcr").setLevel(logging.WARN)
 # Calculation of directories relative to the project module location
 # ==============================================================================
 
-PROJECT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
-BUILDOUT_ROOT = os.path.join(PROJECT_DIR, '..', '..', '..')
-CASSETTES_DIR = os.path.join(PROJECT_DIR, 'fixtures', 'cassettes')
-ENCRYPTED_FIELD_KEYS_DIR = os.path.join(PROJECT_DIR, 'fieldkeys')
+PROJECT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
+FIXTURE_DIR = os.path.join(PROJECT_DIR, '..', 'fixtures')
+CASSETTES_DIR = os.path.join(FIXTURE_DIR, 'cassettes')
+ENCRYPTED_FIELD_KEYS_DIR = os.path.join(PROJECT_DIR, '..', 'fieldkeys')
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_DIR,  'ebay', 'templates'),
+    os.path.join(PROJECT_DIR, 'templates'),
 )
 
 # ==============================================================================
 # Project URLS and media settings
 # ==============================================================================
 
-ROOT_URLCONF = 'inventorum_ebay.urls'
+ROOT_URLCONF = 'inventorum.ebay.urls'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/uploads/'
@@ -227,7 +222,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     # BH: This adds `X-Sentry-ID` header, so error can be tracked down
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
-    'inventorum_ebay.lib.rest.middleware.ExceptionLoggingMiddleware',
+    'inventorum.ebay.lib.rest.middleware.ExceptionLoggingMiddleware',
     'inventorum.util.django.middlewares.CrequestMiddleware',
     # TODO jm: Needed?
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -247,7 +242,7 @@ LANGUAGE_CODE = 'en'
 LANGUAGES = (('de', _('German'),),
              ('en', _('English'),),)
 
-LOCALE_PATHS = (os.path.join(PROJECT_DIR, 'inventorum_ebay', 'conf', 'locale'), )
+LOCALE_PATHS = (os.path.join(PROJECT_DIR, 'conf', 'locale'), )
 
 AVAILABLE_LANGUAGES = [l[0] for l in LANGUAGES]
 
