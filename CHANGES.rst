@@ -10,6 +10,7 @@ Feature
 
 Fix
 ...
+- INV-6380 Fix validation amount of attributes in products with variations.
 - INV-6204 Make the ebay orders sync more robust
 - INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 - INV-6234 Ebay product now can contain special characters like "&"."
