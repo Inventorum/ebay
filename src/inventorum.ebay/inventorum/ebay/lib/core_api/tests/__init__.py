@@ -3,13 +3,11 @@ from __future__ import absolute_import, unicode_literals
 from datetime import date
 
 import logging
-import os
+
 from decimal import Decimal as D
 
-from django.conf import settings
 from inventorum.ebay.apps.accounts.models import EbayUserModel
 from inventorum.ebay.tests import StagingTestAccount
-import vcr
 
 
 log = logging.getLogger(__name__)
