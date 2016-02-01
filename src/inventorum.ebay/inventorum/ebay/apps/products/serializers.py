@@ -12,7 +12,7 @@ from inventorum.ebay.apps.categories.serializers import CategorySerializer, Cate
 from inventorum.ebay.apps.products.models import EbayProductModel, EbayProductSpecificModel
 from inventorum.ebay.apps.shipping.serializers import ShippingServiceConfigurableSerializer
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
-from inventorum.ebay.lib.rest.fields import RelatedModelByIdField, LazyPrimaryKeyRelatedField, InvIdField
+from inventorum.ebay.lib.rest.fields import RelatedModelByIdField, InvIdField
 from rest_framework import serializers
 
 
