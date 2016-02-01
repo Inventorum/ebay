@@ -174,20 +174,23 @@ class PublishingPreparationService(object):
         if not variations:
             return
 
-        specifics_in_variations = defaultdict(int)
+        different_attributes = set()
         for variation in variations:
             for attribute in variation.attributes:
-                specifics_in_variations[attribute.key] += len(attribute.values)
+                different_attributes.add(attribute.key)
 
-        max_attrs = len(variations)
-        all_variations_has_the_same_attributes = all([a == max_attrs for a in specifics_in_variations.values()])
+        all_variations_has_the_same_attributes = all(
+            len(different_attributes) == len({attribute.key for attribute in variation.attributes})
+            for variation in variations
+        )
 
-        if not specifics_in_variations:
+        if not different_attributes:
             raise PublishingValidationException(ugettext("Variations need to have at least one attribute"))
 
         if not all_variations_has_the_same_attributes:
-            raise PublishingValidationException(ugettext("All variations needs to have exactly the same number of "
-                                                         "attributes"))
+            raise PublishingValidationException(ugettext(
+                "All variations needs to have exactly the same number of attributes"
+            ))
 
     def create_ebay_item(self):
         """

@@ -118,7 +118,18 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                                            CoreProductAttributeFactory.create(key='size',
                                                                                               values=['m'])],
                                                images=[CoreImageFactory.create(
-                                                   urls__ipad_retina='http://image/shirt_m_italy.png')])]
+                                                   urls__ipad_retina='http://image/shirt_m_italy.png')]),
+            CoreProductVariationFactory.create(id=942447,
+                                               ean='118678561131',
+                                               quantity=20,
+                                               gross_price='34.99',
+                                               tax_type_id=32346,
+                                               attributes=[CoreProductAttributeFactory.create(key='color',
+                                                                                              values=['red']),
+                                                           CoreProductAttributeFactory.create(key='size',
+                                                                                              values=['xxl'])],
+                                               images=[CoreImageFactory.create(
+                                                   urls__ipad_retina='http://image/shirt_xxl_red.png')])]
 
         return CoreProductFactory.create(id=941441,
                                          name='Felt Tracking T-Shirt',
@@ -258,7 +269,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         ebay_item = ebay_item.reload()
 
         variations = ebay_item.variations.all()
-        self.assertEqual(variations.count(), 2)
+        self.assertEqual(variations.count(), 3)
 
         # assert item variation data for the first variation
         variation_a = variations.get(inv_product_id=942445)
@@ -275,7 +286,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertEqual(variation_a_specifics.count(), 2)
 
         self.assertEqual(variation_a_specifics[0].name, "Größe")
-        self.assertEqual(variation_a_specifics[0].values.first().value, "s")
+        self.assertEqual(variation_a_specifics[0].values.first().value, 's')
         self.assertEqual(variation_a_specifics[1].name, "Farbe")
         self.assertEqual(variation_a_specifics[1].values.first().value, "black")
 
@@ -300,30 +311,72 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
 
         # assert complete ebay payload with variations
         data = ebay_item.ebay_object.dict()
-        self.assertEqual(data['Item']['Variations'],
-                         {'Variation': [{'Quantity': 20,
-                                         'SKU': 'invtest_942446',
-                                         'StartPrice': '34.99',
-                                         'VariationProductListingDetails': {'EAN': '118678561130'},
-                                         'VariationSpecifics': {
-                                             'NameValueList': [{'Name': 'Gr\xf6\xdfe (*)', 'Value': 'm'},
-                                                               {'Name': 'Farbe (*)', 'Value': 'italy'}]}},
-                                        {'Quantity': 30,
-                                         'SKU': 'invtest_942445',
-                                         'StartPrice': '29.99',
-                                         'VariationProductListingDetails': {'EAN': '118678561129'},
-                                         'VariationSpecifics': {
-                                             'NameValueList': [{'Name': 'Gr\xf6\xdfe (*)', 'Value': 's'},
-                                                               {'Name': 'Farbe (*)', 'Value': 'black'}]}}],
-                          'Pictures': {'VariationSpecificName': 'Gr\xf6\xdfe (*)',
-                                       'VariationSpecificPictureSet': [
-                                           {'PictureURL': ['http://image/shirt_m_italy.png'],
-                                            'VariationSpecificValue': 'm'},
-                                           {'PictureURL': ['http://image/shirt_s_black.png'],
-                                            'VariationSpecificValue': 's'}]},
-                          'VariationSpecificsSet': {'NameValueList': [
-                              {'Name': 'Farbe (*)', 'Value': ['black', 'italy']},
-                              {'Name': 'Gr\xf6\xdfe (*)', 'Value': ['s', 'm']}]}})
+        self.assertEqual(
+            data['Item']['Variations'],
+            {
+                'Variation': [
+                    {
+                        'Quantity': 20,
+                        'SKU': 'invtest_942447',
+                        'StartPrice': '34.99',
+                        'VariationProductListingDetails': {'EAN': '118678561131'},
+                        'VariationSpecifics': {
+                            'NameValueList': [
+                                {'Name': 'Gr\xf6\xdfe (*)', 'Value': 'xxl'},
+                                {'Name': 'Farbe (*)', 'Value': 'red'}
+                            ]
+                        }
+                    },
+                    {
+                        'Quantity': 20,
+                        'SKU': 'invtest_942446',
+                        'StartPrice': '34.99',
+                        'VariationProductListingDetails': {'EAN': '118678561130'},
+                        'VariationSpecifics': {
+                            'NameValueList': [
+                                {'Name': 'Gr\xf6\xdfe (*)', 'Value': 'm'},
+                                {'Name': 'Farbe (*)', 'Value': 'italy'}
+                            ]
+                        }
+                    },
+                    {
+                        'Quantity': 30,
+                        'SKU': 'invtest_942445',
+                        'StartPrice': '29.99',
+                        'VariationProductListingDetails': {'EAN': '118678561129'},
+                        'VariationSpecifics': {
+                            'NameValueList': [
+                                {'Name': 'Gr\xf6\xdfe (*)', 'Value': 's'},
+                                {'Name': 'Farbe (*)', 'Value': 'black'}
+                            ]
+                        }
+                    }
+                ],
+                'Pictures': {
+                    'VariationSpecificName': 'Gr\xf6\xdfe (*)',
+                    'VariationSpecificPictureSet': [
+                        {
+                            'PictureURL': ['http://image/shirt_xxl_red.png'],
+                            'VariationSpecificValue': 'xxl'
+                        },
+                        {
+                            'PictureURL': ['http://image/shirt_m_italy.png'],
+                            'VariationSpecificValue': 'm'
+                        },
+                        {
+                            'PictureURL': ['http://image/shirt_s_black.png'],
+                            'VariationSpecificValue': 's'
+                        }
+                    ]
+                },
+                'VariationSpecificsSet': {
+                    'NameValueList': [
+                        {'Name': 'Farbe (*)', 'Value': ['black', 'italy', 'red']},
+                        {'Name': 'Gr\xf6\xdfe (*)', 'Value': ['s', 'm', 'xxl']}
+                    ]
+                }
+            }
+        )
 
     def test_validation_and_builder_with_click_and_collect(self):
         # activate click and collect for the core account
@@ -502,6 +555,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
 
         core_product.variations[0].attributes = []
         core_product.variations[1].attributes = []
+        core_product.variations[2].attributes = []
         self.expect_core_product(core_product)
 
         expected_error_message = 'Variations need to have at least one attribute'
@@ -591,6 +645,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         core_product = self.get_valid_core_product_with_variations()
         core_product.variations[0].ean = None
         core_product.variations[1].ean = None
+        core_product.variations[2].ean = None
         self.expect_core_product(core_product)
 
         self.assertEqual(self.category.features.ean_required, False,
@@ -604,6 +659,8 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
         self.assertEqual(variations[0].ean, None,
                          'EAN can be ``None`` when category does not require a valid EAN')
         self.assertEqual(variations[1].ean, None,
+                         'EAN can be ``None`` when category does not require a valid EAN')
+        self.assertEqual(variations[2].ean, None,
                          'EAN can be ``None`` when category does not require a valid EAN')
 
         # change category to require a valid EAN
