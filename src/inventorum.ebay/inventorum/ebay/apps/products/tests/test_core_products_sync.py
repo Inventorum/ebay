@@ -18,7 +18,7 @@ from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemVaria
 from inventorum.ebay.apps.products.tasks import periodic_core_products_sync_task
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
 from inventorum.ebay.lib.celery import celery_test_case, get_anonymous_task_execution_context
-from inventorum.ebay.tests import IntegrationTest
+from inventorum.ebay.tests import StagingTestAccount, IntegrationTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase, UnitTestCase
 from mock import PropertyMock
 from rest_framework import status
@@ -39,10 +39,13 @@ class IntegrationTestPeriodicCoreProductsSync(EbayAuthenticatedAPITestCase, Core
                                   filter_query_parameters=['start_date'], record_mode="never")
     def test_integration(self):
         # create some core products to play with
-        product_1_inv_id = self.create_core_api_product(name="Test product 1",
-                                                        description="Awesome test products are awesome",
-                                                        gross_price="1.99",
-                                                        quantity=12)
+        product_1_inv_id = self.create_core_api_product(
+            name="Test product 1",
+            description="Awesome test products are awesome",
+            gross_price="1.99",
+            quantity=12,
+            images=[{"id": StagingTestAccount.VALID_IMAGE_2_ID}, {"id": StagingTestAccount.VALID_IMAGE_ID}]
+        )
         ebay_product_1 = self.get_valid_ebay_product_for_publishing(self.account, inv_id=product_1_inv_id)
 
         product_2_inv_id = self.create_core_api_product(name="Test product 2",
