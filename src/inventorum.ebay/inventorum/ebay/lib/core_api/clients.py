@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import json
 import logging
 from collections import defaultdict
+from pprint import pprint
 
 import requests
 from django.conf import settings
@@ -113,6 +114,7 @@ class CoreAPIClient(object):
         response = requests.post(self.url_for(path), json=data, params=params, headers=headers)
 
         if not response.ok:
+            log.error(dict(url=self.url_for(path), params=params, headers=headers, json=data))
             log.error(response.content)
             response.raise_for_status()
 
