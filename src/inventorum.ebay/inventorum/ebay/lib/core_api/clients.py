@@ -103,14 +103,9 @@ class CoreAPIClient(object):
 
         :raises requests.exceptions.RequestException
         """
-        if params is None:
-            params = {}
-
-        if custom_headers is None:
-            custom_headers = {}
-
-        if data is None:
-            data = {}
+        params = params or {}
+        custom_headers = custom_headers or {}
+        data = data or {}
 
         headers = self.default_headers
         headers.update(custom_headers)
