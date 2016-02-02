@@ -35,6 +35,21 @@ class IntegrationTestPeriodicCoreProductsSync(EbayAuthenticatedAPITestCase, Core
         self.prepare_account_for_publishing(self.account)
 
     @celery_test_case()
+    # @IntegrationTest.use_cassette("core_products_sync/core_products_sync_integration_no_images_test.yaml",
+    #                               filter_query_parameters=['start_date'], record_mode="never")
+    def test_integration_with_no_images(self):
+        product_1_inv_id = self.create_core_api_product(
+            name="Test product 1",
+            description="Awesome test products are awesome",
+            gross_price="1.99",
+            quantity=12,
+            images=None,
+        )
+
+        response = self.client.get("/products/%s" % product_1_inv_id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+    @celery_test_case()
     @IntegrationTest.use_cassette("core_products_sync/core_products_sync_integration_test.yaml",
                                   filter_query_parameters=['start_date'], record_mode="never")
     def test_integration(self):

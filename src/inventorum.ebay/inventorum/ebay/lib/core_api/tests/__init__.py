@@ -22,7 +22,9 @@ class CoreApiTestHelpers(object):
     *Caution*: These helpers will hit he actual core api, so use them wisely :-)
     """
 
-    def create_core_api_product(self, name, gross_price="100.00", quantity=100, description="", images=None):
+    def create_core_api_product(
+            self, name, gross_price="100.00", quantity=100, description="",
+            images=({"id": StagingTestAccount.VALID_IMAGE_ID},)):
         user = self.__authenticated_test_user
 
         net_price = gross_to_net(gross_price, tax_rate=D("19"))
@@ -34,7 +36,7 @@ class CoreApiTestHelpers(object):
             "quantity": quantity,
             "reorder_level": 10,
             "safety_stock": 5,
-            "images": images or [{"id": StagingTestAccount.VALID_IMAGE_ID}]
+            "images": images,
         })
 
         json_body = response.json()
