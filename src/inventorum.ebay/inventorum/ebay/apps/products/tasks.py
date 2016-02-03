@@ -199,7 +199,8 @@ def ebay_item_update(self, ebay_item_update_id):
     user = EbayUserModel.objects.get(id=self.context.user_id)
     item_update = EbayItemUpdateModel.objects.get(id=ebay_item_update_id)
 
-    #TODO: unpublish product
+    # unpublish product when is out of stock
+    # TODO: [INV-6575] unpublish the product but as soon as it is in stock again publish it
     if item_update.is_out_of_stock:
         schedule_ebay_item_unpublish(ebay_item_id=item_update.item.id)
         item_update.set_status(EbayItemUpdateStatus.SUCCEEDED)
