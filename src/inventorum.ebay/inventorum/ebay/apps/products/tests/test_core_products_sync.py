@@ -308,10 +308,21 @@ class UnitTestCoreProductsSync(UnitTestCase):
                                         product=product_e,
                                         inv_product_id=1005)
 
-        assert all([p.is_published for p in [product_a, product_b, product_c, product_d, product_e]])
+        # product that went out of stock
+        product_f = EbayProductFactory.create(account=self.account)
+        PublishedEbayItemFactory.create(
+            account=self.account,
+            product=product_f,
+            inv_product_id=1006,
+            gross_price=D("3.99"),
+            quantity=79
+        )
+        CoreProductDeltaFactory(id=1001, gross_price=D("3.99"), quantity=0)
+
+        assert all([p.is_published for p in [product_a, product_b, product_c, product_d, product_e, product_f]])
 
         self.expect_modified([delta_a], [delta_b], [delta_c])
-        self.expect_deleted([1004, 1005])
+        self.expect_deleted([1004, 1005, 1006])
 
         subject.run()
 
@@ -336,10 +347,10 @@ class UnitTestCoreProductsSync(UnitTestCase):
         self.assertEqual([args[0] for args, kwargs in calls], [item_a_update.id, item_b_update.id, item_c_update.id])
 
         # assert deletions
-        self.assertEqual(self.schedule_ebay_product_deletion_mock.call_count, 2)
+        self.assertEqual(self.schedule_ebay_product_deletion_mock.call_count, 3)
 
         calls = self.schedule_ebay_product_deletion_mock.call_args_list
-        self.assertEqual([args[0] for args, kwargs in calls], [product_d.id, product_e.id])
+        self.assertEqual([args[0] for args, kwargs in calls], [product_d.id, product_e.id, product_f.id])
 
     def test_published_modified_and_deleted_variations(self):
         subject = CoreProductsSync(account=self.account)
