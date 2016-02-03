@@ -5,7 +5,7 @@ from datetime import datetime
 from celery.utils.log import get_task_logger
 
 from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
-from inventorum.ebay.apps.products import EbayItemPublishingStatus
+from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayItemUpdateStatus
 from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateModel, EbayProductModel
 from inventorum.ebay.apps.products.services import PublishingService, PublishingSendStateFailedException,\
     PublishingException, UnpublishingService, UnpublishingException, UpdateService, UpdateFailedException, \
@@ -199,12 +199,16 @@ def ebay_item_update(self, ebay_item_update_id):
     user = EbayUserModel.objects.get(id=self.context.user_id)
     item_update = EbayItemUpdateModel.objects.get(id=ebay_item_update_id)
 
-    service = UpdateService(item_update, user=user)
-
-    try:
-        service.update()
-    except UpdateFailedException as e:
-        log.error("Update failed with ebay errors: %s", e.original_exception.errors)
+    #TODO: unpublish product
+    if item_update.is_out_of_stock:
+        schedule_ebay_item_unpublish(ebay_item_id=item_update.item.id)
+        item_update.set_status(EbayItemUpdateStatus.SUCCEEDED)
+    else:
+        service = UpdateService(item_update, user=user)
+        try:
+            service.update()
+        except UpdateFailedException as e:
+            log.error("Update failed with ebay errors: %s", e.original_exception.errors)
 
 
 def schedule_ebay_item_update(ebay_item_update_id, context):
