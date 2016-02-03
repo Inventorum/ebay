@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 import json
 import logging
 from collections import defaultdict
-from pprint import pprint
 
 import requests
 from django.conf import settings
