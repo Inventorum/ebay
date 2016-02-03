@@ -371,6 +371,10 @@ class EbayUpdateModel(BaseModel):
     status_details = JSONField()
 
     @property
+    def is_out_of_stock(self):
+        return self.quantity == 0
+
+    @property
     def has_updated_quantity(self):
         return self.quantity is not None
 
