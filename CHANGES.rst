@@ -14,6 +14,7 @@ Fix
 - INV-6204 Make the ebay orders sync more robust
 - INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 - INV-6234 Ebay product now can contain special characters like "&"."
+- INV-6534 Products with stock in 0 was possible to sale them on Ebay.
 - INV-5690 Test publishing with 2 images. A lot of code is improved.
 
 2016-02-04 0.1.20-1
