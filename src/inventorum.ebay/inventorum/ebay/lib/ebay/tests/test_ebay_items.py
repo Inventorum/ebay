@@ -80,41 +80,31 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
     def test_failed_publishing(self):
         item = self._build_wrong_item()
         service = EbayItems(self.ebay_token)
+
         with self.assertRaises(EbayConnectionException) as e:
             service.publish(item)
 
         errors = e.exception.errors
-        self.assertEqual(len(errors), 4)
+        self.assertEqual(len(errors), 3)
 
-        self.assertEqual(errors[0].long_message, 'Für diese Kategorie ist kein Artikelzustand verfügbar. '
-                                                 'Der eingegebene Artikelzustand wurde entfernt.')
-        self.assertEqual(errors[0].short_message, 'Artikelzustand kann nicht verwendet werden.')
-        self.assertEqual(errors[0].code, 21917121)
-        self.assertEqual(errors[0].severity_code, 'Warning')
+        self.assertEqual(errors[0].long_message, 'Bei der ausgewählten Kategorie handelt es sich nicht um eine so '
+                                                 'genannte Unterkategorie.')
+        self.assertEqual(errors[0].code, 87)
+        self.assertEqual(errors[0].severity_code, 'Error')
         self.assertEqual(errors[0].classification, 'RequestError')
 
-        self.assertEqual(errors[1].long_message, 'Erforderliche Mindesanzahl an Bildern:  1 Für Angebote in dieser '
-                                                 'Kategorie empfehlen wir Ihnen, mindestens 2 Fotos hochzuladen, um '
-                                                 'Ihre Verkaufschancen  möglicherweise um 12 zu erhöhen. '
-                                                 '(Prozentangabe beruht auf Anteilen an verkauften Artikeln in dieser '
-                                                 'Kategorie mit unterschiedlich vielen Bildern. Tatsächliche '
-                                                 'Ergebnisse können anders ausfallen und der Verkauf ist nicht '
-                                                 'garantiert.)')
-        self.assertEqual(errors[1].code, 21919136)
-        self.assertEqual(errors[1].severity_code, 'Error')
-        self.assertEqual(errors[1].classification, 'RequestError')
-
-        self.assertEqual(errors[2].long_message, 'Bei der ausgewählten Kategorie handelt es sich nicht um eine so '
-                                                 'genannte Unterkategorie.')
-        self.assertEqual(errors[2].code, 87)
-        self.assertEqual(errors[2].severity_code, 'Error')
+        self.assertEqual(errors[2].long_message, 'Für diese Kategorie ist kein Artikelzustand verfügbar. '
+                                                 'Der eingegebene Artikelzustand wurde entfernt.')
+        self.assertEqual(errors[2].short_message, 'Artikelzustand kann nicht verwendet werden.')
+        self.assertEqual(errors[2].code, 21917121)
+        self.assertEqual(errors[2].severity_code, 'Warning')
         self.assertEqual(errors[2].classification, 'RequestError')
 
-        self.assertEqual(errors[3].long_message, 'Die Dauer "120" (in Tagen) ist für dieses Angebotsformat nicht '
+        self.assertEqual(errors[1].long_message, 'Die Dauer "120" (in Tagen) ist für dieses Angebotsformat nicht '
                                                  'verfügbar, bzw. ungültig für die Kategorie "64540".')
-        self.assertEqual(errors[3].code, 83)
-        self.assertEqual(errors[3].severity_code, 'Error')
-        self.assertEqual(errors[3].classification, 'RequestError')
+        self.assertEqual(errors[1].code, 83)
+        self.assertEqual(errors[1].severity_code, 'Error')
+        self.assertEqual(errors[1].classification, 'RequestError')
 
     @EbayTest.use_cassette("ebay_publish_ipad_stand_correct_then_unpublish_it.yaml")
     def test_publishing(self):
