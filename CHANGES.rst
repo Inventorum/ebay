@@ -10,6 +10,7 @@ Feature
 
 Fix
 ...
+- ``allow_null`` for meta images
 - INV-6380 Fix validation amount of attributes in products with variations.
 - INV-6204 Make the ebay orders sync more robust
 - INV-6377 Ebay product can use now item specifics with special characters (like umlauts)

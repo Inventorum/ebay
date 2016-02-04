@@ -66,7 +66,7 @@ class CoreProduct(object):
         self.gross_price = gross_price
         self.tax_type_id = tax_type_id
         self.quantity = quantity
-        self.images = images
+        self.images = images or []
         self.variation_count = variation_count
         self.inv_id = inv_id
         self.variations = variations or []
@@ -104,7 +104,7 @@ class CoreImage(object):
 
     class Deserializer(POPOSerializer):
 
-        class Meta:
+        class Meta(POPOSerializer.Meta):
             model = None
 
         id = serializers.IntegerField()
@@ -158,7 +158,7 @@ class CoreBasicProductDeserializer(POPOSerializer, CoreProductMetaOverrideMixin)
         description = serializers.CharField(allow_null=True, allow_blank=True)
         gross_price = MoneyField(allow_null=True)
 
-        images = CoreImage.Deserializer(many=True)
+        images = CoreImage.Deserializer(many=True, allow_null=True)
 
     class Meta(POPOSerializer.Meta):
         model = CoreProduct
