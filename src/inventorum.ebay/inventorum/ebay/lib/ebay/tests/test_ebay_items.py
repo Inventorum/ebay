@@ -138,7 +138,5 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         with self.assertRaises(EbayConnectionException) as e:
             service.publish(item)
 
-        self.assertTrue(e.exception.ebay_message)
+        self.assertIsNone(e.exception.ebay_message)
         self.assertTrue(e.exception.serialized_errors[0]['parameters'])
-        params = e.exception.serialized_errors[0]['parameters']
-        self.assertTrue(params[0].startswith('<div>'), 'Does not starts with <div>: %s' % params[0])
