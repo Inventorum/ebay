@@ -33,7 +33,7 @@ class TestCoreProductDeserializer(UnitTestCase):
                         }}],
             "meta": {
                 "ebay": {
-                    "images": [],
+                    "images": None,
                     "gross_price": "448.6800000000",  # This is how API sends us price, needs to be ensured it works!
                     "id": 520,
                     "channel": 4,
