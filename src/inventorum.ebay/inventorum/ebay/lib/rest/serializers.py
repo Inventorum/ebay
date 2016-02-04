@@ -11,6 +11,9 @@ log = logging.getLogger(__name__)
 
 class POPOListSerializer(serializers.ListSerializer):
     """ List serializer for Plain Old Python Objects (POPO) """
+    def __init__(self, *args, **kwargs):
+        super(POPOListSerializer, self).__init__(*args, **kwargs)
+        self.allow_null = self.child.allow_null
 
     def build(self):
         if not hasattr(self, "_errors"):
@@ -37,8 +40,8 @@ class POPOSerializer(serializers.Serializer):
 
         for original_name, field in self.fields.iteritems():
             name = field.source
-            if name in validated_data:
-                if isinstance(field, POPOSerializer) and validated_data[name] is not None:
+            if name in validated_data and validated_data[name] is not None:
+                if isinstance(field, POPOSerializer):
                     # Note: We call create directly since the data has already been validated
                     validated_data[name] = field.create(validated_data[name])
                 elif isinstance(field, serializers.ListSerializer) and isinstance(field.child, POPOSerializer):
