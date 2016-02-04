@@ -35,7 +35,7 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
         self.assertEqual(item1.primary_category.category_id, '50602')
         self.assertEqual(item1.listing_duration, 'Days_30')
         self.assertEqual(item1.payment_methods, 'PayPal')
-        self.assertEqual(item1.paypal_email_address, 'bartosz@hernas.pl')
+        self.assertEqual(item1.paypal_email_address, 'info@inventorum.com')
         self.assertEqual(item1.pictures[0].url,
                          'http://i.ebayimg.com/00/s/MTIwMFgxNjAw/z/usoAAOSwgQ9VpN-D/$_1.JPG?set_id=880000500F')
         self.assertTrue(item1.pick_up.is_click_and_collect)

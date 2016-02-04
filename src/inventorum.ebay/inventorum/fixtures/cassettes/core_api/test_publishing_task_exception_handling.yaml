@@ -122,7 +122,7 @@ interactions:
         "enabled": true, "free_above_price": null}], "ebay_payment_methods": [1],
         "izettle": true, "meta_prices_enabled": true, "paypal": false, "ebay": true,
         "ebay_click_and_collect": true, "shop": false, "zreports": true, "roundup":
-        false, "atalanda_enabled": false, "pdf": 1, "ebay_paypal_email": "bartosz@hernas.pl",
+        false, "atalanda_enabled": false, "pdf": 1, "ebay_paypal_email": "info@inventorum.com",
         "receipt_header": "", "receipt_footer": "", "first_change_added": false, "individual_receipt_type":
         "default", "company_receipt_type": "detailed"}, "image_width": 0, "image_height":
         0, "permissions": ["accounts.can_open_backoffice", "accounts.can_use_acc_photo_on_receipt",
@@ -213,14 +213,14 @@ interactions:
   response:
     body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetUserPreferencesResponse\
         \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2015-09-17T11:46:03.542Z</Timestamp><Ack>Success</Ack><Version>939</Version><Build>E939_INTL_APISELLING_17668125_R1</Build><SellerProfilePreferences><SellerProfileOptedIn>true</SellerProfileOptedIn><SupportedSellerProfiles><SupportedSellerProfile><ProfileID>70836070023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal:Sofortige\
-        \ Bezahlung</ProfileName><ShortSummary>PayPal, bartosz@hernas.pl</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>72448630023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal:Sofortige\
+        \ Bezahlung</ProfileName><ShortSummary>PayPal, info@inventorum.com</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>72448630023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal:Sofortige\
         \ Bezahlung#2</ProfileName><ShortSummary>PayPal, silvia_maunz@web.de</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>71605019023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal#2</ProfileName><ShortSummary>PayPal,\
         \ silvia_maunz@web.de</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>75236500023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal:\xDC\
-        berweisung in der Kaufabwicklung akze</ProfileName><ShortSummary>PayPal, bartosz@hernas.pl,\
+        berweisung in der Kaufabwicklung akze</ProfileName><ShortSummary>PayPal, info@inventorum.com,\
         \ \xDCberweisung akzeptiert, \xDCberweisung in der Kaufabwicklung akzeptiert</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>71997562023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal#4</ProfileName><ShortSummary>PayPal,\
         \ f.hoetzel@paydroid.de</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>77179000023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal#8</ProfileName><ShortSummary>PayPal,\
         \ mail@jmalcher.de</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>70043491023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal</ProfileName><ShortSummary>PayPal,\
-        \ bartosz@hernas.pl</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>true</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>70787672023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal:Nachnahme,Barzahlung\
+        \ info@inventorum.com</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>true</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>70787672023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal:Nachnahme,Barzahlung\
         \ bei Abholung akze</ProfileName><ShortSummary>PayPal, mail@jmaicher.de, Nachnahme,\
         \ Barzahlung bei Abholung akzeptiert</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>71602305023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal#1</ProfileName><ShortSummary>PayPal,\
         \ pratyaymodi@gmail.com</ShortSummary><CategoryGroup><Name>ALL</Name><IsDefault>false</IsDefault></CategoryGroup></SupportedSellerProfile><SupportedSellerProfile><ProfileID>76586387023</ProfileID><ProfileType>PAYMENT</ProfileType><ProfileName>PayPal:Sofortige\

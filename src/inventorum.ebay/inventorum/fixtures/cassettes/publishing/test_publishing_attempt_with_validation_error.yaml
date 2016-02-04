@@ -156,7 +156,7 @@ interactions:
         "enabled": true, "free_above_price": null}], "ebay_payment_methods": [1],
         "izettle": true, "meta_prices_enabled": true, "paypal": false, "ebay": true,
         "ebay_click_and_collect": true, "shop": false, "zreports": true, "roundup":
-        false, "atalanda_enabled": false, "pdf": 1, "ebay_paypal_email": "bartosz@hernas.pl",
+        false, "atalanda_enabled": false, "pdf": 1, "ebay_paypal_email": "info@inventorum.com",
         "receipt_header": "", "receipt_footer": "", "first_change_added": false, "individual_receipt_type":
         "default", "company_receipt_type": "detailed", "automated_zreports_enabled":
         false, "automated_zreports_time": null, "automated_zreports_email": null},
