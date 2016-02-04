@@ -10,11 +10,16 @@ Feature
 
 Fix
 ...
-- ``allow_null`` for meta images
 - INV-6380 Fix validation amount of attributes in products with variations.
 - INV-6204 Make the ebay orders sync more robust
 - INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 - INV-6234 Ebay product now can contain special characters like "&"."
+
+2016-02-04 0.1.20-1
+===================
+Fix
+...
+- ``allow_null`` for meta images
 
 2015-12-15 0.1.20
 =================
@@ -40,7 +45,7 @@ Feature
 =================
 Fix
 ...
-- INV-5559 Whitelist shipping services with ``DimensionsRequired=True`` (e.g. DHL Paket)
+- INV-5559 Whitelist shipping services with ``DimensionsRequired = True`` (e.g. DHL Paket)
 
 2015-11-04 0.1.16
 =================
