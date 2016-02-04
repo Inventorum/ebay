@@ -20,6 +20,7 @@ Fix
 Fix
 ...
 - ``allow_null`` for meta images
+- INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 
 2015-12-15 0.1.20
 =================
