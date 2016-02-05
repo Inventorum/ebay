@@ -19,19 +19,11 @@ def periodic_ebay_orders_sync_task(self):
     """
     :type self: inventorum.util.celery.InventorumTask
     """
-    from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync
-
-    start_time = datetime.now()
-
     accounts = EbayAccountModel.objects.ebay_authenticated().all()
     log.info("Starting ebay order sync for {} accounts".format(accounts.count()))
 
-    for account in accounts:
-        log.info("Running ebay order sync for account {}".format(account))
-        EbayOrdersSync(account).run()
-
-    run_time = datetime.now() - start_time
-    log.info("Finished ebay orders sync in {}".format(run_time))
+    for delay_in_seconds, account in enumerate(accounts, start=1):
+        schedule_ebay_orders_sync(account.id, context=self.context, countdown=delay_in_seconds)
 
 
 @inventorum_task()
@@ -41,17 +33,25 @@ def ebay_orders_sync(self, account_id):
     :type account_id: int
     """
     from inventorum.ebay.apps.orders.ebay_orders_sync import EbayOrdersSync
+    start_time = datetime.now()
 
     account = EbayAccountModel.objects.get(id=account_id)
+    log.info("Running ebay orders sync for account {}".format(account))
     EbayOrdersSync(account).run()
 
+    run_time = datetime.now() - start_time
+    log.info("Finished ebay orders sync for account {} in {}".format(account, run_time))
 
-def schedule_ebay_orders_sync(account_id, context):
+
+def schedule_ebay_orders_sync(account_id, context, **kwargs_for_apply_async):
     """
     :type account_id: int
     :type context: inventorum.util.celery.TaskExecutionContext
+    :type kwargs_for_apply_async: dict
     """
-    ebay_orders_sync.delay(account_id=account_id, context=context)
+    args = (account_id,)
+    kwargs = dict(context=context)
+    ebay_orders_sync.apply_async(args, kwargs, **kwargs_for_apply_async)
 
 
 @inventorum_task()
