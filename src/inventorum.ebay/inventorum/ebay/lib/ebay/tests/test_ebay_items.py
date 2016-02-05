@@ -37,7 +37,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
         return EbayFixedPriceItem(
             sku="test_321",
             title="Inventorum iPad Stand",
-            description="<![CDATA[Stand for iPad from Inventorum for your POS Shop]]>",
+            description="Stand for iPad from Inventorum for your POS Shop",
             listing_duration="Days_120",
             country="DE",
             postal_code="13355",
