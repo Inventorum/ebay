@@ -1,11 +1,12 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from decimal import *
+from decimal import Decimal
 
 from inventorum.ebay.tests import EbayTest
 from inventorum.ebay.lib.ebay import EbayConnectionException
-from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayItemShippingService, EbayPicture
+from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayItemShippingService, EbayPicture, \
+    EbayItemSpecific
 from inventorum.ebay.lib.ebay.items import EbayItems
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
