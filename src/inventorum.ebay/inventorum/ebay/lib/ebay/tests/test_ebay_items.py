@@ -73,6 +73,7 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
             paypal_email_address="info@inventorum.com",
             payment_methods=['PayPal'],
             category_id="176973",
+            ean='9780471117094',
             shipping_services=[shipping],
             pictures=[picture]
         )
