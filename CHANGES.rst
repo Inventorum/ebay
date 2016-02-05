@@ -4,6 +4,8 @@ CHANGES
 
 develop
 =======
+2016-02-05 0.2.0
+================
 Feature
 .......
 - INV-6302 Add "taxes included" (inkl. MwSt) in all products.
