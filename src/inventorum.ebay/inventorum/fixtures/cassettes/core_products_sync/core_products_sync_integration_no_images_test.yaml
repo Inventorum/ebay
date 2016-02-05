@@ -1,0 +1,84 @@
+interactions:
+- request:
+    body: '{"safety_stock": 5, "reorder_level": 10, "name": "Test product 1", "images":
+      null, "price": "1.6722689076", "quantity": 12, "tax_type": 1063, "description":
+      "Awesome test products are awesome"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['193']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "Test product 1",
+        "id": 726622, "quantity": "12.00", "reorder_level": "10.00", "safety_stock":
+        "5.00", "price": "1.6722689076", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": null, "variation_count": 0, "variations": [], "average_purchase_price":
+        "0", "description": "Awesome test products are awesome", "product_code": null,
+        "ean": null, "categories": [], "images": [], "custom_sale": false, "shipping_services":
+        [], "is_favourite": false, "brand": "", "supplier": "", "meta": {}, "is_giftcard":
+        false, "gross_price": "1.99", "purchase_price": "0", "states": [], "attributes_str":
+        "", "inv_id": "36222023467027831", "package_size_value": null, "package_size_unit":
+        null, "base_price": null, "base_size_value": null, "base_size_unit": null}'}
+    headers:
+      allow: ['GET, POST, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Fri, 05 Feb 2016 10:00:48 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1aRdC4:Ss3JkLGvED869WgnJ3-URIIqchA"; Domain=app.intern.inventorum.net;
+          expires=Fri, 05-Feb-2016 12:00:48 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['2449255927115212276']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+      X-Rid: [!!python/long '1464999086821465688']
+    method: GET
+    uri: http://app.intern.inventorum.net/api/products/726622/
+  response:
+    body: {string: !!python/unicode '{"attributes": {}, "name": "Test product 1",
+        "id": 726622, "quantity": "12.00", "reorder_level": "10.00", "safety_stock":
+        "5.00", "price": "1.6722689076", "tax_type": 1063, "custom_price": false,
+        "ebay_product_id": null, "ebay_url": null, "in_shop": false, "shop_url": null,
+        "thumbnail": null, "variation_count": 0, "variations": [], "average_purchase_price":
+        "0", "description": "Awesome test products are awesome", "product_code": null,
+        "ean": null, "categories": [], "images": [], "custom_sale": false, "shipping_services":
+        [], "is_favourite": false, "brand": "", "supplier": "", "meta": {}, "is_giftcard":
+        false, "gross_price": "1.99", "purchase_price": "0", "states": [], "attributes_str":
+        "", "inv_id": "36222023467027831", "package_size_value": null, "package_size_unit":
+        null, "base_price": null, "base_size_value": null, "base_size_unit": null}'}
+    headers:
+      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
+      connection: [keep-alive]
+      content-type: [application/json]
+      date: ['Fri, 05 Feb 2016 10:00:48 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1aRdC4:Ss3JkLGvED869WgnJ3-URIIqchA"; Domain=app.intern.inventorum.net;
+          expires=Fri, 05-Feb-2016 12:00:48 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['1464999086821465688']
+    status: {code: 200, message: OK}
+version: 1
