@@ -10,7 +10,7 @@ from rest_framework.fields import ListField, CharField, IntegerField
 from inventorum.ebay.lib.ebay.data import EbayParser, EbayArrayField, EbayListSerializer
 from inventorum.ebay.lib.ebay.data.responses import PaginationResultType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from inventorum.ebay.lib.utils import int_or_none
+from inventorum.ebay.lib.utils import int_or_none, cdata
 
 
 class EbayPriceModel(object):
@@ -136,7 +136,7 @@ class EbayReturnPolicy(object):
             data['ShippingCostPaidByOption'] = self.shipping_cost_paid_by_option
 
         if self.description is not None:
-            data['Description'] = self.description
+            data['Description'] = cdata(self.description)
 
         return data
 
@@ -209,9 +209,9 @@ class EbayFixedPriceItem(object):
 
     def dict(self):
         data = {
-            'Title': '<![CDATA[{html}]]>'.format(html=self.title),
+            'Title': cdata(self.title),
             'SKU': self.sku,
-            'Description': '<![CDATA[{html}]]>'.format(html=linebreaks(self.description)),
+            'Description': cdata(linebreaks(self.description)),
             'ListingDuration': self.listing_duration,
             'Country': self.country,
             'PostalCode': self.postal_code,
