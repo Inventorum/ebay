@@ -105,7 +105,7 @@ BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum_ebay"
 CELERYBEAT_SCHEDULE = {
     'periodic_ebay_orders_sync_task': {
         'task': 'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task',
-        'schedule': timedelta(seconds=30),
+        'schedule': timedelta(minutes=10),
         'kwargs': {
             "context": get_anonymous_task_execution_context()
         }
