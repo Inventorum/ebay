@@ -17,13 +17,13 @@ class TestGetDataFromEbay(EbayAuthenticatedAPITestCase):
         items = EbayItems(self.ebay_token)
         response = items.get_all_items_from_seller_list(1)  # just 1 entry per page, to test pagination as well
 
-        self.assertEqual(response.items[0].item_id, '261967105601')
+        self.assertEqual(response.items[0].item_id, '262250114732')
         self.assertEqual(response.items[18].item_id, '262005246355')
 
     @EbayTest.use_cassette("full_test_for_serialize_get_item_from_ebay.yaml")
     def test_get_item_from_ebay(self):
         items = EbayItems(self.ebay_token)
-        id_1 = '261967105601'
+        id_1 = '262250114732'
         item1 = items.get_item(id_1)
         self.assertEqual(item1.item_id, id_1)
         self.assertEqual(item1.start_price.value, Decimal('1.09'))
