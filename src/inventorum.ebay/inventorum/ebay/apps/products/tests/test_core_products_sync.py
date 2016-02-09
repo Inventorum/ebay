@@ -317,9 +317,9 @@ class UnitTestCoreProductsSync(UnitTestCase):
             gross_price=D("3.99"),
             quantity=79
         )
-        CoreProductDeltaFactory(id=1001, gross_price=D("3.99"), quantity=0)
+        CoreProductDeltaFactory(id=1006, gross_price=D("3.99"), quantity=0)
 
-        assert all([p.is_published for p in [product_a, product_b, product_c, product_d, product_e, product_f]])
+        assert all(p.is_published for p in [product_a, product_b, product_c, product_d, product_e, product_f])
 
         self.expect_modified([delta_a], [delta_b], [delta_c])
         self.expect_deleted([1004, 1005, 1006])
