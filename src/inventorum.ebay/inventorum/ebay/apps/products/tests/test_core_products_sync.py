@@ -345,7 +345,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
         calls = self.schedule_ebay_product_deletion_mock.call_args_list
         self.assertEqual([args[0] for args, kwargs in calls], [product_d.id, product_e.id])
 
-    def test_update_product_with_scotk_in_zero_unpublishes_the_ebay_item(self):
+    def test_update_product_with_stock_in_zero_unpublishes_the_ebay_item(self):
         # product that went out of stock
         subject = CoreProductsSync(account=self.account)
 
