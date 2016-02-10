@@ -4,6 +4,12 @@ CHANGES
 
 develop
 =======
+2016-02-08 0.2.1
+================
+- INV-6628 Allow special chars in return policy description (wrapped in CDATA)
+
+2016-02-08 0.2.0
+================
 Feature
 .......
 - INV-6302 Add "taxes included" (inkl. MwSt) in all products.
@@ -15,6 +21,13 @@ Fix
 - INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 - INV-6234 Ebay product now can contain special characters like "&"."
 - INV-6534 Products with stock in 0 was possible to sale them on Ebay.
+
+2016-02-04 0.1.20-1
+===================
+Fix
+...
+- ``allow_null`` for meta images
+- INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 
 2015-12-15 0.1.20
 =================
@@ -40,7 +53,7 @@ Feature
 =================
 Fix
 ...
-- INV-5559 Whitelist shipping services with ``DimensionsRequired=True`` (e.g. DHL Paket)
+- INV-5559 Whitelist shipping services with ``DimensionsRequired = True`` (e.g. DHL Paket)
 
 2015-11-04 0.1.16
 =================
