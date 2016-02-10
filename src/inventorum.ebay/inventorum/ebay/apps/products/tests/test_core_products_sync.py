@@ -363,7 +363,6 @@ class UnitTestCoreProductsSync(UnitTestCase):
         self.expect_modified([delta])
         self.expect_deleted([])
 
-        print('SUBJECT', subject)
         subject.run()
 
         self.assertEqual(item.updates.count(), 1)
