@@ -456,6 +456,8 @@ class UnpublishingService(PublishingUnpublishingService):
             self.item.unpublished_at = datetime.now()
 
         self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
+
+        # In case the unpublish was caused by an update coming from the core API, like quantity = 0
         if isinstance(self.item, EbayUpdateModel):
             self.item.set_status(EbayItemUpdateStatus.SUCCEEDED, save=False)
         self.item.save()
