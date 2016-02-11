@@ -64,7 +64,7 @@ class EbayItems(EbayTrading):
         })
         return EbayGetSellerListResponse.create_from_data(data=response)
 
-    def get_all_items_from_seller_list(self, entries_per_page):
+    def get_all_items_from_seller_list(self, entries_per_page=100):
         """
         Get List of all ItemIds from the Items, published on ebay.
         :rtype [EbayFixedPrizedItem]
