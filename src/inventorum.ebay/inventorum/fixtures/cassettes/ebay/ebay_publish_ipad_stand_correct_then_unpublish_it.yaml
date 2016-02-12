@@ -1,0 +1,84 @@
+interactions:
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><AddFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description><![CDATA[<p>Der
+      stylische iPad-Stand von INVENTORUM aus edlem Holz rundet das Erscheinungsbild
+      Ihrer neuen iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel ist
+      dieser ideal, um einfach und schnell Produkte mit der internen Kamera des iPads
+      zu scannen.</p>]]></Description><DispatchTimeMax>3</DispatchTimeMax><ItemSpecifics><NameValueList><Name>Brand</Name><Value>Felt</Value></NameValueList><NameValueList><Name>Herstellernummer</Name><Value>34534jns</Value></NameValueList></ItemSpecifics><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>info@inventorum.com</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PictureDetails><PictureURL>http://shop.inventorum.com/uploads/img-hash/a9fe/1db9/8c9e/564c/8877/d8a1/f1f8/a9fe1db98c9e564c8877d8a1f1f8fccf_ipad.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>176973</CategoryID></PrimaryCategory><ProductListingDetails><EAN>9780471117094</EAN></ProductListingDetails><Quantity>1</Quantity><SKU>test_124</SKU><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>0.00</ShippingServiceAdditionalCost><ShippingServiceCost>5.00</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><StartPrice>45.99</StartPrice><Title><![CDATA[Inventorum
+      iPad Stand]]></Title></Item></AddFixedPriceItemRequest>
+    headers:
+      Content-Length: ['2663']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.5-1-MANJARO]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'AddFixedPriceItem']
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [0deda202-994c-4f03-ae3b-c06091ad191c]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <AddFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2016-02-12T10:42:08.347Z</Timestamp><Ack>Success</Ack><Version>953</Version><Build>E953_UNI_API5_17831825_R1</Build><ItemID>262287252049</ItemID><StartTime>2016-02-12T10:42:06.550Z</StartTime><EndTime>2016-03-13T10:42:06.550Z</EndTime><Fees><Fee><Name>AuctionLengthFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>BoldFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>BuyItNowFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>CategoryFeaturedFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>FeaturedFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>GalleryPlusFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>FeaturedGalleryFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>FixedPriceDurationFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>GalleryFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>GiftIconFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>HighLightFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>InsertionFee</Name><Fee
+        currencyID="EUR">0.0</Fee><PromotionalDiscount currencyID="EUR">0.35</PromotionalDiscount></Fee><Fee><Name>InternationalInsertionFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>ListingDesignerFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ListingFee</Name><Fee
+        currencyID="EUR">0.0</Fee><PromotionalDiscount currencyID="EUR">0.35</PromotionalDiscount></Fee><Fee><Name>PhotoDisplayFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>PhotoFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ReserveFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>SchedulingFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>SubtitleFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>BorderFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>ProPackBundleFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>BasicUpgradePackBundleFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>ValuePackBundleFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>PrivateListingFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee><Fee><Name>ProPackPlusBundleFee</Name><Fee
+        currencyID="EUR">0.0</Fee></Fee></Fees><DiscountReason>SpecialOffer</DiscountReason></AddFixedPriceItemResponse>'}
+    headers:
+      content-length: ['2373']
+      content-type: [text/xml]
+      date: ['Fri, 12 Feb 2016 10:42:08 GMT']
+      guid: [152d512c-5400-a621-cac2-a2229d52cfaf]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW8ydmtv]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrYWBjNygyNSg+OyswNS0xMD07NT43]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [AddFixedPriceItem]
+      x-ebay-esb-guid: ['urn:uuid:36412f80-c52a-4b5a-bc31-2ee19ee989b4']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['152d512c-5400-a621-cac2-a2229d52cfaf!ws.api.dll!10.98.28.172!esbtrading[']
+    status: {code: 200, message: OK}
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>262287252049</ItemID></EndFixedPriceItemRequest>
+    headers:
+      Content-Length: ['1185']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.5-1-MANJARO]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'EndFixedPriceItem']
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [576178c9-62b2-491e-b761-f5abe16db070]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <EndFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2016-02-12T10:42:09.998Z</Timestamp><Ack>Success</Ack><Version>953</Version><Build>E953_UNI_API5_17831825_R1</Build><EndTime>2016-02-12T10:42:09.000Z</EndTime></EndFixedPriceItemResponse>'}
+    headers:
+      connection: [Keep-Alive]
+      content-length: ['304']
+      content-type: [text/xml]
+      date: ['Fri, 12 Feb 2016 10:42:09 GMT']
+      guid: [152d512d-c770-a626-1634-0e249d2939b2]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW8ydmtv]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrNDc3NigyNSg+OyswNC00PjQ5PTY/Mw==]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [EndFixedPriceItem]
+      x-ebay-esb-guid: ['urn:uuid:4d5eddb8-c927-40bc-adab-91afda5721e9']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['152d512d-c770-a626-1634-0e249d2939b2!ws.api.dll!10.98.97.99!esbtrading[']
+    status: {code: 200, message: OK}
+version: 1
