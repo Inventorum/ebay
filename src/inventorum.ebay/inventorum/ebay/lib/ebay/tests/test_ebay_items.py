@@ -75,7 +75,11 @@ class TestEbayItems(EbayAuthenticatedAPITestCase):
             category_id="176973",
             ean='9780471117094',
             shipping_services=[shipping],
-            pictures=[picture]
+            pictures=[picture],
+            item_specifics=[
+                EbayItemSpecific('Brand', ['Felt']),
+                EbayItemSpecific('Herstellernummer', ['34534jns']),
+            ]
         )
 
     @EbayTest.use_cassette("ebay_publish_ipad_stand_no_image.yaml")
