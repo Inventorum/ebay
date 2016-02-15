@@ -4,8 +4,6 @@ CHANGES
 
 develop
 =======
-2016-02-05 0.2.0
-================
 Feature
 .......
 - INV-6302 Add "taxes included" (inkl. MwSt) in all products.
@@ -16,6 +14,7 @@ Fix
 - INV-6204 Make the ebay orders sync more robust
 - INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 - INV-6234 Ebay product now can contain special characters like "&"."
+- INV-5690 Test publishing with 2 images. A lot of code is improved.
 
 2016-02-04 0.1.20-1
 ===================
