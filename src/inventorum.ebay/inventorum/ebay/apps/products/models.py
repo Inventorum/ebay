@@ -104,6 +104,9 @@ class EbayItemImageModel(BaseModel):
     url = models.TextField()
     inv_image_id = models.IntegerField(verbose_name="Inventorum image id", null=True, blank=True)
 
+    class Meta:
+        ordering = ('time_added', 'id')
+
     @property
     def ebay_object(self):
         return EbayPicture(self.parsed_url)

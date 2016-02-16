@@ -3,13 +3,11 @@ from __future__ import absolute_import, unicode_literals
 from datetime import date
 
 import logging
-import os
+
 from decimal import Decimal as D
 
-from django.conf import settings
 from inventorum.ebay.apps.accounts.models import EbayUserModel
 from inventorum.ebay.tests import StagingTestAccount
-import vcr
 
 
 log = logging.getLogger(__name__)
@@ -24,7 +22,9 @@ class CoreApiTestHelpers(object):
     *Caution*: These helpers will hit he actual core api, so use them wisely :-)
     """
 
-    def create_core_api_product(self, name, gross_price="100.00", quantity=100, description=""):
+    def create_core_api_product(
+            self, name, gross_price="100.00", quantity=100, description="",
+            images=({"id": StagingTestAccount.VALID_IMAGE_ID},)):
         user = self.__authenticated_test_user
 
         net_price = gross_to_net(gross_price, tax_rate=D("19"))
@@ -36,7 +36,7 @@ class CoreApiTestHelpers(object):
             "quantity": quantity,
             "reorder_level": 10,
             "safety_stock": 5,
-            "images": [{"id": StagingTestAccount.VALID_IMAGE_ID}]
+            "images": images,
         })
 
         json_body = response.json()
