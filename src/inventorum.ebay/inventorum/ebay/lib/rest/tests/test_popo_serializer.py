@@ -79,7 +79,7 @@ class _OrderItem(object):
 
 class _OrderItemSerializer(POPOSerializer):
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = _OrderItem
 
     product_id = serializers.IntegerField()
@@ -89,10 +89,10 @@ class _OrderItemSerializer(POPOSerializer):
 
 class _OrderSerializer(POPOSerializer):
 
-    class Meta:
+    class Meta(POPOSerializer.Meta):
         model = _Order
 
-    items = _OrderItemSerializer(many=True)
+    items = _OrderItemSerializer(many=True, allow_null=True)
 
 
 # Specs ####################################################################################
@@ -255,3 +255,13 @@ class TestPOPOSerializer(TestCase):
         serializer = _CustomerSerializerWithUndefinedSerializerAttributes(data=data)
         with self.assertRaises(ValidationError):
             serializer.build()
+
+    def test_many_true_allows_null(self):
+        data = {
+            "items": None
+        }
+
+        serializer = _OrderSerializer(data=data)
+
+        instance = serializer.build()
+        self.assertIsInstance(instance, _Order)

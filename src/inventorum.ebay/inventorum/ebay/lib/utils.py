@@ -8,10 +8,22 @@ log = logging.getLogger(__name__)
 
 
 def int_or_none(x):
+    """
+    :type x: Any
+    :rtype: int | None
+    """
     try:
         return int(x)
     except (TypeError, ValueError):
         return None
+
+
+def cdata(s):
+    """
+    :type s: str | unicode
+    :rtype: unicode
+    """
+    return '<![CDATA[{s}]]>'.format(s=s)
 
 
 def days_to_seconds(days):

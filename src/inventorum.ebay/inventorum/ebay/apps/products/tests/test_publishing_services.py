@@ -247,7 +247,7 @@ class UnitTestPublishingPreparationService(UnitTestCase, ShippingServiceTestMixi
                                             'ReturnsAcceptedOption': 'ReturnsAccepted',
                                             'ReturnsWithinOption': 'Days_14',
                                             'ShippingCostPaidByOption': 'Seller',
-                                            'Description': 'The article can be returned to the given conditions'
+                                            'Description': '<![CDATA[The article can be returned to the given conditions]]>'
                                         },
                                         'SKU': 'invtest_941284',
                                         'ShippingDetails': {
