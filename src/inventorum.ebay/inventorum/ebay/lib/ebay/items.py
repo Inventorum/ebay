@@ -64,7 +64,7 @@ class EbayItems(EbayTrading):
         })
         return EbayGetSellerListResponse.create_from_data(data=response)
 
-    def get_all_items_from_seller_list(self, entries_per_page):
+    def get_all_items_from_seller_list(self, entries_per_page=100):
         """
         Get List of all ItemIds from the Items, published on ebay.
         :rtype [EbayFixedPrizedItem]
@@ -72,7 +72,7 @@ class EbayItems(EbayTrading):
         """
         page_nr = 1
         response = self.get_items_from_seller_list(page_nr, entries_per_page)
-        while (response.page_number-page_nr) > 0:
+        while response.page_number > page_nr:
             page_nr += 1
             next_response = self.get_items_from_seller_list(page_nr, entries_per_page)
             for item in next_response.items:

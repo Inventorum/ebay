@@ -6,11 +6,11 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
-      X-Rid: [&id001 !!python/long '791429467552865880']
+      X-Rid: [&id001 !!python/long '2050266213655812240']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/1225146162033178864/
   response:
@@ -37,8 +37,8 @@ interactions:
         "thumb": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb.JPEG"}}],
         "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
         "", "supplier": "", "meta": {"shop": {"channel": 5, "description": "", "gross_price":
-        null, "id": 740, "images": [], "name": "", "price": null}, "ebay": {"channel":
-        4, "description": "", "gross_price": null, "id": 741, "images": [], "name":
+        null, "id": 740, "images": null, "name": "", "price": null}, "ebay": {"channel":
+        4, "description": "", "gross_price": null, "id": 741, "images": null, "name":
         "", "price": null}}, "is_giftcard": false, "gross_price": "65.00", "purchase_price":
         "0", "states": [], "attributes_str": "", "inv_id": "1225146162033178864",
         "package_size_value": null, "package_size_unit": null, "base_price": null,
@@ -47,15 +47,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:34:47 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:22 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3aZ:CE6RhTk93ifDhOl6SasTrnnXolQ"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:34:47 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVe:d7xn893pkQ9jRQdqc9EtiiGi22E"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:22 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['791429467552865880']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -64,7 +64,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -115,35 +115,34 @@ interactions:
         1, "cost_group_flat": "", "carrier": "DHL", "category": "[STANDARD]", "service":
         "DE_DHL2KGPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
         "enabled": false, "free_above_price": null}], "is_favourite": false, "brand":
-        "", "supplier": "", "meta": {"atalanda": {"channel": 9, "description": null,
-        "gross_price": null, "id": 3514, "images": [], "name": null, "price": null},
-        "shop": {"channel": 5, "description": "", "gross_price": "39.00", "id": 746,
-        "images": [], "name": "", "price": "32.7731092437"}, "click_and_collect":
-        {"channel": 8, "description": null, "gross_price": null, "id": 3515, "images":
-        [], "name": null, "price": null}, "ebay": {"channel": 4, "description": "",
-        "gross_price": null, "id": 747, "images": [], "name": "", "price": null}},
-        "is_giftcard": false, "gross_price": "1.00", "purchase_price": "3E+1", "states":
-        [{"channel": "shop", "details": null, "state": "published"}, {"channel": "ebay",
-        "details": [{"severity_code": "Error", "code": 17, "classification": "RequestError",
-        "parameters": ["1234"], "long_message": "Der Artikel kann nicht aufgerufen
-        werden, da er gel\u00f6scht wurde, es sich um ein Half.com-Angebot handelt
-        oder weil Sie nicht der Verk\u00e4ufer sind.", "short_message": "Artikel kann
-        nicht aufgerufen werden."}], "state": "published"}], "attributes_str": "",
-        "inv_id": "1225146588560351744", "package_size_value": null, "package_size_unit":
-        null, "base_price": null, "base_size_value": null, "base_size_unit": null}'}
+        "", "supplier": "", "meta": {"shop": {"channel": 5, "description": "", "gross_price":
+        "39.00", "id": 746, "images": null, "name": "", "price": "32.7731092437"},
+        "atalanda": {"channel": 9, "description": null, "gross_price": null, "id":
+        3514, "images": null, "name": null, "price": null}, "click_and_collect": {"channel":
+        8, "description": null, "gross_price": null, "id": 3515, "images": null, "name":
+        null, "price": null}, "ebay": {"channel": 4, "description": "", "gross_price":
+        null, "id": 747, "images": null, "name": "", "price": null}}, "is_giftcard":
+        false, "gross_price": "1.00", "purchase_price": "3E+1", "states": [{"channel":
+        "shop", "details": null, "state": "published"}, {"channel": "ebay", "details":
+        [{"severity_code": "FatalError", "code": -1, "classification": "ApiError",
+        "parameters": [], "long_message": "Something went wrong, please try again
+        later.", "short_message": "Fatal error (a5eb8435-6b2f-4c02-8139-c400a3282c05)"}],
+        "state": "failed"}], "attributes_str": "", "inv_id": "1225146588560351744",
+        "package_size_value": null, "package_size_unit": null, "base_price": null,
+        "base_size_value": null, "base_size_unit": null}'}
     headers:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:34:48 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:22 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3aa:_us-y6iYhX_e_HSf76CSEr7ldwI"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:34:48 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVe:d7xn893pkQ9jRQdqc9EtiiGi22E"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:22 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['791429467552865880']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -152,7 +151,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -226,20 +225,21 @@ interactions:
         "subscriptions.is_paid", "subscriptions.native_checkout_enabled", "subscriptions.native_product_details",
         "subscriptions.poweredby_hidden"], "subscriptions": [{"start_date": "2015-04-02T13:16:20.637+02:00",
         "due_date": null, "subscription_plan": {"id": 32, "name": "Base Plan"}, "users_quota":
-        1, "active": true}, {"start_date": "2015-04-02T13:16:42.183+02:00", "due_date":
-        "2015-04-16T23:59:59.183+02:00", "subscription_plan": {"id": 25, "name": "Trial"},
-        "users_quota": 3, "active": false}, {"start_date": "2015-04-02T13:37:41+02:00",
-        "due_date": null, "subscription_plan": {"id": 39, "name": "Inventorum Premium"},
-        "users_quota": null, "active": true}, {"start_date": "2015-05-07T14:59:42+02:00",
-        "due_date": null, "subscription_plan": {"id": 2, "name": "Testing purposes
-        [MichalH]"}, "users_quota": 1, "active": true}], "users_quota": null, "image_absolute":
-        null, "return_prefix": "", "id": 346, "opening_hours": [{"id": 414, "day_of_week":
-        1, "opens_hour": 8, "opens_minute": 0, "closes_hour": 10, "closes_minute":
-        0, "valid_from": null, "valid_through": null, "enabled": true}, {"id": 415,
-        "day_of_week": 2, "opens_hour": 12, "opens_minute": 0, "closes_hour": 14,
-        "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
-        true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute": 0,
-        "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
+        1, "active": true, "pactas_based": false}, {"start_date": "2015-04-02T13:16:42.183+02:00",
+        "due_date": "2015-04-16T23:59:59.183+02:00", "subscription_plan": {"id": 25,
+        "name": "Trial"}, "users_quota": 3, "active": false, "pactas_based": false},
+        {"start_date": "2015-04-02T13:37:41+02:00", "due_date": null, "subscription_plan":
+        {"id": 39, "name": "Inventorum Premium"}, "users_quota": null, "active": true,
+        "pactas_based": false}, {"start_date": "2015-05-07T14:59:42+02:00", "due_date":
+        null, "subscription_plan": {"id": 2, "name": "Testing purposes [MichalH]"},
+        "users_quota": 1, "active": true, "pactas_based": false}], "users_quota":
+        null, "image_absolute": null, "return_prefix": "", "id": 346, "opening_hours":
+        [{"id": 414, "day_of_week": 1, "opens_hour": 8, "opens_minute": 0, "closes_hour":
+        10, "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
+        true}, {"id": 415, "day_of_week": 2, "opens_hour": 12, "opens_minute": 0,
+        "closes_hour": 14, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute":
+        0, "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
         null, "enabled": true}, {"id": 416, "day_of_week": 3, "opens_hour": 0, "opens_minute":
         0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
         null, "enabled": false}, {"id": 417, "day_of_week": 4, "opens_hour": 0, "opens_minute":
@@ -344,15 +344,15 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:34:51 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:22 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3ad:9yls29O-fEt1qcrIFuo75xOFwYY"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:34:51 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVe:d7xn893pkQ9jRQdqc9EtiiGi22E"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:22 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['791429467552865880']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -361,7 +361,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -392,8 +392,8 @@ interactions:
         "thumb": "https://app.inventorum.net/uploads/img-hash/c2ad/2d86/0582/def2/f6b8/3a33/8881/c2ad2d860582def2f6b83a33888159cd_thumb.JPEG"}}],
         "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
         "", "supplier": "", "meta": {"shop": {"channel": 5, "description": "", "gross_price":
-        null, "id": 740, "images": [], "name": "", "price": null}, "ebay": {"channel":
-        4, "description": "", "gross_price": null, "id": 741, "images": [], "name":
+        null, "id": 740, "images": null, "name": "", "price": null}, "ebay": {"channel":
+        4, "description": "", "gross_price": null, "id": 741, "images": null, "name":
         "", "price": null}}, "is_giftcard": false, "gross_price": "65.00", "purchase_price":
         "0", "states": [], "attributes_str": "", "inv_id": "1225146162033178864",
         "package_size_value": null, "package_size_unit": null, "base_price": null,
@@ -402,15 +402,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:34:52 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:22 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3ae:QrIfYshW_HiJ1vu3k03x38MEPXg"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:34:52 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVe:d7xn893pkQ9jRQdqc9EtiiGi22E"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:22 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['791429467552865880']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -419,7 +419,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -493,20 +493,21 @@ interactions:
         "subscriptions.is_paid", "subscriptions.native_checkout_enabled", "subscriptions.native_product_details",
         "subscriptions.poweredby_hidden"], "subscriptions": [{"start_date": "2015-04-02T13:16:20.637+02:00",
         "due_date": null, "subscription_plan": {"id": 32, "name": "Base Plan"}, "users_quota":
-        1, "active": true}, {"start_date": "2015-04-02T13:16:42.183+02:00", "due_date":
-        "2015-04-16T23:59:59.183+02:00", "subscription_plan": {"id": 25, "name": "Trial"},
-        "users_quota": 3, "active": false}, {"start_date": "2015-04-02T13:37:41+02:00",
-        "due_date": null, "subscription_plan": {"id": 39, "name": "Inventorum Premium"},
-        "users_quota": null, "active": true}, {"start_date": "2015-05-07T14:59:42+02:00",
-        "due_date": null, "subscription_plan": {"id": 2, "name": "Testing purposes
-        [MichalH]"}, "users_quota": 1, "active": true}], "users_quota": null, "image_absolute":
-        null, "return_prefix": "", "id": 346, "opening_hours": [{"id": 414, "day_of_week":
-        1, "opens_hour": 8, "opens_minute": 0, "closes_hour": 10, "closes_minute":
-        0, "valid_from": null, "valid_through": null, "enabled": true}, {"id": 415,
-        "day_of_week": 2, "opens_hour": 12, "opens_minute": 0, "closes_hour": 14,
-        "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
-        true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute": 0,
-        "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
+        1, "active": true, "pactas_based": false}, {"start_date": "2015-04-02T13:16:42.183+02:00",
+        "due_date": "2015-04-16T23:59:59.183+02:00", "subscription_plan": {"id": 25,
+        "name": "Trial"}, "users_quota": 3, "active": false, "pactas_based": false},
+        {"start_date": "2015-04-02T13:37:41+02:00", "due_date": null, "subscription_plan":
+        {"id": 39, "name": "Inventorum Premium"}, "users_quota": null, "active": true,
+        "pactas_based": false}, {"start_date": "2015-05-07T14:59:42+02:00", "due_date":
+        null, "subscription_plan": {"id": 2, "name": "Testing purposes [MichalH]"},
+        "users_quota": 1, "active": true, "pactas_based": false}], "users_quota":
+        null, "image_absolute": null, "return_prefix": "", "id": 346, "opening_hours":
+        [{"id": 414, "day_of_week": 1, "opens_hour": 8, "opens_minute": 0, "closes_hour":
+        10, "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
+        true}, {"id": 415, "day_of_week": 2, "opens_hour": 12, "opens_minute": 0,
+        "closes_hour": 14, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute":
+        0, "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
         null, "enabled": true}, {"id": 416, "day_of_week": 3, "opens_hour": 0, "opens_minute":
         0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
         null, "enabled": false}, {"id": 417, "day_of_week": 4, "opens_hour": 0, "opens_minute":
@@ -611,14 +612,14 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:34:52 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:23 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3ae:QrIfYshW_HiJ1vu3k03x38MEPXg"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:34:52 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVf:GUhFb9PZ54E0hM9_OZIPNupBTmc"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:23 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['791429467552865880']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 version: 1

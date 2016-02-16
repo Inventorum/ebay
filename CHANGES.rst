@@ -12,6 +12,10 @@ Fix
 ...
 - INV-5690 Fix publishing product images in reversed order.
 
+2016-02-08 0.2.1
+================
+- INV-6628 Allow special chars in return policy description (wrapped in CDATA)
+
 2016-02-05 0.2.0
 ================
 Feature
@@ -24,7 +28,6 @@ Fix
 - INV-6204 Make the ebay orders sync more robust
 - INV-6377 Ebay product can use now item specifics with special characters (like umlauts)
 - INV-6234 Ebay product now can contain special characters like "&"."
-- INV-6534 Products with stock in 0 was possible to sale them on Ebay.
 
 2016-02-04 0.1.20-1
 ===================
