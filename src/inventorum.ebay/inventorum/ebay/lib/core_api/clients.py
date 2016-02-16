@@ -113,8 +113,14 @@ class CoreAPIClient(object):
         response = requests.post(self.url_for(path), json=data, params=params, headers=headers)
 
         if not response.ok:
-            log.error(dict(url=self.url_for(path), params=params, headers=headers, json=data))
-            log.error(response.content)
+            log.error({
+                'url': self.url_for(path),
+                'params': params,
+                'headers': headers,
+                'json': data,
+                'response': response.content
+            })
+
             response.raise_for_status()
 
         return response
