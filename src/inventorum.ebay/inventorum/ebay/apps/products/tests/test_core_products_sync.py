@@ -369,9 +369,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
         self.assertEqual(update.gross_price, D('3.99'))
         self.assertEqual(update.quantity, 0)
 
-        calls = self.schedule_ebay_item_update_mock.call_args_list
-        self.assertEqual([args[0] for args, kwargs in calls], [])
-
+        self.schedule_ebay_item_update_mock.assert_not_called()
         calls = self.schedule_ebay_item_unpublish_mock.call_args_list
         self.assertEqual([args[0] for args, kwargs in calls], [update.id])
 
