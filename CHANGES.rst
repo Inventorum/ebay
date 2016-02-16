@@ -4,11 +4,19 @@ CHANGES
 
 develop
 =======
+Code
+....
+- Minor code improvements.
+
+Fix
+...
+- INV-5690 Fix publishing product images in reversed order.
+
 2016-02-08 0.2.1
 ================
 - INV-6628 Allow special chars in return policy description (wrapped in CDATA)
 
-2016-02-08 0.2.0
+2016-02-05 0.2.0
 ================
 Feature
 .......

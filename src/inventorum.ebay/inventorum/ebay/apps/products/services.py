@@ -246,8 +246,7 @@ class PublishingPreparationService(object):
                 item=item
             )
 
-        shipping_services = self.product.shipping_services.all() if self.product.shipping_services.exists() \
-            else self.account.shipping_services.all()
+        shipping_services = self.product.shipping_services.all() or self.account.shipping_services.all()
 
         for service_config in shipping_services:
             EbayItemShippingDetails.objects.create(

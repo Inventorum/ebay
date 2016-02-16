@@ -53,6 +53,7 @@ class StagingTestAccount:
     USER_ID = 425
     TAX_TYPE_19_ID = 1063
     VALID_IMAGE_ID = 2933
+    VALID_IMAGE_2_ID = 2556
 
     EMAIL = "tech+ebay@inventorum.com"
 

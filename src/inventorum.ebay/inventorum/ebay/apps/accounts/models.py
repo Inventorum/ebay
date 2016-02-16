@@ -7,7 +7,6 @@ from django.db.models.fields import CharField, EmailField, BooleanField, DateTim
     URLField
 from django.db.models.fields.related import ForeignKey, OneToOneField
 from django_countries.fields import CountryField
-from inventorum.ebay.apps.products.models import EbayItemModel
 from inventorum.ebay.apps.returns.models import ReturnPolicyModel
 from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
@@ -16,7 +15,6 @@ from inventorum.ebay.lib.auth.models import AuthenticableModelMixin
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation
-from inventorum.ebay.lib.ebay.data.items import EbayReturnPolicy
 from inventorum.util.django.model_utils import PassThroughManager
 
 
@@ -24,7 +22,8 @@ log = logging.getLogger(__name__)
 
 
 class AddressModel(BaseModel):
-    """ Represents an address model """
+    """Represent an address model."""
+
     name = CharField(max_length=255)
     # TODO jm: Rename to street1 and street2
     street = CharField(max_length=255, null=True, blank=True)
@@ -208,7 +207,7 @@ class EbayLocationModel(BaseModel):
             region=self.address.region,
             url=self.url,
             utc_offset="+02:00"  # TODO: What to do with it???
-            )
+        )
 
 
 class EbayUserModel(MappedInventorumModel, AuthenticableModelMixin):

@@ -104,6 +104,9 @@ class EbayItemImageModel(BaseModel):
     url = models.TextField()
     inv_image_id = models.IntegerField(verbose_name="Inventorum image id", null=True, blank=True)
 
+    class Meta:
+        ordering = ('time_added', 'id')
+
     @property
     def ebay_object(self):
         return EbayPicture(self.parsed_url)
@@ -365,6 +368,10 @@ class EbayUpdateModel(BaseModel):
     status = models.CharField(max_length=255, choices=EbayItemUpdateStatus.CHOICES,
                               default=EbayItemUpdateStatus.DRAFT)
     status_details = JSONField()
+
+    @property
+    def is_out_of_stock(self):
+        return self.quantity <= 0
 
     @property
     def has_updated_quantity(self):
