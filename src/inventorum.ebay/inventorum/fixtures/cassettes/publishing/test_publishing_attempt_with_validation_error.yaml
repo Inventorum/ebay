@@ -6,11 +6,11 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
-      X-Rid: [&id001 !!python/long '1831198031522029144']
+      X-Rid: [&id001 !!python/long '2050266213655812240']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/1225145632417445479/
   response:
@@ -39,15 +39,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:33:59 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:15 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3Zn:_VIQBtfcsYufw-ZDDq3XljOzk4w"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:33:59 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVX:hPVle0LzVdoGrE5QzgvOw4a094M"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:15 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1831198031522029144']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -56,7 +56,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -89,15 +89,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:33:59 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:15 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3Zn:_VIQBtfcsYufw-ZDDq3XljOzk4w"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:33:59 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVX:hPVle0LzVdoGrE5QzgvOw4a094M"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:15 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1831198031522029144']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -106,7 +106,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -180,20 +180,21 @@ interactions:
         "subscriptions.is_paid", "subscriptions.native_checkout_enabled", "subscriptions.native_product_details",
         "subscriptions.poweredby_hidden"], "subscriptions": [{"start_date": "2015-04-02T13:16:20.637+02:00",
         "due_date": null, "subscription_plan": {"id": 32, "name": "Base Plan"}, "users_quota":
-        1, "active": true}, {"start_date": "2015-04-02T13:16:42.183+02:00", "due_date":
-        "2015-04-16T23:59:59.183+02:00", "subscription_plan": {"id": 25, "name": "Trial"},
-        "users_quota": 3, "active": false}, {"start_date": "2015-04-02T13:37:41+02:00",
-        "due_date": null, "subscription_plan": {"id": 39, "name": "Inventorum Premium"},
-        "users_quota": null, "active": true}, {"start_date": "2015-05-07T14:59:42+02:00",
-        "due_date": null, "subscription_plan": {"id": 2, "name": "Testing purposes
-        [MichalH]"}, "users_quota": 1, "active": true}], "users_quota": null, "image_absolute":
-        null, "return_prefix": "", "id": 346, "opening_hours": [{"id": 414, "day_of_week":
-        1, "opens_hour": 8, "opens_minute": 0, "closes_hour": 10, "closes_minute":
-        0, "valid_from": null, "valid_through": null, "enabled": true}, {"id": 415,
-        "day_of_week": 2, "opens_hour": 12, "opens_minute": 0, "closes_hour": 14,
-        "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
-        true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute": 0,
-        "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
+        1, "active": true, "pactas_based": false}, {"start_date": "2015-04-02T13:16:42.183+02:00",
+        "due_date": "2015-04-16T23:59:59.183+02:00", "subscription_plan": {"id": 25,
+        "name": "Trial"}, "users_quota": 3, "active": false, "pactas_based": false},
+        {"start_date": "2015-04-02T13:37:41+02:00", "due_date": null, "subscription_plan":
+        {"id": 39, "name": "Inventorum Premium"}, "users_quota": null, "active": true,
+        "pactas_based": false}, {"start_date": "2015-05-07T14:59:42+02:00", "due_date":
+        null, "subscription_plan": {"id": 2, "name": "Testing purposes [MichalH]"},
+        "users_quota": 1, "active": true, "pactas_based": false}], "users_quota":
+        null, "image_absolute": null, "return_prefix": "", "id": 346, "opening_hours":
+        [{"id": 414, "day_of_week": 1, "opens_hour": 8, "opens_minute": 0, "closes_hour":
+        10, "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
+        true}, {"id": 415, "day_of_week": 2, "opens_hour": 12, "opens_minute": 0,
+        "closes_hour": 14, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute":
+        0, "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
         null, "enabled": true}, {"id": 416, "day_of_week": 3, "opens_hour": 0, "opens_minute":
         0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
         null, "enabled": false}, {"id": 417, "day_of_week": 4, "opens_hour": 0, "opens_minute":
@@ -298,14 +299,14 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:33:59 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:15 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3Zn:_VIQBtfcsYufw-ZDDq3XljOzk4w"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:33:59 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVX:hPVle0LzVdoGrE5QzgvOw4a094M"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:15 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1831198031522029144']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 version: 1

@@ -12,7 +12,7 @@ from inventorum.ebay.lib.core_api import PublishStates
 from inventorum.ebay.tests import IntegrationTest
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType
 from inventorum.ebay.apps.products.models import EbayProductModel
-from inventorum.ebay.apps.products.services import PublishingPreparationService, PublishingService
+from inventorum.ebay.apps.products.services import PublishingPreparationService
 from inventorum.ebay.lib.celery import celery_test_case
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
