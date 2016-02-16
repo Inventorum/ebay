@@ -368,7 +368,7 @@ class EbayUpdateModel(BaseModel):
 
     @property
     def is_out_of_stock(self):
-        return self.quantity == 0
+        return self.quantity <= 0
 
     @property
     def has_updated_quantity(self):
