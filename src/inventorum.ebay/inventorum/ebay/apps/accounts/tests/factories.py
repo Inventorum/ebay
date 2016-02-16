@@ -66,7 +66,7 @@ class EbayAccountFactory(MappedInventorumModelFactory):
     token = factory.SubFactory(EbayTokenModelFactory)
 
     payment_method_paypal_enabled = True
-    payment_method_paypal_email_address = 'bartosz@hernas.pl'
+    payment_method_paypal_email_address = 'info@inventorum.com'
     payment_method_bank_transfer_enabled = False
 
 

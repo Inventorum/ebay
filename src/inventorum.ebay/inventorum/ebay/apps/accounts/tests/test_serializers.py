@@ -59,7 +59,7 @@ class TestEbayAccountSerializer(UnitTestCase, ShippingServiceConfigurableSeriali
             'email': account.email,
             'payment_method_bank_transfer_enabled': False,
             'payment_method_paypal_enabled': True,
-            'payment_method_paypal_email_address': 'bartosz@hernas.pl',
+            'payment_method_paypal_email_address': 'info@inventorum.com',
             'location': {
                 'name': location.name,
                 'url': location.url,

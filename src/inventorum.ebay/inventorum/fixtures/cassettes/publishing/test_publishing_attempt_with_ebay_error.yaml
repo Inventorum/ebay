@@ -6,11 +6,11 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
-      X-Rid: [&id001 !!python/long '1831198031522029144']
+      X-Rid: [&id001 !!python/long '2050266213655812240']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/1225147276579275043/
   response:
@@ -32,12 +32,12 @@ interactions:
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_thumb_retina.JPEG",
         "thumb": "https://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_thumb.JPEG"}}],
         "meta": {"atalanda": {"channel": 9, "description": null, "gross_price": "150.00",
-        "id": 3498, "images": [], "name": null, "price": "140.1869158879"}, "shop":
+        "id": 3498, "images": null, "name": null, "price": "140.1869158879"}, "shop":
         {"channel": 5, "description": null, "gross_price": "150.00", "id": 960, "images":
-        [], "name": null, "price": "140.1869158879"}, "click_and_collect": {"channel":
-        8, "description": null, "gross_price": "150.00", "id": 3499, "images": [],
+        null, "name": null, "price": "140.1869158879"}, "click_and_collect": {"channel":
+        8, "description": null, "gross_price": "150.00", "id": 3499, "images": null,
         "name": null, "price": "140.1869158879"}, "ebay": {"channel": 4, "description":
-        null, "gross_price": "150.00", "id": 961, "images": [], "name": null, "price":
+        null, "gross_price": "150.00", "id": 961, "images": null, "name": null, "price":
         "140.1869158879"}}, "gross_price": "150.00", "purchase_price": "0", "average_purchase_price":
         "0", "attributes_str": "22, Red, Denim", "inv_id": null, "package_size_value":
         null, "package_size_unit": null, "base_price": null, "base_size_value": null,
@@ -50,13 +50,13 @@ interactions:
         "ipad_retina": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG",
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_thumb_retina.JPEG",
         "thumb": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_thumb.JPEG"}}],
-        "meta": {"atalanda": {"channel": 9, "description": null, "gross_price": "130.00",
-        "id": 3500, "images": [], "name": null, "price": "121.4953271028"}, "shop":
-        {"channel": 5, "description": null, "gross_price": "130.00", "id": 962, "images":
-        [], "name": null, "price": "121.4953271028"}, "click_and_collect": {"channel":
-        8, "description": null, "gross_price": "130.00", "id": 3501, "images": [],
+        "meta": {"shop": {"channel": 5, "description": null, "gross_price": "130.00",
+        "id": 962, "images": null, "name": null, "price": "121.4953271028"}, "atalanda":
+        {"channel": 9, "description": null, "gross_price": "130.00", "id": 3500, "images":
+        null, "name": null, "price": "121.4953271028"}, "click_and_collect": {"channel":
+        8, "description": null, "gross_price": "130.00", "id": 3501, "images": null,
         "name": null, "price": "121.4953271028"}, "ebay": {"channel": 4, "description":
-        null, "gross_price": "130.00", "id": 963, "images": [], "name": null, "price":
+        null, "gross_price": "130.00", "id": 963, "images": null, "name": null, "price":
         "121.4953271028"}}, "gross_price": "130.00", "purchase_price": "0", "average_purchase_price":
         "0", "attributes_str": "50, Blue, Leather", "inv_id": null, "package_size_value":
         null, "package_size_unit": null, "base_price": null, "base_size_value": null,
@@ -71,13 +71,13 @@ interactions:
         "thumb_retina": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_thumb_retina.JPEG",
         "thumb": "https://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_thumb.JPEG"}}],
         "custom_sale": false, "shipping_services": [], "is_favourite": false, "brand":
-        "Test", "supplier": "", "meta": {"atalanda": {"channel": 9, "description":
-        null, "gross_price": "0.00", "id": 3496, "images": [], "name": null, "price":
-        "0E-10"}, "shop": {"channel": 5, "description": null, "gross_price": "0.00",
-        "id": 958, "images": [], "name": null, "price": "0E-10"}, "click_and_collect":
+        "Test", "supplier": "", "meta": {"shop": {"channel": 5, "description": null,
+        "gross_price": "0.00", "id": 958, "images": null, "name": null, "price": "0E-10"},
+        "atalanda": {"channel": 9, "description": null, "gross_price": "0.00", "id":
+        3496, "images": null, "name": null, "price": "0E-10"}, "click_and_collect":
         {"channel": 8, "description": null, "gross_price": "0.00", "id": 3497, "images":
-        [], "name": null, "price": "0E-10"}, "ebay": {"channel": 4, "description":
-        null, "gross_price": "0.00", "id": 959, "images": [], "name": null, "price":
+        null, "name": null, "price": "0E-10"}, "ebay": {"channel": 4, "description":
+        null, "gross_price": "0.00", "id": 959, "images": null, "name": null, "price":
         "0E-10"}}, "is_giftcard": false, "gross_price": "0.00", "purchase_price":
         "0", "states": [{"channel": "ebay", "details": {}, "state": "unpublished"}],
         "attributes_str": "", "inv_id": "1225147276579275043", "package_size_value":
@@ -87,15 +87,15 @@ interactions:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:33:56 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:12 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3Zk:ywH7knAJpuCZVhNuZkW59s2RhCY"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:33:56 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVU:ZekZHfxrknmzr1rC8cqhrsJCcJ4"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:12 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1831198031522029144']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -104,7 +104,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -178,20 +178,21 @@ interactions:
         "subscriptions.is_paid", "subscriptions.native_checkout_enabled", "subscriptions.native_product_details",
         "subscriptions.poweredby_hidden"], "subscriptions": [{"start_date": "2015-04-02T13:16:20.637+02:00",
         "due_date": null, "subscription_plan": {"id": 32, "name": "Base Plan"}, "users_quota":
-        1, "active": true}, {"start_date": "2015-04-02T13:16:42.183+02:00", "due_date":
-        "2015-04-16T23:59:59.183+02:00", "subscription_plan": {"id": 25, "name": "Trial"},
-        "users_quota": 3, "active": false}, {"start_date": "2015-04-02T13:37:41+02:00",
-        "due_date": null, "subscription_plan": {"id": 39, "name": "Inventorum Premium"},
-        "users_quota": null, "active": true}, {"start_date": "2015-05-07T14:59:42+02:00",
-        "due_date": null, "subscription_plan": {"id": 2, "name": "Testing purposes
-        [MichalH]"}, "users_quota": 1, "active": true}], "users_quota": null, "image_absolute":
-        null, "return_prefix": "", "id": 346, "opening_hours": [{"id": 414, "day_of_week":
-        1, "opens_hour": 8, "opens_minute": 0, "closes_hour": 10, "closes_minute":
-        0, "valid_from": null, "valid_through": null, "enabled": true}, {"id": 415,
-        "day_of_week": 2, "opens_hour": 12, "opens_minute": 0, "closes_hour": 14,
-        "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
-        true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute": 0,
-        "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
+        1, "active": true, "pactas_based": false}, {"start_date": "2015-04-02T13:16:42.183+02:00",
+        "due_date": "2015-04-16T23:59:59.183+02:00", "subscription_plan": {"id": 25,
+        "name": "Trial"}, "users_quota": 3, "active": false, "pactas_based": false},
+        {"start_date": "2015-04-02T13:37:41+02:00", "due_date": null, "subscription_plan":
+        {"id": 39, "name": "Inventorum Premium"}, "users_quota": null, "active": true,
+        "pactas_based": false}, {"start_date": "2015-05-07T14:59:42+02:00", "due_date":
+        null, "subscription_plan": {"id": 2, "name": "Testing purposes [MichalH]"},
+        "users_quota": 1, "active": true, "pactas_based": false}], "users_quota":
+        null, "image_absolute": null, "return_prefix": "", "id": 346, "opening_hours":
+        [{"id": 414, "day_of_week": 1, "opens_hour": 8, "opens_minute": 0, "closes_hour":
+        10, "closes_minute": 0, "valid_from": null, "valid_through": null, "enabled":
+        true}, {"id": 415, "day_of_week": 2, "opens_hour": 12, "opens_minute": 0,
+        "closes_hour": 14, "closes_minute": 0, "valid_from": null, "valid_through":
+        null, "enabled": true}, {"id": 421, "day_of_week": 2, "opens_hour": 18, "opens_minute":
+        0, "closes_hour": 20, "closes_minute": 0, "valid_from": null, "valid_through":
         null, "enabled": true}, {"id": 416, "day_of_week": 3, "opens_hour": 0, "opens_minute":
         0, "closes_hour": 0, "closes_minute": 0, "valid_from": null, "valid_through":
         null, "enabled": false}, {"id": 417, "day_of_week": 4, "opens_hour": 0, "opens_minute":
@@ -296,15 +297,15 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Fri, 15 Jan 2016 12:33:56 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:12 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3Zk:ywH7knAJpuCZVhNuZkW59s2RhCY"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:33:56 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVU:ZekZHfxrknmzr1rC8cqhrsJCcJ4"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:12 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1831198031522029144']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: '{"state": "in_progress", "details": null, "channel": "ebay"}'
@@ -314,7 +315,7 @@ interactions:
       Connection: [keep-alive]
       Content-Length: ['60']
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -326,20 +327,20 @@ interactions:
     headers:
       allow: ['POST, OPTIONS']
       connection: [keep-alive]
-      date: ['Fri, 15 Jan 2016 12:33:57 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:13 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3Zl:ZKkvcBOnYQrxuqTrpH7ZXiKQLA0"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:33:57 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVV:59NYcX6PInkC9hBHSas9HB2L2r4"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:13 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1831198031522029144']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 - request:
     body: !!python/str "<?xml version='1.0' encoding='utf-8'?><AddFixedPriceItemRequest\
       \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><Item><ConditionID>1000</ConditionID><Country>DE</Country><Currency>EUR</Currency><Description><![CDATA[<p>Photo\
-      \ of jeans for sell.</p>]]></Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>171949</CategoryID></PrimaryCategory><ReturnPolicy><Description>The\
+      \ of jeans for sell.</p>]]></Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>info@inventorum.com</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>171949</CategoryID></PrimaryCategory><ReturnPolicy><Description>The\
       \ article can be returned to the given conditions</Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsWithinOption>Days_14</ReturnsWithinOption><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption></ReturnPolicy><SKU>invtest_666032</SKU><ShippingDetails><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceAdditionalCost>3.00</ShippingServiceAdditionalCost><ShippingServiceCost>5.00</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions><ShippingServiceOptions><ShippingService>DE_HermesPaket</ShippingService><ShippingServiceAdditionalCost>1.00</ShippingServiceAdditionalCost><ShippingServiceCost>4.50</ShippingServiceCost><ShippingServicePriority>1</ShippingServicePriority></ShippingServiceOptions></ShippingDetails><Title><![CDATA[Jeans\
       \ Valid Attrs]]></Title><VATDetails><VATPercent>7.000</VATPercent></VATDetails><Variations><Pictures><VariationSpecificName>Gr\xF6\
       \xDFe (*)</VariationSpecificName><VariationSpecificPictureSet><PictureURL>http://app.inventorum.net/uploads/img-hash/29de/128c/e87a/4c7c/2f6d/1424/ea3c/29de128ce87a4c7c2f6d1424ea3cc424_ipad_retina.JPEG</PictureURL><VariationSpecificValue>50</VariationSpecificValue></VariationSpecificPictureSet><VariationSpecificPictureSet><PictureURL>http://app.inventorum.net/uploads/img-hash/a2b4/90f3/6717/6129/9548/428d/6205/a2b490f3671761299548428d6205e2e0_ipad_retina.JPEG</PictureURL><VariationSpecificValue>22</VariationSpecificValue></VariationSpecificPictureSet></Pictures><Variation><Quantity>2</Quantity><SKU>invtest_666031</SKU><StartPrice>130.00</StartPrice><VariationSpecifics><NameValueList><Name>Gr\xF6\
@@ -352,36 +353,36 @@ interactions:
       \ (*)</Name><Value>Leather</Value><Value>Denim</Value></NameValueList><NameValueList><Name>Gr\xF6\
       \xDFe (*)</Name><Value>50</Value><Value>22</Value></NameValueList></VariationSpecificsSet></Variations></Item></AddFixedPriceItemRequest>"
     headers:
-      Content-Length: ['4562']
+      Content-Length: ['4564']
       Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.1.dev4 Python/2.7.8 Linux/4.3.3-3-MANJARO]
+      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.4-1-MANJARO]
       X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
       X-EBAY-API-CALL-NAME: [!!python/unicode 'AddFixedPriceItem']
       X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
       X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [9400e8c2-b320-4c1f-9159-1ac571af2eb4]
+      X-EBAY-SDK-REQUEST-ID: [c43032bd-41b2-4ba1-974f-16797adb3461]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AddFixedPriceItemResponse\
-        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2016-01-15T12:33:58.661Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>In\
+        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2016-02-09T15:47:14.940Z</Timestamp><Ack>Failure</Ack><Errors><ShortMessage>In\
         \ dieser Kategorie werden keine Varianten unterst\xFCtzt</ShortMessage><LongMessage>Die\
-        \ ausgew\xE4hlte Kategorie unterst\xFCtzt keine Angebote mit Varianten</LongMessage><ErrorCode>21916564</ErrorCode><SeverityCode>Error</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Version>949</Version><Build>E949_UNI_API5_17774433_R1</Build></AddFixedPriceItemResponse>"}
+        \ ausgew\xE4hlte Kategorie unterst\xFCtzt keine Angebote mit Varianten</LongMessage><ErrorCode>21916564</ErrorCode><SeverityCode>Error</SeverityCode><ErrorClassification>RequestError</ErrorClassification></Errors><Version>951</Version><Build>E951_UNI_API5_17821258_R1</Build></AddFixedPriceItemResponse>"}
     headers:
       content-length: ['577']
       content-type: [text/xml]
-      date: ['Fri, 15 Jan 2016 12:33:58 GMT']
-      guid: [15245472-99a0-a794-4554-70a4c842192b]
+      date: ['Tue, 09 Feb 2016 15:47:14 GMT']
+      guid: [152c6b71-6cb0-a621-4765-9675a0419e7f]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dWtgMGQ3MmYrNWFhNigyNSg2MTUoNjMyKDMyPz43OzU=]
+      x-ebay-api-server-name: [___dm97PWQ3MGYrMTJjMCgyNSgzMSs0MjIrNzM2Pz43OzU=]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddFixedPriceItem]
-      x-ebay-esb-guid: ['urn:uuid:3e77fd89-8beb-45e6-961e-ffc9c4561216']
+      x-ebay-esb-guid: ['urn:uuid:8d40bd22-9b81-466b-828d-75068a4cbc08']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['15245472-99a0-a794-4554-70a4c842192b!ws.api.dll!10.121.68.85!esbtrading[']
+      x-ebay-request-id: ['152c6b71-6cb0-a621-4765-9675a0419e7f!ws.api.dll!10.98.20.118!esbtrading[']
     status: {code: 200, message: OK}
 - request:
     body: '{"state": "failed", "details": [{"severity_code": "Error", "code": 21916564,
@@ -394,7 +395,7 @@ interactions:
       Connection: [keep-alive]
       Content-Length: ['325']
       Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.1.21-dev']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
@@ -406,14 +407,14 @@ interactions:
     headers:
       allow: ['POST, OPTIONS']
       connection: [keep-alive]
-      date: ['Fri, 15 Jan 2016 12:33:58 GMT']
+      date: ['Tue, 09 Feb 2016 15:47:15 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aK3Zm:mmHmtNYnjJLoUkdTY_Rlj9usJ5w"; Domain=app.intern.inventorum.net;
-          expires=Fri, 15-Jan-2016 14:33:58 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTAVX:hPVle0LzVdoGrE5QzgvOw4a094M"; Domain=app.intern.inventorum.net;
+          expires=Tue, 09-Feb-2016 17:47:15 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['1831198031522029144']
+      x-rid: ['2050266213655812240']
     status: {code: 200, message: OK}
 version: 1
