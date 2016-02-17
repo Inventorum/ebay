@@ -157,10 +157,14 @@ class UnitTestCoreProductsSync(UnitTestCase):
         schedule_ebay_product_deletion = "inventorum.ebay.apps.products.tasks.schedule_ebay_product_deletion"
         self.schedule_ebay_product_deletion_mock = self.patch(schedule_ebay_product_deletion)
 
+        schedule_ebay_item_unpublish = "inventorum.ebay.apps.products.tasks.schedule_ebay_item_unpublish"
+        self.schedule_ebay_item_unpublish_mock = self.patch(schedule_ebay_item_unpublish)
+
     def reset_mocks(self):
         self.core_api_mock.reset_mock()
         self.schedule_ebay_item_update_mock.reset_mock()
         self.schedule_ebay_product_deletion_mock.reset_mock()
+        self.schedule_ebay_item_unpublish_mock.reset_mock()
 
     def expect_modified(self, *pages):
         mock = self.core_api_mock.get_paginated_product_delta_modified
@@ -326,7 +330,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
                                         product=product_e,
                                         inv_product_id=1005)
 
-        assert all([p.is_published for p in [product_a, product_b, product_c, product_d, product_e]])
+        assert all(p.is_published for p in [product_a, product_b, product_c, product_d, product_e])
 
         self.expect_modified([delta_a], [delta_b], [delta_c])
         self.expect_deleted([1004, 1005])
@@ -349,7 +353,6 @@ class UnitTestCoreProductsSync(UnitTestCase):
         self.assertEqual(item_c_update.gross_price, D("111.11"))
         self.assertEqual(item_c_update.quantity, 22)
 
-        self.assertEqual(self.schedule_ebay_item_update_mock.call_count, 3)
         calls = self.schedule_ebay_item_update_mock.call_args_list
         self.assertEqual([args[0] for args, kwargs in calls], [item_a_update.id, item_b_update.id, item_c_update.id])
 
@@ -358,6 +361,35 @@ class UnitTestCoreProductsSync(UnitTestCase):
 
         calls = self.schedule_ebay_product_deletion_mock.call_args_list
         self.assertEqual([args[0] for args, kwargs in calls], [product_d.id, product_e.id])
+
+    def test_update_product_with_stock_in_zero_unpublishes_the_ebay_item(self):
+        # product that went out of stock
+        subject = CoreProductsSync(account=self.account)
+
+        product = EbayProductFactory.create(account=self.account)
+        item = PublishedEbayItemFactory.create(
+            account=self.account,
+            product=product,
+            inv_product_id=1006,
+            gross_price=D("5.64"),
+            quantity=79
+        )
+        delta = CoreProductDeltaFactory(id=1006, gross_price=D("3.99"), quantity=0)
+        self.assertTrue(product.is_published)
+
+        self.expect_modified([delta])
+        self.expect_deleted([])
+
+        subject.run()
+
+        self.assertEqual(item.updates.count(), 1)
+        update = item.updates.first()
+        self.assertEqual(update.gross_price, D('3.99'))
+        self.assertEqual(update.quantity, 0)
+
+        self.schedule_ebay_item_update_mock.assert_not_called()
+        calls = self.schedule_ebay_item_unpublish_mock.call_args_list
+        self.assertEqual([args[0] for args, kwargs in calls], [update.id])
 
     def test_published_modified_and_deleted_variations(self):
         subject = CoreProductsSync(account=self.account)

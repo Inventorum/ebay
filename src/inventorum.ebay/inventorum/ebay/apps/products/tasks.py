@@ -200,7 +200,6 @@ def ebay_item_update(self, ebay_item_update_id):
     item_update = EbayItemUpdateModel.objects.get(id=ebay_item_update_id)
 
     service = UpdateService(item_update, user=user)
-
     try:
         service.update()
     except UpdateFailedException as e:

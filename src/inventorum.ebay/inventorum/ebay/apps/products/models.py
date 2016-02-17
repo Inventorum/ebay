@@ -371,7 +371,7 @@ class EbayUpdateModel(BaseModel):
 
     @property
     def is_out_of_stock(self):
-        return self.quantity <= 0
+        return self.quantity is not None and self.quantity <= 0
 
     @property
     def has_updated_quantity(self):
@@ -423,6 +423,7 @@ class EbayItemVariationUpdateModel(EbayUpdateModel):
             # purchases, you can delete it.
             self.quantity = 0
         super(EbayItemVariationUpdateModel, self).save(*args, **kwargs)
+
     @property
     def ebay_object(self):
         return EbayReviseFixedPriceVariation(

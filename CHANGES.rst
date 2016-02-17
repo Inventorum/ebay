@@ -11,6 +11,7 @@ Code
 Fix
 ...
 - INV-5690 Fix publishing product images in reversed order.
+- INV-6534 Products with stock in 0 was possible to sale them on Ebay.
 
 2016-02-08 0.2.1
 ================

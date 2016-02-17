@@ -17,7 +17,7 @@ from inventorum.util.django.timezone import datetime
 from requests.exceptions import RequestException
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
-from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemImageModel, \
+from inventorum.ebay.apps.products.models import EbayUpdateModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt, EbayItemVariationModel, \
     EbayItemVariationSpecificModel, EbayItemVariationSpecificValueModel
 from inventorum.ebay.lib.ebay import EbayConnectionException
@@ -455,6 +455,10 @@ class UnpublishingService(PublishingUnpublishingService):
             self.item.unpublished_at = datetime.now()
 
         self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
+
+        # In case the unpublish was caused by an update coming from the core API, like quantity = 0
+        if isinstance(self.item, EbayUpdateModel):
+            self.item.set_status(EbayItemUpdateStatus.SUCCEEDED, save=False)
         self.item.save()
 
         EbayApiAttempt.create_from_service_for_item_and_type(
