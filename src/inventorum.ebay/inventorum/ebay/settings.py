@@ -102,6 +102,10 @@ RABBITMQ_PASSWORD = 'ebay'
 
 BROKER_URL = "amqp://ebay:ebay@localhost:5672/inventorum_ebay"
 
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
 CELERYBEAT_SCHEDULE = {
     'periodic_ebay_orders_sync_task': {
         'task': 'inventorum.ebay.apps.orders.tasks.periodic_ebay_orders_sync_task',
