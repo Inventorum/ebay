@@ -4,14 +4,16 @@ CHANGES
 
 develop
 =======
-Code
-....
-- Minor code improvements.
-
 Fix
 ...
 - INV-5690 Fix publishing product images in reversed order.
 - INV-6534 Products with stock in 0 was possible to sale them on Ebay.
+
+Code
+....
+- Use json instead of pickle as serializer for celery
+- Minor code improvements.
+
 
 2016-02-08 0.2.1
 ================
