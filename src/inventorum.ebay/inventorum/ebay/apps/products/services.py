@@ -358,7 +358,11 @@ class PublishingService(PublishingUnpublishingService):
         """
         :raises PublishingException
         """
-        self._add_inventory_for_click_and_collect()
+        try:
+            self._add_inventory_for_click_and_collect()
+        except EbayConnectionException as e:
+            # We ignore exception, so product will still be published but not part of C&C
+            log.error('Add inventory for click and collect failed for ebay item: %s, exc: %s', self.item.pk, e)
 
         ebay_api = EbayItems(self.user.account.token.ebay_object)
         try:
@@ -446,8 +450,11 @@ class UnpublishingService(PublishingUnpublishingService):
                 )
 
                 raise UnpublishingException(e.message, original_exception=e)
-
-        self._delete_inventory_for_click_and_collect()
+        try:
+            self._delete_inventory_for_click_and_collect()
+        except EbayConnectionException as e:
+            # We ignore exception, so product will still be unpublished even if it had problems with C&C
+            log.error('Delete inventory for click and collect failed for ebay item: %s, exc: %s', self.item.pk, e)
 
         if response:
             self.item.unpublished_at = response.end_time
