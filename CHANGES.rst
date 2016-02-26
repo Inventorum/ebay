@@ -6,6 +6,7 @@ develop
 =======
 Fix
 ...
+- INV-6228 We decide to ignore C&C errors so products can still be published.
 - INV-5690 Fix publishing product images in reversed order.
 - INV-6534 Products with stock in 0 was possible to sale them on Ebay.
 
