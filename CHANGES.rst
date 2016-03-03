@@ -4,6 +4,9 @@ CHANGES
 
 develop
 =======
+
+2016-03-03 0.3.0
+================
 Fix
 ...
 - INV-6228 We decide to ignore C&C errors so products can still be published.
