@@ -49,7 +49,13 @@ class CoreProductsSync(object):
     def _sync_ebay_item(self, ebay_item, core_product_delta):
         ebay_item_update = self._create_item_update_from_diff(ebay_item, core_product_delta)
         if ebay_item_update:
-            tasks.schedule_ebay_item_update(ebay_item_update.id, context=self.get_task_execution_context())
+            if ebay_item_update.is_out_of_stock:
+                # unpublish product when is out of stock
+                # TODO: [INV-6575] unpublish the product but as soon as it is in stock again publish it
+                action = tasks.schedule_ebay_item_unpublish
+            else:
+                action = tasks.schedule_ebay_item_update
+            action(ebay_item_update.id, context=self.get_task_execution_context())
 
     def _sync_ebay_variation(self, ebay_variation, core_product_delta):
         self._create_variation_update_from_diff(ebay_variation, core_product_delta)

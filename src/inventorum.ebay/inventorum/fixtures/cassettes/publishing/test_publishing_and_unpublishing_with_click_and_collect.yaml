@@ -140,7 +140,7 @@ interactions:
         "enabled": true, "free_above_price": null}], "ebay_payment_methods": [1],
         "izettle": true, "meta_prices_enabled": true, "paypal": false, "ebay": true,
         "ebay_click_and_collect": true, "shop": false, "zreports": true, "roundup":
-        false, "atalanda_enabled": false, "pdf": 1, "ebay_paypal_email": "bartosz@hernas.pl",
+        false, "atalanda_enabled": false, "pdf": 1, "ebay_paypal_email": "info@inventorum.com",
         "receipt_header": "", "receipt_footer": "", "first_change_added": false, "individual_receipt_type":
         "default", "company_receipt_type": "detailed", "automated_zreports_enabled":
         false, "automated_zreports_time": null, "automated_zreports_email": null},
@@ -353,7 +353,7 @@ interactions:
       \ Ihrer neuen iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel\
       \ ist dieser ideal, um einfach und schnell Produkte mit der internen Kamera\
       \ des iPads zu scannen.  Kompatibel f\xFCr iPad 2, 3 und 4, sowie das iPad Air\
-      \ und iPad mini.</p>]]></Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>bartosz@hernas.pl</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PickupInStoreDetails><EligibleForPickupInStore>True</EligibleForPickupInStore></PickupInStoreDetails><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>171949</CategoryID></PrimaryCategory><Quantity>74</Quantity><ReturnPolicy><Description>The\
+      \ und iPad mini.</p>]]></Description><DispatchTimeMax>3</DispatchTimeMax><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><PayPalEmailAddress>info@inventorum.com</PayPalEmailAddress><PaymentMethods>PayPal</PaymentMethods><PickupInStoreDetails><EligibleForPickupInStore>True</EligibleForPickupInStore></PickupInStoreDetails><PictureDetails><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL></PictureDetails><PostalCode>13355</PostalCode><PrimaryCategory><CategoryID>171949</CategoryID></PrimaryCategory><Quantity>74</Quantity><ReturnPolicy><Description>The\
       \ article can be returned to the given conditions</Description><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsWithinOption>Days_14</ReturnsWithinOption><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption></ReturnPolicy><SKU>invtest_665753</SKU><StartPrice>1.00</StartPrice><Title><![CDATA[INVENTORUM\
       \ iPad-Stand]]></Title><VATDetails><VATPercent>19.000</VATPercent></VATDetails></Item></AddFixedPriceItemRequest>"
     headers:

@@ -4,11 +4,26 @@ CHANGES
 
 develop
 =======
+
+2016-03-03 0.3.0
+================
+Fix
+...
+- INV-6228 We decide to ignore C&C errors so products can still be published.
+- INV-5690 Fix publishing product images in reversed order.
+- INV-6534 Products with stock in 0 was possible to sale them on Ebay.
+
+Code
+....
+- Use json instead of pickle as serializer for celery
+- Minor code improvements.
+
+
 2016-02-08 0.2.1
 ================
 - INV-6628 Allow special chars in return policy description (wrapped in CDATA)
 
-2016-02-08 0.2.0
+2016-02-05 0.2.0
 ================
 Feature
 .......
