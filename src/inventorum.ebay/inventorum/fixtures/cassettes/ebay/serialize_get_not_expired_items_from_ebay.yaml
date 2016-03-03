@@ -1,5 +1,35 @@
 interactions:
 - request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><DetailLevel>ReturnAll</DetailLevel><EndTimeFrom>2016-02-11T14:14:28.829705Z</EndTimeFrom><EndTimeTo>2016-06-10T14:14:28.829724Z</EndTimeTo><ErrorLanguage>de_DE</ErrorLanguage><IncludeVariations>True</IncludeVariations><Pagination><EntriesPerPage>100</EntriesPerPage><PageNumber>1</PageNumber></Pagination></GetSellerListRequest>
+    headers:
+      Content-Length: ['1377']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.5-1-MANJARO]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetSellerList']
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [8b63bfd0-1691-4ab6-9f4b-d30537e4d3c3]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <GetSellerListResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2016-02-11T13:14:29.609Z</Timestamp><Ack>Success</Ack><Version>947</Version><Build>E947_INTL_APISELLING_17766253_R1</Build><PaginationResult><TotalNumberOfPages>0</TotalNumberOfPages><TotalNumberOfEntries>0</TotalNumberOfEntries></PaginationResult><HasMoreItems>false</HasMoreItems><ItemArray/><ItemsPerPage>100</ItemsPerPage><PageNumber>1</PageNumber><ReturnedItemCountActual>0</ReturnedItemCountActual><Seller><AboutMePage>false</AboutMePage><Email>tech+ebay@inventorum.com</Email><FeedbackScore>1</FeedbackScore><PositiveFeedbackPercent>66.7</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>false</NewUser><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATExempt</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>true</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><StoreOwner>false</StoreOwner><SafePaymentExempt>false</SafePaymentExempt></SellerInfo><MotorsDealer>false</MotorsDealer></Seller></GetSellerListResponse>'}
+    headers:
+      content-length: ['1532']
+      content-type: [text/xml]
+      date: ['Thu, 11 Feb 2016 13:14:29 GMT']
+      guid: [152d077f-8c60-a621-4441-59319e51b68b]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW90Zmlqbm1ib2l3aQ==]
+      x-ebay-api-server-name: [___dm97MmQ3MWYrMjFhNygyNSg/NSs3My0yNT07NT42]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetSellerList]
+      x-ebay-esb-guid: ['urn:uuid:57aaf4b9-338d-4a1f-8189-2141d590b851']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['152d077f-8c60-a621-4441-59319e51b68b!ws.api.dll!10.98.20.68!esbtrading[']
+    status: {code: 200, message: OK}
+- request:
     body: null
     headers:
       Accept: [!!python/unicode 'application/json']
@@ -10,6 +40,7 @@ interactions:
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
+      X-Rid: [&id001 !!python/long '3035066506913504856']
     method: GET
     uri: http://app.intern.inventorum.net/api/products/1225146588560351744/
   response:
@@ -65,25 +96,22 @@ interactions:
         null, "id": 747, "images": null, "name": "", "price": null}}, "is_giftcard":
         false, "gross_price": "1.00", "purchase_price": "3E+1", "states": [{"channel":
         "shop", "details": null, "state": "published"}, {"channel": "ebay", "details":
-        [{"severity_code": "FatalError", "code": -1, "classification": "ApiError",
-        "parameters": [], "long_message": "Something went wrong, please try again
-        later.", "short_message": "Fatal error (a5eb8435-6b2f-4c02-8139-c400a3282c05)"}],
-        "state": "failed"}], "attributes_str": "", "inv_id": "1225146588560351744",
+        {}, "state": "unpublished"}], "attributes_str": "", "inv_id": "1225146588560351744",
         "package_size_value": null, "package_size_unit": null, "base_price": null,
         "base_size_value": null, "base_size_unit": null}'}
     headers:
       allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Tue, 09 Feb 2016 15:56:31 GMT']
+      date: ['Thu, 11 Feb 2016 13:14:30 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aTAeV:lHeuA4OLv7kuX0nrkX8QCOu6tTg"; Domain=app.intern.inventorum.net;
-          expires=Tue, 09-Feb-2016 17:56:31 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTr4o:6aQstI2d9e60Is5OwjeY74VOoiY"; Domain=app.intern.inventorum.net;
+          expires=Thu, 11-Feb-2016 15:14:30 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['2700331606341117428']
+      x-rid: ['3035066506913504856']
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -96,6 +124,7 @@ interactions:
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
+      X-Rid: [*id001]
     method: GET
     uri: http://app.intern.inventorum.net/api/info/
   response:
@@ -284,15 +313,45 @@ interactions:
       allow: ['GET, HEAD, OPTIONS']
       connection: [keep-alive]
       content-type: [application/json]
-      date: ['Tue, 09 Feb 2016 15:56:31 GMT']
+      date: ['Thu, 11 Feb 2016 13:14:30 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aTAeV:lHeuA4OLv7kuX0nrkX8QCOu6tTg"; Domain=app.intern.inventorum.net;
-          expires=Tue, 09-Feb-2016 17:56:31 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTr4o:6aQstI2d9e60Is5OwjeY74VOoiY"; Domain=app.intern.inventorum.net;
+          expires=Thu, 11-Feb-2016 15:14:30 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3840586736995984884']
+      x-rid: ['3035066506913504856']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"state": "in_progress", "details": null, "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['60']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+      X-Rid: [*id001]
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Thu, 11 Feb 2016 13:14:30 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1aTr4o:6aQstI2d9e60Is5OwjeY74VOoiY"; Domain=app.intern.inventorum.net;
+          expires=Thu, 11-Feb-2016 15:14:30 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['3035066506913504856']
     status: {code: 200, message: OK}
 - request:
     body: !!python/str "<?xml version='1.0' encoding='utf-8'?><AddFixedPriceItemRequest\
@@ -307,20 +366,17 @@ interactions:
     headers:
       Content-Length: ['3392']
       Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.4-1-MANJARO]
-      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
+      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.5-1-MANJARO]
       X-EBAY-API-CALL-NAME: [!!python/unicode 'AddFixedPriceItem']
-      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
-      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [6b9c30cd-7d35-4c08-b049-4c8417693746]
+      X-EBAY-SDK-REQUEST-ID: [fa2dd1de-b9f6-4f5b-a6ac-11645bb1184e]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
 
-        <AddFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2016-02-09T15:56:36.404Z</Timestamp><Ack>Success</Ack><Version>951</Version><Build>E951_UNI_API5_17821258_R1</Build><ItemID>262283175378</ItemID><StartTime>2016-02-09T15:56:34.513Z</StartTime><EndTime>2016-03-10T15:56:34.513Z</EndTime><Fees><Fee><Name>AuctionLengthFee</Name><Fee
+        <AddFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2016-02-11T13:14:33.691Z</Timestamp><Ack>Success</Ack><Version>953</Version><Build>E953_UNI_API5_17831825_R1</Build><ItemID>262285951425</ItemID><StartTime>2016-02-11T13:14:32.065Z</StartTime><EndTime>2016-03-12T13:14:32.065Z</EndTime><Fees><Fee><Name>AuctionLengthFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>BoldFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>BuyItNowFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>CategoryFeaturedFee</Name><Fee
         currencyID="EUR">0.0</Fee></Fee><Fee><Name>FeaturedFee</Name><Fee currencyID="EUR">0.0</Fee></Fee><Fee><Name>GalleryPlusFee</Name><Fee
@@ -340,304 +396,16 @@ interactions:
     headers:
       content-length: ['2373']
       content-type: [text/xml]
-      date: ['Tue, 09 Feb 2016 15:56:35 GMT']
-      guid: [152c6bf9-e330-a621-c5e6-fcb6a02d3617]
+      date: ['Thu, 11 Feb 2016 13:14:32 GMT']
+      guid: [152d077f-f840-a786-b802-c9a2ec976bfd]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___ZW9nNGQ3MWYrYzs3ZCgyNSg+OyswNC03Mz07NT43]
+      x-ebay-api-server-name: [___dWtgMGQ3MWYrMDswMygyNSg2MTMoNjo2KD4xPz43OzU=]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [AddFixedPriceItem]
-      x-ebay-esb-guid: ['urn:uuid:239f9394-97cc-4da7-b7f6-a78928e39114']
+      x-ebay-esb-guid: ['urn:uuid:9bf6fc35-b6ff-48d7-8e3f-8f114d613e76']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['152c6bf9-e330-a621-c5e6-fcb6a02d3617!ws.api.dll!10.98.28.94!esbtrading[']
-    status: {code: 200, message: OK}
-- request:
-    body: <?xml version='1.0' encoding='utf-8'?><GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><DetailLevel>ReturnAll</DetailLevel><EndTimeFrom>2016-02-09T16:56:36.545056Z</EndTimeFrom><EndTimeTo>2016-06-08T16:56:36.545075Z</EndTimeTo><ErrorLanguage>de_DE</ErrorLanguage><IncludeVariations>True</IncludeVariations><Pagination><EntriesPerPage>200</EntriesPerPage><PageNumber>1</PageNumber></Pagination></GetSellerListRequest>
-    headers:
-      Content-Length: ['1377']
-      Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.4-1-MANJARO]
-      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
-      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetSellerList']
-      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
-      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
-      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
-      X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [f3fa48df-0ff0-455c-94cb-5820b49cda7a]
-    method: POST
-    uri: https://api.ebay.com/ws/api.dll
-  response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetSellerListResponse\
-        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2016-02-09T15:56:37.288Z</Timestamp><Ack>Success</Ack><Version>947</Version><Build>E947_INTL_APISELLING_17766253_R1</Build><PaginationResult><TotalNumberOfPages>1</TotalNumberOfPages><TotalNumberOfEntries>2</TotalNumberOfEntries></PaginationResult><HasMoreItems>false</HasMoreItems><ItemArray><Item><AutoPay>false</AutoPay><BuyerProtection>ItemIneligible</BuyerProtection><BuyItNowPrice\
-        \ currencyID=\"USD\">0.0</BuyItNowPrice><Country>DE</Country><Currency>EUR</Currency><Description>&lt;p&gt;Ein\
-        \ feiner Wein :-)&lt;/p&gt;\n\n&lt;p&gt;\xE4\xF6as\xE4da\xE4s\xF6d &lt;b&gt;FooBAR&lt;/b&gt;&lt;/p&gt;</Description><GiftIcon>0</GiftIcon><HitCounter>NoHitCounter</HitCounter><ItemID>262283040813</ItemID><ListingDetails><Adult>false</Adult><BindingAuction>false</BindingAuction><CheckoutEnabled>true</CheckoutEnabled><ConvertedBuyItNowPrice\
-        \ currencyID=\"USD\">0.0</ConvertedBuyItNowPrice><ConvertedStartPrice currencyID=\"\
-        EUR\">1.0</ConvertedStartPrice><ConvertedReservePrice currencyID=\"EUR\">0.0</ConvertedReservePrice><HasReservePrice>false</HasReservePrice><StartTime>2016-02-09T13:32:54.000Z</StartTime><EndTime>2016-03-10T13:32:54.000Z</EndTime><ViewItemURL>http://www.ebay.de/itm/Vino-Rioja-special-chaers-/262283040813</ViewItemURL><HasUnansweredQuestions>false</HasUnansweredQuestions><HasPublicMessages>false</HasPublicMessages><ViewItemURLForNaturalSearch>http://www.ebay.de/itm/Vino-Rioja-special-chaers-/262283040813</ViewItemURLForNaturalSearch></ListingDetails><ListingDesigner><LayoutID>7710000</LayoutID><ThemeID>7710</ThemeID></ListingDesigner><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><Location>Berlin</Location><PaymentMethods>PayPal</PaymentMethods><PayPalEmailAddress>mail@jmaicher.de</PayPalEmailAddress><PrimaryCategory><CategoryID>38182</CategoryID><CategoryName>Feinschmecker:Bier,\
-        \ Wein &amp; Spirituosen:Weine &amp; Schaumweine:Rotweine</CategoryName></PrimaryCategory><PrivateListing>false</PrivateListing><Quantity>91</Quantity><ReservePrice\
-        \ currencyID=\"EUR\">0.0</ReservePrice><ReviseStatus><ItemRevised>false</ItemRevised></ReviseStatus><SellingStatus><BidCount>0</BidCount><BidIncrement\
-        \ currencyID=\"EUR\">0.0</BidIncrement><ConvertedCurrentPrice currencyID=\"\
-        EUR\">1.0</ConvertedCurrentPrice><CurrentPrice currencyID=\"EUR\">1.0</CurrentPrice><LeadCount>0</LeadCount><MinimumToBid\
-        \ currencyID=\"EUR\">1.0</MinimumToBid><QuantitySold>0</QuantitySold><ReserveMet>true</ReserveMet><SecondChanceEligible>false</SecondChanceEligible><ListingStatus>Active</ListingStatus></SellingStatus><ShippingDetails><ApplyShippingDiscount>false</ApplyShippingDiscount><CalculatedShippingRate><WeightMajor\
-        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
-        Metric\" unit=\"gm\">0</WeightMinor></CalculatedShippingRate><InsuranceFee\
-        \ currencyID=\"EUR\">0.0</InsuranceFee><InsuranceOption>NotOffered</InsuranceOption><SalesTax><SalesTaxPercent>0.0</SalesTaxPercent><ShippingIncludedInTax>false</ShippingIncludedInTax></SalesTax><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceCost\
-        \ currencyID=\"EUR\">4.9</ShippingServiceCost><ShippingServiceAdditionalCost\
-        \ currencyID=\"EUR\">0.0</ShippingServiceAdditionalCost><ShippingServicePriority>1</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingServiceOptions><ShippingService>DE_DHLPackchen</ShippingService><ShippingServiceCost\
-        \ currencyID=\"EUR\">3.9</ShippingServiceCost><ShippingServiceAdditionalCost\
-        \ currencyID=\"EUR\">0.0</ShippingServiceAdditionalCost><ShippingServicePriority>2</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingType>Flat</ShippingType><ThirdPartyCheckout>false</ThirdPartyCheckout><InsuranceDetails><InsuranceOption>NotOffered</InsuranceOption></InsuranceDetails><ShippingDiscountProfileID>0</ShippingDiscountProfileID><InternationalShippingDiscountProfileID>0</InternationalShippingDiscountProfileID><SellerExcludeShipToLocationsPreference>true</SellerExcludeShipToLocationsPreference></ShippingDetails><ShipToLocations>DE</ShipToLocations><Site>Germany</Site><StartPrice\
-        \ currencyID=\"EUR\">1.0</StartPrice><TimeLeft>P29DT21H36M17S</TimeLeft><Title>Vino\
-        \ Rioja &amp; special ch\xE4rs</Title><VATDetails><VATPercent>7.0</VATPercent></VATDetails><LocationDefaulted>true</LocationDefaulted><GetItFast>false</GetItFast><SKU>invrc_686904</SKU><PostalCode>13355</PostalCode><PictureDetails><GalleryType>Gallery</GalleryType><GalleryURL>http://i.ebayimg.com/00/s/MTIwNlgxNjAw/z/6CEAAOSwKtVWuere/$_1.JPG?set_id=880000500F</GalleryURL><PhotoDisplay>PicturePack</PhotoDisplay><PictureURL>http://i.ebayimg.com/00/s/MTIwNlgxNjAw/z/6CEAAOSwKtVWuere/$_1.JPG?set_id=880000500F</PictureURL><PictureURL>http://i.ebayimg.com/00/s/MzUwWDUwOQ==/z/Dd4AAOSwB4NWuerW/$_1.JPG?set_id=880000500F</PictureURL><PictureURL>http://i.ebayimg.com/00/s/MjY4WDE0MjY=/z/yEMAAOSwWTRWuerV/$_1.JPG?set_id=880000500F</PictureURL></PictureDetails><DispatchTimeMax>3</DispatchTimeMax><ProxyItem>false</ProxyItem><BuyerGuaranteePrice\
-        \ currencyID=\"EUR\">20000.0</BuyerGuaranteePrice><ReturnPolicy><ReturnsWithinOption>Days_14</ReturnsWithinOption><ReturnsWithin>14\
-        \ Tage</ReturnsWithin><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsAccepted>Verbraucher\
-        \ haben das Recht, den Artikel unter den angegebenen Bedingungen zur\xFCckzugeben.</ReturnsAccepted><Description>More\
-        \ details about the return conditions &amp;&amp;&amp; &lt;b&gt;Hello Prat&lt;/b&gt;</Description><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption><ShippingCostPaidBy>Verk\xE4\
-        ufer tr\xE4gt die Kosten der R\xFCcksendung der Waren</ShippingCostPaidBy></ReturnPolicy><ConditionID>1000</ConditionID><ConditionDisplayName>Neu</ConditionDisplayName><PostCheckoutExperienceEnabled>false</PostCheckoutExperienceEnabled><SellerProfiles><SellerShippingProfile><ShippingProfileID>79700885023</ShippingProfileID><ShippingProfileName>Pauschal:DHL\
-        \ Paket(EUR 4,90),DHL P\xE4ckchen,3 W</ShippingProfileName></SellerShippingProfile><SellerReturnProfile><ReturnProfileID>84631103023</ReturnProfileID><ReturnProfileName>Verbraucher\
-        \ haben das Recht, den Artikel unte#6</ReturnProfileName></SellerReturnProfile><SellerPaymentProfile><PaymentProfileID>72901342023</PaymentProfileID><PaymentProfileName>PayPal#6</PaymentProfileName></SellerPaymentProfile></SellerProfiles><ShippingPackageDetails><ShippingIrregular>false</ShippingIrregular><ShippingPackage>None</ShippingPackage><WeightMajor\
-        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
-        Metric\" unit=\"gm\">0</WeightMinor></ShippingPackageDetails><HideFromSearch>false</HideFromSearch><eBayPlus>false</eBayPlus><eBayPlusEligible>false</eBayPlusEligible></Item><Item><AutoPay>false</AutoPay><BuyerProtection>ItemIneligible</BuyerProtection><BuyItNowPrice\
-        \ currencyID=\"USD\">0.0</BuyItNowPrice><Country>DE</Country><Currency>EUR</Currency><Description>&lt;p&gt;Der\
-        \ stylische iPad-Stand von INVENTORUM aus edlem Holz rundet das Erscheinungsbild\
-        \ Ihrer neuen iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel\
-        \ ist dieser ideal, um einfach und schnell Produkte mit der internen Kamera\
-        \ des iPads zu scannen.  Kompatibel f\xFCr iPad 2, 3 und 4, sowie das iPad\
-        \ Air und iPad mini.&lt;/p&gt;</Description><GiftIcon>0</GiftIcon><HitCounter>NoHitCounter</HitCounter><ItemID>262283175378</ItemID><ListingDetails><Adult>false</Adult><BindingAuction>false</BindingAuction><CheckoutEnabled>true</CheckoutEnabled><ConvertedBuyItNowPrice\
-        \ currencyID=\"USD\">0.0</ConvertedBuyItNowPrice><ConvertedStartPrice currencyID=\"\
-        EUR\">1.0</ConvertedStartPrice><ConvertedReservePrice currencyID=\"EUR\">0.0</ConvertedReservePrice><HasReservePrice>false</HasReservePrice><StartTime>2016-02-09T15:56:34.000Z</StartTime><EndTime>2016-03-10T15:56:34.000Z</EndTime><ViewItemURL>http://www.ebay.de/itm/INVENTORUM-iPad-Stand-/262283175378</ViewItemURL><HasUnansweredQuestions>false</HasUnansweredQuestions><HasPublicMessages>false</HasPublicMessages><ViewItemURLForNaturalSearch>http://www.ebay.de/itm/INVENTORUM-iPad-Stand-/262283175378</ViewItemURLForNaturalSearch></ListingDetails><ListingDesigner><LayoutID>7710000</LayoutID><ThemeID>7710</ThemeID></ListingDesigner><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><Location>Berlin</Location><PaymentMethods>PayPal</PaymentMethods><PayPalEmailAddress>info@inventorum.com</PayPalEmailAddress><PrimaryCategory><CategoryID>171949</CategoryID><CategoryName>Verschiedenes:Sonstige</CategoryName></PrimaryCategory><PrivateListing>false</PrivateListing><Quantity>74</Quantity><ReservePrice\
-        \ currencyID=\"EUR\">0.0</ReservePrice><ReviseStatus><ItemRevised>false</ItemRevised></ReviseStatus><SellingStatus><BidCount>0</BidCount><BidIncrement\
-        \ currencyID=\"EUR\">0.0</BidIncrement><ConvertedCurrentPrice currencyID=\"\
-        EUR\">1.0</ConvertedCurrentPrice><CurrentPrice currencyID=\"EUR\">1.0</CurrentPrice><LeadCount>0</LeadCount><MinimumToBid\
-        \ currencyID=\"EUR\">1.0</MinimumToBid><QuantitySold>0</QuantitySold><ReserveMet>true</ReserveMet><SecondChanceEligible>false</SecondChanceEligible><ListingStatus>Active</ListingStatus></SellingStatus><ShippingDetails><ApplyShippingDiscount>false</ApplyShippingDiscount><CalculatedShippingRate><WeightMajor\
-        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
-        Metric\" unit=\"gm\">0</WeightMinor></CalculatedShippingRate><InsuranceFee\
-        \ currencyID=\"EUR\">0.0</InsuranceFee><InsuranceOption>NotOffered</InsuranceOption><SalesTax><SalesTaxPercent>0.0</SalesTaxPercent><ShippingIncludedInTax>false</ShippingIncludedInTax></SalesTax><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceCost\
-        \ currencyID=\"EUR\">5.0</ShippingServiceCost><ShippingServiceAdditionalCost\
-        \ currencyID=\"EUR\">3.0</ShippingServiceAdditionalCost><ShippingServicePriority>1</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingServiceOptions><ShippingService>DE_HermesPaket</ShippingService><ShippingServiceCost\
-        \ currencyID=\"EUR\">4.5</ShippingServiceCost><ShippingServiceAdditionalCost\
-        \ currencyID=\"EUR\">1.0</ShippingServiceAdditionalCost><ShippingServicePriority>2</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingType>Flat</ShippingType><ThirdPartyCheckout>false</ThirdPartyCheckout><InsuranceDetails><InsuranceOption>NotOffered</InsuranceOption></InsuranceDetails><ShippingDiscountProfileID>0</ShippingDiscountProfileID><InternationalShippingDiscountProfileID>0</InternationalShippingDiscountProfileID><SellerExcludeShipToLocationsPreference>true</SellerExcludeShipToLocationsPreference></ShippingDetails><ShipToLocations>DE</ShipToLocations><Site>Germany</Site><StartPrice\
-        \ currencyID=\"EUR\">1.0</StartPrice><TimeLeft>P29DT23H59M57S</TimeLeft><Title>INVENTORUM\
-        \ iPad-Stand</Title><VATDetails><VATPercent>19.0</VATPercent></VATDetails><LocationDefaulted>true</LocationDefaulted><GetItFast>false</GetItFast><SKU>invtest_665753</SKU><PostalCode>13355</PostalCode><PictureDetails><GalleryType>Gallery</GalleryType><GalleryURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</GalleryURL><PhotoDisplay>PicturePack</PhotoDisplay><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL></PictureDetails><DispatchTimeMax>3</DispatchTimeMax><ProxyItem>false</ProxyItem><BuyerGuaranteePrice\
-        \ currencyID=\"EUR\">20000.0</BuyerGuaranteePrice><ReturnPolicy><ReturnsWithinOption>Days_14</ReturnsWithinOption><ReturnsWithin>14\
-        \ Tage</ReturnsWithin><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsAccepted>Verbraucher\
-        \ haben das Recht, den Artikel unter den angegebenen Bedingungen zur\xFCckzugeben.</ReturnsAccepted><Description>The\
-        \ article can be returned to the given conditions</Description><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption><ShippingCostPaidBy>Verk\xE4\
-        ufer tr\xE4gt die Kosten der R\xFCcksendung der Waren</ShippingCostPaidBy></ReturnPolicy><PaymentAllowedSite>Germany</PaymentAllowedSite><ConditionID>1000</ConditionID><ConditionDisplayName>Neu</ConditionDisplayName><PostCheckoutExperienceEnabled>false</PostCheckoutExperienceEnabled><SellerProfiles/><ShippingPackageDetails><ShippingIrregular>false</ShippingIrregular><ShippingPackage>None</ShippingPackage><WeightMajor\
-        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
-        Metric\" unit=\"gm\">0</WeightMinor></ShippingPackageDetails><HideFromSearch>false</HideFromSearch><eBayPlus>false</eBayPlus><eBayPlusEligible>false</eBayPlusEligible></Item></ItemArray><ItemsPerPage>200</ItemsPerPage><PageNumber>1</PageNumber><ReturnedItemCountActual>2</ReturnedItemCountActual><Seller><AboutMePage>false</AboutMePage><Email>tech+ebay@inventorum.com</Email><FeedbackScore>1</FeedbackScore><PositiveFeedbackPercent>66.7</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>false</NewUser><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATExempt</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>true</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><StoreOwner>false</StoreOwner><SafePaymentExempt>false</SafePaymentExempt></SellerInfo><MotorsDealer>false</MotorsDealer></Seller></GetSellerListResponse>"}
-    headers:
-      content-length: ['14505']
-      content-type: [text/xml]
-      date: ['Tue, 09 Feb 2016 15:56:37 GMT']
-      guid: [152c6bfa-f730-a794-ca16-89668fa06264]
-      server: [Apache-Coyote/1.1]
-      x-ebay-api-pool-name: [___cDRidW90Zmlqbm1ib2l3aQ==]
-      x-ebay-api-server-name: [___dWtgMGQ3MWYrMGU8NSgyNSg2MTMoNC00NTc5PTY/Mg==]
-      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
-      x-ebay-esb-call-name: [GetSellerList]
-      x-ebay-esb-guid: ['urn:uuid:90869ea8-ad1b-4dd2-b162-a16c9758ddd5']
-      x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['152c6bfa-f730-a794-ca16-89668fa06264!ws.api.dll!10.121.76.161!esbtrading[']
-    status: {code: 200, message: OK}
-- request:
-    body: <?xml version='1.0' encoding='utf-8'?><GetItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><ItemID>262283040813</ItemID></GetItemRequest>
-    headers:
-      Content-Length: ['1124']
-      Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.4-1-MANJARO]
-      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
-      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetItem']
-      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
-      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
-      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
-      X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [560b5431-f283-4c9d-850f-6e85a659af81]
-    method: POST
-    uri: https://api.ebay.com/ws/api.dll
-  response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetItemResponse xmlns=\"\
-        urn:ebay:apis:eBLBaseComponents\"><Timestamp>2016-02-09T15:56:37.694Z</Timestamp><Ack>Success</Ack><Version>949</Version><Build>E949_INTL_API_17775486_R1</Build><Item><AutoPay>false</AutoPay><BuyerProtection>ItemIneligible</BuyerProtection><BuyItNowPrice\
-        \ currencyID=\"EUR\">0.0</BuyItNowPrice><Country>DE</Country><Currency>EUR</Currency><GiftIcon>0</GiftIcon><HitCounter>NoHitCounter</HitCounter><ItemID>262283040813</ItemID><ListingDetails><Adult>false</Adult><BindingAuction>false</BindingAuction><CheckoutEnabled>true</CheckoutEnabled><ConvertedBuyItNowPrice\
-        \ currencyID=\"EUR\">0.0</ConvertedBuyItNowPrice><ConvertedStartPrice currencyID=\"\
-        EUR\">1.0</ConvertedStartPrice><ConvertedReservePrice currencyID=\"EUR\">0.0</ConvertedReservePrice><HasReservePrice>false</HasReservePrice><StartTime>2016-02-09T13:32:54.000Z</StartTime><EndTime>2016-03-10T13:32:54.000Z</EndTime><ViewItemURL>http://www.ebay.de/itm/Vino-Rioja-special-chaers-/262283040813</ViewItemURL><HasUnansweredQuestions>false</HasUnansweredQuestions><HasPublicMessages>false</HasPublicMessages><ViewItemURLForNaturalSearch>http://www.ebay.de/itm/Vino-Rioja-special-chaers-/262283040813</ViewItemURLForNaturalSearch></ListingDetails><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><Location>Berlin</Location><PaymentMethods>PayPal</PaymentMethods><PayPalEmailAddress>mail@jmaicher.de</PayPalEmailAddress><PrimaryCategory><CategoryID>38182</CategoryID><CategoryName>Feinschmecker:Bier,\
-        \ Wein &amp; Spirituosen:Weine &amp; Schaumweine:Rotweine</CategoryName></PrimaryCategory><PrivateListing>false</PrivateListing><Quantity>91</Quantity><ReservePrice\
-        \ currencyID=\"EUR\">0.0</ReservePrice><ReviseStatus><ItemRevised>false</ItemRevised></ReviseStatus><Seller><AboutMePage>false</AboutMePage><Email>tech+ebay@inventorum.com</Email><FeedbackScore>1</FeedbackScore><PositiveFeedbackPercent>66.7</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>false</NewUser><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATExempt</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>true</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><StoreOwner>false</StoreOwner><SellerBusinessType>Commercial</SellerBusinessType><SafePaymentExempt>false</SafePaymentExempt></SellerInfo><MotorsDealer>false</MotorsDealer></Seller><SellingStatus><BidCount>0</BidCount><BidIncrement\
-        \ currencyID=\"EUR\">0.0</BidIncrement><ConvertedCurrentPrice currencyID=\"\
-        EUR\">1.0</ConvertedCurrentPrice><CurrentPrice currencyID=\"EUR\">1.0</CurrentPrice><LeadCount>0</LeadCount><MinimumToBid\
-        \ currencyID=\"EUR\">1.0</MinimumToBid><QuantitySold>0</QuantitySold><ReserveMet>true</ReserveMet><SecondChanceEligible>false</SecondChanceEligible><ListingStatus>Active</ListingStatus><QuantitySoldByPickupInStore>0</QuantitySoldByPickupInStore></SellingStatus><ShippingDetails><ApplyShippingDiscount>false</ApplyShippingDiscount><CalculatedShippingRate><WeightMajor\
-        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
-        Metric\" unit=\"gm\">0</WeightMinor></CalculatedShippingRate><InsuranceFee\
-        \ currencyID=\"EUR\">0.0</InsuranceFee><InsuranceOption>NotOffered</InsuranceOption><SalesTax><SalesTaxPercent>0.0</SalesTaxPercent><ShippingIncludedInTax>false</ShippingIncludedInTax></SalesTax><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceCost\
-        \ currencyID=\"EUR\">4.9</ShippingServiceCost><ShippingServiceAdditionalCost\
-        \ currencyID=\"EUR\">0.0</ShippingServiceAdditionalCost><ShippingServicePriority>1</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingServiceOptions><ShippingService>DE_DHLPackchen</ShippingService><ShippingServiceCost\
-        \ currencyID=\"EUR\">3.9</ShippingServiceCost><ShippingServiceAdditionalCost\
-        \ currencyID=\"EUR\">0.0</ShippingServiceAdditionalCost><ShippingServicePriority>2</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingType>Flat</ShippingType><ThirdPartyCheckout>false</ThirdPartyCheckout><InsuranceDetails><InsuranceOption>NotOffered</InsuranceOption></InsuranceDetails><ShippingDiscountProfileID>0</ShippingDiscountProfileID><InternationalShippingDiscountProfileID>0</InternationalShippingDiscountProfileID><SellerExcludeShipToLocationsPreference>true</SellerExcludeShipToLocationsPreference></ShippingDetails><ShipToLocations>DE</ShipToLocations><Site>Germany</Site><StartPrice\
-        \ currencyID=\"EUR\">1.0</StartPrice><TimeLeft>P29DT21H36M17S</TimeLeft><Title>Vino\
-        \ Rioja &amp; special ch\xE4rs</Title><VATDetails><VATPercent>7.0</VATPercent></VATDetails><HitCount>6</HitCount><LocationDefaulted>true</LocationDefaulted><GetItFast>false</GetItFast><SKU>invrc_686904</SKU><PostalCode>13355</PostalCode><PictureDetails><GalleryType>Gallery</GalleryType><GalleryURL>http://i.ebayimg.com/00/s/MTIwNlgxNjAw/z/6CEAAOSwKtVWuere/$_1.JPG?set_id=880000500F</GalleryURL><PhotoDisplay>PicturePack</PhotoDisplay><PictureURL>http://i.ebayimg.com/00/s/MTIwNlgxNjAw/z/6CEAAOSwKtVWuere/$_1.JPG?set_id=880000500F</PictureURL><PictureURL>http://i.ebayimg.com/00/s/MzUwWDUwOQ==/z/Dd4AAOSwB4NWuerW/$_1.JPG?set_id=880000500F</PictureURL><PictureURL>http://i.ebayimg.com/00/s/MjY4WDE0MjY=/z/yEMAAOSwWTRWuerV/$_1.JPG?set_id=880000500F</PictureURL><ExternalPictureURL>http://app.inventorum.net/uploads/232/product/f4/05/10/b9/37/27/a4/79/e5/57/62/cc/46/fc/78/f40510b93727a479e55762cc46fc78a5.ipad_retina.png</ExternalPictureURL></PictureDetails><DispatchTimeMax>3</DispatchTimeMax><ProxyItem>false</ProxyItem><BusinessSellerDetails><Address><Street1>Inventorum\
-        \ GmbH</Street1><Street2>Voltastr 5</Street2><CityName>Berlin</CityName><CountryName>Deutschland</CountryName><PostalCode>13355</PostalCode><FirstName>John</FirstName><LastName>Newman</LastName></Address><Email>tech+ebay@inventorum.com</Email><AdditionalContactInformation>http://ec.europa.eu/consumers/odr/</AdditionalContactInformation><LegalInvoice>false</LegalInvoice></BusinessSellerDetails><BuyerGuaranteePrice\
-        \ currencyID=\"EUR\">20000.0</BuyerGuaranteePrice><ReturnPolicy><ReturnsWithinOption>Days_14</ReturnsWithinOption><ReturnsWithin>14\
-        \ Tage</ReturnsWithin><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsAccepted>Verbraucher\
-        \ haben das Recht, den Artikel unter den angegebenen Bedingungen zur\xFCckzugeben.</ReturnsAccepted><Description>More\
-        \ details about the return conditions &amp;&amp;&amp; &lt;b&gt;Hello Prat&lt;/b&gt;</Description><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption><ShippingCostPaidBy>Verk\xE4\
-        ufer tr\xE4gt die Kosten der R\xFCcksendung der Waren</ShippingCostPaidBy></ReturnPolicy><ConditionID>1000</ConditionID><ConditionDisplayName>Neu</ConditionDisplayName><PostCheckoutExperienceEnabled>false</PostCheckoutExperienceEnabled><SellerProfiles><SellerShippingProfile><ShippingProfileID>79700885023</ShippingProfileID><ShippingProfileName>Pauschal:DHL\
-        \ Paket(EUR 4,90),DHL P\xE4ckchen,3 W</ShippingProfileName></SellerShippingProfile><SellerReturnProfile><ReturnProfileID>84631103023</ReturnProfileID><ReturnProfileName>Verbraucher\
-        \ haben das Recht, den Artikel unte#6</ReturnProfileName></SellerReturnProfile><SellerPaymentProfile><PaymentProfileID>72901342023</PaymentProfileID><PaymentProfileName>PayPal#6</PaymentProfileName></SellerPaymentProfile></SellerProfiles><ShippingPackageDetails><ShippingIrregular>false</ShippingIrregular><ShippingPackage>None</ShippingPackage><WeightMajor\
-        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
-        Metric\" unit=\"gm\">0</WeightMinor></ShippingPackageDetails><HideFromSearch>false</HideFromSearch><OutOfStockControl>true</OutOfStockControl><eBayPlus>false</eBayPlus><eBayPlusEligible>false</eBayPlusEligible></Item></GetItemResponse>"}
-    headers:
-      content-length: ['8379']
-      content-type: [text/xml]
-      date: ['Tue, 09 Feb 2016 15:56:37 GMT']
-      guid: [152c6bfb-1360-a5e4-3694-ef34fcd1496c]
-      server: [Apache-Coyote/1.1]
-      x-ebay-api-pool-name: [___cDRidW9ubXFq]
-      x-ebay-api-server-name: [___dWtgMWQ3MmYrPzcwYCgyNSg+Nys+MS00NTY5PTY/Mg==]
-      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
-      x-ebay-esb-call-name: [GetItem]
-      x-ebay-esb-guid: ['urn:uuid:31992567-208f-4016-aa39-627c9f38eda0']
-      x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['152c6bfb-1360-a5e4-3694-ef34fcd1496c!ws.api.dll!10.94.67.105!esbtrading[']
-    status: {code: 200, message: OK}
-- request:
-    body: <?xml version='1.0' encoding='utf-8'?><GetItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><ItemID>262283175378</ItemID></GetItemRequest>
-    headers:
-      Content-Length: ['1124']
-      Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.4-1-MANJARO]
-      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
-      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetItem']
-      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
-      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
-      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
-      X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [b6c3e44d-5474-4fc3-a215-b75203446694]
-    method: POST
-    uri: https://api.ebay.com/ws/api.dll
-  response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetItemResponse xmlns=\"\
-        urn:ebay:apis:eBLBaseComponents\"><Timestamp>2016-02-09T15:56:38.183Z</Timestamp><Ack>Success</Ack><Version>949</Version><Build>E949_INTL_API_17775486_R1</Build><Item><AutoPay>false</AutoPay><BuyerProtection>ItemIneligible</BuyerProtection><BuyItNowPrice\
-        \ currencyID=\"EUR\">0.0</BuyItNowPrice><Country>DE</Country><Currency>EUR</Currency><GiftIcon>0</GiftIcon><HitCounter>NoHitCounter</HitCounter><ItemID>262283175378</ItemID><ListingDetails><Adult>false</Adult><BindingAuction>false</BindingAuction><CheckoutEnabled>true</CheckoutEnabled><ConvertedBuyItNowPrice\
-        \ currencyID=\"EUR\">0.0</ConvertedBuyItNowPrice><ConvertedStartPrice currencyID=\"\
-        EUR\">1.0</ConvertedStartPrice><ConvertedReservePrice currencyID=\"EUR\">0.0</ConvertedReservePrice><HasReservePrice>false</HasReservePrice><StartTime>2016-02-09T15:56:34.000Z</StartTime><EndTime>2016-03-10T15:56:34.000Z</EndTime><ViewItemURL>http://www.ebay.de/itm/INVENTORUM-iPad-Stand-/262283175378</ViewItemURL><HasUnansweredQuestions>false</HasUnansweredQuestions><HasPublicMessages>false</HasPublicMessages><ViewItemURLForNaturalSearch>http://www.ebay.de/itm/INVENTORUM-iPad-Stand-/262283175378</ViewItemURLForNaturalSearch></ListingDetails><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><Location>Berlin</Location><PaymentMethods>PayPal</PaymentMethods><PayPalEmailAddress>info@inventorum.com</PayPalEmailAddress><PrimaryCategory><CategoryID>171949</CategoryID><CategoryName>Verschiedenes:Sonstige</CategoryName></PrimaryCategory><PrivateListing>false</PrivateListing><Quantity>74</Quantity><ReservePrice\
-        \ currencyID=\"EUR\">0.0</ReservePrice><ReviseStatus><ItemRevised>false</ItemRevised></ReviseStatus><Seller><AboutMePage>false</AboutMePage><Email>tech+ebay@inventorum.com</Email><FeedbackScore>1</FeedbackScore><PositiveFeedbackPercent>66.7</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>false</NewUser><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATExempt</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>true</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><StoreOwner>false</StoreOwner><SellerBusinessType>Commercial</SellerBusinessType><SafePaymentExempt>false</SafePaymentExempt></SellerInfo><MotorsDealer>false</MotorsDealer></Seller><SellingStatus><BidCount>0</BidCount><BidIncrement\
-        \ currencyID=\"EUR\">0.0</BidIncrement><ConvertedCurrentPrice currencyID=\"\
-        EUR\">1.0</ConvertedCurrentPrice><CurrentPrice currencyID=\"EUR\">1.0</CurrentPrice><LeadCount>0</LeadCount><MinimumToBid\
-        \ currencyID=\"EUR\">1.0</MinimumToBid><QuantitySold>0</QuantitySold><ReserveMet>true</ReserveMet><SecondChanceEligible>false</SecondChanceEligible><ListingStatus>Active</ListingStatus><QuantitySoldByPickupInStore>0</QuantitySoldByPickupInStore></SellingStatus><ShippingDetails><ApplyShippingDiscount>false</ApplyShippingDiscount><CalculatedShippingRate><WeightMajor\
-        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
-        Metric\" unit=\"gm\">0</WeightMinor></CalculatedShippingRate><InsuranceFee\
-        \ currencyID=\"EUR\">0.0</InsuranceFee><InsuranceOption>NotOffered</InsuranceOption><SalesTax><SalesTaxPercent>0.0</SalesTaxPercent><ShippingIncludedInTax>false</ShippingIncludedInTax></SalesTax><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceCost\
-        \ currencyID=\"EUR\">5.0</ShippingServiceCost><ShippingServiceAdditionalCost\
-        \ currencyID=\"EUR\">3.0</ShippingServiceAdditionalCost><ShippingServicePriority>1</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingServiceOptions><ShippingService>DE_HermesPaket</ShippingService><ShippingServiceCost\
-        \ currencyID=\"EUR\">4.5</ShippingServiceCost><ShippingServiceAdditionalCost\
-        \ currencyID=\"EUR\">1.0</ShippingServiceAdditionalCost><ShippingServicePriority>2</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingType>Flat</ShippingType><ThirdPartyCheckout>false</ThirdPartyCheckout><InsuranceDetails><InsuranceOption>NotOffered</InsuranceOption></InsuranceDetails><ShippingDiscountProfileID>0</ShippingDiscountProfileID><InternationalShippingDiscountProfileID>0</InternationalShippingDiscountProfileID><SellerExcludeShipToLocationsPreference>true</SellerExcludeShipToLocationsPreference></ShippingDetails><ShipToLocations>DE</ShipToLocations><Site>Germany</Site><StartPrice\
-        \ currencyID=\"EUR\">1.0</StartPrice><TimeLeft>P29DT23H59M56S</TimeLeft><Title>INVENTORUM\
-        \ iPad-Stand</Title><VATDetails><VATPercent>19.0</VATPercent></VATDetails><HitCount>0</HitCount><LocationDefaulted>true</LocationDefaulted><GetItFast>false</GetItFast><SKU>invtest_665753</SKU><PostalCode>13355</PostalCode><PictureDetails><GalleryType>Gallery</GalleryType><GalleryURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</GalleryURL><PhotoDisplay>PicturePack</PhotoDisplay><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL><ExternalPictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</ExternalPictureURL></PictureDetails><DispatchTimeMax>3</DispatchTimeMax><ProxyItem>false</ProxyItem><BusinessSellerDetails><Address><Street1>Inventorum\
-        \ GmbH</Street1><Street2>Voltastr 5</Street2><CityName>Berlin</CityName><CountryName>Deutschland</CountryName><PostalCode>13355</PostalCode><FirstName>John</FirstName><LastName>Newman</LastName></Address><Email>tech+ebay@inventorum.com</Email><AdditionalContactInformation>http://ec.europa.eu/consumers/odr/</AdditionalContactInformation><LegalInvoice>false</LegalInvoice></BusinessSellerDetails><BuyerGuaranteePrice\
-        \ currencyID=\"EUR\">20000.0</BuyerGuaranteePrice><ReturnPolicy><ReturnsWithinOption>Days_14</ReturnsWithinOption><ReturnsWithin>14\
-        \ Tage</ReturnsWithin><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsAccepted>Verbraucher\
-        \ haben das Recht, den Artikel unter den angegebenen Bedingungen zur\xFCckzugeben.</ReturnsAccepted><Description>The\
-        \ article can be returned to the given conditions</Description><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption><ShippingCostPaidBy>Verk\xE4\
-        ufer tr\xE4gt die Kosten der R\xFCcksendung der Waren</ShippingCostPaidBy></ReturnPolicy><PaymentAllowedSite>Germany</PaymentAllowedSite><ConditionID>1000</ConditionID><ConditionDisplayName>Neu</ConditionDisplayName><PostCheckoutExperienceEnabled>false</PostCheckoutExperienceEnabled><ShippingPackageDetails><ShippingIrregular>false</ShippingIrregular><ShippingPackage>None</ShippingPackage><WeightMajor\
-        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
-        Metric\" unit=\"gm\">0</WeightMinor></ShippingPackageDetails><HideFromSearch>false</HideFromSearch><OutOfStockControl>true</OutOfStockControl><eBayPlus>false</eBayPlus><eBayPlusEligible>false</eBayPlusEligible></Item></GetItemResponse>"}
-    headers:
-      content-length: ['7956']
-      content-type: [text/xml]
-      date: ['Tue, 09 Feb 2016 15:56:38 GMT']
-      guid: [152c6bfb-2b80-a794-4554-70a4a7847317]
-      server: [Apache-Coyote/1.1]
-      x-ebay-api-pool-name: [___cDRidW9ubXFq]
-      x-ebay-api-server-name: [___dWtgMWQ3MmYrMDczPygyNSg+Nys0NjMrPzU5PTY/Mg==]
-      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
-      x-ebay-esb-call-name: [GetItem]
-      x-ebay-esb-guid: ['urn:uuid:df17cc04-5625-410f-b264-ed900ae8c381']
-      x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['152c6bfb-2b80-a794-4554-70a4a7847317!ws.api.dll!10.121.68.85!esbtrading[']
-    status: {code: 200, message: OK}
-- request:
-    body: null
-    headers:
-      Accept: [!!python/unicode 'application/json']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      Content-Type: [!!python/unicode 'application/json']
-      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
-      X-Api-Version: [10]
-      X-Inv-Account: [!!python/unicode '346']
-      X-Inv-User: [!!python/unicode '425']
-    method: GET
-    uri: http://app.intern.inventorum.net/api/products/665753/
-  response:
-    body: {string: !!python/unicode '{"attributes": {}, "name": "INVENTORUM iPad-Stand",
-        "id": 665753, "quantity": "74.00", "reorder_level": "0.00", "safety_stock":
-        "0.00", "price": "0.8403361345", "tax_type": 1063, "custom_price": false,
-        "ebay_product_id": null, "ebay_url": null, "in_shop": true, "shop_url": "https://inventorum-test-account.inventorum.net/products/details?pid=665753",
-        "thumbnail": {"ipad": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad.JPEG",
-        "id": 2934, "ipad_retina": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG",
-        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_thumb.JPEG"},
-        "variation_count": 0, "variations": [], "average_purchase_price": "3E+1",
-        "description": "Der stylische iPad-Stand von INVENTORUM aus edlem Holz rundet
-        das Erscheinungsbild Ihrer neuen iPad-Kasse optimal ab. Durch seinen speziellen
-        Neigungswinkel ist dieser ideal, um einfach und schnell Produkte mit der internen
-        Kamera des iPads zu scannen.  Kompatibel f\u00fcr iPad 2, 3 und 4, sowie das
-        iPad Air und iPad mini.", "product_code": "", "ean": null, "categories": [],
-        "images": [{"new": false, "type": 0, "id": 2934, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad.JPEG",
-        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG",
-        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_thumb.JPEG"}},
-        {"new": false, "type": 0, "id": 2935, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad.JPEG",
-        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG",
-        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_thumb.JPEG"}},
-        {"new": false, "type": 0, "id": 2936, "urls": {"ipad": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad.JPEG",
-        "ipad_retina": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG",
-        "thumb_retina": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_thumb_retina.JPEG",
-        "thumb": "https://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_thumb.JPEG"}}],
-        "custom_sale": false, "shipping_services": [{"id": "DE_HermesPaket", "description":
-        "Hermes Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
-        "Group3MaxFlatShippingCost", "carrier": "Hermes", "category": "[STANDARD]",
-        "service": "DE_HermesPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
-        "enabled": false, "free_above_price": null}, {"id": "DE_DHLPaket", "description":
-        "DHL Paket", "type": "", "time_max": 2, "time_min": 1, "cost_group_flat":
-        "Group3MaxFlatShippingCost", "carrier": "DHL", "category": "[STANDARD]", "service":
-        "DE_DHLPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
-        "enabled": true, "free_above_price": null}, {"id": "DE_HermesPaketSperrgut",
-        "description": "Hermes Paket Sperrgut", "type": "", "time_max": 2, "time_min":
-        1, "cost_group_flat": "", "carrier": "Hermes", "category": "[STANDARD]", "service":
-        "DE_HermesPaketSperrgut", "cost": "0E-10", "additional_cost": "2.0000000000",
-        "enabled": false, "free_above_price": null}, {"id": "DE_DHL2KGPaket", "description":
-        "DHL 2kg Paket (nur f\u00fcr kurze Zeit)", "type": "", "time_max": 2, "time_min":
-        1, "cost_group_flat": "", "carrier": "DHL", "category": "[STANDARD]", "service":
-        "DE_DHL2KGPaket", "cost": "5.0000000000", "additional_cost": "2.0000000000",
-        "enabled": false, "free_above_price": null}], "is_favourite": false, "brand":
-        "", "supplier": "", "meta": {"shop": {"channel": 5, "description": "", "gross_price":
-        "39.00", "id": 746, "images": null, "name": "", "price": "32.7731092437"},
-        "atalanda": {"channel": 9, "description": null, "gross_price": null, "id":
-        3514, "images": null, "name": null, "price": null}, "click_and_collect": {"channel":
-        8, "description": null, "gross_price": null, "id": 3515, "images": null, "name":
-        null, "price": null}, "ebay": {"channel": 4, "description": "", "gross_price":
-        null, "id": 747, "images": null, "name": "", "price": null}}, "is_giftcard":
-        false, "gross_price": "1.00", "purchase_price": "3E+1", "states": [{"channel":
-        "shop", "details": null, "state": "published"}, {"channel": "ebay", "details":
-        [{"severity_code": "FatalError", "code": -1, "classification": "ApiError",
-        "parameters": [], "long_message": "Something went wrong, please try again
-        later.", "short_message": "Fatal error (a5eb8435-6b2f-4c02-8139-c400a3282c05)"}],
-        "state": "failed"}], "attributes_str": "", "inv_id": "1225146588560351744",
-        "package_size_value": null, "package_size_unit": null, "base_price": null,
-        "base_size_value": null, "base_size_unit": null}'}
-    headers:
-      allow: ['GET, PUT, DELETE, HEAD, OPTIONS']
-      connection: [keep-alive]
-      content-type: [application/json]
-      date: ['Tue, 09 Feb 2016 15:56:38 GMT']
-      server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aTAec:SLYXUi7-mEAuRpHaTq7BJZrppIg"; Domain=app.intern.inventorum.net;
-          expires=Tue, 09-Feb-2016 17:56:38 GMT; httponly; Max-Age=7200; Path=/']
-      transfer-encoding: [chunked]
-      vary: ['Accept, Cookie']
-      x-inv-account: ['346']
-      x-inv-user: ['425']
-      x-rid: ['3840586736995984884']
+      x-ebay-request-id: ['152d077f-f840-a786-b802-c9a2ec976bfd!ws.api.dll!10.120.107.128!esbtrading[']
     status: {code: 200, message: OK}
 - request:
     body: '{"state": "published", "details": {}, "channel": "ebay"}'
@@ -651,6 +419,7 @@ interactions:
       X-Api-Version: [10]
       X-Inv-Account: [!!python/unicode '346']
       X-Inv-User: [!!python/unicode '425']
+      X-Rid: [*id001]
     method: POST
     uri: http://app.intern.inventorum.net/api/products/665753/state/
   response:
@@ -658,47 +427,215 @@ interactions:
     headers:
       allow: ['POST, OPTIONS']
       connection: [keep-alive]
-      date: ['Tue, 09 Feb 2016 15:56:38 GMT']
+      date: ['Thu, 11 Feb 2016 13:14:33 GMT']
       server: [nginx/1.6.2]
-      set-cookie: ['sn="e30:1aTAec:SLYXUi7-mEAuRpHaTq7BJZrppIg"; Domain=app.intern.inventorum.net;
-          expires=Tue, 09-Feb-2016 17:56:38 GMT; httponly; Max-Age=7200; Path=/']
+      set-cookie: ['sn="e30:1aTr4r:MlDCtWPeUutePf_B1SawdNL8XwM"; Domain=app.intern.inventorum.net;
+          expires=Thu, 11-Feb-2016 15:14:33 GMT; httponly; Max-Age=7200; Path=/']
       transfer-encoding: [chunked]
       vary: ['Accept, Cookie']
       x-inv-account: ['346']
       x-inv-user: ['425']
-      x-rid: ['3840586736995984884']
+      x-rid: ['3035066506913504856']
     status: {code: 200, message: OK}
 - request:
-    body: <?xml version='1.0' encoding='utf-8'?><EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>262283175378</ItemID></EndFixedPriceItemRequest>
+    body: <?xml version='1.0' encoding='utf-8'?><GetSellerListRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><DetailLevel>ReturnAll</DetailLevel><EndTimeFrom>2016-02-11T14:14:33.953030Z</EndTimeFrom><EndTimeTo>2016-06-10T14:14:33.953049Z</EndTimeTo><ErrorLanguage>de_DE</ErrorLanguage><IncludeVariations>True</IncludeVariations><Pagination><EntriesPerPage>1</EntriesPerPage><PageNumber>1</PageNumber></Pagination></GetSellerListRequest>
+    headers:
+      Content-Length: ['1375']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.5-1-MANJARO]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetSellerList']
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [01540d8d-e66d-4d5f-a375-cfcfd6f3e416]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetSellerListResponse\
+        \ xmlns=\"urn:ebay:apis:eBLBaseComponents\"><Timestamp>2016-02-11T13:14:34.917Z</Timestamp><Ack>Success</Ack><Version>947</Version><Build>E947_INTL_APISELLING_17766253_R1</Build><PaginationResult><TotalNumberOfPages>1</TotalNumberOfPages><TotalNumberOfEntries>1</TotalNumberOfEntries></PaginationResult><HasMoreItems>false</HasMoreItems><ItemArray><Item><AutoPay>false</AutoPay><BuyerProtection>ItemIneligible</BuyerProtection><BuyItNowPrice\
+        \ currencyID=\"USD\">0.0</BuyItNowPrice><Country>DE</Country><Currency>EUR</Currency><Description>&lt;p&gt;Der\
+        \ stylische iPad-Stand von INVENTORUM aus edlem Holz rundet das Erscheinungsbild\
+        \ Ihrer neuen iPad-Kasse optimal ab. Durch seinen speziellen Neigungswinkel\
+        \ ist dieser ideal, um einfach und schnell Produkte mit der internen Kamera\
+        \ des iPads zu scannen.  Kompatibel f\xFCr iPad 2, 3 und 4, sowie das iPad\
+        \ Air und iPad mini.&lt;/p&gt;</Description><GiftIcon>0</GiftIcon><HitCounter>NoHitCounter</HitCounter><ItemID>262285951425</ItemID><ListingDetails><Adult>false</Adult><BindingAuction>false</BindingAuction><CheckoutEnabled>true</CheckoutEnabled><ConvertedBuyItNowPrice\
+        \ currencyID=\"USD\">0.0</ConvertedBuyItNowPrice><ConvertedStartPrice currencyID=\"\
+        EUR\">1.0</ConvertedStartPrice><ConvertedReservePrice currencyID=\"EUR\">0.0</ConvertedReservePrice><HasReservePrice>false</HasReservePrice><StartTime>2016-02-11T13:14:32.000Z</StartTime><EndTime>2016-03-12T13:14:32.000Z</EndTime><ViewItemURL>http://www.ebay.de/itm/INVENTORUM-iPad-Stand-/262285951425</ViewItemURL><HasUnansweredQuestions>false</HasUnansweredQuestions><HasPublicMessages>false</HasPublicMessages><ViewItemURLForNaturalSearch>http://www.ebay.de/itm/INVENTORUM-iPad-Stand-/262285951425</ViewItemURLForNaturalSearch></ListingDetails><ListingDesigner><LayoutID>7710000</LayoutID><ThemeID>7710</ThemeID></ListingDesigner><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><Location>Berlin</Location><PaymentMethods>PayPal</PaymentMethods><PayPalEmailAddress>info@inventorum.com</PayPalEmailAddress><PrimaryCategory><CategoryID>171949</CategoryID><CategoryName>Verschiedenes:Sonstige</CategoryName></PrimaryCategory><PrivateListing>false</PrivateListing><Quantity>74</Quantity><ReservePrice\
+        \ currencyID=\"EUR\">0.0</ReservePrice><ReviseStatus><ItemRevised>false</ItemRevised></ReviseStatus><SellingStatus><BidCount>0</BidCount><BidIncrement\
+        \ currencyID=\"EUR\">0.0</BidIncrement><ConvertedCurrentPrice currencyID=\"\
+        EUR\">1.0</ConvertedCurrentPrice><CurrentPrice currencyID=\"EUR\">1.0</CurrentPrice><LeadCount>0</LeadCount><MinimumToBid\
+        \ currencyID=\"EUR\">1.0</MinimumToBid><QuantitySold>0</QuantitySold><ReserveMet>true</ReserveMet><SecondChanceEligible>false</SecondChanceEligible><ListingStatus>Active</ListingStatus></SellingStatus><ShippingDetails><ApplyShippingDiscount>false</ApplyShippingDiscount><CalculatedShippingRate><WeightMajor\
+        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
+        Metric\" unit=\"gm\">0</WeightMinor></CalculatedShippingRate><InsuranceFee\
+        \ currencyID=\"EUR\">0.0</InsuranceFee><InsuranceOption>NotOffered</InsuranceOption><SalesTax><SalesTaxPercent>0.0</SalesTaxPercent><ShippingIncludedInTax>false</ShippingIncludedInTax></SalesTax><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceCost\
+        \ currencyID=\"EUR\">5.0</ShippingServiceCost><ShippingServiceAdditionalCost\
+        \ currencyID=\"EUR\">3.0</ShippingServiceAdditionalCost><ShippingServicePriority>1</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingServiceOptions><ShippingService>DE_HermesPaket</ShippingService><ShippingServiceCost\
+        \ currencyID=\"EUR\">4.5</ShippingServiceCost><ShippingServiceAdditionalCost\
+        \ currencyID=\"EUR\">1.0</ShippingServiceAdditionalCost><ShippingServicePriority>2</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingType>Flat</ShippingType><ThirdPartyCheckout>false</ThirdPartyCheckout><InsuranceDetails><InsuranceOption>NotOffered</InsuranceOption></InsuranceDetails><ShippingDiscountProfileID>0</ShippingDiscountProfileID><InternationalShippingDiscountProfileID>0</InternationalShippingDiscountProfileID><SellerExcludeShipToLocationsPreference>true</SellerExcludeShipToLocationsPreference></ShippingDetails><ShipToLocations>DE</ShipToLocations><Site>Germany</Site><StartPrice\
+        \ currencyID=\"EUR\">1.0</StartPrice><TimeLeft>P29DT23H59M58S</TimeLeft><Title>INVENTORUM\
+        \ iPad-Stand</Title><VATDetails><VATPercent>19.0</VATPercent></VATDetails><LocationDefaulted>true</LocationDefaulted><GetItFast>false</GetItFast><SKU>invtest_665753</SKU><PostalCode>13355</PostalCode><PictureDetails><GalleryType>Gallery</GalleryType><GalleryURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</GalleryURL><PhotoDisplay>PicturePack</PhotoDisplay><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL></PictureDetails><DispatchTimeMax>3</DispatchTimeMax><ProxyItem>false</ProxyItem><BuyerGuaranteePrice\
+        \ currencyID=\"EUR\">20000.0</BuyerGuaranteePrice><ReturnPolicy><ReturnsWithinOption>Days_14</ReturnsWithinOption><ReturnsWithin>14\
+        \ Tage</ReturnsWithin><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsAccepted>Verbraucher\
+        \ haben das Recht, den Artikel unter den angegebenen Bedingungen zur\xFCckzugeben.</ReturnsAccepted><Description>The\
+        \ article can be returned to the given conditions</Description><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption><ShippingCostPaidBy>Verk\xE4\
+        ufer tr\xE4gt die Kosten der R\xFCcksendung der Waren</ShippingCostPaidBy></ReturnPolicy><PaymentAllowedSite>Germany</PaymentAllowedSite><ConditionID>1000</ConditionID><ConditionDisplayName>Neu</ConditionDisplayName><PostCheckoutExperienceEnabled>false</PostCheckoutExperienceEnabled><SellerProfiles/><ShippingPackageDetails><ShippingIrregular>false</ShippingIrregular><ShippingPackage>None</ShippingPackage><WeightMajor\
+        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
+        Metric\" unit=\"gm\">0</WeightMinor></ShippingPackageDetails><HideFromSearch>false</HideFromSearch><eBayPlus>false</eBayPlus><eBayPlusEligible>false</eBayPlusEligible></Item></ItemArray><ItemsPerPage>1</ItemsPerPage><PageNumber>1</PageNumber><ReturnedItemCountActual>1</ReturnedItemCountActual><Seller><AboutMePage>false</AboutMePage><Email>tech+ebay@inventorum.com</Email><FeedbackScore>1</FeedbackScore><PositiveFeedbackPercent>66.7</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>false</NewUser><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATExempt</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>true</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><StoreOwner>false</StoreOwner><SafePaymentExempt>false</SafePaymentExempt></SellerInfo><MotorsDealer>false</MotorsDealer></Seller></GetSellerListResponse>"}
+    headers:
+      content-length: ['7944']
+      content-type: [text/xml]
+      date: ['Thu, 11 Feb 2016 13:14:34 GMT']
+      guid: [152d0780-d190-a626-04b4-b2d49ddbb9c5]
+      server: [Apache-Coyote/1.1]
+      x-ebay-api-pool-name: [___cDRidW90Zmlqbm1ib2l3aQ==]
+      x-ebay-api-server-name: [___dm97PWQ3MGYrYWEzMSgyNSgzMSsxMy0yMj07NT42]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetSellerList]
+      x-ebay-esb-guid: ['urn:uuid:253db98b-7f62-4e05-805e-43c69e720196']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['152d0780-d190-a626-04b4-b2d49ddbb9c5!ws.api.dll!10.98.96.75!esbtrading[']
+    status: {code: 200, message: OK}
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><GetItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><ErrorLanguage>de_DE</ErrorLanguage><ItemID>262285951425</ItemID></GetItemRequest>
+    headers:
+      Content-Length: ['1124']
+      Content-Type: [text/xml]
+      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.5-1-MANJARO]
+      X-EBAY-API-CALL-NAME: [!!python/unicode 'GetItem']
+      X-EBAY-API-COMPATIBILITY-LEVEL: [911]
+      X-EBAY-API-SITEID: [77]
+      X-EBAY-SDK-REQUEST-ID: [5c7fcb8f-eead-481e-af6b-dc9bd65e8a56]
+    method: POST
+    uri: https://api.ebay.com/ws/api.dll
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<GetItemResponse xmlns=\"\
+        urn:ebay:apis:eBLBaseComponents\"><Timestamp>2016-02-11T13:14:35.500Z</Timestamp><Ack>Success</Ack><Version>949</Version><Build>E949_INTL_API_17775486_R1</Build><Item><AutoPay>false</AutoPay><BuyerProtection>ItemIneligible</BuyerProtection><BuyItNowPrice\
+        \ currencyID=\"EUR\">0.0</BuyItNowPrice><Country>DE</Country><Currency>EUR</Currency><GiftIcon>0</GiftIcon><HitCounter>NoHitCounter</HitCounter><ItemID>262285951425</ItemID><ListingDetails><Adult>false</Adult><BindingAuction>false</BindingAuction><CheckoutEnabled>true</CheckoutEnabled><ConvertedBuyItNowPrice\
+        \ currencyID=\"EUR\">0.0</ConvertedBuyItNowPrice><ConvertedStartPrice currencyID=\"\
+        EUR\">1.0</ConvertedStartPrice><ConvertedReservePrice currencyID=\"EUR\">0.0</ConvertedReservePrice><HasReservePrice>false</HasReservePrice><StartTime>2016-02-11T13:14:32.000Z</StartTime><EndTime>2016-03-12T13:14:32.000Z</EndTime><ViewItemURL>http://www.ebay.de/itm/INVENTORUM-iPad-Stand-/262285951425</ViewItemURL><HasUnansweredQuestions>false</HasUnansweredQuestions><HasPublicMessages>false</HasPublicMessages><ViewItemURLForNaturalSearch>http://www.ebay.de/itm/INVENTORUM-iPad-Stand-/262285951425</ViewItemURLForNaturalSearch></ListingDetails><ListingDuration>Days_30</ListingDuration><ListingType>FixedPriceItem</ListingType><Location>Berlin</Location><PaymentMethods>PayPal</PaymentMethods><PayPalEmailAddress>info@inventorum.com</PayPalEmailAddress><PrimaryCategory><CategoryID>171949</CategoryID><CategoryName>Verschiedenes:Sonstige</CategoryName></PrimaryCategory><PrivateListing>false</PrivateListing><Quantity>74</Quantity><ReservePrice\
+        \ currencyID=\"EUR\">0.0</ReservePrice><ReviseStatus><ItemRevised>false</ItemRevised></ReviseStatus><Seller><AboutMePage>false</AboutMePage><Email>tech+ebay@inventorum.com</Email><FeedbackScore>1</FeedbackScore><PositiveFeedbackPercent>66.7</PositiveFeedbackPercent><FeedbackPrivate>false</FeedbackPrivate><FeedbackRatingStar>None</FeedbackRatingStar><IDVerified>false</IDVerified><eBayGoodStanding>true</eBayGoodStanding><NewUser>false</NewUser><RegistrationDate>2015-03-31T08:57:26.000Z</RegistrationDate><Site>Germany</Site><Status>Confirmed</Status><UserID>newmade</UserID><UserIDChanged>false</UserIDChanged><VATStatus>VATExempt</VATStatus><SellerInfo><AllowPaymentEdit>true</AllowPaymentEdit><CheckoutEnabled>true</CheckoutEnabled><CIPBankAccountStored>true</CIPBankAccountStored><GoodStanding>true</GoodStanding><LiveAuctionAuthorized>false</LiveAuctionAuthorized><MerchandizingPref>OptIn</MerchandizingPref><QualifiesForB2BVAT>false</QualifiesForB2BVAT><StoreOwner>false</StoreOwner><SellerBusinessType>Commercial</SellerBusinessType><SafePaymentExempt>false</SafePaymentExempt></SellerInfo><MotorsDealer>false</MotorsDealer></Seller><SellingStatus><BidCount>0</BidCount><BidIncrement\
+        \ currencyID=\"EUR\">0.0</BidIncrement><ConvertedCurrentPrice currencyID=\"\
+        EUR\">1.0</ConvertedCurrentPrice><CurrentPrice currencyID=\"EUR\">1.0</CurrentPrice><LeadCount>0</LeadCount><MinimumToBid\
+        \ currencyID=\"EUR\">1.0</MinimumToBid><QuantitySold>0</QuantitySold><ReserveMet>true</ReserveMet><SecondChanceEligible>false</SecondChanceEligible><ListingStatus>Active</ListingStatus><QuantitySoldByPickupInStore>0</QuantitySoldByPickupInStore></SellingStatus><ShippingDetails><ApplyShippingDiscount>false</ApplyShippingDiscount><CalculatedShippingRate><WeightMajor\
+        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
+        Metric\" unit=\"gm\">0</WeightMinor></CalculatedShippingRate><InsuranceFee\
+        \ currencyID=\"EUR\">0.0</InsuranceFee><InsuranceOption>NotOffered</InsuranceOption><SalesTax><SalesTaxPercent>0.0</SalesTaxPercent><ShippingIncludedInTax>false</ShippingIncludedInTax></SalesTax><ShippingServiceOptions><ShippingService>DE_DHLPaket</ShippingService><ShippingServiceCost\
+        \ currencyID=\"EUR\">5.0</ShippingServiceCost><ShippingServiceAdditionalCost\
+        \ currencyID=\"EUR\">3.0</ShippingServiceAdditionalCost><ShippingServicePriority>1</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingServiceOptions><ShippingService>DE_HermesPaket</ShippingService><ShippingServiceCost\
+        \ currencyID=\"EUR\">4.5</ShippingServiceCost><ShippingServiceAdditionalCost\
+        \ currencyID=\"EUR\">1.0</ShippingServiceAdditionalCost><ShippingServicePriority>2</ShippingServicePriority><ExpeditedService>false</ExpeditedService><ShippingTimeMin>1</ShippingTimeMin><ShippingTimeMax>2</ShippingTimeMax></ShippingServiceOptions><ShippingType>Flat</ShippingType><ThirdPartyCheckout>false</ThirdPartyCheckout><InsuranceDetails><InsuranceOption>NotOffered</InsuranceOption></InsuranceDetails><ShippingDiscountProfileID>0</ShippingDiscountProfileID><InternationalShippingDiscountProfileID>0</InternationalShippingDiscountProfileID><SellerExcludeShipToLocationsPreference>true</SellerExcludeShipToLocationsPreference></ShippingDetails><ShipToLocations>DE</ShipToLocations><Site>Germany</Site><StartPrice\
+        \ currencyID=\"EUR\">1.0</StartPrice><TimeLeft>P29DT23H59M57S</TimeLeft><Title>INVENTORUM\
+        \ iPad-Stand</Title><VATDetails><VATPercent>19.0</VATPercent></VATDetails><HitCount>0</HitCount><LocationDefaulted>true</LocationDefaulted><GetItFast>false</GetItFast><SKU>invtest_665753</SKU><PostalCode>13355</PostalCode><PictureDetails><GalleryType>Gallery</GalleryType><GalleryURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</GalleryURL><PhotoDisplay>PicturePack</PhotoDisplay><PictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/9586/84f1/4581/9e61/2a42/6fd0/7015/958684f145819e612a426fd07015eb9f_ipad_retina.JPEG</PictureURL><PictureURL>http://app.inventorum.net/uploads/img-hash/03c4/ed1e/65fb/0731/4cd0/e469/c346/03c4ed1e65fb07314cd0e469c346aac4_ipad_retina.JPEG</PictureURL><ExternalPictureURL>http://app.inventorum.net/uploads/img-hash/6c8b/d601/0a6c/f966/b929/1d01/4424/6c8bd6010a6cf966b9291d0144245e77_ipad_retina.JPEG</ExternalPictureURL></PictureDetails><DispatchTimeMax>3</DispatchTimeMax><ProxyItem>false</ProxyItem><BusinessSellerDetails><Address><Street1>Inventorum\
+        \ GmbH</Street1><Street2>Voltastr 5</Street2><CityName>Berlin</CityName><CountryName>Deutschland</CountryName><PostalCode>13355</PostalCode><FirstName>John</FirstName><LastName>Newman</LastName></Address><Email>tech+ebay@inventorum.com</Email><AdditionalContactInformation>http://ec.europa.eu/consumers/odr/</AdditionalContactInformation><LegalInvoice>false</LegalInvoice></BusinessSellerDetails><BuyerGuaranteePrice\
+        \ currencyID=\"EUR\">20000.0</BuyerGuaranteePrice><ReturnPolicy><ReturnsWithinOption>Days_14</ReturnsWithinOption><ReturnsWithin>14\
+        \ Tage</ReturnsWithin><ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption><ReturnsAccepted>Verbraucher\
+        \ haben das Recht, den Artikel unter den angegebenen Bedingungen zur\xFCckzugeben.</ReturnsAccepted><Description>The\
+        \ article can be returned to the given conditions</Description><ShippingCostPaidByOption>Seller</ShippingCostPaidByOption><ShippingCostPaidBy>Verk\xE4\
+        ufer tr\xE4gt die Kosten der R\xFCcksendung der Waren</ShippingCostPaidBy></ReturnPolicy><PaymentAllowedSite>Germany</PaymentAllowedSite><ConditionID>1000</ConditionID><ConditionDisplayName>Neu</ConditionDisplayName><PostCheckoutExperienceEnabled>false</PostCheckoutExperienceEnabled><ShippingPackageDetails><ShippingIrregular>false</ShippingIrregular><ShippingPackage>None</ShippingPackage><WeightMajor\
+        \ measurementSystem=\"Metric\" unit=\"kg\">0</WeightMajor><WeightMinor measurementSystem=\"\
+        Metric\" unit=\"gm\">0</WeightMinor></ShippingPackageDetails><HideFromSearch>false</HideFromSearch><OutOfStockControl>true</OutOfStockControl><eBayPlus>false</eBayPlus><eBayPlusEligible>false</eBayPlusEligible></Item></GetItemResponse>"}
+    headers:
+      content-length: ['7956']
+      content-type: [text/xml]
+      date: ['Thu, 11 Feb 2016 13:14:35 GMT']
+      guid: [152d0780-f800-a624-c541-e7419e13068c]
+      server: [Apache-Coyote/1.1]
+      x-cnection: [close]
+      x-ebay-api-pool-name: [___cDRidW9ubXFq]
+      x-ebay-api-server-name: [___ZW9nNGQ3MWYrYjJhYCgyNSg+OyswNS00PjY5PTY/Mg==]
+      x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
+      x-ebay-esb-call-name: [GetItem]
+      x-ebay-esb-guid: ['urn:uuid:8bc8bc32-1336-4c3d-96a1-8321ed84c9e3']
+      x-ebay-esb-siteid: ['77']
+      x-ebay-request-id: ['152d0780-f800-a624-c541-e7419e13068c!ws.api.dll!10.98.76.84!esbtrading[']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"state": "in_progress", "details": null, "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['60']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+      X-Rid: [&id002 !!python/long '3035066506913504856']
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Thu, 11 Feb 2016 13:14:35 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1aTr4t:TfBQi4Lz5ihJLaoU7eECVIp-PEM"; Domain=app.intern.inventorum.net;
+          expires=Thu, 11-Feb-2016 15:14:35 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['3035066506913504856']
+    status: {code: 200, message: OK}
+- request:
+    body: <?xml version='1.0' encoding='utf-8'?><EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><RequesterCredentials><eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**rp4aVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AHlYunD5KLqA+dj6x9nY+seQ**qeUBAA**AAMAAA**O2lrsU8I6yjrricneQO018oJ2GChsYf5PaV62oYlcDgguiGB/IPq89cLIHfiHXjsz5ONAxNsjSzR+elJQkx6NlF+LTw0p3DdPItRFahsbY3O5+iVksmJr++E1+QF7PvkudovYAb183wTZpnZ8np7bsOPAWvFeuRZHbVmwvROSGDQOsAzbWFyVF/6l9xJpHAKULDMzR/nnaCnE24tiTn0V2KH+iBAMZzVbuoXM1kEtIll+N6S0JEvvhtTUW8qlmM0blGaXC7uVfd8CeLDudxEi7T2CSLzsqszuzf+fzBsbSHmAWLWwndHmgnhqyrOXoDrrL9bd2w8jAgO5Lg58/2LoEPbo7TzFXlqv6RPjr0A/gp2/rpbbTl5XTsApPyUN+YiYHuZe0MzxJxgDD6BsGKFK4FmeL+GoC8J9qox5Rk8ynGFOdpjTT29c9gA0NRW0x3iA9zzB5O81Z20+euQJ1L58iVFOcDSHbN2pae0kgafUVJsq96yBz7EB56q9jt1KegCbGXVUrkfCzDUrEmZuJCm3qw6edh6Xir6x+esSnG65toiF/TuiyyC76UYVXctEFxmJFpHbEOou8fzfEHq4FR8LFM5xEmqsx4tUKUFRoxO6pCWHEjPEeOu5Hgl8/JxWDSp/JmTgGwofeIHrgHLJsnA6bhoo6heiAo2O8bGw/sReKccSGNV8JlFZJXCL7leA3APeVt3yi4itCaSCq0JsDpILTCAdC6vnUEQHcVvowhzN7ck1qmY0gUcOo6IOMuJlxn/</eBayAuthToken></RequesterCredentials><EndingReason>NotAvailable</EndingReason><ErrorLanguage>de_DE</ErrorLanguage><ItemID>262285951425</ItemID></EndFixedPriceItemRequest>
     headers:
       Content-Length: ['1185']
       Content-Type: [text/xml]
-      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.4-1-MANJARO]
-      X-EBAY-API-APP-NAME: [Inventor-9021-41d8-9c25-9bae93f76429]
+      User-Agent: [eBaySDK/2.1.2 Python/2.7.8 Linux/4.3.5-1-MANJARO]
       X-EBAY-API-CALL-NAME: [!!python/unicode 'EndFixedPriceItem']
-      X-EBAY-API-CERT-NAME: [6be1b82a-0372-4e15-822d-e93797d623ac]
       X-EBAY-API-COMPATIBILITY-LEVEL: [911]
-      X-EBAY-API-DEV-NAME: [dbedb016-ee04-4fce-a8e3-22c134fbb3c7]
       X-EBAY-API-SITEID: [77]
-      X-EBAY-SDK-REQUEST-ID: [e2c1ebb7-4f1f-4190-b7cf-09126b1425ea]
+      X-EBAY-SDK-REQUEST-ID: [3ae6153a-ed6a-489d-a980-362d1bd0990b]
     method: POST
     uri: https://api.ebay.com/ws/api.dll
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
 
-        <EndFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2016-02-09T15:56:40.040Z</Timestamp><Ack>Success</Ack><Version>951</Version><Build>E951_UNI_API5_17821258_R1</Build><EndTime>2016-02-09T15:56:39.000Z</EndTime></EndFixedPriceItemResponse>'}
+        <EndFixedPriceItemResponse xmlns="urn:ebay:apis:eBLBaseComponents"><Timestamp>2016-02-11T13:14:36.622Z</Timestamp><Ack>Success</Ack><Version>953</Version><Build>E953_UNI_API5_17831825_R1</Build><EndTime>2016-02-11T13:14:36.000Z</EndTime></EndFixedPriceItemResponse>'}
     headers:
       content-length: ['304']
       content-type: [text/xml]
-      date: ['Tue, 09 Feb 2016 15:56:39 GMT']
-      guid: [152c6bfb-7a90-a626-0143-a203b5ba5bda]
+      date: ['Thu, 11 Feb 2016 13:14:35 GMT']
+      guid: [152d0781-38a0-a5e4-3727-be27fb11c429]
       server: [Apache-Coyote/1.1]
       x-ebay-api-pool-name: [___cDRidW8ydmtv]
-      x-ebay-api-server-name: [___dm97PWQ3MGYrYmEzNigyNSgzMSs/Mi00NjA5PTY/Mw==]
+      x-ebay-api-server-name: [___dm97PWQ3MGYrP2BgYCgyNSgzMSs/NC00NT45PTY/Mw==]
       x-ebay-esb-app-name: [Inventor-9021-41d8-9c25-9bae93f76429]
       x-ebay-esb-call-name: [EndFixedPriceItem]
-      x-ebay-esb-guid: ['urn:uuid:863eca92-2b4a-43ff-aee4-0710c06b33bb']
+      x-ebay-esb-guid: ['urn:uuid:3525ce13-1528-4a6b-9765-907cbbd57044']
       x-ebay-esb-siteid: ['77']
-      x-ebay-request-id: ['152c6bfb-7a90-a626-0143-a203b5ba5bda!ws.api.dll!10.98.96.20!esbtrading[']
+      x-ebay-request-id: ['152d0781-38a0-a5e4-3727-be27fb11c429!ws.api.dll!10.94.67.114!esbtrading[']
+    status: {code: 200, message: OK}
+- request:
+    body: '{"state": "unpublished", "details": {}, "channel": "ebay"}'
+    headers:
+      Accept: [!!python/unicode 'application/json']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['58']
+      Content-Type: [!!python/unicode 'application/json']
+      User-Agent: [!!python/unicode 'inv-ebay/0.3-dev']
+      X-Api-Version: [10]
+      X-Inv-Account: [!!python/unicode '346']
+      X-Inv-User: [!!python/unicode '425']
+      X-Rid: [*id002]
+    method: POST
+    uri: http://app.intern.inventorum.net/api/products/665753/state/
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      allow: ['POST, OPTIONS']
+      connection: [keep-alive]
+      date: ['Thu, 11 Feb 2016 13:14:36 GMT']
+      server: [nginx/1.6.2]
+      set-cookie: ['sn="e30:1aTr4u:QZC3OkTA-6fQ8lr3OxBVC0L2YXI"; Domain=app.intern.inventorum.net;
+          expires=Thu, 11-Feb-2016 15:14:36 GMT; httponly; Max-Age=7200; Path=/']
+      transfer-encoding: [chunked]
+      vary: ['Accept, Cookie']
+      x-inv-account: ['346']
+      x-inv-user: ['425']
+      x-rid: ['3035066506913504856']
     status: {code: 200, message: OK}
 version: 1

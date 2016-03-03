@@ -103,14 +103,9 @@ class CoreAPIClient(object):
 
         :raises requests.exceptions.RequestException
         """
-        if params is None:
-            params = {}
-
-        if custom_headers is None:
-            custom_headers = {}
-
-        if data is None:
-            data = {}
+        params = params or {}
+        custom_headers = custom_headers or {}
+        data = data or {}
 
         headers = self.default_headers
         headers.update(custom_headers)
@@ -118,7 +113,14 @@ class CoreAPIClient(object):
         response = requests.post(self.url_for(path), json=data, params=params, headers=headers)
 
         if not response.ok:
-            log.error(response.content)
+            log.error({
+                'url': self.url_for(path),
+                'params': params,
+                'headers': headers,
+                'json': data,
+                'response': response.content
+            })
+
             response.raise_for_status()
 
         return response

@@ -104,6 +104,9 @@ class EbayItemImageModel(BaseModel):
     url = models.TextField()
     inv_image_id = models.IntegerField(verbose_name="Inventorum image id", null=True, blank=True)
 
+    class Meta:
+        ordering = ('time_added', 'id')
+
     @property
     def ebay_object(self):
         return EbayPicture(self.parsed_url)
@@ -367,6 +370,10 @@ class EbayUpdateModel(BaseModel):
     status_details = JSONField()
 
     @property
+    def is_out_of_stock(self):
+        return self.quantity is not None and self.quantity <= 0
+
+    @property
     def has_updated_quantity(self):
         return self.quantity is not None
 
@@ -416,6 +423,7 @@ class EbayItemVariationUpdateModel(EbayUpdateModel):
             # purchases, you can delete it.
             self.quantity = 0
         super(EbayItemVariationUpdateModel, self).save(*args, **kwargs)
+
     @property
     def ebay_object(self):
         return EbayReviseFixedPriceVariation(

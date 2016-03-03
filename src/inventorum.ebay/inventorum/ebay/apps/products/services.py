@@ -1,6 +1,5 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from collections import defaultdict
 
 import logging
 from decimal import Decimal
@@ -10,7 +9,7 @@ from django.utils.translation import ugettext
 from inventorum.ebay.apps.accounts.models import ReturnPolicyModel
 from inventorum.ebay.apps.products.validators import CategorySpecificsValidator
 from inventorum.ebay.lib.core_api.clients import CoreAPIClient
-from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants, SellerProfileCodeType
+from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConstants
 from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
@@ -18,7 +17,7 @@ from inventorum.util.django.timezone import datetime
 from requests.exceptions import RequestException
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus
-from inventorum.ebay.apps.products.models import EbayProductModel, EbayItemModel, EbayItemImageModel, \
+from inventorum.ebay.apps.products.models import EbayUpdateModel, EbayItemModel, EbayItemImageModel, \
     EbayItemShippingDetails, EbayItemPaymentMethod, EbayItemSpecificModel, EbayApiAttempt, EbayItemVariationModel, \
     EbayItemVariationSpecificModel, EbayItemVariationSpecificValueModel
 from inventorum.ebay.lib.ebay import EbayConnectionException
@@ -247,8 +246,7 @@ class PublishingPreparationService(object):
                 item=item
             )
 
-        shipping_services = self.product.shipping_services.all() if self.product.shipping_services.exists() \
-            else self.account.shipping_services.all()
+        shipping_services = self.product.shipping_services.all() or self.account.shipping_services.all()
 
         for service_config in shipping_services:
             EbayItemShippingDetails.objects.create(
@@ -360,7 +358,11 @@ class PublishingService(PublishingUnpublishingService):
         """
         :raises PublishingException
         """
-        self._add_inventory_for_click_and_collect()
+        try:
+            self._add_inventory_for_click_and_collect()
+        except EbayConnectionException as e:
+            # We ignore exception, so product will still be published but not part of C&C
+            log.error('Add inventory for click and collect failed for ebay item: %s, exc: %s', self.item.pk, e)
 
         ebay_api = EbayItems(self.user.account.token.ebay_object)
         try:
@@ -448,8 +450,11 @@ class UnpublishingService(PublishingUnpublishingService):
                 )
 
                 raise UnpublishingException(e.message, original_exception=e)
-
-        self._delete_inventory_for_click_and_collect()
+        try:
+            self._delete_inventory_for_click_and_collect()
+        except EbayConnectionException as e:
+            # We ignore exception, so product will still be unpublished even if it had problems with C&C
+            log.error('Delete inventory for click and collect failed for ebay item: %s, exc: %s', self.item.pk, e)
 
         if response:
             self.item.unpublished_at = response.end_time
@@ -457,6 +462,10 @@ class UnpublishingService(PublishingUnpublishingService):
             self.item.unpublished_at = datetime.now()
 
         self.item.set_publishing_status(EbayItemPublishingStatus.UNPUBLISHED, save=False)
+
+        # In case the unpublish was caused by an update coming from the core API, like quantity = 0
+        if isinstance(self.item, EbayUpdateModel):
+            self.item.set_status(EbayItemUpdateStatus.SUCCEEDED, save=False)
         self.item.save()
 
         EbayApiAttempt.create_from_service_for_item_and_type(
