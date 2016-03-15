@@ -490,13 +490,13 @@ class UnitTestCoreProductsSync(UnitTestCase):
         variation_d_update = variation_d.updates.last()
         self.assertEqual(variation_d_update.gross_price, None)
         self.assertEqual(variation_d_update.quantity, 0)
-        self.assertEqual(variation_d_update.is_deleted, True)
+        self.assertEqual(variation_d_update.is_variation_deleted, True)
 
         self.assertEqual(variation_e.updates.count(), 1)
         variation_e_update = variation_e.updates.last()
         self.assertEqual(variation_e_update.gross_price, None)
         self.assertEqual(variation_e_update.quantity, 0)
-        self.assertEqual(variation_e_update.is_deleted, True)
+        self.assertEqual(variation_e_update.is_variation_deleted, True)
 
         self.assertEqual(self.schedule_ebay_item_update_mock.call_count, 1)
         # assert deletions

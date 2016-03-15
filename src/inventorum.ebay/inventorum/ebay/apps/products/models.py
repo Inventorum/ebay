@@ -414,10 +414,10 @@ class EbayItemUpdateModel(EbayUpdateModel):
 class EbayItemVariationUpdateModel(EbayUpdateModel):
     variation = models.ForeignKey("products.EbayItemVariationModel", related_name="updates")
     update_item = models.ForeignKey(EbayItemUpdateModel, related_name="variations")
-    is_deleted = models.BooleanField(default=False)
+    is_variation_deleted = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        if self.is_deleted:
+        if self.is_variation_deleted:
             # If a variation has any purchases (i.e., an order line item was created and QuantitySold is greater
             # than 0), you can't delete the variation, but you can set its quantity to zero. If a variation has no
             # purchases, you can delete it.
@@ -430,7 +430,7 @@ class EbayItemVariationUpdateModel(EbayUpdateModel):
             original_variation=self.variation.ebay_object,
             new_quantity=self.quantity,
             new_start_price=self.gross_price,
-            is_deleted=self.is_deleted
+            is_deleted=self.is_variation_deleted
         )
 
 

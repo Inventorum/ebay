@@ -144,7 +144,8 @@ class CoreProductsSync(object):
         deleted_variations = EbayItemVariationModel.objects.filter(inv_product_id__in=deleted_core_product_ids)
         for deleted_variation in deleted_variations:
             item = self._get_update_item_for_variation(deleted_variation)
-            EbayItemVariationUpdateModel.objects.create(variation=deleted_variation, update_item=item, is_deleted=True)
+            EbayItemVariationUpdateModel.objects.create(variation=deleted_variation, update_item=item,
+                                                        is_variation_deleted=True)
 
     def _get_core_modifications_of_published_items(self, modified_since):
         """
