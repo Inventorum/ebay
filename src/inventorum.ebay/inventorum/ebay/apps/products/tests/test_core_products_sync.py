@@ -252,7 +252,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
 
         # ..and also may not touch non-related published products
         product_noise = product_noise.reload()
-        self.assertEqual(product_noise.is_active, True)
+        self.assertEqual(product_noise.is_deleted, False)
 
 
     @unittest.skip("only products that were published at least once are deleted, see core products sync for details")
@@ -360,7 +360,7 @@ class UnitTestCoreProductsSync(UnitTestCase):
         self.assertEqual(self.schedule_ebay_product_deletion_mock.call_count, 2)
 
         calls = self.schedule_ebay_product_deletion_mock.call_args_list
-        self.assertEqual([args[0] for args, kwargs in calls], [product_d.id, product_e.id])
+        self.assertEqual({args[0] for args, kwargs in calls}, {product_d.id, product_e.id})
 
     def test_update_product_with_stock_in_zero_unpublishes_the_ebay_item(self):
         # product that went out of stock
