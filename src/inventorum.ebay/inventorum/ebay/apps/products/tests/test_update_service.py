@@ -134,7 +134,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             EbayItemVariationUpdateFactory.create(
                 update_item=item_update,
                 variation=second_variation_obj,
-                is_deleted=True
+                is_variation_deleted=True
             )
 
             subject = UpdateService(item_update, user=self.user)
