@@ -45,8 +45,17 @@ chown_log_files_args = [
   ('www-data', '-R', '${os:root-prefix}/var/log/com.inventorum.ebay/'),
 ]
 
-for chown_command in chown_log_files_args:
-    chown_command = ('chown', ) + chown_command
+for dir_path in chown_log_files_args:
+    mkdir_command = ('mkdir',  '-p') + dir_path
+    chown_command = ('chown', ) + dir_path
+
+    print '[inv-ebay] mkdir: %s...' % (mkdir_command, )
+    proc = subprocess.Popen(mkdir_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    _out, _err = proc.communicate()
+    print '[inv-ebay] %s' % _out
+    if proc.returncode != 0:
+        print '[inv-ebay] %s' % _err
+        exit(proc.returncode)
 
     print '[inv-ebay] set chown: %s...' % (chown_command, )
     proc = subprocess.Popen(chown_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
