@@ -75,55 +75,27 @@ db_provision = [
     os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
     '${config:postgres_db}'
 ]
-print '[inv-ebay] provisioning the database: %s ...' % db_provision
-proc = subprocess.Popen(db_provision, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-_out, _err = proc.communicate()
-print '[inv-ebay] %s' % _out
-if proc.returncode != 0:
-    print '[inv-ebay] %s' % _err
-    exit(proc.returncode)
-
+print '[inv-ebay] Provisioning the database: %s' % " ".join(db_provision)
 
 db_migrationlist = [
     os.path.join(install_dir, 'bin', 'ebay', 'manage'),
     os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
      'migrate', '--list'
 ]
-print '[inv-ebay] check for migrations: %s ...' % db_migrationlist
-proc = subprocess.Popen(db_migrationlist, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-_out, _err = proc.communicate()
-print '[inv-ebay] %s' % _out
-if proc.returncode != 0:
-    print '[inv-ebay] %s' % _err
-    exit(proc.returncode)
-
+print '[inv-ebay] Check for migrations: %s' % " ".join(db_migrationlist)
 
 db_migrate = [
     os.path.join(install_dir, 'bin', 'ebay', 'manage'),
     os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini'),
      'migrate', '--noinput'
 ]
-print '[inv-ebay] running migrations: %s ...' % db_migrate
-proc = subprocess.Popen(db_migrate, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-_out, _err = proc.communicate()
-print '[inv-ebay] %s' % _out
-if proc.returncode != 0:
-    print '[inv-ebay] %s' % _err
-    exit(proc.returncode)
-
+print '[inv-ebay] Run migrations: %s' % " ".join(db_migrate)
 
 rabbitmq_provision = [
     os.path.join(install_dir, 'bin', 'provisioning', 'provision_rabbitmq'),
     os.path.join(install_dir, 'src', 'inventorum.ebay', '${config:environment}.ini')
 ]
-print '[inv-ebay] provisioning rabbitmq ...'
-proc = subprocess.Popen(rabbitmq_provision, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-_out, _err = proc.communicate()
-print '[inv-ebay] %s' % _out
-if proc.returncode != 0:
-    print '[inv-ebay] %s' % _err
-    exit(proc.returncode)
-
+print '[inv-ebay] Provision rabbitmq:' % " ".join(rabbitmq_provision)
 
 # http://askubuntu.com/a/431013
 # start and autostart daemon
@@ -136,14 +108,7 @@ if proc.returncode != 0:
     print '[inv-ebay] %s' % _err
     # this error can be ignored as we set the symlink on our own already
     # exit(proc.returncode)
-print '[inv-ebay] ``ebay_worker``: invoke ...'
-proc = subprocess.Popen(['invoke-rc.d', 'com.inventorum.ebay_worker', 'restart'],
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-_out, _err = proc.communicate()
-print '[inv-ebay] %s' % _out
-if proc.returncode != 0:
-    print '[inv-ebay] %s' % _err
-    exit(proc.returncode)
+print '[inv-ebay] ``ebay_worker``: invoke ebay service: %s' % " ".join(['invoke-rc.d', 'com.inventorum.ebay_worker', 'restart'])
 
 
 print ""
