@@ -31,7 +31,7 @@ required_eggs = [
     'django-extensions>=1.5.2',
     'djangorestframework==3.1.3',
     'django-mptt>=0.6.1',
-    'django-pastedeploy-settings>=1.0rc4dev',
+    'django-pastedeploy-settings>=1.0.1',
     'django-rest-swagger>=0.2.9',
 
     'inventorum.util==10.6.7',
