@@ -79,6 +79,29 @@ class IntegrationTestPeriodicEbayOrdersSync(EbayAuthenticatedAPITestCase, CoreAp
             self.assertIsNotNone(order_line_item.inv_id)
 
     @celery_test_case()
+    @MockedTest.use_cassette("ebay_orders_sync_nonexisting_shipping.yaml", record_mode="always", match_on=['body'])
+    def test_ebay_orders_sync(self):
+        # ensure constant sync start since we're matching on body with vcr
+        self.account.last_ebay_orders_sync = EbayParser.parse_date("2015-04-25T12:16:11.257939Z")
+        self.account.save()
+
+        # create published item with variations that are included in the response cassette
+        published_item = PublishedEbayItemFactory.create(account=self.account,
+                                                         product__account=self.account,
+                                                         external_id="261869293885")
+        EbayItemVariationFactory.create(inv_product_id=670339, item=published_item)
+
+        # create shipping service that is selected in the response cassette
+        self.get_shipping_service_dhl()
+
+        periodic_ebay_orders_sync_task.delay(context=get_anonymous_task_execution_context())
+
+        orders = OrderModel.objects.by_account(self.account)
+        # First order in cassette has non-existing shipping service
+        # There are 5 orders in total, so we should get 5
+        self.assertPostcondition(orders.count(), 5)
+
+    @celery_test_case()
     @MockedTest.use_cassette("ebay_orders_sync_click_and_collect.yaml", record_mode="once", match_on=['body'])
     def test_ebay_orders_click_and_collect_sync(self):
         # ensure constant sync start since we're matching on body with vcr

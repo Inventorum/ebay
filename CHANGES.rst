@@ -4,6 +4,7 @@ CHANGES
 
 develop
 =======
+- Changed orders syncing so it creates shipping service if it was not existing.
 
 2016-03-03 0.3.0
 ================

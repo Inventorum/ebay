@@ -201,8 +201,12 @@ class IncomingEbayOrderSyncer(object):
                 service_model = ShippingServiceModel.objects.by_country(self.account.country)\
                     .get(external_id=selected_shipping.shipping_service)
             except ShippingServiceModel.DoesNotExist:
-                raise EbayOrderSyncException("No matching ShippingServiceModel found with `external_id={}`"
-                                             .format(selected_shipping.shipping_service))
+                # In case it does not exist on our system, we create it and delete it immediately as we
+                # don't want to have it visible for all users.
+                service_model = ShippingServiceModel.objects.create(country=self.account.country,
+                                                                    external_id=selected_shipping.shipping_service,
+                                                                    description=selected_shipping.shipping_service)
+                service_model.delete()
 
             model.selected_shipping = ShippingServiceConfigurationModel.create(service=service_model,
                                                                                cost=selected_shipping.shipping_cost)
