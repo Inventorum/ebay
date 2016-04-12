@@ -5,7 +5,6 @@ import logging
 import mock
 from datetime import datetime
 from datetime import timedelta
-from time import sleep
 
 import mock
 
@@ -29,17 +28,22 @@ class TestDelayedItemsPublishingGetsFinalized(UnitTestCase):
         self.user = EbayUserFactory.create()
         self.account = self.user.account
         self.product = EbayProductFactory.create(account=self.account)
-        self.timeout = 5
+        self.timeout = 300
 
         self._make_items()
-        sleep(self.timeout)
-        self._make_items()
+        self._make_items(timeout=self.timeout)
 
-    def _make_items(self, count=5):
+    def _make_items(self, count=5, timeout=0):
+        items = []
         for counter in range(count):
             item = EbayItemFactory.create(account=self.account,
                                           product=self.product,
                                           publishing_status=EbayItemPublishingStatus.IN_PROGRESS)
+            items.append(item.id)
+
+        if timeout:
+            delay = datetime.now() - timedelta(seconds=timeout)
+            EbayItemModel.objects.filter(pk__in=items).update(time_added=delay)
 
     @mock.patch('inventorum.ebay.apps.products.tasks._finalize_ebay_item_publish.delay')
     def test_delayed_publishing_made_failed(self, finalize_ebay_item_publish_delay_mock):
