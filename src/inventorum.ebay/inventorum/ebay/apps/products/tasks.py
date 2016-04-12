@@ -238,20 +238,17 @@ def schedule_ebay_product_deletion(ebay_product_id, context):
 
 
 @inventorum_task()
-def periodic_ebay_timeouted_item_check_task(self, timeout=5):
+def periodic_ebay_timeouted_item_check_task(self, timeout=300):
     """
     :type self: inventorum.util.celery.InventorumTask
     """
-    delay = timedelta(seconds=timeout * 60)
-    limit_date = datetime.now() - delay
+    details = dict(message="Publishing timeout ({.seconds} seconds).".format(delay))
 
-    EbayItemModel.objects.filter(
-        publishing_status=EbayItemPublishingStatus.IN_PROGRESS,
-        time_added__lt=limit_date
-    ).update(
-        publishing_status=EbayItemPublishingStatus.FAILED,
-        publishing_status_details=dict(message="Publishing timeout ({.seconds} seconds).".format(delay))
-    )
+    for item in EbayItemModel.objects.delayed_publishing(timeout):
+        item.set_publishing_status(publishing_status=EbayItemPublishingStatus.FAILED,
+                                   details=details,
+                                   save=True)
+
 
 
 # - Publishing state sync -----------------------------------------------
