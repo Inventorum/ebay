@@ -248,7 +248,7 @@ def periodic_ebay_timeouted_item_check_task(self, timeout=300):
         item.set_publishing_status(publishing_status=EbayItemPublishingStatus.FAILED,
                                    details=details,
                                    save=True)
-
+        _finalize_ebay_item_publish.delay(item.id, context=self.context)
 
 
 # - Publishing state sync -----------------------------------------------
