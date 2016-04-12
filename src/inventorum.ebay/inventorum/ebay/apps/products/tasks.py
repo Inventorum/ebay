@@ -242,7 +242,7 @@ def periodic_ebay_timeouted_item_check_task(self, timeout=300):
     """
     :type self: inventorum.util.celery.InventorumTask
     """
-    details = dict(message="Publishing timeout ({.seconds} seconds).".format(delay))
+    details = dict(message="Publishing timeout ({} seconds).".format(timeout))
 
     for item in EbayItemModel.objects.delayed_publishing(timeout):
         item.set_publishing_status(publishing_status=EbayItemPublishingStatus.FAILED,
