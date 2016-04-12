@@ -186,7 +186,7 @@ class EbayItemModelQuerySet(BaseQuerySet):
         limit_date = datetime.now() - delay
 
         return self.filter(publishing_status=EbayItemPublishingStatus.IN_PROGRESS,
-                           time_added__lt=limit_date)
+                           time_added__lte=limit_date)
 
 
 class EbayItemModel(OrderableItemModel, BaseModel):
