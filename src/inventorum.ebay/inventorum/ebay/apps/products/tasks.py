@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
+from datetime import timedelta
 from celery.utils.log import get_task_logger
 
 from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
@@ -234,6 +235,23 @@ def schedule_ebay_product_deletion(ebay_product_id, context):
     :type context: inventorum.util.celery.TaskExecutionContext
     """
     ebay_product_deletion.delay(ebay_product_id, context=context)
+
+
+@inventorum_task()
+def periodic_ebay_timeouted_item_check_task(self, timeout=5):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    """
+    delay = timedelta(seconds=timeout * 60)
+    limit_date = datetime.now() - delay
+
+    EbayItemModel.objects.filter(
+        publishing_status=EbayItemPublishingStatus.IN_PROGRESS,
+        time_added__lt=limit_date
+    ).update(
+        publishing_status=EbayItemPublishingStatus.FAILED,
+        publishing_status_details=dict(message="Publishing timeout ({.seconds} seconds).".format(delay))
+    )
 
 
 # - Publishing state sync -----------------------------------------------

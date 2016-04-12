@@ -149,6 +149,14 @@ CELERYBEAT_SCHEDULE = {
             "context": get_anonymous_task_execution_context()
         }
     },
+    'periodic_ebay_timeouted_item_check_task': {
+        'task': 'inventorum.ebay.apps.products.tasks.periodic_ebay_timeouted_item_check_task',
+        'schedule': timedelta(seconds=300),
+        'kwargs': {
+            'timeout': 5,
+            'context': get_anonymous_task_execution_context()
+        }
+    },
 }
 
 # will be used by util.celery.InventorumTask to handle async celery exceptions
