@@ -7,9 +7,7 @@ from datetime import datetime, timedelta
 
 from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
 from inventorum.ebay.tests.testcases import UnitTestCase
-from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
 from ..tasks import periodic_ebay_timeouted_item_check_task
-from ..tests.factories import EbayProductFactory
 from .. import EbayItemPublishingStatus
 from ..models import EbayItemModel
 from .factories import EbayItemFactory
@@ -22,9 +20,6 @@ class TestDelayedItemsPublishingGetsFinalized(UnitTestCase):
 
     def setUp(self):
         super(TestDelayedItemsPublishingGetsFinalized, self).setUp()
-        self.user = EbayUserFactory.create()
-        self.account = self.user.account
-        self.product = EbayProductFactory.create(account=self.account)
         self.timeout = 300
 
         self._make_items()
@@ -33,9 +28,7 @@ class TestDelayedItemsPublishingGetsFinalized(UnitTestCase):
     def _make_items(self, count=5, timeout=0):
         items = []
         for counter in range(count):
-            item = EbayItemFactory.create(account=self.account,
-                                          product=self.product,
-                                          publishing_status=EbayItemPublishingStatus.IN_PROGRESS)
+            item = EbayItemFactory.create(publishing_status=EbayItemPublishingStatus.IN_PROGRESS)
             items.append(item.id)
 
         if timeout:
