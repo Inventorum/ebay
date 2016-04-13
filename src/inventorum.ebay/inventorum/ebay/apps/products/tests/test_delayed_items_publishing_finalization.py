@@ -10,11 +10,11 @@ import mock
 
 from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
 from inventorum.ebay.tests.testcases import UnitTestCase
-from ...accounts.tests.factories import EbayUserFactory
-from ...products.tasks import periodic_ebay_timeouted_item_check_task
-from ...products.tests.factories import EbayProductFactory
-from ...products import EbayItemPublishingStatus
-from ...products.models import EbayItemModel
+from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
+from ..tasks import periodic_ebay_timeouted_item_check_task
+from ..tests.factories import EbayProductFactory
+from .. import EbayItemPublishingStatus
+from ..models import EbayItemModel
 from .factories import EbayItemFactory
 
 
