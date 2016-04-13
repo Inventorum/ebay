@@ -5,8 +5,6 @@ import logging
 import mock
 from datetime import datetime, timedelta
 
-import mock
-
 from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
 from inventorum.ebay.tests.testcases import UnitTestCase
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
