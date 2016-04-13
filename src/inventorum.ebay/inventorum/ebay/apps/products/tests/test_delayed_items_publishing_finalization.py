@@ -59,3 +59,7 @@ class TestDelayedItemsPublishingGetsFinalized(UnitTestCase):
         self.assertEqual(failed_items.first().publishing_status_details,
                          dict(message='Publishing timeout ({} seconds).'.format(self.timeout)))
         self.assertEqual(finalize_ebay_item_publish_delay_mock.call_count, 5)
+
+        call_list = [args[0][0] for args in finalize_ebay_item_publish_delay_mock.call_args_list]
+
+        self.assertEqual(call_list, list(failed_items.values_list('pk', flat=True)))
