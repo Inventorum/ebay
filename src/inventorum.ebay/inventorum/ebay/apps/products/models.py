@@ -2,8 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 import logging
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.utils.translation import ugettext

@@ -1,8 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 from celery.utils.log import get_task_logger
 
 from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
