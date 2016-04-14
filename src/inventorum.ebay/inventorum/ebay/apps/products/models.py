@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 import logging
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.utils.translation import ugettext
@@ -174,6 +175,17 @@ class EbayItemModelQuerySet(BaseQuerySet):
         :rtype: EbayItemModelQuerySet
         """
         return self.filter(publishing_status=EbayItemPublishingStatus.PUBLISHED)
+
+    def delayed_publishing(self, timeout=300):
+        """
+        :param timeout: seconds since the item creation is considered as pending
+        :rtype: EbayItemModelQuerySet
+        """
+        delay = timedelta(seconds=timeout)
+        limit_date = datetime.now() - delay
+
+        return self.filter(publishing_status=EbayItemPublishingStatus.IN_PROGRESS,
+                           time_added__lte=limit_date)
 
 
 class EbayItemModel(OrderableItemModel, BaseModel):

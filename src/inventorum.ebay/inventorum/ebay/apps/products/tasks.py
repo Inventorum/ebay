@@ -1,7 +1,8 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+from datetime import datetime, timedelta
 
-from datetime import datetime
+from django.utils.translation import ugettext
 from celery.utils.log import get_task_logger
 
 from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
@@ -234,6 +235,21 @@ def schedule_ebay_product_deletion(ebay_product_id, context):
     :type context: inventorum.util.celery.TaskExecutionContext
     """
     ebay_product_deletion.delay(ebay_product_id, context=context)
+
+
+@inventorum_task()
+def periodic_ebay_timeouted_item_check_task(self, timeout=300):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    """
+    message = ugettext('Publishing timeout (%(timeout)d seconds).') % dict(timeout=timeout)
+    details = dict(message=message)
+
+    for item in EbayItemModel.objects.delayed_publishing(timeout):
+        item.set_publishing_status(publishing_status=EbayItemPublishingStatus.FAILED,
+                                   details=details,
+                                   save=True)
+        _finalize_ebay_item_publish.delay(item.id, context=self.context)
 
 
 # - Publishing state sync -----------------------------------------------
