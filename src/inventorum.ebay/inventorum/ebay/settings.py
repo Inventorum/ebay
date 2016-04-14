@@ -183,6 +183,7 @@ CELERY_ROUTES = {
     'inventorum.ebay.apps.orders.tasks.click_and_collect_status_update_with_event_task': {'queue': 'syncing'},
     'inventorum.ebay.apps.orders.tasks.ebay_order_status_update_task': {'queue': 'syncing'},
     'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.products.tasks.periodic_ebay_timeouted_item_check_task': {'queue': 'syncing'},
 
     # Publishing
     'inventorum.ebay.apps.products.tasks._initialize_ebay_item_publish': {'queue': 'publishing'},
