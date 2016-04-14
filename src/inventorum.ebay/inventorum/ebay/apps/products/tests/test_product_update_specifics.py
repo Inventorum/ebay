@@ -314,7 +314,7 @@ class TestProductUpdateSpecifics(EbayAuthenticatedAPITestCase):
 
     def test_more_than_one_value_in_one_specific_valid(self):
         """
-        Test proving that saving 2 values for one specific works! 
+        Test proving that saving 2 values for one specific works!
         :return:
         """
 
