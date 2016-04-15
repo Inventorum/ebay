@@ -221,6 +221,8 @@ class EbayItemModel(OrderableItemModel, BaseModel):
 
     objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
 
+    ordering = ['pk']
+
     @property
     def ebay_object(self):
         payment_methods = list(self.payment_methods.all().values_list('external_id', flat=True))
