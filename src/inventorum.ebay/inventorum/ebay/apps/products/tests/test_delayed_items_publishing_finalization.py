@@ -35,8 +35,8 @@ class TestDelayedItemsPublishingGetsFinalized(UnitTestCase):
             delay = datetime.now() - timedelta(seconds=timeout)
             EbayItemModel.objects.filter(pk__in=items).update(time_added=delay)
 
-    @mock.patch('inventorum.ebay.apps.products.tasks._finalize_ebay_item_publish.delay')
-    def test_delayed_publishing_made_failed(self, finalize_ebay_item_publish_delay_mock):
+    @mock.patch('inventorum.ebay.apps.products.tasks.synchronise_ebay_item_to_api.delay')
+    def test_delayed_publishing_made_failed(self, synchronise_ebay_item_to_api):
         kwargs = dict(
             timeout=self.timeout,
             context=get_anonymous_task_execution_context())
@@ -49,8 +49,8 @@ class TestDelayedItemsPublishingGetsFinalized(UnitTestCase):
         self.assertEqual(failed_items.count(), 5)
         self.assertEqual(failed_items.first().publishing_status_details,
                          dict(message='Publishing timeout ({} seconds).'.format(self.timeout)))
-        self.assertEqual(finalize_ebay_item_publish_delay_mock.call_count, 5)
+        self.assertEqual(synchronise_ebay_item_to_api.call_count, 5)
 
-        call_list = [args[0][0] for args in finalize_ebay_item_publish_delay_mock.call_args_list]
+        call_list = [args[0][0] for args in synchronise_ebay_item_to_api.call_args_list]
 
         self.assertEqual(set(call_list), set(failed_items.values_list('pk', flat=True)))

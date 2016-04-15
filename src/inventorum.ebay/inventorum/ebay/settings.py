@@ -157,6 +157,14 @@ CELERYBEAT_SCHEDULE = {
             'context': get_anonymous_task_execution_context()
         }
     },
+    'periodic_synchronise_ebay_item_to_api': {
+        'task': 'inventorum.ebay.apps.products.tasks.periodic_synchronise_ebay_item_to_api',
+        'schedule': timedelta(seconds=300),
+        'kwargs': {
+            'timeout': 300,
+            'context': get_anonymous_task_execution_context()
+        }
+    },
 }
 
 # will be used by util.celery.InventorumTask to handle async celery exceptions
@@ -184,11 +192,12 @@ CELERY_ROUTES = {
     'inventorum.ebay.apps.orders.tasks.ebay_order_status_update_task': {'queue': 'syncing'},
     'inventorum.ebay.apps.products.tasks.periodic_core_products_sync_task': {'queue': 'syncing'},
     'inventorum.ebay.apps.products.tasks.periodic_ebay_timeouted_item_check_task': {'queue': 'syncing'},
+    'inventorum.ebay.apps.products.tasks.periodic_synchronise_ebay_item_to_api': {'queue': 'syncing'},
 
     # Publishing
     'inventorum.ebay.apps.products.tasks._initialize_ebay_item_publish': {'queue': 'publishing'},
     'inventorum.ebay.apps.products.tasks._ebay_item_publish': {'queue': 'publishing'},
-    'inventorum.ebay.apps.products.tasks._finalize_ebay_item_publish': {'queue': 'publishing'},
+    'inventorum.ebay.apps.products.tasks.synchronise_ebay_item_to_api': {'queue': 'publishing'},
     'inventorum.ebay.apps.products.tasks._initialize_ebay_item_unpublish': {'queue': 'publishing'},
     'inventorum.ebay.apps.products.tasks._ebay_item_unpublish': {'queue': 'publishing'},
     'inventorum.ebay.apps.products.tasks._finalize_ebay_item_unpublish': {'queue': 'publishing'},

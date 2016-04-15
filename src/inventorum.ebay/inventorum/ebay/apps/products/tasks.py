@@ -1,13 +1,13 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from datetime import datetime, timedelta
 
-from django.utils.translation import ugettext
+from datetime import datetime
 from celery.utils.log import get_task_logger
 
+from django.utils.translation import ugettext
 from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
 from inventorum.ebay.apps.products import EbayItemPublishingStatus
-from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateModel, EbayProductModel
+from inventorum.ebay.apps.products.models import EbayItemModel, EbayItemUpdateModel, EbayProductModel, DirtynessRegistry
 from inventorum.ebay.apps.products.services import PublishingService, PublishingSendStateFailedException,\
     PublishingException, UnpublishingService, UnpublishingException, UpdateService, UpdateFailedException, \
     ProductDeletionService, CorePublishingStatusUpdateService
@@ -82,12 +82,12 @@ def _ebay_item_publish(self, ebay_item_id):
         # we want to mark product as unpublished
         error = EbayFatalError(self.request.id)
         ebay_item.set_publishing_status(EbayItemPublishingStatus.FAILED, details=[error.api_dict()])
-        _finalize_ebay_item_publish.delay(ebay_item_id, context=self.context)
+        synchronise_ebay_item_to_api.delay(ebay_item_id, context=self.context)
         preserve_and_reraise_exception()
 
 
 @inventorum_task(max_retries=5, default_retry_delay=30)
-def _finalize_ebay_item_publish(self, ebay_item_id):
+def synchronise_ebay_item_to_api(self, ebay_item_id):
     """
     :type self: inventorum.util.celery.InventorumTask
     :type ebay_item_id: int
@@ -99,6 +99,7 @@ def _finalize_ebay_item_publish(self, ebay_item_id):
 
     try:
         service.finalize_publish_attempt()
+        DirtynessRegistry.objects.unregister(ebay_item)
     except PublishingSendStateFailedException:
         self.retry(args=(ebay_item_id,))
 
@@ -109,7 +110,7 @@ def schedule_ebay_item_publish(ebay_item_id, context):
     :type context: inventorum.util.celery.TaskExecutionContext
     """
     publish = _ebay_item_publish.si(ebay_item_id, context=context)
-    finalize_publish = _finalize_ebay_item_publish.si(ebay_item_id, context=context)
+    finalize_publish = synchronise_ebay_item_to_api.si(ebay_item_id, context=context)
 
     (publish | finalize_publish)()
 
@@ -154,7 +155,7 @@ def _ebay_item_unpublish(self, ebay_item_id):
         # we want to mark product as unpublished
         error = EbayFatalError(self.request.id)
         ebay_item.set_publishing_status(EbayItemPublishingStatus.PUBLISHED, details=[error.api_dict()])
-        _finalize_ebay_item_publish.delay(ebay_item_id, context=self.context)
+        synchronise_ebay_item_to_api.delay(ebay_item_id, context=self.context)
         preserve_and_reraise_exception()
 
 
@@ -249,7 +250,16 @@ def periodic_ebay_timeouted_item_check_task(self, timeout=300):
         item.set_publishing_status(publishing_status=EbayItemPublishingStatus.FAILED,
                                    details=details,
                                    save=True)
-        _finalize_ebay_item_publish.delay(item.id, context=self.context)
+        synchronise_ebay_item_to_api.delay(item.id, context=self.context)
+
+
+@inventorum_task()
+def periodic_synchronise_ebay_item_to_api(self, timeout=300):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    """
+    for element in DirtynessRegistry.objects.get_for_model(EbayItemModel).delayed(timeout):
+        synchronise_ebay_item_to_api.delay(element.object_id, context=self.context)
 
 
 # - Publishing state sync -----------------------------------------------
