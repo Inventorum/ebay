@@ -4,6 +4,10 @@ CHANGES
 
 develop
 =======
+
+2016-04-15 0.3.2
+================
+- Created fallback system for products states.
 - Changed orders syncing so it creates shipping service if it was not existing.
 
 2016-03-03 0.3.0
