@@ -2,11 +2,14 @@
 from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 import logging
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.utils.translation import ugettext
 from django_countries.fields import CountryField
 from django_extensions.db.fields.json import JSONField
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from inventorum.ebay import settings
 from inventorum.ebay.apps.returns.models import ReturnPolicyModel
 from inventorum.ebay.apps.returns import ReturnsAcceptedOption
@@ -175,6 +178,17 @@ class EbayItemModelQuerySet(BaseQuerySet):
         """
         return self.filter(publishing_status=EbayItemPublishingStatus.PUBLISHED)
 
+    def delayed_publishing(self, timeout=300):
+        """
+        :param timeout: seconds since the item creation is considered as pending
+        :rtype: EbayItemModelQuerySet
+        """
+        delay = timedelta(seconds=timeout)
+        limit_date = datetime.now() - delay
+
+        return self.filter(publishing_status=EbayItemPublishingStatus.IN_PROGRESS,
+                           time_added__lte=limit_date)
+
 
 class EbayItemModel(OrderableItemModel, BaseModel):
     account = models.ForeignKey("accounts.EbayAccountModel", related_name="items",
@@ -208,6 +222,8 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     unpublished_at = models.DateTimeField(null=True, blank=True)
 
     objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
+
+    ordering = ['pk']
 
     @property
     def ebay_object(self):
@@ -576,3 +592,38 @@ class EbayApiAttempt(BaseModel):
             response=EbayApiAttemptResponse.create_from_response(ebay.api.response),
             success=True
         )
+
+
+class DirtynessRegistryQueryset(models.QuerySet):
+    def get_for_model(self, ModelClass):
+        content_type = ContentType.objects.get_for_model(ModelClass)
+        return self.filter(content_type=content_type)
+
+    def delayed(self, timeout=300):
+        delta = datetime.now() - timedelta(seconds=timeout)
+        return self.filter(created_at__lte=delta)
+
+    def register(self, instance):
+        instance_type = ContentType.objects.get_for_model(instance)
+        try:
+            self.get(content_type=instance_type.pk,
+                     object_id=instance.pk)
+        except self.model.DoesNotExist:
+            DirtynessRegistry(content_object=instance).save()
+
+    def unregister(self, instance):
+        instance_type = ContentType.objects.get_for_model(instance)
+        try:
+            self.get(content_type=instance_type.pk,
+                     object_id=instance.pk).delete()
+        except self.model.DoesNotExist:
+            pass
+
+
+class DirtynessRegistry(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    created_at = models.DateTimeField(auto_now=True)
+
+    objects = DirtynessRegistryQueryset.as_manager()
