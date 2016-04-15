@@ -7,7 +7,7 @@ import mock
 from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
 from inventorum.ebay.tests.testcases import UnitTestCase
 from .. import EbayItemPublishingStatus
-from ..tasks import synchronise_ebay_item_to_api
+from ..tasks import periodic_synchronise_ebay_item_to_api
 from ..models import EbayItemModel
 from ..models import DirtynessRegistry
 from .factories import EbayItemFactory
@@ -45,8 +45,8 @@ class TestItemDirtyness(UnitTestCase):
         self.assertEqual(dirty_qs.first().object_id,
                          EbayItemModel.objects.first().pk)
 
-    @mock.patch('inventorum.ebay.apps.products.tasks._finalize_ebay_item_publish.delay')
-    def test_finalize_item_publish_is_called(self, finalize_ebay_item_publish_delay_mock):
+    @mock.patch('inventorum.ebay.apps.products.tasks.synchronise_ebay_item_to_api.delay')
+    def test_finalize_item_publish_is_called(self, synchronise_ebay_item_to_api):
         delta = datetime.now() - timedelta(seconds=self.timeout)
 
         selected_items = DirtynessRegistry.objects.all()[2:]
@@ -59,8 +59,8 @@ class TestItemDirtyness(UnitTestCase):
             timeout=self.timeout,
             context=get_anonymous_task_execution_context())
 
-        synchronise_ebay_item_to_api.apply(kwargs=kwargs)
+        periodic_synchronise_ebay_item_to_api.apply(kwargs=kwargs)
 
-        call_list = [args[0][0] for args in finalize_ebay_item_publish_delay_mock.call_args_list]
+        call_list = [args[0][0] for args in synchronise_ebay_item_to_api.call_args_list]
 
         self.assertEqual(call_list, ids)
