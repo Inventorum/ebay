@@ -1,8 +1,7 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-from datetime import datetime, timedelta
 
-from django.utils.translation import ugettext
+from datetime import datetime
 from celery.utils.log import get_task_logger
 
 from inventorum.ebay.apps.accounts.models import EbayUserModel, EbayAccountModel
@@ -99,6 +98,7 @@ def _finalize_ebay_item_publish(self, ebay_item_id):
 
     try:
         service.finalize_publish_attempt()
+        DirtynessRegistry.objects.unregister(ebay_item)
     except PublishingSendStateFailedException:
         self.retry(args=(ebay_item_id,))
 
@@ -250,6 +250,15 @@ def periodic_ebay_timeouted_item_check_task(self, timeout=300):
                                    details=details,
                                    save=True)
         _finalize_ebay_item_publish.delay(item.id, context=self.context)
+
+
+@inventorum_task()
+def synchronise_ebay_item_to_api(self, timeout=300):
+    """
+    :type self: inventorum.util.celery.InventorumTask
+    """
+    for element in DirtynessRegistry.objects.get_for_model(EbayItemModel).delayed(timeout):
+        _finalize_ebay_item_publish.delay(element.object_id, context=self.context)
 
 
 # - Publishing state sync -----------------------------------------------
