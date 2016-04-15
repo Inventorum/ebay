@@ -53,4 +53,4 @@ class TestDelayedItemsPublishingGetsFinalized(UnitTestCase):
 
         call_list = [args[0][0] for args in finalize_ebay_item_publish_delay_mock.call_args_list]
 
-        self.assertEqual(call_list, list(failed_items.values_list('pk', flat=True)))
+        self.assertEqual(set(call_list), set(failed_items.values_list('pk', flat=True)))
