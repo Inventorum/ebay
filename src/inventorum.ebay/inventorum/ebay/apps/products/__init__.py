@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
@@ -61,3 +60,6 @@ class EbayApiAttemptType(object):
         (UNPUBLISH, 'Unpublish'),
         (UPDATE, 'Update')
     )
+
+
+default_app_config = 'inventorum.ebay.apps.products.apps.ProductsConfig'
