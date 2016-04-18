@@ -92,8 +92,12 @@ def synchronise_ebay_item_to_api(self, ebay_item_id):
     :type self: inventorum.util.celery.InventorumTask
     :type ebay_item_id: int
     """
-    user = EbayUserModel.objects.get(id=self.context.user_id)
     ebay_item = EbayItemModel.objects.get_for_publishing(id=ebay_item_id)
+
+    if self.context.user_id is not None:
+        user = EbayUserModel.objects.get(id=self.context.user_id)
+    else:
+        user = ebay_item.account.default_user
 
     service = PublishingService(ebay_item, user)
 
