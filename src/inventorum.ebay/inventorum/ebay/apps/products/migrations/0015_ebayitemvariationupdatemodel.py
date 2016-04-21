@@ -6,7 +6,7 @@ import datetime
 from django.utils.timezone import utc
 import django.utils.timezone
 import inventorum.util.django.db.models
-import django_extensions.db.fields.json
+from inventorum.ebay.lib.db.fields import JSONField
 
 
 class Migration(migrations.Migration):
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('quantity', models.IntegerField(null=True, blank=True)),
                 ('gross_price', models.DecimalField(null=True, max_digits=20, decimal_places=10, blank=True)),
                 ('status', models.CharField(default='draft', max_length=255, choices=[('draft', 'DRAFT'), ('in_progress', 'IN_PROGRESS'), ('succeeded', 'SUCCEEDED'), ('failed', 'FAILED')])),
-                ('status_details', django_extensions.db.fields.json.JSONField()),
+                ('status_details', JSONField()),
                 ('is_deleted', models.BooleanField(default=False)),
                 ('update_item', models.ForeignKey(related_name='variations', to='products.EbayItemUpdateModel')),
                 ('variation', models.ForeignKey(related_name='updates', to='products.EbayItemVariationModel')),

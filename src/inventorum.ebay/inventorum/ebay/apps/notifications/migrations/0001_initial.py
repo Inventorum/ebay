@@ -6,7 +6,7 @@ import datetime
 from django.utils.timezone import utc
 import django.utils.timezone
 import inventorum.util.django.db.models
-import django_extensions.db.fields.json
+from inventorum.ebay.lib.db.fields import JSONField
 
 
 class Migration(migrations.Migration):
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, verbose_name='Is active')),
                 ('deleted_at', models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=utc), verbose_name='Time of deletion')),
                 ('event_type', models.CharField(max_length=255)),
-                ('payload', django_extensions.db.fields.json.JSONField()),
+                ('payload', JSONField()),
                 ('timestamp', models.CharField(max_length=255)),
                 ('signature', models.CharField(max_length=255)),
                 ('request_body', models.TextField()),

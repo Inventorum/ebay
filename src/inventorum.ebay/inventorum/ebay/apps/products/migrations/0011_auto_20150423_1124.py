@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import django_extensions.db.fields.json
+from inventorum.ebay.lib.db.fields import JSONField
 
 
 class Migration(migrations.Migration):
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='ebayitemupdatemodel',
             name='status_details',
-            field=django_extensions.db.fields.json.JSONField(),
+            field=JSONField(),
             preserve_default=True,
         ),
         migrations.AlterField(

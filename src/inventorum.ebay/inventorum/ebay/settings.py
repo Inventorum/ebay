@@ -36,6 +36,7 @@ USE_NGINX_X_ACCEL_REDIRECT = True
 
 # alphabetically ordered
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'django_extensions',
@@ -57,7 +58,7 @@ INSTALLED_APPS = (
     'rest_framework_swagger'
 )
 
-AUTH_USER_MODEL = 'inventorum.ebay.apps.accounts.models.EbayAccountModel'
+AUTH_USER_MODEL = 'accounts.EbayAccountModel'
 
 ADMINS = (
     ('Development', 'tech@inventorum.com'),
