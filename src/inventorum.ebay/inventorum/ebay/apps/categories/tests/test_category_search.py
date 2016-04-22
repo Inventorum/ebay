@@ -1,6 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
-import json
+
 import logging
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 from inventorum.ebay.apps.categories.search import CategorySearchService

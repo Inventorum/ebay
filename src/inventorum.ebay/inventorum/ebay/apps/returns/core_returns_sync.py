@@ -4,7 +4,7 @@ import logging
 
 from datetime import datetime
 from django.db import transaction
-from inventorum.ebay.apps.orders.models import OrderModel, OrderLineItemModel
+from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.returns import EbayRefundType
 from inventorum.ebay.apps.returns.models import ReturnModel
 from inventorum.ebay.apps.returns.tasks import schedule_ebay_return_event

@@ -6,7 +6,6 @@ from inventorum.ebay.apps.accounts.models import EbayAccountModel, EbayUserModel
 from inventorum.ebay.lib.utils import int_or_none
 
 from rest_framework.authentication import BaseAuthentication
-from rest_framework.exceptions import AuthenticationFailed
 
 
 log = logging.getLogger(__name__)

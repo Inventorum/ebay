@@ -5,7 +5,6 @@ from django.test.testcases import TestCase
 
 from inventorum.ebay.lib.rest.fields import InvIdField
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from rest_framework import serializers
 
 from rest_framework.exceptions import ValidationError
 
