@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0002_ebaytokenmodel_site_id'),
+        ('ebay_auth', '0002_ebaytokenmodel_site_id'),
     ]
 
     operations = [

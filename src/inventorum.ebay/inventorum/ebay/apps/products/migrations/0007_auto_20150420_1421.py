@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 import datetime
 from django.utils.timezone import utc
-import django_extensions.db.fields.json
 import django.utils.timezone
 import inventorum.util.django.db.models
+from inventorum.ebay.lib.db.fields import JSONField
 
 
 class Migration(migrations.Migration):
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, verbose_name='Is active')),
                 ('deleted_at', models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=utc), verbose_name='Time of deletion')),
                 ('body', models.TextField()),
-                ('headers', django_extensions.db.fields.json.JSONField()),
+                ('headers', JSONField()),
                 ('url', models.TextField()),
                 ('method', models.TextField()),
             ],
@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, verbose_name='Is active')),
                 ('deleted_at', models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=utc), verbose_name='Time of deletion')),
                 ('content', models.TextField()),
-                ('headers', django_extensions.db.fields.json.JSONField()),
+                ('headers', JSONField()),
                 ('url', models.TextField()),
                 ('status_code', models.IntegerField()),
             ],

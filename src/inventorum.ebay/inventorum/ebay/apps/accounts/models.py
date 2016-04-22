@@ -15,7 +15,6 @@ from inventorum.ebay.lib.auth.models import AuthenticableModelMixin
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocation
-from inventorum.util.django.model_utils import PassThroughManager
 
 
 log = logging.getLogger(__name__)
@@ -87,7 +86,7 @@ class EbayAccountModelQuerySet(MappedInventorumModelQuerySet):
 
 class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
     """ Represents an inventorum account in the ebay context """
-    token = ForeignKey("auth.EbayTokenModel", null=True, blank=True, related_name="accounts",
+    token = ForeignKey("ebay_auth.EbayTokenModel", null=True, blank=True, related_name="accounts",
                        verbose_name="Ebay token")
     registration_address = ForeignKey(AddressModel, null=True, blank=True, related_name="accounts",
                                       verbose_name="Registration address")
@@ -112,7 +111,10 @@ class EbayAccountModel(ShippingServiceConfigurable, MappedInventorumModel):
 
     return_policy = OneToOneField(ReturnPolicyModel, null=True, blank=True, related_name="account")
 
-    objects = PassThroughManager.for_queryset_class(EbayAccountModelQuerySet)()
+    objects = EbayAccountModelQuerySet.as_manager()
+
+    REQUIRED_FIELDS = ()
+    USERNAME_FIELD = 'email'
 
     @property
     def ebay_location_id(self):

@@ -8,7 +8,6 @@ from factory import fuzzy
 
 from inventorum.util.django.db.managers import ValidityQuerySet
 from inventorum.util.django.db.models import AbstractModel
-from inventorum.util.django.model_utils import PassThroughManager
 
 
 log = logging.getLogger(__name__)
@@ -25,7 +24,7 @@ class BaseModel(AbstractModel):
     class Meta:
         abstract = True
 
-    objects = PassThroughManager.for_queryset_class(BaseQuerySet)()
+    objects = BaseQuerySet.as_manager()
 
 
 class MappedInventorumModelQuerySet(BaseQuerySet):
@@ -45,7 +44,7 @@ class MappedInventorumModel(BaseModel):
 
     inv_id = models.BigIntegerField(unique=True, verbose_name="Universal inventorum id")
 
-    objects = PassThroughManager.for_queryset_class(MappedInventorumModelQuerySet)()
+    objects = MappedInventorumModelQuerySet.as_manager()
 
     def __unicode__(self):
         return "{} (inv_id: {})".format(self.pk, self.inv_id)

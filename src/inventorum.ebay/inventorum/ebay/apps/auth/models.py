@@ -9,7 +9,6 @@ from django_extensions.db.fields.encrypted import EncryptedTextField
 
 from inventorum.ebay.lib.db.models import BaseModel, BaseQuerySet
 from inventorum.ebay.lib.ebay.data.authorization import EbayToken
-from inventorum.util.django.model_utils import PassThroughManager
 
 
 class EbayTokenModelQuerySet(BaseQuerySet):
@@ -25,7 +24,7 @@ class EbayTokenModel(BaseModel):
     expiration_date = DateTimeField()
     site_id = IntegerField(default=DEFAULT_SITE_ID)  # default: DE
 
-    objects = PassThroughManager.for_queryset_class(EbayTokenModelQuerySet)()
+    objects = EbayTokenModelQuerySet.as_manager()
 
     @classmethod
     def create_from_ebay_token(cls, ebay_token):

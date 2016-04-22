@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 import datetime
 from django.utils.timezone import utc
-import django_extensions.db.fields.json
 import django.utils.timezone
 import inventorum.util.django.db.models
+from inventorum.ebay.lib.db.fields import JSONField
 
 
 class Migration(migrations.Migration):
@@ -80,7 +80,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ebayitemmodel',
             name='publishing_status_details',
-            field=django_extensions.db.fields.json.JSONField(null=True, blank=True),
+            field=JSONField(null=True, blank=True),
             preserve_default=True,
         ),
     ]

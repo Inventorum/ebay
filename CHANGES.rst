@@ -4,6 +4,8 @@ CHANGES
 
 develop
 =======
+Code:
+- Bumped Django from 1.7.x to 1.9.x
 
 2016-04-15 0.3.2
 ================

@@ -12,7 +12,6 @@ from django_countries.fields import CountryField
 from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.lib.db.models import BaseModel, BaseQuerySet
 
-from inventorum.util.django.model_utils import PassThroughManager
 
 log = logging.getLogger(__name__)
 
@@ -42,7 +41,7 @@ class ShippingServiceModel(BaseModel):
     shipping_time_min = models.IntegerField(null=True, blank=True)
     shipping_time_max = models.IntegerField(null=True, blank=True)
 
-    objects = PassThroughManager.for_queryset_class(ShippingServiceQuerySet)()
+    objects = ShippingServiceQuerySet.as_manager()
 
     @classmethod
     def create_or_update_from_ebay_shipping_service(cls, ebay_shipping_service, country_code):
