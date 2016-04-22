@@ -105,31 +105,33 @@ class ThreadedCoreAPIFake(threading.Thread):
         self.host = host
         self.port = port
 
+        threaded_self = self
+
         class CoreAPIFake(BaseHTTPRequestHandler):
 
-            def do_GET(s):
-                s._handle(self.GET)
+            def do_GET(self):
+                self._handle(threaded_self.GET)
 
-            def do_POST(s):
-                s._handle(self.POST)
+            def do_POST(self):
+                self._handle(threaded_self.POST)
 
-            def _handle(s, method):
-                path = s.path
-                if path not in self._responses[method]:
+            def _handle(self, method):
+                path = self.path
+                if path not in threaded_self._responses[method]:
                     log.error("Unexpected %s: %s" % (method, path))
-                    s.send_response(500)
+                    self.send_response(500)
                     return
 
-                response = self._responses[method][path]
+                response = threaded_self._responses[method][path]
 
                 sleep(1)
 
-                s.send_response(response.status)
-                s.send_header("Content-type", "application/json")
-                s.end_headers()
+                self.send_response(response.status)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
                 if response.has_body:
-                    s.wfile.write(response.json)
-                s.wfile.close()
+                    self.wfile.write(response.json)
+                self.wfile.close()
 
         self.server = ThreadedHTTPServer((host, port), CoreAPIFake)
 

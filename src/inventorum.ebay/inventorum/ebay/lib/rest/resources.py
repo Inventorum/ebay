@@ -8,7 +8,6 @@ from rest_framework.generics import GenericAPIView
 from inventorum.ebay.lib.rest.permissions import IsEbayAuthenticated
 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 
 
 log = logging.getLogger(__name__)

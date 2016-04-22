@@ -1,10 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 import logging
-from django.conf import settings
+
 from inventorum.ebay.apps.accounts.models import EbayAccountModel
 from inventorum.ebay.lib.ebay.authentication import EbayAuthentication
-from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 
 
 log = logging.getLogger(__name__)

@@ -6,6 +6,7 @@ develop
 =======
 Code:
 - Bumped Django from 1.7.x to 1.9.x
+- Added Pylint to be run by Jenkins
 
 2016-04-15 0.3.2
 ================

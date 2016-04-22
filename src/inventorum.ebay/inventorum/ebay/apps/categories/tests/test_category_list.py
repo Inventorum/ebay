@@ -2,7 +2,6 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.apps.categories.models import CategoryModel
 from inventorum.ebay.apps.categories.serializers import CategorySerializer, CategoryBreadcrumbSerializer
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.tests import Countries

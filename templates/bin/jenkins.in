@@ -14,6 +14,9 @@ done
 
 export LANG=en_US.UTF-8
 
+echo "Execute Pylint"
+pylint --rcfile=${buildout:directory}/.pylintrc ${buildout:directory}/src/inventorum.ebay/inventorum/
+
 if ! $local_flag; then
     bin/supervisorctl shutdown >/dev/null 2>&1||true
     sleep 4

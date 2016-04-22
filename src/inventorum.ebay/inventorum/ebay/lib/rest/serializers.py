@@ -66,7 +66,7 @@ class POPOSerializer(serializers.Serializer):
         return self.save()
 
     def update(self, instance, validated_data):
-        raise NotImplemented("`update()` not implemented.")
+        raise NotImplementedError("`update()` not implemented.")
 
     @classmethod
     def extract_original_data(cls, instance):

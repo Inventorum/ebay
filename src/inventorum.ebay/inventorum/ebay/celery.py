@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 
 import celery
-from celery import signals
+
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from inventorum.util.celery import CeleryBaseMiddleware

@@ -1,7 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 
-import json
 from collections import defaultdict
 import logging
 from datetime import datetime, timedelta

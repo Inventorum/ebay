@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import json
 import logging
 
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
@@ -9,9 +8,8 @@ from django.contrib.contenttypes.models import ContentType
 from inventorum.ebay.apps.orders import CorePaymentMethod, PickupCode
 from inventorum.ebay.apps.shipping import INV_CLICK_AND_COLLECT_SERVICE_EXTERNAL_ID
 from inventorum.ebay.lib.db.fields import MoneyField, TaxRateField, JSONField
-
 from inventorum.ebay.lib.db.models import BaseModel, MappedInventorumModelQuerySet
-from django.core.serializers.json import DjangoJSONEncoder
+
 from django.db import models
 from inventorum.ebay.lib.ebay.data import CompleteStatusCodeType
 
