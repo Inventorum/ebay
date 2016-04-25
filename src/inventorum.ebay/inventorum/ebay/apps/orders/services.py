@@ -2,7 +2,6 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 
-from inventorum.ebay.apps.orders.models import OrderModel
 from inventorum.ebay.apps.orders.serializers import OrderModelCoreAPIDataSerializer
 from inventorum.ebay.lib.ebay.data.events import EbayEventType, EbayEventReadyForPickup, EbayEventPickedUp, \
     EbayEventCanceled

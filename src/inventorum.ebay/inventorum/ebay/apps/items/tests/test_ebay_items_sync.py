@@ -5,7 +5,6 @@ import logging
 from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 
 from inventorum.ebay.apps.accounts.tests.factories import EbayUserFactory
-from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, DurationModel
 from inventorum.ebay.apps.categories.tests.factories import CategoryFactory
 from inventorum.ebay.apps.items import EbaySKU
 from inventorum.ebay.apps.items.ebay_items_sync_services import IncomingEbayItemSyncer, EbayItemsSync
@@ -19,7 +18,7 @@ from inventorum.ebay.lib.core_api.clients import UserScopedCoreAPIClient
 from inventorum.ebay.lib.core_api.tests.factories import CoreProductFactory
 from inventorum.ebay.lib.ebay.data.items import EbayFixedPriceItem, EbayPicture, EbayPickupInStoreDetails, \
     EbayShippingDetails, EbayShippingServiceOption, EbayPriceModel
-from inventorum.ebay.tests import Countries, MockedTest, StagingTestAccount, IntegrationTest
+from inventorum.ebay.tests import Countries, StagingTestAccount, IntegrationTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from inventorum.util.celery import TaskExecutionContext
 from mock import PropertyMock

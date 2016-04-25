@@ -321,7 +321,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         }
 
         pager = self.paginated_get("/api/products/delta/modified/", limit_per_page=limit_per_page, params=params)
-        for page in pager.pages:
+        for page in pager.pages:  # pylint:disable=not-an-iterable
             serializer = CoreProductDeltaDeserializer(data=page.data, many=True)
             yield serializer.build()
 
@@ -338,7 +338,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
             "start_date": self._encode_datetime(start_date)
         }
         pager = self.paginated_get("/api/products/delta/deleted/", limit_per_page=limit_per_page, params=params)
-        for page in pager.pages:
+        for page in pager.pages:  # pylint:disable=not-an-iterable
             yield page.data
 
     def get_paginated_orders_delta(self, start_date, limit_per_page=100):
@@ -356,7 +356,7 @@ class UserScopedCoreAPIClient(CoreAPIClient):
         }
 
         pager = self.paginated_get("/api/orders/delta/", limit_per_page=limit_per_page, params=params)
-        for page in pager.pages:
+        for page in pager.pages:  # pylint:disable=not-an-iterable
             serializer = CoreOrder.Serializer(data=page.data, many=True)
             yield serializer.build()
 

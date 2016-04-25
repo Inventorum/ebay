@@ -9,7 +9,6 @@ import sys
 from datetime import datetime, timedelta
 from celery.schedules import crontab
 from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
-from inventorum.util.celery import TaskExecutionContext
 
 here = os.path.abspath(os.path.dirname(__file__))
 VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()

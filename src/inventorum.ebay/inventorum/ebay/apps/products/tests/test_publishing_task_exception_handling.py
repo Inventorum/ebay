@@ -10,7 +10,7 @@ from inventorum.ebay.apps.products.services import PublishingPreparationService
 from inventorum.ebay.apps.products.tasks import schedule_ebay_item_publish
 from inventorum.ebay.apps.products.tests import ProductTestMixin
 from inventorum.ebay.lib.celery import celery_test_case
-from inventorum.ebay.tests import ApiTest, StagingTestAccount
+from inventorum.ebay.tests import ApiTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 

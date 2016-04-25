@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from inventorum.ebay.apps.auth.models import EbayTokenModel
-from inventorum.ebay.tests import ApiTest, IntegrationTest
+from inventorum.ebay.tests import IntegrationTest
 from inventorum.ebay.tests.testcases import APITestCase, EbayAuthenticatedAPITestCase
 from inventorum.util.django.timezone import datetime
 

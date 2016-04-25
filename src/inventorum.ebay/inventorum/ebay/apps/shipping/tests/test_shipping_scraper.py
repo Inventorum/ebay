@@ -4,11 +4,10 @@ import logging
 from decimal import Decimal
 
 from inventorum.ebay.tests import EbayTest, Countries
-from inventorum.ebay.apps.accounts.models import EbayAccountModel
 from inventorum.ebay.apps.accounts.tests.factories import EbayAccountFactory
 from inventorum.ebay.apps.products.tests.factories import EbayProductFactory
 
-from inventorum.ebay.apps.shipping.models import ShippingServiceModel, ShippingServiceConfigurationModel
+from inventorum.ebay.apps.shipping.models import ShippingServiceModel
 from inventorum.ebay.apps.shipping.services import EbayShippingScraper
 from inventorum.ebay.apps.shipping.tests import ShippingServiceTestMixin
 from inventorum.ebay.apps.shipping.tests.factories import ShippingServiceFactory
