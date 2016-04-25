@@ -161,11 +161,18 @@ class EbayTrading(Ebay):
     default_connection_cls = TradingConnection
 
     def __init__(self, token=None, default_site_id=None, parallel=None):
-        connection_kwargs = dict(appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
-                                 certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
-                                 debug=settings.DEBUG, timeout=self.timeout,
-                                 compatibility=self.compatibility,
-                                 version=self.version, parallel=parallel)
+        connection_kwargs = dict(
+            appid=settings.EBAY_APPID,
+            devid=settings.EBAY_DEVID,
+            certid=settings.EBAY_CERTID,
+            domain=settings.EBAY_DOMAIN,
+            debug=settings.DEBUG,
+            timeout=self.timeout,
+            compatibility=self.compatibility,
+            version=self.version,
+            parallel=parallel,
+            https=settings.EBAY_HTTPS
+        )
         super(EbayTrading, self).__init__(token, default_site_id, connection_kwargs=connection_kwargs)
 
     def _append_additional_params_to_data(self, data):
