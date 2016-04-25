@@ -4,8 +4,10 @@ CHANGES
 
 develop
 =======
-Code:
+Code
+....
 - Bumped Django from 1.7.x to 1.9.x
+- The HTTPS protocol can be switched on or off for the Ebay SDK
 
 2016-04-15 0.3.2
 ================
