@@ -18,7 +18,7 @@ class TestEbayBaseClass(EbayClassTestCase):
             appid=settings.EBAY_APPID, devid=settings.EBAY_DEVID,
             certid=settings.EBAY_CERTID, domain=settings.EBAY_DOMAIN,
             debug=settings.DEBUG, timeout=20, config_file=None,
-            compatibility=911, version=911, parallel=None)
+            compatibility=911, version=911, parallel=None, https=settings.EBAY_HTTPS)
 
         self.assertEqual(self.config.values['token'], None)
         self.assertEqual(self.config.values['siteid'], 77)

@@ -4,6 +4,9 @@ CHANGES
 
 develop
 =======
+Code
+....
+- The HTTPS protocol can be switched on or off for the Ebay SDK
 
 2016-04-15 0.3.2
 ================
