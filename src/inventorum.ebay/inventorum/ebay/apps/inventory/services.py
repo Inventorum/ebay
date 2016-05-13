@@ -4,7 +4,6 @@ from django.utils.translation import ugettext as _
 
 import logging
 from inventorum.ebay.apps.items import EbaySKU
-from inventorum.ebay.apps.products.models import EbayItemModel
 
 log = logging.getLogger(__name__)
 

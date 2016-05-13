@@ -12,7 +12,7 @@ import inventorum.util.django.db.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0001_initial'),
+        ('ebay_auth', '0001_initial'),
         ('accounts', '0001_initial'),
     ]
 
@@ -46,7 +46,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='ebayaccountmodel',
             name='token',
-            field=models.ForeignKey(related_name='accounts', verbose_name='Ebay token', blank=True, to='auth.EbayTokenModel', null=True),
+            field=models.ForeignKey(related_name='accounts', verbose_name='Ebay token', blank=True,
+                                    to='ebay_auth.EbayTokenModel', null=True),
             preserve_default=True,
         ),
     ]

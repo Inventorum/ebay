@@ -9,7 +9,6 @@ import sys
 from datetime import datetime, timedelta
 from celery.schedules import crontab
 from inventorum.ebay.lib.celery import get_anonymous_task_execution_context
-from inventorum.util.celery import TaskExecutionContext
 
 here = os.path.abspath(os.path.dirname(__file__))
 VERSION = open(os.path.join(here, '..', '..', 'VERSION')).read().strip()
@@ -36,6 +35,7 @@ USE_NGINX_X_ACCEL_REDIRECT = True
 
 # alphabetically ordered
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'django_extensions',
@@ -57,7 +57,7 @@ INSTALLED_APPS = (
     'rest_framework_swagger'
 )
 
-AUTH_USER_MODEL = 'inventorum.ebay.apps.accounts.models.EbayAccountModel'
+AUTH_USER_MODEL = 'accounts.EbayAccountModel'
 
 ADMINS = (
     ('Development', 'tech@inventorum.com'),

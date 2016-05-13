@@ -3,10 +3,9 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import datetime
-import inventorum.ebay.lib.db.fields
+from  inventorum.ebay.lib.db import fields
 import django_countries.fields
 from django.utils.timezone import utc
-import django_extensions.db.fields.json
 import django.utils.timezone
 import inventorum.util.django.db.models
 
@@ -32,7 +31,7 @@ class Migration(migrations.Migration):
                 ('orderable_item_id', models.PositiveIntegerField()),
                 ('name', models.CharField(max_length=255)),
                 ('quantity', models.PositiveIntegerField(verbose_name='Quantity')),
-                ('unit_price', inventorum.ebay.lib.db.fields.MoneyField(verbose_name='Unit price', max_digits=10, decimal_places=2)),
+                ('unit_price', fields.MoneyField(verbose_name='Unit price', max_digits=10, decimal_places=2)),
             ],
             options={
                 'abstract': False,
@@ -50,7 +49,7 @@ class Migration(migrations.Migration):
                 ('inv_id', models.IntegerField(unique=True, null=True, verbose_name='Universal inventorum id', blank=True)),
                 ('ebay_id', models.CharField(unique=True, max_length=255, verbose_name='Ebay id')),
                 ('ebay_status', models.CharField(max_length=255, verbose_name='Ebay order status', choices=[('Complete', 'Complete'), ('Incomplete', 'Incomplete'), ('Pending', 'Pending')])),
-                ('original_ebay_data', django_extensions.db.fields.json.JSONField(null=True, verbose_name='Original ebay data')),
+                ('original_ebay_data', fields.JSONField(null=True, verbose_name='Original ebay data')),
                 ('buyer_first_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('buyer_last_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('buyer_email', models.CharField(max_length=255, null=True, blank=True)),
@@ -62,10 +61,10 @@ class Migration(migrations.Migration):
                 ('shipping_city', models.CharField(max_length=255, null=True, blank=True)),
                 ('shipping_state', models.CharField(max_length=255, null=True, blank=True)),
                 ('shipping_country', django_countries.fields.CountryField(blank=True, max_length=2, null=True)),
-                ('subtotal', inventorum.ebay.lib.db.fields.MoneyField(null=True, max_digits=10, decimal_places=2, blank=True)),
-                ('total', inventorum.ebay.lib.db.fields.MoneyField(null=True, max_digits=10, decimal_places=2, blank=True)),
+                ('subtotal', fields.MoneyField(null=True, max_digits=10, decimal_places=2, blank=True)),
+                ('total', fields.MoneyField(null=True, max_digits=10, decimal_places=2, blank=True)),
                 ('payment_method', models.CharField(max_length=255, null=True, blank=True)),
-                ('payment_amount', inventorum.ebay.lib.db.fields.MoneyField(null=True, max_digits=10, decimal_places=2, blank=True)),
+                ('payment_amount', fields.MoneyField(null=True, max_digits=10, decimal_places=2, blank=True)),
                 ('payment_status', models.CharField(max_length=255, null=True, blank=True)),
                 ('account', models.ForeignKey(verbose_name='Ebay account', to='accounts.EbayAccountModel')),
                 ('selected_shipping', models.OneToOneField(related_name='order', null=True, blank=True, to='shipping.ShippingServiceConfigurationModel')),

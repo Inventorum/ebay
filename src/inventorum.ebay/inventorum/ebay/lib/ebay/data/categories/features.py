@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from inventorum.ebay.lib.ebay.data import EbayBooleanField, EbayListSerializer, ProductIdentiferEnabledCodeType
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
-from rest_framework.fields import IntegerField, ListField, CharField, BooleanField
+from rest_framework.fields import IntegerField, ListField, CharField
 
 
 class EbayListingDuration(object):

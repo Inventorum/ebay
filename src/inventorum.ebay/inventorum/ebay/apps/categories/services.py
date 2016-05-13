@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging
 from django.db.transaction import atomic
-from django.utils.functional import cached_property
+
 from inventorum.ebay.apps.categories.models import CategoryModel, CategoryFeaturesModel, CategorySpecificModel
 from inventorum.ebay.lib.db.utils import batch_queryset
 from inventorum.ebay.lib.ebay.categories import EbayCategories

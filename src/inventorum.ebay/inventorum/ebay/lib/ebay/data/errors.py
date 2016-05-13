@@ -1,10 +1,9 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
 from django.utils.translation import ugettext
-from inventorum.ebay.lib.ebay.data import EbayNullableIntegerField, EbayNullableDecimalField, EbayListSerializer
+from inventorum.ebay.lib.ebay.data import EbayNullableDecimalField, EbayListSerializer
 from inventorum.ebay.lib.rest.serializers import POPOSerializer
 from rest_framework import fields
-from rest_framework.fields import IntegerField
 from rest_framework.serializers import Serializer
 
 

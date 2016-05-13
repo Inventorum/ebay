@@ -74,6 +74,7 @@ class IntegrationTestUpdateService(EbayAuthenticatedAPITestCase):
             self.assertEqual(attempt.success, False)
 
             self.assertEqual(item_update.status, EbayItemUpdateStatus.FAILED)
+
             self.assertEqual(item_update.status_details, [
                 {
                     "long_message": "Das eBay-Konto f\u00fcr den in dieser Anfrage angegebenen Nutzernamen \"dejoh_dnju7\" wurde aufgehoben. Sie k\u00f6nnen leider nur Informationen f\u00fcr aktuelle Nutzer anfordern.",

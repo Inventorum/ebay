@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+
 import logging
-from inventorum.ebay.apps.notifications import EbayNotificationStatus
-from inventorum.ebay.lib.db.models import BaseModel
 
 from django.db import models
-from django_extensions.db.fields.json import JSONField
 
+from inventorum.ebay.apps.notifications import EbayNotificationStatus
+from inventorum.ebay.lib.db.fields import JSONField
+from inventorum.ebay.lib.db.models import BaseModel
 
 log = logging.getLogger(__name__)
 
