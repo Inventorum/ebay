@@ -73,7 +73,7 @@ class ProductResourceMixin(object):
                 if e.response.status_code == status.HTTP_404_NOT_FOUND:
                     raise exceptions.NotFound
 
-                data = getattr(e.response, 'data', '')
+                data = getattr(e.response, 'data', e.response.text)
                 raise ApiException(data, key="core.api.error")
 
             item = preparation_service.create_ebay_item()
