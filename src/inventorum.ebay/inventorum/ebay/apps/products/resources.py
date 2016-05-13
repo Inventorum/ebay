@@ -72,7 +72,9 @@ class ProductResourceMixin(object):
             except PublishingCouldNotGetDataFromCoreAPI as e:
                 if e.response.status_code == status.HTTP_404_NOT_FOUND:
                     raise exceptions.NotFound
-                raise ApiException(e.response.data, key="core.api.error")
+
+                data = getattr(e.response, 'data', '')
+                raise ApiException(data, key="core.api.error")
 
             item = preparation_service.create_ebay_item()
 
