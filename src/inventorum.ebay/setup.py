@@ -19,7 +19,7 @@ migrate_from_old_ebay = inventorum.ebay.scripts.migration_tool:migrate_from_old_
 
 # alphabetically ordered(!)
 required_eggs = [
-    'celery>=3.1.17',
+    'celery>=3.1.23',
     'ebaysdk>=2.1.2',
     'flower>=0.8.1',
     'grequests>=0.3.1',
