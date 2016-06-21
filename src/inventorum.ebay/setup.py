@@ -23,19 +23,15 @@ required_eggs = [
     'ebaysdk>=2.1.2',
     'flower>=0.8.1',
     'grequests>=0.3.1',
-
     'graypy>=0.2.11',
-
     'Django>=1.7.7',
     'django-countries>=3.3',
     'django-extensions>=1.5.2',
-    'djangorestframework==3.1.3',
+    'djangorestframework==3.3.3',
     'django-mptt>=0.6.1',
     'django-pastedeploy-settings>=1.0.1',
     'django-rest-swagger>=0.2.9',
-
-    'inventorum.util==10.6.7',
-
+    'inventorum.util==10.6.9',
     'mock>=1.0.1',
     'plac>=0.9.1',
     'python-keyczar>=0.715',
@@ -76,6 +72,9 @@ setup(
         '#egg=ebaysdk-2.1.2',
         'https://github.com/rtdean/grequests/archive/0.3.0.zip'
         '#egg=grequests-0.3.1',
+        # We are using our own Django fork, as the fix was not yet merged to it's master branch
+        'https://github.com/bimusiek/django/archive/6ee2d18f6d36e587769226fb32d7799df0a41727.zip'
+        '#egg=Django-1.9.6',
     ],
 )
 # https://github.com/bimusiek/ebaysdk-python/archive/c8365ee3cb2db29fdaae6d96fbdeff482a65ac29.zip

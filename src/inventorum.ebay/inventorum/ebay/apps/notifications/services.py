@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 import logging
 
 from inventorum.ebay.apps.notifications import EbayNotificationEventType, handlers, EbayNotificationStatus
-from inventorum.ebay.apps.notifications.handlers import EbayNotificationHandlerException
 
 
 log = logging.getLogger(__name__)
@@ -35,7 +34,7 @@ class EbayPlatformNotificationService(object):
 
         try:
             handler(notification)
-        except EbayNotificationHandlerException as e:
+        except handlers.EbayNotificationHandlerException as e:
             log.error("Error while handling %s notification with pk %s: %s",
                       notification.event_type, notification.pk, e.message)
             notification.set_status(EbayNotificationStatus.FAILED, details=e.message)

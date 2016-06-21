@@ -10,8 +10,6 @@ from inventorum.ebay.apps.products import EbayItemPublishingStatus
 from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
 
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
-from inventorum.util.celery import TaskExecutionContext
-from inventorum.util.django.middlewares import get_current_request_id
 
 
 log = logging.getLogger(__name__)

@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 
 import factory
-from inventorum.ebay.apps.accounts.models import EbayLocationModel
 from inventorum.ebay.lib.ebay.data.authorization import EbayToken
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayInterval, EbayDay, EbayLocation
 from inventorum.ebay.lib.ebay.data.shipping import EbayShippingService

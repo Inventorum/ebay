@@ -56,10 +56,10 @@ class ShippingServiceConfigurableSerializerTest(ShippingServiceTestMixin):
     # Required interface for implementing test classes -----------------------
 
     def get_entity(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_serializer_class(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     # Test methods -----------------------------------------------------------
 

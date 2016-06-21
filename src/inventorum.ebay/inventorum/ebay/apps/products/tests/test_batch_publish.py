@@ -6,7 +6,7 @@ from inventorum.ebay.apps.accounts.tests import AccountTestMixin
 import mock
 
 from inventorum.ebay.apps.products.tests import ProductTestMixin
-from inventorum.ebay.tests import StagingTestAccount, ApiTest, IntegrationTest
+from inventorum.ebay.tests import StagingTestAccount, IntegrationTest
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 
 log = logging.getLogger(__name__)

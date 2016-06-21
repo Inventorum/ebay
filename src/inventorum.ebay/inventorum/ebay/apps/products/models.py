@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import absolute_import, unicode_literals
+
 from collections import defaultdict
 import logging
 from datetime import datetime, timedelta
@@ -7,7 +8,6 @@ from datetime import datetime, timedelta
 from django.db import models
 from django.utils.translation import ugettext
 from django_countries.fields import CountryField
-from django_extensions.db.fields.json import JSONField
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from inventorum.ebay import settings
@@ -18,14 +18,13 @@ from inventorum.ebay.apps.orders.models import OrderableItemModel
 
 from inventorum.ebay.apps.shipping.models import ShippingServiceConfigurable
 from inventorum.ebay.apps.products import EbayItemUpdateStatus, EbayApiAttemptType, EbayItemPublishingStatus
-from inventorum.ebay.lib.db.fields import TaxRateField, MoneyField
+from inventorum.ebay.lib.db.fields import TaxRateField, MoneyField, JSONField
 from inventorum.ebay.lib.db.models import MappedInventorumModel, BaseModel, BaseQuerySet, MappedInventorumModelQuerySet
 from inventorum.ebay.lib.ebay.data import EbayParser
 
 from inventorum.ebay.lib.ebay.data.items import EbayItemShippingService, EbayFixedPriceItem, EbayPicture,\
     EbayItemSpecific, EbayVariation, EbayReviseFixedPriceItem, EbayReviseFixedPriceVariation, EbayReturnPolicy
 from inventorum.ebay.lib.utils import translation
-from inventorum.util.django.model_utils import PassThroughManager
 
 
 log = logging.getLogger(__name__)
@@ -61,7 +60,7 @@ class EbayProductModel(ShippingServiceConfigurable, MappedInventorumModel):
 
     deleted_in_core_api = models.BooleanField(default=False)
 
-    objects = PassThroughManager.for_queryset_class(EbayProductModelQuerySet)()
+    objects = EbayProductModelQuerySet.as_manager()
 
     @property
     def is_published(self):
@@ -148,7 +147,7 @@ class EbayItemModelQuerySet(BaseQuerySet):
         """
         :rtype: EbayItemModelQuerySet
         """
-        return self.select_related("product", "shipping", "images", "specific_values").get(**kwargs)
+        return self.select_related("product").get(**kwargs)
 
     def by_ebay_id(self, ebay_id):
         """
@@ -221,7 +220,7 @@ class EbayItemModel(OrderableItemModel, BaseModel):
     published_at = models.DateTimeField(null=True, blank=True)
     unpublished_at = models.DateTimeField(null=True, blank=True)
 
-    objects = PassThroughManager.for_queryset_class(EbayItemModelQuerySet)()
+    objects = EbayItemModelQuerySet.as_manager()
 
     ordering = ['pk']
 
@@ -320,7 +319,7 @@ class EbayItemVariationModel(OrderableItemModel, BaseModel):
 
     item = models.ForeignKey(EbayItemModel, related_name="variations")
 
-    objects = PassThroughManager.for_queryset_class(EbayItemVariationModelQuerySet)()
+    objects = EbayItemVariationModelQuerySet.as_manager()
 
     @property
     def ebay_object(self):
@@ -383,7 +382,7 @@ class EbayUpdateModel(BaseModel):
 
     status = models.CharField(max_length=255, choices=EbayItemUpdateStatus.CHOICES,
                               default=EbayItemUpdateStatus.DRAFT)
-    status_details = JSONField()
+    status_details = JSONField(null=True, blank=True)
 
     @property
     def is_out_of_stock(self):

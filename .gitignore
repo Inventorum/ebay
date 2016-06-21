@@ -10,34 +10,17 @@
 /inventorum/var
 /.coverage
 /tmp
-/.idea/dictionaries
-/.idea/workspace.xml
-/.idea/libraries/Buildout_Eggs.xml
-/.idea/backend.iml
-/.idea/misc.xml
-/.idea/libraries/Buildout_Eggs*.xml
-/.idea/modules.xml
-/.idea/libraries/
-/.idea/inspectionProfiles/*
+/.idea/
 
 .DS_Store
 *.pyc
 *.pyo
 *.egg-info
-.idea/dataSources.ids
-.idea/dataSources.xml
-.idea/inventorum.backend.iml
-.idea/watcherTasks.xml
 
 node_modules
 .sass-cache
 Django_Lib.xml
 missing_versions.cfg
-/.idea/scopes/scope_settings.xml
-/.idea/vcs.xml
-/.idea/encodings.xml
-/.idea/ebay.iml
-/.idea/.name
 
 celerybeat-schedule
 celerybeat.pid

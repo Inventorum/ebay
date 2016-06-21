@@ -6,7 +6,7 @@ from decimal import Decimal as D
 
 from inventorum.ebay.tests import ApiTest, StagingTestAccount
 
-from inventorum.ebay.apps.products.tests.factories import EbayProductFactory, PublishedEbayItemFactory
+from inventorum.ebay.apps.products.tests.factories import PublishedEbayItemFactory
 from inventorum.ebay.tests.testcases import EbayAuthenticatedAPITestCase
 from django.conf import settings
 

@@ -5,7 +5,8 @@ import logging
 import factory
 from factory import fuzzy
 from inventorum.ebay.apps.orders.tests.factories import OrderModelFactory, OrderLineItemModelFactory
-from inventorum.ebay.apps.returns import EbayRefundType
+from inventorum.ebay.apps.returns import EbayRefundType, ReturnsAcceptedOption, ReturnsWithinOption, \
+    ShippingCostPaidByOption
 from inventorum.ebay.apps.returns.models import ReturnModel, ReturnItemModel, ReturnPolicyModel
 
 
