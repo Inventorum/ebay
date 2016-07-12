@@ -4,6 +4,8 @@ from __future__ import absolute_import, unicode_literals
 import logging
 from decimal import Decimal
 
+from datetime import datetime
+
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext
 from inventorum.ebay.apps.accounts.models import ReturnPolicyModel
@@ -13,7 +15,7 @@ from inventorum.ebay.lib.ebay.data import BuyerPaymentMethodCodeType, EbayConsta
 from inventorum.ebay.lib.ebay.data.errors import EbayErrorCode
 from inventorum.ebay.lib.ebay.data.inventorymanagement import EbayLocationAvailability, EbayAvailability
 from inventorum.ebay.lib.ebay.inventorymanagement import EbayInventoryManagement
-from inventorum.util.django.timezone import datetime
+
 from requests.exceptions import RequestException
 
 from inventorum.ebay.apps.products import EbayItemPublishingStatus, EbayApiAttemptType, EbayItemUpdateStatus

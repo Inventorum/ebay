@@ -5,6 +5,13 @@ CHANGES
 develop
 =======
 
+2016-07-12 0.3.4
+================
+Code
+....
+- Bumped ```inventorum.util=10.6.10```
+- Remove deprecated datetime-utils usages
+
 2016-04-15 0.3.3
 ================
 Code
