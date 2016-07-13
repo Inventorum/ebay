@@ -19,7 +19,7 @@ migrate_from_old_ebay = inventorum.ebay.scripts.migration_tool:migrate_from_old_
 
 # alphabetically ordered(!)
 required_eggs = [
-    'celery>=3.1.17',
+    'celery>=3.1.23',
     'ebaysdk>=2.1.2',
     'flower>=0.8.1',
     'grequests>=0.3.1',
@@ -31,7 +31,7 @@ required_eggs = [
     'django-mptt>=0.6.1',
     'django-pastedeploy-settings>=1.0.1',
     'django-rest-swagger>=0.2.9',
-    'inventorum.util==10.6.9',
+    'inventorum.util==10.6.10',
     'mock>=1.0.1',
     'plac>=0.9.1',
     'python-keyczar>=0.715',
